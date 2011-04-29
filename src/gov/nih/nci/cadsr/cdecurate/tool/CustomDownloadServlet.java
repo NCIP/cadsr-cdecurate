@@ -643,15 +643,28 @@ public class CustomDownloadServlet extends CurationServlet {
 
 		Element deElement = dom.createElement("DataElement");
 		deElement.setAttribute("num",Integer.toString(rowNumber));
-
+		String oldType = "";
 		for (int j = 0; j < colIndices.length; j++) {
 
 			Element elem = null;
 			String currentType = allTypes.get(colIndices[j]);
-
+			
 			if (currentType.endsWith("_T"))
 			{
-				elem = dom.createElement(columns[j].replace(" ", "")+"Collection");
+				//Create collection only if new one
+				if (!currentType.equals(oldType)){
+					oldType = currentType;
+					String collectionName = "";
+					String colNameArr[] = columns[j].split(" ");
+					int dropNumber = 1;
+					if (currentType.endsWith("ID"))
+						dropNumber = 2;
+					for (int nameIndex = 0; nameIndex < colNameArr.length-dropNumber; nameIndex++ ){
+						collectionName = collectionName+colNameArr[nameIndex];
+					}
+					collectionName = collectionName+"Collection";
+					elem = dom.createElement(collectionName);
+				}
 				//Deal with CS/CSI
 				String[] originalArrColNames = typeMap.get(currentType).get(0);
 
