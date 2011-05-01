@@ -26,6 +26,7 @@
             <curate:header displayUser = "false"/>
         <!-- Main Area -->
  	<%ArrayList<String> headers = (ArrayList<String>) session.getAttribute("headers");
+ 	  ArrayList<String> allExpandedHeaders = (ArrayList<String>) session.getAttribute("allExpandedHeaders");
       ArrayList<String> types = (ArrayList<String>) session.getAttribute("types");
       ArrayList<String> defaultExcluded = (ArrayList<String>) session.getAttribute("excludedHeaders");
       
@@ -297,31 +298,19 @@
             var cdlLayout = [
 		            <%   
 		            
-		            for (int colLoop = 0; colLoop < headers.size(); colLoop++) {
+		            for (int colLoop = 0; colLoop < allExpandedHeaders.size(); colLoop++) {
 		            
-		            if (typeMap.get(types.get(colLoop)) != null) {
-		            	String[] subHeaders = typeMap.get(types.get(colLoop)).get(0);
-		            	
-		            	for (int i = 0; i < subHeaders.length; i++) {
-							out.println("{");
-							//Take Column Name from headers and take correct column from current row
-							out.println("field:\""+subHeaders[i]+"\",");
-							out.println("name:\""+""+subHeaders[i]+"\",");
-							out.println("width:"+"10");
-							out.println("}");
-							out.println(",");
-				    
-		            	}
-		            } else {
+		            
+		            
 					    out.println("{");
 					    //Take Column Name from headers and take correct column from current row
-					    out.println("field:\""+headers.get(colLoop)+"\",");
-					    out.println("name:\""+""+headers.get(colLoop)+"\",");
+					    out.println("field:\""+allExpandedHeaders.get(colLoop)+"\",");
+					    out.println("name:\""+""+allExpandedHeaders.get(colLoop)+"\",");
 					    out.println("width:"+"10");
 					    out.println("}");
-					    if (colLoop != headers.size()-1)
+					    if (colLoop != allExpandedHeaders.size()-1)
 					    	out.println(",");
-					    }
+					    
 		            }
 		            %>	    ];
            	 	return cdlLayout;
@@ -414,38 +403,23 @@
                 var notSel = dojo.byId('notSelectedCols');
                 var sel = dojo.byId('selectedCols');
                 
-                <% for (int colLoop = 0; colLoop < headers.size(); colLoop++) { 
-                	if (!headers.get(colLoop).endsWith("IDSEQ")){
+                <% for (int colLoop = 0; colLoop < allExpandedHeaders.size(); colLoop++) { 
+                	if (!allExpandedHeaders.get(colLoop).endsWith("IDSEQ")){
                 	
                 %>
                     var c = dojo.doc.createElement('option');
                     
-			<% if (typeMap.get(types.get(colLoop)) != null) {
-				String[] subHeaders = typeMap.get(types.get(colLoop)).get(0);
-	
-				for (int i = 0; i < subHeaders.length; i++) { %>
-					c = dojo.doc.createElement('option');
-					c.innerHTML = '<%=subHeaders[i]%>';
-					c.value = '<%=subHeaders[i]%>';
-					
-					<%if (defaultExcluded.contains(subHeaders[i])){%>
-					notSel.appendChild(c);
-					<%} else {%>
-					sel.appendChild(c);
-					<%}%>
-				<%  } %>
-
-			<%} else {%>
-				c.innerHTML = '<%=headers.get(colLoop)%>';
-				c.value = '<%=headers.get(colLoop)%>';
-				<%if (defaultExcluded.contains(headers.get(colLoop))){%>
+			
+				c.innerHTML = '<%=allExpandedHeaders.get(colLoop)%>';
+				c.value = '<%=allExpandedHeaders.get(colLoop)%>';
+				<%if (defaultExcluded.contains(allExpandedHeaders.get(colLoop))){%>
 					notSel.appendChild(c);
 					<%} else {%>
 					sel.appendChild(c);
 					<%}%>
                     <%  } %>
                     
-                <%  } } %>
+                <%  } %>
             	cdlLayout= getLayout();
             	
                 var sel = dojo.byId('selectedCols');
