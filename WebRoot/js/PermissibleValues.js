@@ -526,9 +526,9 @@
         }
 	    	//display or undisplay the delete icon for concepts
     	count = 0;
-    	while (document.getElementById(pvNo + "con" + count) !== null)
+    	while (document.getElementById(pvNo + "Con" + count) !== null)
     	{
-    		var divConEdit = document.getElementById(pvNo + "con" + count);
+    		var divConEdit = document.getElementById(pvNo + "Con" + count);
     		divConEdit.style.display = editDisp;
     		count++;
     	}
@@ -1328,6 +1328,9 @@
   		}
   		vm.innerText = appName;  // vmName;
   		vm.textContent = appName;
+  		var vmFormName = getByName("txt"+pvInd+"Mean");  // vmName;
+  		vmFormName.value = appName;
+  		
   		document.PVForm.currentVM.value = appName;
   		//get the vm description object
   		var vmd = document.getElementById(pvInd + "VMDView");
@@ -1341,11 +1344,21 @@
   		}
   		vmd.innerText = appDesc;  // vmDesc;
   		vmd.textContent = appDesc;
+  		var vmFormDesc = getByName("txt"+pvInd+"Def");  // vmDesc;
+  		vmFormDesc.value = appDesc;
   		//make sure to disable the search link also when vm name exists
   		if (appName !== "") {
   			disableSearch('pvNew');
         }
   		return;
+  	}
+  	
+  	function getByName(formElementName){
+  		for (var o =0; o < document.PVForm.elements.length; o++) {
+  			if (formElementName == document.PVForm.elements[o].name)
+  				return document.PVForm.elements[o];
+  		}
+  		return null;
   	}
   	function enableEditVM(pvInd)
   	{
@@ -1416,7 +1429,7 @@
   		if (totalCon === 0)
   		{
   			//create empty row
-  			var trCur = curTbl.insertRow();
+  			var trCur = curTbl.insertRow(0);
   			var tdN = createTD("emptyRow", "\u00a0", "", "", "");
   			trCur.appendChild(tdN);
   			//make vm edit mode do this later
@@ -1483,7 +1496,7 @@
   		 	{
   		 		objs = document.getElementsByName("txt" + pvId + "Mean");
                 var vmInput = objs[0];
-  		 		if (vmInput !== null) {
+  		 		if (vmInput !== null && vmInput !== undefined) {
   		 			vmText = vmInput.value;
                 }
   		 	}
@@ -1491,6 +1504,7 @@
   		 	if (vmText === null || vmText === "")
   		 	{
   		 		alert("Value Meaning is mandatory for a Permissible Value.  Please add a Value Meaning.");
+  		 		vvmvmdDisplay(pvId, 'edit');
   		 		return false;
   		 	}
 	  		//check if pv vm comb is valid
