@@ -464,6 +464,22 @@ public class InsACService implements Serializable {
 				// logger.info(m_servlet.getLogMessage(m_classReq, "setVD",
 				// "execute ok", startDate, new java.util.Date()));
 
+				if (vd.getVD_IN_FORM()) {
+					//Go through all the forms and set warnings for owners
+					SearchServlet ser = new SearchServlet(m_classReq, m_classRes, m_servlet.m_servletContext);
+					ser.get_m_conn();
+					HashMap<String,ArrayList<String[]>> display = ser.getVDAssociatedForms(vd.getIDSEQ(), null);
+					ArrayList<String[]> forms = display.get("Content");
+					String[] headers = display.get("Head").get(0);
+					//Last two spots.
+					int idseqNdx = headers.length-1;
+					int nameNdx = headers.length-2;
+					
+					for (String[] formInfo : forms) {
+						m_servlet.doMonitor(formInfo[nameNdx], formInfo[idseqNdx]);
+					}	
+				}
+					
 				sReturnCode = cstmt.getString(2);
 				String prefName = cstmt.getString(6);
 				if (prefName != null)
@@ -480,6 +496,7 @@ public class InsACService implements Serializable {
 				sVD_ID = cstmt.getString(5);
 				vd.setVD_VD_IDSEQ(sVD_ID);
 				String sReturn = "";
+				
 				if (sAction.equals("INS"))
 					this.storeStatusMsg("Value Domain Name : "
 							+ vd.getVD_LONG_NAME());
@@ -2573,6 +2590,22 @@ public class InsACService implements Serializable {
 			}
 			this.storeStatusMsg("\\n");
 
+			if (de.getDE_IN_FORM()) {
+				//Go through all the forms and set warnings for owners
+				SearchServlet ser = new SearchServlet(m_classReq, m_classRes, m_servlet.m_servletContext);
+				ser.get_m_conn();
+				HashMap<String,ArrayList<String[]>> display = ser.getDEAssociatedForms(de.getIDSEQ(), null);
+				ArrayList<String[]> forms = display.get("Content");
+				String[] headers = display.get("Head").get(0);
+				//Last two spots.
+				int idseqNdx = headers.length-1;
+				int nameNdx = headers.length-2;
+				
+				for (String[] formInfo : forms) {
+					m_servlet.doMonitor(formInfo[nameNdx], formInfo[idseqNdx]);
+				}	
+			}
+			
 		} catch (Exception e) {
 			logger.error("ERROR in InsACService-setDE for other : "
 					+ e.toString(), e);
@@ -6074,6 +6107,12 @@ public class InsACService implements Serializable {
 			  VD_Bean m_VD = (VD_Bean) session.getAttribute("m_VD");
 			  id = m_VD.getVD_REP_IDSEQ();
 			  name = "vdStatusBean";
+			  String newRepTerm = "";
+			  newRepTerm = (String)session.getAttribute("newRepTerm");
+			  
+			  //Don't search for rep term if we're creating new one.
+			  if (newRepTerm != null && newRepTerm.equals("true"))
+				  id = "";
 		  }
 		  //If user selected existing OC or Prop or Rep Term in any context
 		  if (id != null && !id.equals("")){

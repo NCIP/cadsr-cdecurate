@@ -60,7 +60,8 @@ public class ObjMenuTag extends MenuTag {
 									  + displayNewVersion()
 									  + displayShowAll()
 									  + displayHideAll()
-									  + displayAppend());
+									  + displayAppend()
+									  + displayCustomDownload());
 				}
 				if ((selACType).equals("ValueDomain")) {
 					objMenu.println(displayEdit()
