@@ -468,7 +468,7 @@ public class InsACService implements Serializable {
 					//Go through all the forms and set warnings for owners
 					SearchServlet ser = new SearchServlet(m_classReq, m_classRes, m_servlet.m_servletContext);
 					ser.get_m_conn();
-					HashMap<String,ArrayList<String[]>> display = ser.getAssociatedForms(vd.getIDSEQ(), null, true);
+					HashMap<String,ArrayList<String[]>> display = ser.getVDAssociatedForms(vd.getIDSEQ(), null);
 					ArrayList<String[]> forms = display.get("Content");
 					String[] headers = display.get("Head").get(0);
 					//Last two spots.
