@@ -279,7 +279,8 @@ public class CustomDownloadServlet extends CurationServlet {
 							if (c.getName().toUpperCase().contains("STRUCT")) {
 								Struct str = (Struct) valueDatum[a];
 								Object[] strValues = str.getAttributes();
-								values = new String[valueDatum.length+strValues.length];
+								values = new String[valueDatum.length+strValues.length-1]; 
+								slide = -1;
 								for (int b = 0; b < strValues.length; b++){
 									values[b] = strValues[b].toString();
 									slide++;
@@ -900,12 +901,12 @@ public class CustomDownloadServlet extends CurationServlet {
 									//Derived data element is special double nested, needs to be modified to be more general.
 									
 									//General DDE information is in the first 4 columns, but contained in the first row of the Row Array Data
-									if (originalColumnIndex < 4) {
+									if (originalColumnIndex < 5) {
 										if (nestedRowIndex == 0)
 											data = (originalColumnIndex > 0)? nestedData[originalColumnIndex]:nestedData[originalColumnIndex+1];  //This skips the 2nd entry, description, which is not to be shown.
 									} else {
 										if (nestedRowIndex+1 < rowArrayData.size()){
-											data = rowArrayData.get(nestedRowIndex+1)[originalColumnIndex-4];
+											data = rowArrayData.get(nestedRowIndex+1)[originalColumnIndex-5];
 										}
 									}
 										

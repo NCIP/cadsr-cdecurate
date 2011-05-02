@@ -1354,11 +1354,8 @@
   	}
   	
   	function getByName(formElementName){
-  		for (var o =0; o < document.PVForm.elements.length; o++) {
-  			if (formElementName == document.PVForm.elements[o].name)
-  				return document.PVForm.elements[o];
-  		}
-  		return null;
+  		objs = document.getElementsByName(formElementName);
+		return objs[0]; 
   	}
   	function enableEditVM(pvInd)
   	{
