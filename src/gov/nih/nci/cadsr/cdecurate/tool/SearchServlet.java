@@ -2596,7 +2596,7 @@ public class SearchServlet extends CurationServlet {
            +" AND (qc.DN_CRF_IDSEQ = crf.QC_IDSEQ)"
            +" AND (CRF.CREATED_BY = UA.UA_NAME)"
            +" AND (VD."+idseqString+" = ?)"
-           +" AND (VD.DE_IDSEQ = DE.DE_IDSEQ)"
+           +" AND (VD.VD_IDSEQ = DE.VD_IDSEQ)"
            +" order by crf.long_name desc";
 		
 		String sqlE = "SELECT DISTINCT " +
