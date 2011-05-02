@@ -21,7 +21,7 @@
 	    </style>
   </head>
   
-  <body class=" claro ">
+  <body class=" claro " onLoad="toggleView();">
           <!-- Header -->
             <curate:header displayUser = "false"/>
         <!-- Main Area -->
@@ -46,6 +46,18 @@
       <div id="simpleViewContainer" style="width: 100%; display: block">
       <form>  
           <table border="0">
+          		<tr>
+                  <td align="center">
+                      Excluded
+                  </td>
+                  <td >
+                      
+                  </td>
+                  <td align="center">
+                     Included
+                  </td>
+                  <td>
+              </tr>
               <tr>
                   <td>
                       <select id="notSelectedCols" style="width:300px" size=15></select>
@@ -461,7 +473,7 @@
             
             dojo.connect(cdGrid, "onHeaderCellClick", selectColumn);
            
-            toggleView();
+            
         </script>	
         
            <!-- Footer -->
