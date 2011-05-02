@@ -1329,7 +1329,7 @@
   		vm.innerText = appName;  // vmName;
   		vm.textContent = appName;
   		var vmFormName = getByName("txt"+pvInd+"Mean");  // vmName;
-  		vmFormName = appName;
+  		vmFormName.value = appName;
   		
   		document.PVForm.currentVM.value = appName;
   		//get the vm description object
@@ -1345,7 +1345,7 @@
   		vmd.innerText = appDesc;  // vmDesc;
   		vmd.textContent = appDesc;
   		var vmFormDesc = getByName("txt"+pvInd+"Def");  // vmDesc;
-  		vmFormDesc = appDesc;
+  		vmFormDesc.value = appDesc;
   		//make sure to disable the search link also when vm name exists
   		if (appName !== "") {
   			disableSearch('pvNew');
