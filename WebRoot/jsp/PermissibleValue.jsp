@@ -1166,12 +1166,12 @@
 																	<div style="display:inline">
 																	<b>VM Long Name:</b>
 																	</div>
-																	<% if (vmCon.size() < 1) { %>
+																	<% //if (vmCon.size() < 1) { %>
 																	<div id="<%=pvCount%>VMEdit" style="display: none; width:90%">
 																		&nbsp;&nbsp;
 																		<textarea name="txt<%=pvCount%>Mean" style="width: 100%" rows="2" onblur="javascript:checkNameLen(this, 255);" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vm');"><%=sPVMeanJsp%></textarea>
 																	</div>
-																	<% } %>
+																	<% //} %>
 																	<%if (!isView){ %>
 																	<div id="<%=pvCount%>VMAltView" style="display: inline; text-align:right">
 																		<span style="padding-left:0.3in; padding-right:0.1in; text-align:right">
@@ -1259,9 +1259,9 @@
 																					<div id="<%=pvCount%>VMDView" style="display: block">
 																						<%=sPVDesc%>
 																					</div>
-																					<% if (vmCon.size() < 1) { %>
+																					<% //if (vmCon.size() < 1) { %>
 																					<div id="<%=pvCount%>VMDEdit" style="display: none"><textarea name="txt<%=pvCount%>Def" rows="4" style="width: 100%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vmd');"><%=sPVDesc%></textarea></div>
-																					<% } %>
+																					<% //} %>
 																					<br>
 																				</td>
 																			</tr>
@@ -1285,7 +1285,7 @@
 																					<div id="<%=pvCount%>Con" style="display:block; border:1px;">
 																						<table id="<%=pvCount%>TBL" style="width: 98%; border: 0px">
 																							<% 
-																//		System.out.println("jsp vm " + vmCon.size());
+																		// System.out.println("jsp vm " + vmCon.size());
 																			if (vmCon.size() > 0) 
 																			{
 																				for (int k = 0; k<vmCon.size(); k++)
@@ -1306,7 +1306,7 @@
 																					if (conType.equals("Primary"))
 																						isParPrim = sParId;
 																					
-																//		System.out.println(trCount + " jsp " + conName + conID + conVocab + conDesc);
+																	//	System.out.println(trCount + " jsp " + conName + conID + conVocab + conDesc);
 																			%>
 																							<tr id="<%=trCount%>">
 																								<td valign="top" nowrap="nowrap">
