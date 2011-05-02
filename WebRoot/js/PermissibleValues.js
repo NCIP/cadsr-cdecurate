@@ -1328,8 +1328,8 @@
   		}
   		vm.innerText = appName;  // vmName;
   		vm.textContent = appName;
-  		document.getElementById("txt"+pvInd+"Mean").innerText = appName;  // vmName;
-  		document.getElementById("txt"+pvInd+"Mean").textContent = appName;
+  		var vmFormName = getByName("txt"+pvInd+"Mean");  // vmName;
+  		vmFormName = appName;
   		
   		document.PVForm.currentVM.value = appName;
   		//get the vm description object
@@ -1344,13 +1344,21 @@
   		}
   		vmd.innerText = appDesc;  // vmDesc;
   		vmd.textContent = appDesc;
-  		document.getElementById("txt"+pvInd+"Def").innerText  = appDesc;  // vmDesc;
-  		document.getElementById("txt"+pvInd+"Def").textContent = appDesc;
+  		var vmFormDesc = getByName("txt"+pvInd+"Def");  // vmDesc;
+  		vmFormDesc = appDesc;
   		//make sure to disable the search link also when vm name exists
   		if (appName !== "") {
   			disableSearch('pvNew');
         }
   		return;
+  	}
+  	
+  	function getByName(formElementName){
+  		for (var o =0; o < document.PVForm.elements.length; o++) {
+  			if (formElementName == document.PVForm.elements[o].name)
+  				return document.PVForm.elements[o];
+  		}
+  		return null;
   	}
   	function enableEditVM(pvInd)
   	{
