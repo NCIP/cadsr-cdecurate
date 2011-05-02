@@ -277,7 +277,7 @@ if (results.size() > 0)
 			<table width="100%" border="0">
 				<tr height="40" valign="bottom">
 					<td>
-						<input type="button" name="useSelectedBtn" value="Use Selection" onClick="PasteDefinition()" disabled>
+						<input type="button" name="useSelectedBtn" value="Link Concept" onClick="PasteDefinition()" disabled>
 						&nbsp;&nbsp;
 						<input type="button" name="btnSubmitToEVS" value="Submit Suggestion to EVS" onclick="javascript:NewTermSuggested();">
 						&nbsp;&nbsp;
