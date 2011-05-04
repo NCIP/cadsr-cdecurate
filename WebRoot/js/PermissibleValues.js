@@ -1513,19 +1513,25 @@
             }
   			return checkPVVMCombDuplicate(vText, vmText, pvId);
   	}
+  
+  	function trim (str) {
+		str = str.replace(/^\s+/, '');
+		for (var i = str.length - 1; i >= 0; i--) {
+			if (/\S/.test(str.charAt(i))) {
+				str = str.substring(0, i + 1);
+				break;
+			}
+		}
+		return str;
+	}
   	function checkPVVMCombDuplicate(sVal, sVM, pvId)
   	{
 		//make it lower case no space for matching
 		sVal = sVal.toLowerCase();
-  		while (sVal.indexOf(' ') > 0)
-		{
-			sVal = sVal.replace(' ', '');
-		}
+  		sVal = trim(sVal);
+  		
   		sVM = sVM.toLowerCase();
-  		while (sVM.indexOf(' ') > 0)
-		{
-			sVM = sVM.replace(' ', '');
-		}  		
+  		sVM = trim(sVM);		
   		//get the value and meaning from each row and compare it to the text of the saving pv
   		var i = 0;
   		do
@@ -1541,10 +1547,8 @@
     	  			{
     	  				var val = pvTrT;
     			  		val = val.toLowerCase();  //make it lower case no space for matching
-    			  		while (val.indexOf(' ') > 0)
-    					{
-    						val = val.replace(' ', '');
-    					}
+    			  		val = trim(val);
+    			  		
     	  				var vm = "";
     	  				var vmTr = document.getElementById(pvCount + "VMView");
                         if (vmTr !== null) {
@@ -1553,10 +1557,8 @@
         	  					vm = vmTrT;
                             }
         			  		vm = vm.toLowerCase();   //make it lower case no space for matching
-        			  		while (vm.indexOf(' ') > 0)
-        					{
-        						vm = vm.replace(' ', '');
-        					}
+        			  		vm = trim(vm);
+        			  		
         	  				if (sVal == val && sVM == vm)
         	  				{
         	  					alert("The Value and the Value Meaning combination must be unique in the Value Domain." +
