@@ -1027,7 +1027,7 @@ public class UtilService implements Serializable
                  if (strInValid.equals(""))
                    attStatus = sValid;   //status, OK, not exceed limit
                  else if (strInValid.startsWith("Warning"))
-                	 attStatus = sValid +" " +strInValid; //Ok, but warning
+                	 attStatus = sValid +" \n " +strInValid; //Ok, but warning
                  else
                    attStatus = strInValid;
                }

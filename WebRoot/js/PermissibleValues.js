@@ -526,9 +526,9 @@
         }
 	    	//display or undisplay the delete icon for concepts
     	count = 0;
-    	while (document.getElementById(pvNo + "con" + count) !== null)
+    	while (document.getElementById(pvNo + "Con" + count) !== null)
     	{
-    		var divConEdit = document.getElementById(pvNo + "con" + count);
+    		var divConEdit = document.getElementById(pvNo + "Con" + count);
     		divConEdit.style.display = editDisp;
     		count++;
     	}
@@ -1328,6 +1328,9 @@
   		}
   		vm.innerText = appName;  // vmName;
   		vm.textContent = appName;
+  		var vmFormName = getByName("txt"+pvInd+"Mean");  // vmName;
+  		vmFormName.value = appName;
+  		
   		document.PVForm.currentVM.value = appName;
   		//get the vm description object
   		var vmd = document.getElementById(pvInd + "VMDView");
@@ -1341,11 +1344,18 @@
   		}
   		vmd.innerText = appDesc;  // vmDesc;
   		vmd.textContent = appDesc;
+  		var vmFormDesc = getByName("txt"+pvInd+"Def");  // vmDesc;
+  		vmFormDesc.value = appDesc;
   		//make sure to disable the search link also when vm name exists
   		if (appName !== "") {
   			disableSearch('pvNew');
         }
   		return;
+  	}
+  	
+  	function getByName(formElementName){
+  		objs = document.getElementsByName(formElementName);
+		return objs[0]; 
   	}
   	function enableEditVM(pvInd)
   	{
@@ -1416,7 +1426,7 @@
   		if (totalCon === 0)
   		{
   			//create empty row
-  			var trCur = curTbl.insertRow();
+  			var trCur = curTbl.insertRow(0);
   			var tdN = createTD("emptyRow", "\u00a0", "", "", "");
   			trCur.appendChild(tdN);
   			//make vm edit mode do this later
@@ -1483,7 +1493,7 @@
   		 	{
   		 		objs = document.getElementsByName("txt" + pvId + "Mean");
                 var vmInput = objs[0];
-  		 		if (vmInput !== null) {
+  		 		if (vmInput !== null && vmInput !== undefined) {
   		 			vmText = vmInput.value;
                 }
   		 	}
@@ -1491,6 +1501,7 @@
   		 	if (vmText === null || vmText === "")
   		 	{
   		 		alert("Value Meaning is mandatory for a Permissible Value.  Please add a Value Meaning.");
+  		 		vvmvmdDisplay(pvId, 'edit');
   		 		return false;
   		 	}
 	  		//check if pv vm comb is valid
@@ -1502,19 +1513,25 @@
             }
   			return checkPVVMCombDuplicate(vText, vmText, pvId);
   	}
+  
+  	function trim (str) {
+		str = str.replace(/^\s+/, '');
+		for (var i = str.length - 1; i >= 0; i--) {
+			if (/\S/.test(str.charAt(i))) {
+				str = str.substring(0, i + 1);
+				break;
+			}
+		}
+		return str;
+	}
   	function checkPVVMCombDuplicate(sVal, sVM, pvId)
   	{
 		//make it lower case no space for matching
 		sVal = sVal.toLowerCase();
-  		while (sVal.indexOf(' ') > 0)
-		{
-			sVal = sVal.replace(' ', '');
-		}
+  		sVal = trim(sVal);
+  		
   		sVM = sVM.toLowerCase();
-  		while (sVM.indexOf(' ') > 0)
-		{
-			sVM = sVM.replace(' ', '');
-		}  		
+  		sVM = trim(sVM);		
   		//get the value and meaning from each row and compare it to the text of the saving pv
   		var i = 0;
   		do
@@ -1530,10 +1547,8 @@
     	  			{
     	  				var val = pvTrT;
     			  		val = val.toLowerCase();  //make it lower case no space for matching
-    			  		while (val.indexOf(' ') > 0)
-    					{
-    						val = val.replace(' ', '');
-    					}
+    			  		val = trim(val);
+    			  		
     	  				var vm = "";
     	  				var vmTr = document.getElementById(pvCount + "VMView");
                         if (vmTr !== null) {
@@ -1542,10 +1557,8 @@
         	  					vm = vmTrT;
                             }
         			  		vm = vm.toLowerCase();   //make it lower case no space for matching
-        			  		while (vm.indexOf(' ') > 0)
-        					{
-        						vm = vm.replace(' ', '');
-        					}
+        			  		vm = trim(vm);
+        			  		
         	  				if (sVal == val && sVM == vm)
         	  				{
         	  					alert("The Value and the Value Meaning combination must be unique in the Value Domain." +
