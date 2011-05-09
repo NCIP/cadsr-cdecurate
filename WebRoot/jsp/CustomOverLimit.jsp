@@ -1,16 +1,12 @@
 <%@ page language="java" import="java.util.*" pageEncoding="ISO-8859-1"%>
 <%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <%
-String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 String downloadLimit = (String) request.getSession().getAttribute("downloadLimit");
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <base href="<%=basePath%>">
-    
     <title>Customizable Download</title>
     
 	<meta http-equiv="pragma" content="no-cache">
@@ -35,7 +31,7 @@ String downloadLimit = (String) request.getSession().getAttribute("downloadLimit
        
       <br></br>
       <br></br>
-      <% ArrayList<String> rows = (ArrayList<String>) session.getAttribute("rows"); %>
+      <% ArrayList<String> rows = (ArrayList<String>) session.getAttribute("downloadIDs"); %>
       <font size="6"><%=rows.size()%> elements selected for download.</font>  
       <% if (rows.size() > Integer.valueOf(downloadLimit).intValue()){ %>
       	<font size="6" color="red">Warning: Current limit for item download is <%=downloadLimit%>.  Please select a smaller set to download.</font>
