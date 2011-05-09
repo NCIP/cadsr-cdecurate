@@ -3,7 +3,7 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-Integer downloadLimit = (Integer) request.getSession().getAttribute("downloadLimit");
+String downloadLimit = (String) request.getSession().getAttribute("downloadLimit");
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -37,8 +37,8 @@ Integer downloadLimit = (Integer) request.getSession().getAttribute("downloadLim
       <br></br>
       <% ArrayList<String> rows = (ArrayList<String>) session.getAttribute("rows"); %>
       <font size="6"><%=rows.size()%> elements selected for download.</font>  
-      <% if (rows.size() > downloadLimit.intValue()){ %>
-      	<font size="6" color="red">Warning: Current limit for item download is <%=downloadLimit.intValue()%>.  Please select a smaller set to download.</font>
+      <% if (rows.size() > Integer.valueOf(downloadLimit).intValue()){ %>
+      	<font size="6" color="red">Warning: Current limit for item download is <%=downloadLimit%>.  Please select a smaller set to download.</font>
       <%} %>
           
         <curate:footer/>
