@@ -1564,7 +1564,16 @@
         	  					alert("The Value and the Value Meaning combination must be unique in the Value Domain." +
         	  						"\n Modify either the Value or the Value Meaning to create new Permissible Value.");
         	  					return false;
+        	  				} else if (sVal == val  && sVM !== vm) {
+        	  					alert("Warning: The Value you chose already exists in this Value Domain." +
+        	  					"\n Please make sure this is correct.");
+        	  					return true;
+        	  				} else if (sVal !== val && sVM == vm) {
+        	  					alert("Warning: The Value Meaning Name you chose already exists in this Value Domain." +
+        	  					"\n Please make sure this is correct.");
+        	  					return true;
         	  				}
+        	  				
                         }
     	  			}
                 }
