@@ -31,12 +31,13 @@ String downloadLimit = (String) request.getSession().getAttribute("downloadLimit
        
       <br></br>
       <br></br>
+      <div style="height:90%; width:70%">
       <% ArrayList<String> rows = (ArrayList<String>) session.getAttribute("downloadIDs"); %>
       <font size="4"><%=rows.size()%> elements selected for download.</font> <br/> 
       <% if (rows.size() > Integer.valueOf(downloadLimit).intValue()){ %>
-      	<font size="4" color="red">Alert: The current limit for Custom Download is <%=downloadLimit%>.
-      	 Your download cannot be completed; please select a smaller set of items.</font>
-      <%} %><br/>
+      	<br><font size="4" color="red">Alert: The current limit for Custom Download is <%=downloadLimit%>. 
+      	<br>Your download cannot be completed. <u>Please select a smaller set of items</u>.</font><br>
+      <%} %></div>
           
         <curate:footer/>
   </body>
