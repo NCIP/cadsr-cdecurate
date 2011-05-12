@@ -118,12 +118,14 @@
 		  if (action == "save")
 		  {
 		  	//check current vm has the data
-		   	var curVM = document.PVForm.currentVM;
-		  	if (curVM === null || curVM.value === null || curVM.value === "") {
-		  		editedPV = getORsetEdited(editedPV, "vm");
-            }
-		  	SubmitValidate("save");
-		  	return false;
+		    var valid = EditPVCheck(editedPV);
+		    if (valid === true) {
+			  	SubmitValidate("save");
+			  	return false;
+		  	} else {
+		  		return false;
+		  	}
+		  		
 		  }
 		  else
 		  {
@@ -248,6 +250,60 @@
                 }
     			SubmitValidate("addNewPV");
     		}
+    	}
+    }
+    
+    function EditPVCheck(pvNo)
+    {
+    	
+    	var nameObj = document.getElementsByName("txt" + pvNo + "Mean");
+    	var defObj = document.getElementsByName("txt" + pvNo + "Def");
+    	var valObj = document.getElementsByName("txt" + pvNo + "Value");
+    	
+    	var alertMsg = "";
+    	var txtVM = "";
+    	//first if user entered
+    	var vmDiv = nameObj[0];
+    	if (vmDiv !== null )
+    	{
+	    	txtVM = vmDiv.value;
+    	}
+    	
+    	if (txtVM === null || txtVM === "") {
+	    	alertMsg += "Please enter the text for Value Meaning. \n";
+        }
+    	//check user entered description
+    	var vmdDiv = defObj[0];
+    	if (vmdDiv !== null)
+    	{
+	    	var txtVMD = vmdDiv.value;
+	    	if (txtVMD === null || txtVMD === "") {
+	    		alertMsg += "Please enter the text for Value Meaning Description. \n";
+            }
+    	}
+    	//get vm pv if not exists
+    	if (valObj !== null){
+	    	var txtPV = valObj[0].value;
+	    	if ((txtPV === null || txtPV === "") && alertMsg === "")
+	    	{
+	 			if (txtVM !== "")
+				{
+					txtVM = txtVM.replace(/(\r\n)|(\n)/g, "");
+					txtPV = txtVM;
+				}
+	    	}
+    	}
+    	
+    	if (txtPV === null || txtPV === "") {
+    		alertMsg += "Please enter the text for Permissible Value. \n";
+        }
+    	if (alertMsg !== "") {
+    		alert(alertMsg);
+    		return false;
+        }
+    	else
+    	{
+    		return true;
     	}
     }
     function ContinueDuplicateVM()
