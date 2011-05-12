@@ -1025,7 +1025,10 @@ private String goBackToSearch()
       vm = new VM_Bean().copyVMBean(pv.getPV_VM());
     Vector vmCon = vm.getVM_CONCEPT_LIST();
     String[] sCons = req.getParameterValues("hiddenConVM");
-    if (sCons != null && vmCon != null)
+    if (sCons == null)
+    	sCons = new String[0];
+    
+    if (vmCon != null)  //sCons could be null, if they're all removed.
     {
       vmAction.resetVMConcepts(sCons, vm, pv);
     }
