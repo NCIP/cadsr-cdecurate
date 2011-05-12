@@ -1190,7 +1190,7 @@ public class ValueDomainServlet extends CurationServlet {
 							defs = (Vector<String>) session.getAttribute("chosenRepDefs");
 						}
 					
-
+						
 					if (!codes.contains(code)) {
 						codes.add(code);    	   
 						defs.add(def);
