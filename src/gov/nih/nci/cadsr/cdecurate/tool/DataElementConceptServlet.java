@@ -972,7 +972,7 @@ public class DataElementConceptServlet extends CurationServlet {
 			Vector<String> defs = null;
 
 			if (sComp.startsWith("Object")) {
-				if (session.getAttribute("chosenOCCodes") == null) {
+				if (session.getAttribute("chosenOCCodes") == null || ((Vector)session.getAttribute("chosenOCCodes")).size() == 0) {
 					codes = new Vector<String>();
 					defs = new Vector<String>();
 				} else {
@@ -990,8 +990,8 @@ public class DataElementConceptServlet extends CurationServlet {
 					defs = (Vector<String>) session.getAttribute("chosenPropDefs");
 				}
 			}
-
-			if (!codes.contains(code)) {
+			
+			if (!codes.contains(code)) {	
 				codes.add(code);    	   
 				defs.add(def);
 			}
@@ -1150,6 +1150,7 @@ public class DataElementConceptServlet extends CurationServlet {
 
 		
 		//vConcepts is a list of all concepts currently used for this element
+		//Chosen codes and defs are contained in [ ] if are originating from a caDSR element.
 		//The codes list should not include anything that's not in vConcept (in case of removal)
 		//Also need to make sure that the new concepts are at the end of the list, like they're supposed to be.
 		//added in 4.1 to check if OC exists and set alternate def. if used an EVS concept	   
@@ -1159,15 +1160,18 @@ public class DataElementConceptServlet extends CurationServlet {
 			boolean found = false;
 			for(int codeCounter = 0; codeCounter < codes.size(); codeCounter++){
 				String chosenCode = codes.get(codeCounter);
-				if (chosenCode.equals(usedCode) || chosenCode.equals("*"+usedCode)){
+				
+				if (chosenCode.equals(usedCode) || chosenCode.equals("*"+usedCode) || (chosenCode.contains(usedCode) && chosenCode.endsWith("]"))){
 					//Code is used, transfer to rebuilt list
 					found = true;
-					rebuiltCodes.add("*"+chosenCode); //Adding * to mark a new concept (need to be added at the end of old definition)
-					rebuiltDefs.add("*"+defs.get(codeCounter));
+					
+						rebuiltCodes.add("*"+chosenCode); //Adding * to mark a new concept (need to be added at the end of old definition)
+						rebuiltDefs.add("*"+defs.get(codeCounter));
 
-					//if definitions don't match, put up a warning.
-					if (!defs.get(codeCounter).equals(usedDef))
-						warning = true;
+						//if definitions don't match, put up a warning.
+						if (!defs.get(codeCounter).equals(usedDef))
+							warning = true;
+					
 				}
 			}
 			
