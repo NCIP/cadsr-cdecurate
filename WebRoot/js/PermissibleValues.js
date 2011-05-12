@@ -63,6 +63,10 @@
 			var isValid = true;
 			if (sAction != "openEditVM") {
 				isValid = storeVMConcept(sAction);
+				
+				if (isValid) {
+					isValid = EditPVCheck();
+				}
             }
 			if (isValid)  //submit only if valid
 			{
@@ -118,14 +122,13 @@
 		  if (action == "save")
 		  {
 		  	//check current vm has the data
-		    var valid = EditPVCheck(editedPV);
-		    if (valid === true) {
-			  	SubmitValidate("save");
-			  	return false;
-		  	} else {
-		  		return false;
-		  	}
-		  		
+		   	var curVM = document.PVForm.currentVM;
+		  	if (curVM === null || curVM.value === null || curVM.value === "") {
+		  		editedPV = getORsetEdited(editedPV, "vm");
+            }
+		  	
+		  	SubmitValidate("save");
+		  	return false;
 		  }
 		  else
 		  {
@@ -253,9 +256,11 @@
     	}
     }
     
-    function EditPVCheck(pvNo)
+    function EditPVCheck()
     {
-    	
+    	var id = document.PVForm.editPVInd;
+  		var pvNo = id.value;
+  		
     	var nameObj = document.getElementsByName("txt" + pvNo + "Mean");
     	var defObj = document.getElementsByName("txt" + pvNo + "Def");
     	var valObj = document.getElementsByName("txt" + pvNo + "Value");
@@ -299,7 +304,6 @@
         }
     	if (alertMsg !== "") {
     		alert(alertMsg);
-    		return false;
         }
     	else
     	{
