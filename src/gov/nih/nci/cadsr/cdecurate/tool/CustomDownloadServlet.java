@@ -620,7 +620,8 @@ public class CustomDownloadServlet extends CurationServlet {
 		ArrayList<String> allTypes = (ArrayList<String>) m_classReq.getSession().getAttribute("types");
 		HashMap<String, String> arrayColumnTypes = (HashMap<String,String>) m_classReq.getSession().getAttribute("arrayColumnTypes");
 		HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String,ArrayList<String[]>>) m_classReq.getSession().getAttribute("typeMap");
-		ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = (ArrayList<HashMap<String,ArrayList<String[]>>>) m_classReq.getSession().getAttribute("arrayData"); 
+		ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = (ArrayList<HashMap<String,ArrayList<String[]>>>) m_classReq.getSession().getAttribute("arrayData");
+		String downloadType = (String)m_classReq.getSession().getAttribute("downloadType");
 
 		String[] columns = null;
 		if (xmlColumns != null && !xmlColumns.trim().equals("")) {
@@ -655,7 +656,16 @@ public class CustomDownloadServlet extends CurationServlet {
 			//create an instance of DOM
 			dom = db.newDocument();
 
-			Element rootEle = dom.createElement("DataElementCollection");
+			String colName = "Element";
+			
+			if (downloadType.toUpperCase().equals("CDE"))
+				colName = "DataElement";
+			else if (downloadType.toUpperCase().equals("DEC"))
+				colName = "DataElementConcept";
+			else if (downloadType.toUpperCase().equals("VD"))
+				colName = "ValueDomain";
+			
+			Element rootEle = dom.createElement("Collection");
 			dom.appendChild(rootEle);
 
 
