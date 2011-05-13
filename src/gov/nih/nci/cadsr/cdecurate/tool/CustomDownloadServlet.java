@@ -738,7 +738,7 @@ public class CustomDownloadServlet extends CurationServlet {
 					for (int nameIndex = 0; nameIndex < colNameArr.length-dropNumber; nameIndex++ ){
 						collectionName = collectionName+colNameArr[nameIndex];
 					}
-					collectionName = collectionName.toUpperCase()+"LIST";
+					collectionName = collectionName+"LIST";
 					collectionElement = dom.createElement(collectionName);
 				}
 				//Deal with CS/CSI
@@ -760,7 +760,7 @@ public class CustomDownloadServlet extends CurationServlet {
 				if (rowArrayData != null) {
 					for (int nestedRowIndex = 0; nestedRowIndex < rowArrayData.size(); nestedRowIndex++) {
 						//Get subType column names and iterate over those and create nested elements
-						Element nestedElement = dom.createElement(columns[j].replace(" ", "")+"_ITEM");
+						Element nestedElement = dom.createElement(columns[j].replace(" ", ""));
 						//Add element and data close element
 						String[] nestedData = rowArrayData.get(nestedRowIndex);
 						String data = "";
