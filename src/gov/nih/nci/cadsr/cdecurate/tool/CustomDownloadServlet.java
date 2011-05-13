@@ -665,7 +665,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			else if (downloadType.toUpperCase().equals("VD"))
 				colName = "ValueDomain";
 			
-			Element rootEle = dom.createElement(colName+"Collection");
+			Element rootEle = dom.createElement(colName+"sList");
 			dom.appendChild(rootEle);
 
 
@@ -673,7 +673,7 @@ public class CustomDownloadServlet extends CurationServlet {
 
 				String[] row = allRows.get(i);
 				//For each row create approppriate element and attach it to root, pass all the column/type data to do this
-				Element deElement = createElement(row, i, dom, columns, colIndices, allTypes, typeMap, arrayData);
+				Element deElement = createElement(row, i, dom, columns, colIndices, allTypes, typeMap, arrayData, colName);
 				rootEle.appendChild(deElement);
 			}
 
@@ -711,11 +711,11 @@ public class CustomDownloadServlet extends CurationServlet {
 	}
 
 	private Element createElement(String[] row, int rowNumber, Document dom, String[] columns, int[] colIndices, 
-			ArrayList<String> allTypes, HashMap<String,ArrayList<String[]>> typeMap, ArrayList<HashMap<String,ArrayList<String[]>>> arrayData){
+			ArrayList<String> allTypes, HashMap<String,ArrayList<String[]>> typeMap, ArrayList<HashMap<String,ArrayList<String[]>>> arrayData, String elementType){
 
 
-		Element deElement = dom.createElement("DataElement");
-		deElement.setAttribute("num",Integer.toString(rowNumber));
+		Element deElement = dom.createElement(elementType);
+		deElement.setAttribute("num",Integer.toString(rowNumber+1));
 		String oldType = "";
 		Element collectionElement = null;
 		for (int j = 0; j < colIndices.length; j++) {
@@ -738,7 +738,7 @@ public class CustomDownloadServlet extends CurationServlet {
 					for (int nameIndex = 0; nameIndex < colNameArr.length-dropNumber; nameIndex++ ){
 						collectionName = collectionName+colNameArr[nameIndex];
 					}
-					collectionName = collectionName+"Collection";
+					collectionName = collectionName.toUpperCase()+"LIST";
 					collectionElement = dom.createElement(collectionName);
 				}
 				//Deal with CS/CSI
@@ -760,7 +760,7 @@ public class CustomDownloadServlet extends CurationServlet {
 				if (rowArrayData != null) {
 					for (int nestedRowIndex = 0; nestedRowIndex < rowArrayData.size(); nestedRowIndex++) {
 						//Get subType column names and iterate over those and create nested elements
-						Element nestedElement = dom.createElement(columns[j].replace(" ", ""));
+						Element nestedElement = dom.createElement(columns[j].replace(" ", "")+"_ITEM");
 						//Add element and data close element
 						String[] nestedData = rowArrayData.get(nestedRowIndex);
 						String data = "";
