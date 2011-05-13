@@ -269,7 +269,7 @@
     	var txtVM = "";
     	//first if user entered
     	var vmDiv = nameObj[0];
-    	if (vmDiv !== null )
+    	if (vmDiv !== null && vmDiv !== undefined )
     	{
 	    	txtVM = vmDiv.value;
     	}
@@ -279,7 +279,7 @@
         }
     	//check user entered description
     	var vmdDiv = defObj[0];
-    	if (vmdDiv !== null)
+    	if (vmdDiv !== null && vmdDiv !== undefined )
     	{
 	    	var txtVMD = vmdDiv.value;
 	    	if (txtVMD === null || txtVMD === "") {
@@ -287,7 +287,7 @@
             }
     	}
     	//get vm pv if not exists
-    	if (valObj !== null){
+    	if (valObj !== null && valObj[0]!== undefined){
 	    	var txtPV = valObj[0].value;
 	    	if ((txtPV === null || txtPV === "") && alertMsg === "")
 	    	{
