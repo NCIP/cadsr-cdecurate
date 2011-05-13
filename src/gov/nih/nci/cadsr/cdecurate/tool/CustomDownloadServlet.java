@@ -665,7 +665,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			else if (downloadType.toUpperCase().equals("VD"))
 				colName = "ValueDomain";
 			
-			Element rootEle = dom.createElement("Collection");
+			Element rootEle = dom.createElement(colName+"Collection");
 			dom.appendChild(rootEle);
 
 
