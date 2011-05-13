@@ -106,10 +106,11 @@ public class PVAction implements Serializable {
 			Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
 			boolean isExists = false;
 			String selID = selPV.getPV_VDPVS_IDSEQ();
-			if (!selID.equals(""))
-				isExists = this.checkPVQCExists("", selID, data);
+			if (!selID.equals("") )
+				//isExists = this.checkPVQCExists("", selID, data);
+				isExists = selPV.getPV_IN_FORM();
 			//associated to the form
-			if (isExists) {
+			/*if (isExists) {
 				PV_Bean oldPV = vd.getRemoved_VDPVList().lastElement();
 				sCRFmsg = "Unable to edit the Permissible Value (PV) ("
 						+ oldPV.getPV_VALUE()
@@ -134,13 +135,14 @@ public class PVAction implements Serializable {
 				vdpvs.insertElementAt(oldPV, pvInd); //insert it back
 				vd.getRemoved_VDPVList().removeElement(oldPV);
 				pvInd += 1; //reset it
-			}
+			}*/
 			//ready the new pv for insert
 			selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_INS);
 			selPV.setPV_PV_IDSEQ("");
 			selPV.setPV_VDPVS_IDSEQ("");
 			vdpvs.setElementAt(selPV, pvInd);
 			vd.setVD_PV_List(vdpvs);
+			
 		} catch (RuntimeException e) {
 			logger.error("ERROR at changePVQCAttributes: ", e);
 		}
