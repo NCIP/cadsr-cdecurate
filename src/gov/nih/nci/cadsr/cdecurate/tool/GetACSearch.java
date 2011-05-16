@@ -2044,7 +2044,7 @@ public class GetACSearch implements Serializable
                         VDBean.setAC_CONCEPT_NAME(rs.getString("con_name"));
                         VDBean.setALTERNATE_NAME(rs.getString("alt_name"));
                         VDBean.setREFERENCE_DOCUMENT(rs.getString("rd_name"));
-                        VDBean.setVD_IN_FORM(isVDinForm(VDBean.getVD_VD_IDSEQ()));
+                        VDBean.setVD_IN_FORM(isVDinForm(VDBean.getVD_VD_IDSEQ(), VDBean.getVD_TYPE_FLAG()));
                         // get permissible value
                         s = rs.getString("min_value");
                         if (s != null && !s.equals(""))
@@ -2084,7 +2084,7 @@ public class GetACSearch implements Serializable
         }
     }
 
-    public boolean isVDinForm(String vdIDseq) {
+    public boolean isVDinForm(String vdIDseq, String typeFlag) {
     	
     	
 		ResultSet rs = null;
@@ -2094,17 +2094,40 @@ public class GetACSearch implements Serializable
 		try {
 			if ((vdIDseq != null && !vdIDseq.equals(""))) {
 				if (m_servlet.getConn() != null) {
-					pstmt = m_servlet.getConn()
-							.prepareStatement(
-									"select SBREXT_COMMON_ROUTINES.VD_PVS_QC_EXISTS(?,?) from DUAL");
-					// register the Out parameters
-					pstmt.setString(1, "");
-					pstmt.setString(2, vdIDseq);
-					// Now we are ready to call the function
-					rs = pstmt.executeQuery();
-					while (rs.next()) {
-						if (rs.getString(1).equalsIgnoreCase("TRUE"))
-							isValid = true;
+					if (typeFlag.equals("E")){
+						pstmt = m_servlet.getConn()
+								.prepareStatement(
+										"select SBREXT_COMMON_ROUTINES.VD_PVS_QC_EXISTS(?,?) from DUAL");
+						// register the Out parameters
+						pstmt.setString(1, "");
+						pstmt.setString(2, vdIDseq);
+						// Now we are ready to call the function
+						rs = pstmt.executeQuery();
+						while (rs.next()) {
+							if (rs.getString(1).equalsIgnoreCase("TRUE"))
+								isValid = true;
+						}
+					} else {
+						pstmt = m_servlet.getConn()
+						.prepareStatement(
+								"SELECT D.QC_IDSEQ "+
+						        "FROM"+
+						         "  SBREXT.QUEST_CONTENTS_VIEW_EXT D"+
+						         ", SBR.VALUE_DOMAINS_VIEW B "+
+						         ", SBR.DATA_ELEMENTS_VIEW C "+
+						        "WHERE"+
+						        "    (C.VD_IDSEQ = B.VD_IDSEQ) "+
+						        "AND (D.DE_IDSEQ = C.DE_IDSEQ) " +
+						        "and ROWNUM=1 "+
+						        "and B.VD_IDSEQ = ?");
+				
+							pstmt.setString(1, vdIDseq);
+							// Now we are ready to call the function
+							rs = pstmt.executeQuery();
+							while (rs.next()) {
+									isValid = true;
+							}
+						
 					}
 				}
 			}
