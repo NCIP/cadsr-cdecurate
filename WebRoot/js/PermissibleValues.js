@@ -272,11 +272,12 @@
     	if (vmDiv !== null && vmDiv !== undefined )
     	{
 	    	txtVM = vmDiv.value;
+	    	if (txtVM === null || txtVM === "") {
+	    		alertMsg += "Please enter the text for Value Meaning. \n";
+        	}
     	}
     	
-    	if (txtVM === null || txtVM === "") {
-	    	alertMsg += "Please enter the text for Value Meaning. \n";
-        }
+    	
     	//check user entered description
     	var vmdDiv = defObj[0];
     	if (vmdDiv !== null && vmdDiv !== undefined )
