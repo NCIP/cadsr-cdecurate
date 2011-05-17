@@ -759,9 +759,15 @@ public class VMAction implements Serializable
 				// set setvm_evs method to set th edata
 				ret = this.setVM(data, conArray);
 			}
-			else
+			else {
+				//Remove old condr if it exists first, then continue on with the upd/insert function
+				ret = this.removeVMCondr(data);
+				if (ret != null && !ret.equals(""))
+					ret += "\\n" + ret;
+				
 				ret = this.setVM(data, null); // update or insert non evs vm
-
+			}
+			
 			if (ret != null && !ret.equals(""))
 				erMsg += "\\n" + ret;
 
@@ -884,7 +890,7 @@ public class VMAction implements Serializable
 			// remove the deleted concepts if not the same size
 			for (int i = 0; i < sCons.length; i++)
 			{
-				String sID = sCons[i].trim();
+				String sID = realTrim(sCons[i]);  //String.trim() does not work on all whitespace characters
 				for (int j = 0; j < vmCon.size(); j++)
 				{
 					EVS_Bean eBean = (EVS_Bean) vmCon.elementAt(j);
@@ -904,6 +910,26 @@ public class VMAction implements Serializable
 		this.makeVMNameFromConcept(vm, ConceptForm.FOR_PV_PAGE_CONCEPT);
 	}
 
+	private String realTrim(String toTrim) {
+		
+		int front = 0;
+		int back = toTrim.length();
+		if (toTrim.length() > 0) {
+			for (front = 0; front < back; front++) {
+				if (!Character.isSpaceChar(toTrim.charAt(front)))
+					break;
+			}
+			for (back = toTrim.length()-1; back > front; back--) {
+				if (!Character.isSpaceChar(toTrim.charAt(back))){
+					back++;
+					break;
+				}
+			} 
+		}
+		
+		return toTrim.substring(front, back);
+	}
+	
 	/**
 	 * inserts or adds new depeneding on teh existing concepts and sets vm
 	 * attributes
@@ -1520,6 +1546,44 @@ public class VMAction implements Serializable
 	 * @param conArray
 	 * @return String return code
 	 */
+	
+	private String removeVMCondr(VMForm data) {
+		
+		ResultSet rs = null;
+		PreparedStatement ps = null;
+		String stMsg = ""; // out
+		try
+		{
+			VM_Bean vm = data.getVMBean();
+			String idseq = vm.getIDSEQ();
+			if (data.getCurationServlet().getConn() != null)
+			{
+				ps = data
+				.getCurationServlet()
+				.getConn()
+				.prepareStatement("update VALUE_MEANINGS_VIEW set condr_idseq = '' where vm_idseq = ?");
+				
+				ps.setString(1,idseq);
+				
+				boolean ret = ps.execute();
+				
+			}
+			
+		} catch (Exception e)
+		{
+			logger.error("ERROR in setVM for other : " + e.toString(), e);
+			data.setRetErrorCode("Exception");
+			stMsg += "\\tException : Unable to remove all VM concepts.";
+		}
+		finally
+		{
+			rs = SQLHelper.closeResultSet(rs);
+			ps = SQLHelper.closePreparedStatement(ps);
+		}
+		
+		return stMsg;
+	}
+	
 	private String setVM(VMForm data, String conArray)
 	{
 
