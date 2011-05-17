@@ -919,7 +919,7 @@ public class VMAction implements Serializable
 				if (!Character.isSpaceChar(toTrim.charAt(front)))
 					break;
 			}
-			for (back = toTrim.length(); back > front; back--) {
+			for (back = toTrim.length()-1; back > front; back--) {
 				if (!Character.isSpaceChar(toTrim.charAt(back))){
 					back++;
 					break;
