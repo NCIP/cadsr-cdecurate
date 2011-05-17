@@ -658,8 +658,8 @@ public class SetACService implements Serializable
 			String chosenDef = constructChosenDefinition(req.getSession(), "DEC", oldDef);
 			if (!chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
-				String warningMessage = "Warning: Your chosen definition is being replaced by standard definitions.  Your chosen definition is being added as an alternate definition if it does not exist already.";
-				UtilService.setValPageVector(vValidate, "Alternate Definition", s, false, 0, warningMessage, sOriginAction);
+				String warningMessage = "Valid \n Note: Your chosen definition is being replaced by standard definition.  Your chosen definition is being added as an alternate definition if it does not exist already.";
+				UtilService.setValPageVector(vValidate, "Alternate Definition",chosenDef, false, 0, warningMessage, sOriginAction);
 			
 				//add Alt Def
 			
