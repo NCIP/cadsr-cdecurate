@@ -961,11 +961,12 @@ public class PVServlet implements Serializable
        VD_Bean vd = data.getVD();
        PV_Bean selPV = data.getSelectPV();
        //check if associated with the form
-       boolean isExists = false; 
+       //do not remove if assoicated to a form (This is now changed due to GF 7680, and removal is allowed)
+  /*     boolean isExists = false; 
        String vpIDseq = selPV.getPV_VDPVS_IDSEQ();
        if (vpIDseq != null && !vpIDseq.equals(""))
            isExists = pvAction.checkPVQCExists("", vpIDseq, data);
-       //do not remove if assoicated to a form
+       
        if (isExists)
        {
          String sCRFmsg = "Unable to remove the Permissible Value (PV) (" + selPV.getPV_VALUE() + ") because the Permissible Value is used in a CRF." +
@@ -981,7 +982,13 @@ public class PVServlet implements Serializable
            if (pvInd > 0)
              pvInd = (pvInd - 1);           
            DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);
-        }
+        }*/
+       
+       pvAction.doRemovePV(vd, pvInd, selPV, 0);
+       //make the one before to be in view
+        if (pvInd > 0)
+          pvInd = (pvInd - 1);           
+        DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);
      }
      data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv" + pvInd);  //"pv" + pvInd + "View");
      return "/PermissibleValue.jsp";

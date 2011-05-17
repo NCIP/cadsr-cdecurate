@@ -1317,4 +1317,32 @@ public class AltNamesDefsSession implements Serializable
     {
         return _conteName[0];
     }
+    
+    // This will add alternate definition if one with exact content does not exist.
+    public boolean addAlternateDefinition(String def, AC_Bean acb, Connection conn) throws ToolException{
+    	boolean ret = false;
+    	boolean exists = false;
+    	if (_alts == null){
+    		DBAccess db = new DBAccess(conn);
+    		this.loadAlternates(db, _sortName);
+    	}
+    	for (Alternates alt: _alts) {
+    		
+    		if (alt.isDef()) {
+    			String temp = alt.getName();
+    			if (def.equals(temp))
+    				exists = true;
+    		}
+    	}
+    	
+    	if (!exists) {
+    		Alternates newAlt = new Alternates(Alternates._INSTANCEDEF, def, "System-generated", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
+            
+    		updateAlternatesList(newAlt, false);
+    		
+    	}
+    		
+    	
+    	return ret;
+    }
 }
