@@ -1086,7 +1086,7 @@ public class SetACService implements Serializable
 			if (!chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
 				String warningMessage = "Warning: Your chosen definitions are being replaced by standard definitions.  Your chosen definition is being added as an alternate definition if it does not exist already.";
-				UtilService.setValPageVector(vValidate, "Definition", s, bMandatory, 2000, warningMessage, sOriginAction);
+				UtilService.setValPageVector(vValidate, "Alternate Definition", chosenDef, false, 0, warningMessage, sOriginAction);
 				
 				//add Alt Def
 				
