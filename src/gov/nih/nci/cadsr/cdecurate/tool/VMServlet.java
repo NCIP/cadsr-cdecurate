@@ -391,8 +391,8 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
           }
         }
     }
-
-    vmAction.setDataForCreate(pv, vd, vmData);
+    vmData.setRequest(httpRequest);
+    vmAction.setDataForCreate(pv, vd, vmData); 
     // - handle status message and other session attributes as needed    
     Vector<VM_Bean> vErrMsg = vmData.getErrorMsgList();
     if (vErrMsg != null && vErrMsg.size()>0)
