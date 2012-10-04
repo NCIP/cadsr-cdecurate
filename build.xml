@@ -166,14 +166,14 @@
 	<target name="-assemble" depends="-compile,-prop-check" description="Assembles the deployment parts into the artifacts folders.">
 		<echo>Assembling artifacts ...</echo>
 		<delete>
-			<fileset file="${root.dir}/curationtool.properties" />
+			<fileset file="${root.dir}/WEB-INF/classes/curationtool.properties" />
 			<fileset file="${web.dir}/web.xml" />
 		</delete>
 		<copy todir="${artifacts.dir}">
 			<fileset file="build.xml" />
 			<fileset file="${PROP.FILE}" />
 		</copy>
-		<copy tofile="${root.dir}/curationtool.properties" filtering="true">
+		<copy tofile="${root.dir}/WEB-INF/classes/curationtool.properties" filtering="true">
 					<fileset file="conf/template.curationtool.properties" />
 		</copy>
 		<copy tofile="${web.dir}/web.xml" filtering="true">
