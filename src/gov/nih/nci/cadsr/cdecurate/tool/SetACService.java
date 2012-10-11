@@ -655,6 +655,7 @@ public class SetACService implements Serializable
 			}
 			
 			//Check Definition against (constructed) chosen definition, add to Alt Def if not same, add Warning in vValidate vector.
+			System.out.println("req [" + req + "] req.getSession() [" + req.getSession() + "] noldDef [" + oldDef + "] ");
 			String chosenDef = constructChosenDefinition(req.getSession(), "DEC", oldDef);
 			if (!chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
@@ -856,9 +857,11 @@ public class SetACService implements Serializable
 	public Vector<String> getDefs(Vector<EVS_Bean> vConcepts) {
 		Vector<String> defs = new Vector<String>();
 		
-		for (EVS_Bean eb: vConcepts) {
-			String definition = eb.getPREFERRED_DEFINITION();
-			defs.add(definition);
+		if(vConcepts != null) {	//JT
+			for (EVS_Bean eb: vConcepts) {
+				String definition = eb.getPREFERRED_DEFINITION();
+				defs.add(definition);
+			}
 		}
 		
 		return defs;
@@ -888,7 +891,7 @@ public class SetACService implements Serializable
 		if (vObjectClass != null && vObjectClass.size() > 0)
 		{
 			String ocDef = vObjectClass.elementAt(0);
-			if (ocDef.startsWith("*")) { //Add only if new 
+			if (ocDef != null && ocDef.startsWith("*")) { //Add only if new //JT
 				ocDef = ocDef.substring(1); //peel off the *
 				if (!sDef.equals(""))
 					sDef += "_"; // add definition
