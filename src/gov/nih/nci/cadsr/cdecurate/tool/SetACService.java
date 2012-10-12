@@ -702,7 +702,7 @@ public class SetACService implements Serializable
 
 			s = m_DEC.getDEC_VERSION();
 			strInValid = "";
-			if (s.equals("")==false)
+			if (s != null && s.equals("")==false)	//[#32158] Validation of DEC missing a Property thows unexpect exception.
 			{
 				strInValid = this.checkVersionDimension(s);   //checkValueIsNumeric(s);
 				DEC_Bean oldDEC = (DEC_Bean)session.getAttribute("oldDECBean");
@@ -747,7 +747,7 @@ public class SetACService implements Serializable
 			String sCS = "";
 			String sCSI = "";
 			String sAC = "";
-			if(m_DEC.getAC_CS_NAME() != null)
+			if(m_DEC != null && m_DEC.getAC_CS_NAME() != null)	//[#32158] Validation of DEC missing a Property thows unexpect exception.
 			{
 				Vector vACCSI = (Vector)m_DEC.getAC_AC_CSI_VECTOR();    //req.getAttribute("vACCSIList");
 				if (vACCSI != null && !vACCSI.isEmpty())
@@ -857,7 +857,7 @@ public class SetACService implements Serializable
 	public Vector<String> getDefs(Vector<EVS_Bean> vConcepts) {
 		Vector<String> defs = new Vector<String>();
 		
-		if(vConcepts != null) {	//JT
+		if(vConcepts != null) {	//32158
 			for (EVS_Bean eb: vConcepts) {
 				String definition = eb.getPREFERRED_DEFINITION();
 				defs.add(definition);
@@ -891,7 +891,7 @@ public class SetACService implements Serializable
 		if (vObjectClass != null && vObjectClass.size() > 0)
 		{
 			String ocDef = vObjectClass.elementAt(0);
-			if (ocDef != null && ocDef.startsWith("*")) { //Add only if new //JT
+			if (ocDef != null && ocDef.startsWith("*")) { //Add only if new //32158
 				ocDef = ocDef.substring(1); //peel off the *
 				if (!sDef.equals(""))
 					sDef += "_"; // add definition
