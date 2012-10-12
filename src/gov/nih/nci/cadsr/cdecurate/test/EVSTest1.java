@@ -46,7 +46,9 @@ import oracle.jdbc.pool.OracleDataSource;
  * log4j.xml EVSTest1.xml
  * 2. Add the directory of the test (where EVSTest1.xml/log4j.xml are) into the classpath e.g.
  * [YOUR PROJECT DIR]/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test
- * 3. Choose Run/Debug
+ * 3. Add the directory of the conf (where application-config-client.xml) into the classpath e.g.
+ * [YOUR PROJECT DIR]/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test
+ * 4. Choose Run/Debug
  * 
  * @author lhebel
  *
