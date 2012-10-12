@@ -11,9 +11,13 @@ import gov.nih.nci.cadsr.cdecurate.tool.GetACService;
 import gov.nih.nci.cadsr.cdecurate.tool.TOOL_OPTION_Bean;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 //import gov.nih.nci.evs.domain.DescLogicConcept;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -33,6 +37,16 @@ import oracle.jdbc.pool.OracleDataSource;
 
 /**
  * This class tests the use of the EVS API in the Curation Tool and verifies connectivity to the EVS servers.
+ * 
+ * Useful SQL -
+ * select tool_name, property, VALUE from sbrext.tool_options_view_ext where Tool_name = 'CURATION' and Property like 'EVS.URL'
+ *
+ * Setup -
+ * 1. Add two arguments in Run/Debug configuration i.e.
+ * log4j.xml EVSTest1.xml
+ * 2. Add the directory of the test (where EVSTest1.xml/log4j.xml are) into the classpath e.g.
+ * [YOUR PROJECT DIR]/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test
+ * 3. Choose Run/Debug
  * 
  * @author lhebel
  *
@@ -101,7 +115,8 @@ public class EVSTest1
         {
             _logger.section("Loading properties...");
             _propFile = propFile_;
-            FileInputStream in = new FileInputStream(_propFile);
+//            FileInputStream in = new FileInputStream(_propFile);
+            InputStream in = ClassLoader.getSystemResourceAsStream(_propFile);
             _prop.loadFromXML(in);
             in.close();
         }
@@ -158,25 +173,50 @@ public class EVSTest1
 
         // Open the database connection. If the format contains colons ( : ) this will be a thin
         // client connection. Otherwise this will be a thick client connection.
-        OracleDataSource ods = new OracleDataSource();
-        if (dburl.indexOf(':') > 0)
-        {
+//        OracleDataSource ods = new OracleDataSource();
+//        if (dburl.indexOf(':') > 0)
+//        {
             String parts[] = dburl.split("[:]");
-            ods.setDriverType("thin");
-            ods.setServerName(parts[0]);
-            ods.setPortNumber(Integer.parseInt(parts[1]));
-            ods.setServiceName(parts[2]);
-        }
-        else
-        {
-            ods.setDriverType("oci8");
-            ods.setTNSEntryName(dburl);
-        }
-        _conn = ods.getConnection(user, pswd);
+//            ods.setDriverType("thin");
+//            ods.setServerName(parts[0]);
+//            ods.setPortNumber(Integer.parseInt(parts[1]));
+//            ods.setServiceName(parts[2]);
+//        }
+//        else
+//        {
+//            ods.setDriverType("oci8");
+//            ods.setTNSEntryName(dburl);
+//        }
+//        _conn = ods.getConnection(user, pswd);
+		try {
+			_conn = getConnection(user, pswd);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         // No updates should be done using this connection.
         _conn.setAutoCommit(false);
     }
+
+	public Connection getConnection(String username, String password)
+			throws Exception {
+		String dbtype = "oracle";
+		String dbserver = "137.187.181.4"; String dbname = "DSRDEV"; //dev
+//		String dbserver = "137.187.181.89"; String dbname = "DSRQA";
+		// String username = "root";
+		// String password = "root";
+		int port = 1551;
+		ConnectionUtil cu = new ConnectionUtil();
+		cu.setUserName(username);
+		cu.setPassword(password);
+		cu.setDbms(dbtype);
+		cu.setDbName(dbname);
+		cu.setServerName(dbserver);
+		cu.setPortNumber(port);
+		Connection conn = cu.getConnection();
+		return conn;
+	}
 
     /**
      * Close the database connection.
@@ -317,7 +357,7 @@ public class EVSTest1
             	CodingScheme cs = evsService.resolveCodingScheme(vocab, null);
             
             	// Check the connectivity by getting the root concepts.
-            	vals = evs.getRootConcepts(vocab, cs);
+            	vals = evs.getRootConcepts(vocab, cs);	//JT
             } catch (Exception e) 
             {
             	_logger.fatal("Exception getting service");
