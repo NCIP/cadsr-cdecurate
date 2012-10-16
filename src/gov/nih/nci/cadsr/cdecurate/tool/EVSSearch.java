@@ -747,7 +747,11 @@ public class EVSSearch implements Serializable {
 		//check if valid dts vocab
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");
-		this.registerSecurityToken((LexEVSApplicationService) evsService, dtsVocab, m_eUser);
+		try {
+			this.registerSecurityToken((LexEVSApplicationService) evsService, dtsVocab, m_eUser);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))  
 		{
 			try {
@@ -1326,7 +1330,12 @@ public class EVSSearch implements Serializable {
 		dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 				EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "", "vocabName");
 
-		this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab,m_eUser);
+		try {
+			this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab,m_eUser);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			logger.error("EVSSearch:getSuperConceptNamesImmediate() registerSecurityToken [" + e1 + "]");	//JT
+		}
 		
 		if (dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue")) 
 			return concepts;
@@ -1377,7 +1386,12 @@ public class EVSSearch implements Serializable {
 			LexBIGServiceConvenienceMethods lbscm = 
 				(LexBIGServiceConvenienceMethods) evsService.getGenericExtension("LexBIGServiceConvenienceMethods"); 
 			lbscm.setLexBIGService(evsService);
-			this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab, m_eUser);
+			try {
+				this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab, m_eUser);
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.error("EVSSearch:getSuperConceptNames() registerSecurityToken [" + e + "]");	//JT
+			}
 			
 			if (conceptCode.equals("") && !conceptName.equals(""))
 				conceptCode = this.do_getEVSCode(conceptName, dtsVocab);
@@ -3475,13 +3489,17 @@ public class EVSSearch implements Serializable {
 	 * @param vocabAccess
 	 * @param vocab
 	 * @return evsquery
+	 * @throws Exception 
 	 */
 
 
-	public static LexEVSApplicationService registerSecurityToken(LexEVSApplicationService lexevsService, String codingScheme, EVS_UserBean userBean) {
+	public static LexEVSApplicationService registerSecurityToken(LexEVSApplicationService lexevsService, String codingScheme, EVS_UserBean userBean) throws Exception {
 		
 		String token = "";
 		Hashtable ht = userBean.getVocab_Attr();
+		if(ht == null) {
+            throw new Exception("Not able to register security token (The vocabulary returns NULL for the coding schema [" + codingScheme + "]).");
+		}
 		EVS_UserBean eu = (EVS_UserBean) ht.get(codingScheme);
 		token = eu.getVocabAccess();
 		SecurityToken securityToken = new SecurityToken();
