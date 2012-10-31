@@ -950,7 +950,7 @@ public class SetACService implements Serializable
 		if (vRepTerm != null && vRepTerm.size() > 0)
 		{
 			String ocDef = vRepTerm.elementAt(0);
-			if (ocDef.startsWith("*")) { //Add only if new 
+			if (ocDef != null && ocDef.startsWith("*")) { //Add only if new 
 				ocDef = ocDef.substring(1); //peel off the *		
 				if (!sDef.equals(""))
 					sDef += "_"; // add definition
