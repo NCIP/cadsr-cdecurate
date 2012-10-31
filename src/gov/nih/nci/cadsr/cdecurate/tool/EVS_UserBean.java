@@ -833,7 +833,7 @@ public final class EVS_UserBean implements Serializable
 			  CodingSchemeSummary css = csr.getCodingSchemeSummary();
 			  String formalName = css.getFormalName();
 			  String localName = css.getLocalName();
-			  String descriptionContent = css.getCodingSchemeDescription().getContent();
+			  String descriptionContent = css.getCodingSchemeDescription() != null?css.getCodingSchemeDescription().getContent():"";
 			  //System.out.println(formalName + " - " +localName + " - " + descriptionContent);
 			  vocabList.add(formalName);
 		  }
