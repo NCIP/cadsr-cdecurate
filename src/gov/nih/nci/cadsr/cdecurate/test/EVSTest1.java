@@ -40,6 +40,7 @@ import oracle.jdbc.pool.OracleDataSource;
  * 
  * Useful SQL -
  * select tool_name, property, VALUE from sbrext.tool_options_view_ext where Tool_name = 'CURATION' and Property like 'EVS.URL'
+ * select tool_name, property, VALUE from sbrext.tool_options_view_ext where Tool_name = 'EVSAPI' and Property like 'URL'
  *
  * Setup -
  * 1. Add two arguments in Run/Debug configuration i.e.
