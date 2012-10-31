@@ -40,9 +40,9 @@
 	</if>
 	<property file="default.properties" />
 	<property file="project.properties" />
-	
+
 	<property name="appl.version" value="${appl.release}.${DSTAMP}${TSTAMP}" />
-	
+
 	<filter token="CADSR.DS.URL" value="${CADSR.DS.URL}" />
 	<filter token="CADSR.DS.USER" value="${CADSR.DS.USER}" />
 	<filter token="CADSR.DS.PSWD" value="${CADSR.DS.PSWD}" />
@@ -50,7 +50,7 @@
 	<filter token="appl.version" value="${appl.version}" />
 	<filter token="trackStatements" value="${track.statements}" />
 	<filter token="logLevel" value="${log.level}" />
-	
+
 	<target name="init" depends="clean" description="Set up initial directories">
 		<mkdir dir="${classes.dir}" />
 		<mkdir dir="${package.download.dir}" />
@@ -86,7 +86,7 @@
 	</target>
 
 	<target name="dist" depends="compile" description="Assembles the deployment artifacts into the dist folders.">
-		<echo>Assembling artifacts ...</echo>		
+		<echo>Assembling artifacts ...</echo>
 		<copy tofile="${root.dir}/WEB-INF/classes/curationtool.properties" filtering="true">
 			<fileset file="conf/template.curationtool.properties" />
 		</copy>
@@ -103,13 +103,18 @@
 		<copy tofile="${dist.dir}/jboss/cdecurate-log4j-category.xml" filtering="true">
 			<fileset file="conf/template.cdecurate-log4j-category.xml" />
 		</copy>
-		
+
 		<copy todir="${classes.dir}/gov/nih/nci/cadsr/cdecurate/tool" filtering="true">
 			<fileset file="${src.dir}/gov/nih/nci/cadsr/cdecurate/tool/NCICuration.properties" />
 		</copy>
+
+		<copy todir="${dist.dir}/jboss">
+			<fileset file="${lib.dir}/ojdbc14.jar" />
+		</copy>
+
 		<fixcrlf srcdir="${dist.dir}" eol="lf" includes="**/*.sh, **/*.xml, **/*.properties" />
-		
-		<antcall target="-build-war"/>
+
+		<antcall target="-build-war" />
 
 	</target>
 
@@ -126,10 +131,10 @@
 		<delete dir="${classes.dir}/jsp" />
 		<delete dir="${classes.dir}/org" />
 	</target>
-	
+
 	<target name="-build-war" description="Builds the project WAR file.">
 		<echo>Building deployable WAR file ...</echo>
-		<war destfile="${dist.dir}/cdecurate.war" basedir="${root.dir}" update="true" webxml="${web.dir}/web.xml" excludes="**/log4j*.jar,**/commons-logging*.jar">
+		<war destfile="${dist.dir}/cdecurate.war" basedir="${root.dir}" update="true" webxml="${web.dir}/web.xml" excludes="**/commons-logging*.jar">
 		</war>
 	</target>
 
@@ -181,9 +186,9 @@
 		</zip>
 		<tar destfile="${package.download.dir}/gforge/cdecurate_ospack.tar.gz" basedir="${odi.dir}" compression="gzip" />
 		<delete dir="${odi.dir}" />
-		
-		<antcall target="build-jar"/>
-		<antcall target="javadoc"/>
+
+		<antcall target="build-jar" />
+		<antcall target="javadoc" />
 	</target>
 
 	<target name="javadoc" description="Build the project Javadoc.">
@@ -218,6 +223,11 @@
 				<include name="**/*-ds.xml" />
 			</fileset>
 		</copy>
+		
+		<copy todir="${JBOSS.SERVER.DIR}/lib">
+		   <fileset file="${dist.dir}/jboss/ojdbc14.jar"/>
+		</copy>
+			
 		<sleep seconds="15" />
 		<copy tofile="${JBOSS.DEPLOY.DIR}/cdecurate.waz">
 			<fileset file="${dist.dir}/cdecurate.war" />
