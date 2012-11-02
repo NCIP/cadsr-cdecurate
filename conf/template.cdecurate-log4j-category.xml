@@ -1,5 +1,5 @@
     <!-- ============================ -->
-    <!-- Setup the cdecurate category debug-->
+    <!-- Setup the cdecurate category -->
     <!-- ============================ -->
 
     <category name="gov.nih.nci.cadsr.cdecurate" additivity="false">
