@@ -90,18 +90,25 @@
 		<copy tofile="${root.dir}/WEB-INF/classes/curationtool.properties" filtering="true">
 			<fileset file="conf/template.curationtool.properties" />
 		</copy>
+		
 		<copy tofile="${web.dir}/web.xml" filtering="true">
 			<fileset file="conf/template.web.xml" />
 		</copy>
+		
 		<copy tofile="${dist.dir}/jboss/cdecurate-oracle-ds.xml" filtering="true">
 			<fileset file="conf/template.cdecurate-oracle-ds.xml" />
 		</copy>
+		<!--
 		<copy tofile="${dist.dir}/jboss/cdecurate-log4j-appender.xml" filtering="true">
 			<fileset file="conf/template.cdecurate-log4j-appender.xml" />
 		</copy>
-
+		
 		<copy tofile="${dist.dir}/jboss/cdecurate-log4j-category.xml" filtering="true">
 			<fileset file="conf/template.cdecurate-log4j-category.xml" />
+		</copy>
+		-->
+		<copy tofile="${dist.dir}/jboss/jboss-log4j.xml" filtering="true">
+			<fileset file="conf/template.cdecurate-jboss-log4j.xml" />
 		</copy>
 
 		<copy todir="${classes.dir}/gov/nih/nci/cadsr/cdecurate/tool" filtering="true">
@@ -114,7 +121,8 @@
 
 		<fixcrlf srcdir="${dist.dir}" eol="lf" includes="**/*.sh, **/*.xml, **/*.properties" />
 
-		<antcall target="-build-war" />
+		<echo>Building deployable WAR file ...</echo>
+		<war destfile="${dist.dir}/cdecurate.war" basedir="${root.dir}" update="true" webxml="${web.dir}/web.xml" excludes="**/commons-logging*.jar"/>
 
 	</target>
 
@@ -130,12 +138,6 @@
 		</javac>
 		<delete dir="${classes.dir}/jsp" />
 		<delete dir="${classes.dir}/org" />
-	</target>
-
-	<target name="-build-war" description="Builds the project WAR file.">
-		<echo>Building deployable WAR file ...</echo>
-		<war destfile="${dist.dir}/cdecurate.war" basedir="${root.dir}" update="true" webxml="${web.dir}/web.xml" excludes="**/commons-logging*.jar">
-		</war>
 	</target>
 
 	<target name="build-jar" depends="compile" description="Build the project JAR files.">
@@ -228,6 +230,10 @@
 		   <fileset file="${dist.dir}/jboss/ojdbc14.jar"/>
 		</copy>
 			
+		<copy todir="${JBOSS.SERVER.DIR}/conf">
+		   <fileset file="${dist.dir}/jboss/jboss-log4j.xml"/>
+		</copy>
+		   	
 		<sleep seconds="15" />
 		<copy tofile="${JBOSS.DEPLOY.DIR}/cdecurate.waz">
 			<fileset file="${dist.dir}/cdecurate.war" />
