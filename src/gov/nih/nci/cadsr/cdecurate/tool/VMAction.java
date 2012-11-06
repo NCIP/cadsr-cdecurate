@@ -129,9 +129,10 @@ public class VMAction implements Serializable
 					if (g == recordsDisplayed){
                     	int totalRecords = getResultSetSize(rs);
                     	DataManager.setAttribute(data.getRequest().getSession(), "totalRecords", Integer.toString(totalRecords));
-                    } else 
+                    } else {
+                    	//TBD - NPE
                     	DataManager.setAttribute(data.getRequest().getSession(), "totalRecords", Integer.toString(g));
-                    
+                    }
 				} // END IF
 			}
 			data.setVMList(vmList);
