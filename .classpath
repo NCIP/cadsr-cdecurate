@@ -37,7 +37,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jaxrpc.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexbig.jar" sourcepath="/lexevs_api/lbInterfaces/src"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/LexEVSSecurity.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/log4j-1.2.14.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-core-2.4.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-regex-2.4.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-snowball-2.4.0.jar"/>
@@ -55,5 +54,7 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevs-client-framework.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevs-core.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevsapi60-beans.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/selenium-server-standalone-2.25.0.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>
