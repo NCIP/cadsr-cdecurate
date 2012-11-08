@@ -119,6 +119,10 @@
 			<fileset file="${lib.dir}/ojdbc14.jar" />
 		</copy>
 
+		<copy todir="${dist.dir}/jboss">
+			<fileset file="${lib.dir}/spring-jdbc-3.0.5.RELEASE.jar" />
+		</copy>
+		
 		<fixcrlf srcdir="${dist.dir}" eol="lf" includes="**/*.sh, **/*.xml, **/*.properties" />
 
 		<echo>Building deployable WAR file ...</echo>
@@ -227,7 +231,8 @@
 		</copy>
 		
 		<copy todir="${JBOSS.SERVER.DIR}/lib">
-		   <fileset file="${dist.dir}/jboss/ojdbc14.jar"/>
+		   	<fileset file="${dist.dir}/jboss/ojdbc14.jar"/>
+			<fileset file="${dist.dir}/jboss/spring-jdbc-3.0.5.RELEASE.jar" />
 		</copy>
 			
 		<copy todir="${JBOSS.SERVER.DIR}/conf">
