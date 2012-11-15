@@ -10,6 +10,7 @@ import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.common.Constants;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -599,10 +600,7 @@ public class SetACService implements Serializable
 			//validate naming components
 			this.setValidateNameComp(vValidate, "DataElementConcept", req, res, m_DEC, m_OC, m_PC, null, null);
 			// System.out.println("setValidatePageValuesDEC2");
-			s = m_DEC.getDEC_LONG_NAME();
-			if (s == null) s = "";
-			strInValid = "";
-			UtilService.setValPageVector(vValidate, "Long Name", s, bMandatory, 255, strInValid, sOriginAction);
+
 
 			s = m_DEC.getDEC_PREFERRED_NAME();
 			if (s == null) s = "";
@@ -614,12 +612,21 @@ public class SetACService implements Serializable
 				Vector vObjectClass = (Vector) session.getAttribute("vObjectClass");
 				Vector vProperty = (Vector) session.getAttribute("vProperty");
 				//no object and no property
-				if ( (vObjectClass == null || vObjectClass.size()<1) && (vProperty == null || vProperty.size()<1) )
+				//if ( (vObjectClass == null || vObjectClass.size()<1) && (vProperty == null || vProperty.size()<1) )
+				if ( (vObjectClass != null && vObjectClass.size()>0) && (vProperty == null || vProperty.size()<1) )	//GF31953
 				{
-					strInValid = "Requires Object Class or Property to create System Generated Short Name.";
+					strInValid = "Requires Object Class and Property to create System Generated Short Name.";
 					s = "";
+					UtilService.setValPageVector(vValidate, "Property", s, bMandatory, 255, strInValid, sOriginAction);	//GF31953
 				}
-			}
+			}			
+			
+			
+			s = m_DEC.getDEC_LONG_NAME();
+			if (s == null) s = "";
+			strInValid = "";
+			UtilService.setValPageVector(vValidate, "Long Name", s, bMandatory, 255, strInValid, sOriginAction);
+
 			//checks uniuqe in the context and name differred for Released
 			if (!s.equals(""))
 			{
@@ -1852,7 +1859,7 @@ public class SetACService implements Serializable
 
 				}
 				UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Object Class", sOCL, bNotMandatory, 255, strOCInvalid, sOriginAction, strOCValid);
-				UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Property", s, bNotMandatory, 255, strPropInvalid, sOriginAction, strPropValid);
+				//UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Property", s, bNotMandatory, 255, strPropInvalid, sOriginAction, strPropValid);	//GF31953
 			}
 			else
 			{
@@ -3384,7 +3391,7 @@ public class SetACService implements Serializable
 	{
 		String sValid = "Valid";
 		String sNoChange = "No Change";
-		String sMandatory = "This field is Mandatory. \n";
+		String sMandatory = Constants.DEFAULT_MANDATORY_ATTRIBUTE_TEXT;
 		if(sItem.equals("Effective End Date"))
 			sMandatory = "Effective End Date field is Mandatory for this workflow status. \n";
 

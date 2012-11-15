@@ -5,6 +5,8 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.common.Constants;
+
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -989,7 +991,7 @@ public class UtilService implements Serializable
     {
        String sValid = "Valid";
        String sNoChange = "No Change";
-       String sMandatory = "This field is Mandatory. \n";
+       String sMandatory = Constants.DEFAULT_MANDATORY_ATTRIBUTE_TEXT;
        if(sItem.equals("Effective End Date"))
          sMandatory = "Effective End Date field is Mandatory for this workflow status. \n";
 
@@ -1176,7 +1178,7 @@ public class UtilService implements Serializable
 	    {
 	       String sValid = "Valid";
 	       String sNoChange = "No Change";
-	       String sMandatory = "This field is Mandatory. \n";
+	       String sMandatory = Constants.DEFAULT_MANDATORY_ATTRIBUTE_TEXT;
 	       if (strValid != null && !strValid.equals("")){
 	    	   sValid = strValid;
 	       }
