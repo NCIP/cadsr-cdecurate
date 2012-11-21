@@ -11,6 +11,7 @@ import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.persist.common.DBConstants;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -615,9 +616,14 @@ public class SetACService implements Serializable
 				//if ( (vObjectClass == null || vObjectClass.size()<1) && (vProperty == null || vProperty.size()<1) )
 				if ( (vObjectClass != null && vObjectClass.size()>0) && (vProperty == null || vProperty.size()<1) )	//GF31953
 				{
-					strInValid = "Requires Object Class and Property to create System Generated Short Name.";
-					s = "";
-					UtilService.setValPageVector(vValidate, "Property", s, bMandatory, 255, strInValid, sOriginAction);	//GF31953
+					String oStatus = m_DEC.getDEC_ASL_NAME();
+					if(oStatus != null && oStatus.equals(DBConstants.ASL_NAME_RELEASED)) {
+						strInValid = "Requires Object Class and Property to create System Generated Short Name.";
+						s = "";
+						UtilService.setValPageVector(vValidate, "Property", s, bMandatory, 255, strInValid, sOriginAction);	//GF31953
+					} else if(oStatus == null) {
+						throw new Exception("Not able to validate Object Class's Property (workflow status is NULL or empty).");
+					}
 				}
 			}			
 			
