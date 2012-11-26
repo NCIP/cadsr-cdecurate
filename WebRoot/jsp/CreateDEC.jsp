@@ -796,7 +796,7 @@
 						</font>
 					</td>
 					<td valign="top" align="left">
-						<textarea name="CreateDefinition" style="width:80%" rows=6><%=sDefinition%></textarea>
+						<textarea name="CreateDefinition" style="width:80%" rows=6 readonly="readonly"><%=sDefinition%></textarea>
 						<!-- &nbsp;&nbsp; <font color="#FF0000"> <a href="javascript:OpenEVSWindow()">Search</a></font> -->
 					</td>
 				</tr>
