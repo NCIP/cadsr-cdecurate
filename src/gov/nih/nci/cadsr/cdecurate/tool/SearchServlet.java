@@ -8,11 +8,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
+import gov.nih.nci.cadsr.common.TimeWatch;
 import gov.nih.nci.cadsr.persist.ac.Admin_Components_Mgr;
 import gov.nih.nci.cadsr.persist.exception.DBException;
 
@@ -23,7 +25,6 @@ import javax.servlet.http.HttpSession;
 
 public class SearchServlet extends CurationServlet {
 
-
 	public SearchServlet() {
 		super();
 	}
@@ -32,11 +33,16 @@ public class SearchServlet extends CurationServlet {
 		super(req, res, sc);
 	}
 	
-	public void execute(ACRequestTypes reqType) throws Exception {	
-		
+	public void execute(ACRequestTypes reqType) throws Exception {
+		//this should cause minimal overhead, or can be totally before production
+		TimeWatch watch;
+		if(TimeWatch.ENABLED) {
+			watch = TimeWatch.start();
+		}
+
 		switch (reqType){
 			case homePage:
-				doHomePage();
+				doHomePage();	//GF32155
 				break;			
 			case searchACs:
 				doGetACSearchActions(); 
@@ -81,12 +87,23 @@ public class SearchServlet extends CurationServlet {
                doConClassSearchActions();
                break;
 			case showCDDetail:
-               doConDomainSearchActions();
+				if(TimeWatch.ENABLED) {
+					long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
+					//long passedTimeInMs = watch.time();
+					System.out.println(this.getClass().getName() +":execute elaped time in s = " + passedTimeInSeconds);
+				}
+               doConDomainSearchActions();	//GF32155
                break;
 			case showUsedBy:
 			   doShowUsedBy();
 			   break;
  		}
+		
+		if(TimeWatch.ENABLED) {
+			long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
+			//long passedTimeInMs = watch.time();
+			System.out.println(this.getClass().getName() +":execute elaped time in s = " + passedTimeInSeconds);
+		}
 	}
 	
     /**
@@ -97,6 +114,11 @@ public class SearchServlet extends CurationServlet {
      */
     public void doHomePage()
     {
+    	TimeWatch watch;
+		if(TimeWatch.ENABLED) {
+			watch = TimeWatch.start();
+		}
+    	
         try
         {
             HttpSession session = m_classReq.getSession();
@@ -153,6 +175,12 @@ public class SearchServlet extends CurationServlet {
                                 "Problem with login. User name/password may be incorrect, or database connection can not be established.");
                 // ForwardErrorJSP(m_classReq, m_classRes, "Unable to connect to the database. Please log in again.");
             }
+            
+    		if(TimeWatch.ENABLED) {
+    			long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
+    			//long passedTimeInMs = watch.time();
+    			System.out.println(this.getClass().getName() +":doHomePage elaped time in s = " + passedTimeInSeconds);
+    		}
         }
         catch (Exception e)
         {

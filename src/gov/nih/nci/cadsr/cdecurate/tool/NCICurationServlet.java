@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -25,8 +26,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import gov.nih.nci.cadsr.cdecurate.util.HelpURL;
+import gov.nih.nci.cadsr.common.TimeWatch;
 
 import org.apache.log4j.Logger;
+import gov.nih.nci.cadsr.common.TimeWatch;
 
 /**
  * The NCICurationServlet is the main servlet for communicating between the client and the server.
@@ -197,6 +200,11 @@ public class NCICurationServlet extends HttpServlet
      */
     public void service(HttpServletRequest req, HttpServletResponse res)
     {
+		//this should cause minimal overhead, or can be totally before production
+		TimeWatch watch;
+		if(TimeWatch.ENABLED) {
+			watch = TimeWatch.start();
+		}
         ClockTime clock = new ClockTime();
         try
         {
@@ -258,6 +266,11 @@ public class NCICurationServlet extends HttpServlet
             logger.error("Service error : " + e.toString(), e);
         }
         logger.debug("service response time " + clock.toStringLifeTime());
+		if(TimeWatch.ENABLED) {
+			long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
+			//long passedTimeInMs = watch.time();
+			System.out.println(this.getClass().getName() +":execute elaped time in s = " + passedTimeInSeconds);
+		}
     }
 
     /**
