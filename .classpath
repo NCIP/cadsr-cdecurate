@@ -54,5 +54,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevs-core.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/LexEVSSecurity.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/selenium-server-standalone-2.25.0.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>
