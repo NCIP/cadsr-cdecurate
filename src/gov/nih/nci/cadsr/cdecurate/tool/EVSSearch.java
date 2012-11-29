@@ -1969,7 +1969,7 @@ public class EVSSearch implements Serializable {
 							+ ee.toString(), ee);
 				}
 				//do the meta thesaurus search if meta name exists and if meta search is true
-				if (sMetaName != null && !sMetaName.equals("") && isMetaSearch)
+				if (sMetaName != null && !sMetaName.equals("") && isMetaSearch)		//JT - "Semantic Type" empty issue due to sMetaName is empty
 					vConList = this.doMetaSearch(vConList, termStr, sSearchIn,
 							sMetaSource, iMetaLimit, sMetaName);
 		} catch (Exception ee) {
@@ -2284,7 +2284,7 @@ public class EVSSearch implements Serializable {
 					);
 
 				} catch (Exception ex) {
-					logger.error("doMetaSearch evsSearch: " + ex.toString(), ex);
+					logger.error("doMetaSearch evsSearch: " + ex.toString(), ex);	//JT - lexvs error here!!!
 				}
 				if (concepts != null && concepts.getResolvedConceptReferenceCount() > 0) {
 					String sConName = "";
@@ -2311,7 +2311,7 @@ public class EVSSearch implements Serializable {
 							sCodeType = this.getNCIMetaCodeType(sConID, "byID");
 
 							//get semantic types
-							sSemantic = this.getMetaSemantics(props);
+							sSemantic = this.getMetaSemantics(props);	//TBD - JT "Semantic Type" might be empty here?
 							//get preferred source code from atom collection
 							sCodeSrc = this.getPrefMetaCode(presentations);
 
@@ -3508,7 +3508,7 @@ public class EVSSearch implements Serializable {
 		try {
 			retval = lexevsService.registerSecurityToken(codingScheme, securityToken);
 			if(retval != null && retval.equals(Boolean.TRUE)) {
-				//System.out.println("Registration of SecurityToken was successful.");
+				System.out.println("Registration of SecurityToken was successful.");
 			}
 			else {
 				System.out.println("WARNING: Registration of SecurityToken failed.");
