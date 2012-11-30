@@ -99,7 +99,7 @@ public class CaDsrUserCredentials
 
     private Logger _logger = Logger.getLogger(CaDsrUserCredentials.class);
     
-    private static String _jndiName = "java:/jdbc/caDSR";
+    private static String _jndiName = "java:/jdbc/CDECurateDS";
     
     private static final String CHECKOPTIONS = "select COUNT(*) from sbrext.tool_options_view_ext "
         + "where tool_name = 'caDSR' and property in ('LOCKOUT.TIMER', 'LOCKOUT.THRESHOLD')";
