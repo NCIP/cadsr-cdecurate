@@ -1856,6 +1856,7 @@ public class GetACSearch implements Serializable
         }finally{
         	rs = SQLHelper.closeResultSet(rs);
             cstmt = SQLHelper.closeCallableStatement(cstmt);
+//            SQLHelper.closeConnection(m_servlet.getConn());		//GF32438
         }
     }
 
@@ -2081,6 +2082,7 @@ public class GetACSearch implements Serializable
         }finally{
         	rs = SQLHelper.closeResultSet(rs);
             cstmt = SQLHelper.closeCallableStatement(cstmt);
+//            SQLHelper.closeConnection(m_servlet.getConn());		//GF32438
         }
     }
 
@@ -5525,6 +5527,7 @@ public class GetACSearch implements Serializable
         }finally{
         	rs = SQLHelper.closeResultSet(rs);
             cstmt = SQLHelper.closeCallableStatement(cstmt);
+//            SQLHelper.closeConnection(m_servlet.getConn());		//GF32438
         }
         return vAC_CSI;
     }
@@ -9691,6 +9694,7 @@ public class GetACSearch implements Serializable
         }finally{
         	rs = SQLHelper.closeResultSet(rs);
             cstmt = SQLHelper.closeCallableStatement(cstmt);
+//            SQLHelper.closeConnection(m_servlet.getConn());		//GF32438
         }
         return vList;
     }
@@ -9782,6 +9786,7 @@ public class GetACSearch implements Serializable
         }finally{
         	rs = SQLHelper.closeResultSet(rs);
             cstmt = SQLHelper.closeCallableStatement(cstmt);
+//            SQLHelper.closeConnection(m_servlet.getConn());		//GF32438
         }
         return vList;
     }
@@ -10010,6 +10015,7 @@ public class GetACSearch implements Serializable
         }finally{
         	rs = SQLHelper.closeResultSet(rs);
             cstmt = SQLHelper.closeCallableStatement(cstmt);
+//            SQLHelper.closeConnection(m_servlet.getConn());		//GF32438
         }
         return vList;
     }
