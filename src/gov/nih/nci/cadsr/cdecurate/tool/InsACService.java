@@ -4060,6 +4060,7 @@ public class InsACService implements Serializable {
 		}finally{
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
+          SQLHelper.closeConnection(m_servlet.getConn());		//GF32438
 		}
 		return rd_ID;
 	} // end RD_ID
