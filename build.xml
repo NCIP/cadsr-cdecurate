@@ -79,6 +79,7 @@
 			<fileset dir="conf">
 				<include name="application-*.*" />
 				<include name="gov.*.*" />
+				<include name="log4j.properties" />
 				<include name="mapping.*" />
 				<include name="*-mapping.*" />
 			</fileset>
@@ -110,6 +111,9 @@
 		<copy tofile="${dist.dir}/jboss/jboss-log4j.xml" filtering="true">
 			<fileset file="conf/template.cdecurate-jboss-log4j.xml" />
 		</copy>
+		<copy tofile="${dist.dir}/jboss/log4j.properties" filtering="false">
+				<fileset file="conf/log4j.properties" />
+		</copy>
 
 		<copy todir="${classes.dir}/gov/nih/nci/cadsr/cdecurate/tool" filtering="true">
 			<fileset file="${src.dir}/gov/nih/nci/cadsr/cdecurate/tool/NCICuration.properties" />
@@ -118,6 +122,7 @@
 		<copy todir="${dist.dir}/jboss">
 			<fileset file="${lib.dir}/ojdbc14.jar" />
 		</copy>
+
 <!-- 
 		<copy todir="${dist.dir}/jboss">
 			<fileset file="${lib.dir}/spring-jdbc-3.0.5.RELEASE.jar" />
@@ -232,13 +237,14 @@
 		
 		<copy todir="${JBOSS.SERVER.DIR}/lib">
 		   	<fileset file="${dist.dir}/jboss/ojdbc14.jar"/>
-<!-- 		   	
+<!--		   	
 			<fileset file="${dist.dir}/jboss/spring-jdbc-3.0.5.RELEASE.jar" />
- -->			
+ -->
 		</copy>
 			
 		<copy todir="${JBOSS.SERVER.DIR}/conf">
 		   <fileset file="${dist.dir}/jboss/jboss-log4j.xml"/>
+		   <fileset file="${dist.dir}/jboss/log4j.properties"/>
 		</copy>
 		   	
 		<sleep seconds="15" />
