@@ -1862,7 +1862,7 @@ public class EVSSearch implements Serializable {
 					//do not do vocab search if it is meta code search
 					if (!sSearchIn.equals("MetaCode")
 							&& !sMetaName.equals(vocabDisp))
-						lstResults = this.doConceptQuery(
+						lstResults = this.doConceptQuery(	//GF29786
 								vocabBean.getVocabAccess(), termStr, dtsVocab,
 								sSearchIn, vocabType, namePropIn, sSearchAC);
 					//get the desc object from the list
@@ -1886,7 +1886,7 @@ public class EVSSearch implements Serializable {
 									continue skipConcept;
 							}
 
-							String sConName = rcr.getEntityDescription().getContent();
+							String sConName = rcr.getEntityDescription().getContent();	//GF29786
 							if (sConName == null)
 								sConName = "";
 							String sConID = rcr.getCode();
@@ -2256,7 +2256,7 @@ public class EVSSearch implements Serializable {
 								Constructors.createLocalNameList("value"), //the Property Name to match
 								null, //the Property Type to match (null matches all)
 								termStr, //the text to match
-								"contains", //the match algorithm to use
+								"contains", //the match algorithm to use	//GF29786
 								null );//the language to match (null matches all)
 
 					}
@@ -2272,10 +2272,10 @@ public class EVSSearch implements Serializable {
 						//meta keyword search
 						nodeSet = nodeSet.restrictToMatchingDesignations(termStr, //the text to match 
 								CodedNodeSet.SearchDesignationOption.PREFERRED_ONLY,  //whether to search all designation, only Preferred or only Non-Preferred
-								"contains", //the match algorithm to use
+								"contains", //the match algorithm to use	//GF29786
 								null); //the language to match (null matches all)
 
-
+					//GF29786 - this might not get everything??? JT
 					concepts = nodeSet.resolveToList(
 							null, //Sorts used to sort results (null means sort by match score)
 							null, //PropertyNames to resolve (null resolves all)
@@ -3682,13 +3682,16 @@ public class EVSSearch implements Serializable {
 		            Association[] associations = sourceOf.getAssociation();
 		            for (int i = 0; i < associations.length; i++) {
 		                Association assoc = associations[i];
-		                AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
-		                for (int j = 0; j < acl.length; j++) {
-		                    AssociatedConcept ac = acl[j];
-		                    if (resolveConcepts)
-		                    	ret.put(ac.getCode(), ac);
-		                    else
-		                    	ret.put(ac.getCode(), ac.getEntityDescription().getContent());
+		                if (assoc!= null && assoc.getAssociatedConcepts() != null &&
+		                		assoc.getAssociatedConcepts().getAssociatedConcept() != null) {	//blank screen due to NPE on superconcept
+			                AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+			                for (int j = 0; j < acl.length; j++) {
+			                    AssociatedConcept ac = acl[j];
+			                    if (resolveConcepts)
+			                    	ret.put(ac.getCode(), ac);
+			                    else
+			                    	ret.put(ac.getCode(), ac.getEntityDescription().getContent());
+			                }
 		                }
 		            }    
 	            }
