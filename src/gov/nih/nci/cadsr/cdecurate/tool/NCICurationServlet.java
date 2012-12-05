@@ -8,6 +8,8 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 // import files
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ClockTime;
+import gov.nih.nci.cadsr.cdecurate.util.HelpURL;
+import gov.nih.nci.cadsr.common.TimeWatch;
 
 import java.io.InputStream;
 import java.sql.Connection;
@@ -25,11 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import gov.nih.nci.cadsr.cdecurate.util.HelpURL;
-import gov.nih.nci.cadsr.common.TimeWatch;
-
 import org.apache.log4j.Logger;
-import gov.nih.nci.cadsr.common.TimeWatch;
 
 /**
  * The NCICurationServlet is the main servlet for communicating between the client and the server.
@@ -168,11 +166,13 @@ public class NCICurationServlet extends HttpServlet
                     }
                 else
                     throw (new Exception("DBPool connection test failed."));
-                 if(connected)
-                 {
-                	 String helpURL = curser.getHelpURL(con);
-                	 HelpURL.setCurationToolHelpURL(helpURL);
-                 }
+				/*
+				 * Per GForge#30445, updated HelpURL to retrieve
+				 * CurationToolHelpURL from a properties file
+				 * 
+				 * if(connected) { String helpURL = curser.getHelpURL(con);
+				 * HelpURL.setCurationToolHelpURL(helpURL); }
+				 */
             }
             catch (Exception e)
             {
