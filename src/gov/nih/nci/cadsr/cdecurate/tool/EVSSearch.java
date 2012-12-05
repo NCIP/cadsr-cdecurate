@@ -1886,7 +1886,7 @@ public class EVSSearch implements Serializable {
 									continue skipConcept;
 							}
 
-							String sConName = rcr.getEntityDescription().getContent();	//GF29786
+							String sConName = rcr.getEntityDescription().getContent();
 							if (sConName == null)
 								sConName = "";
 							String sConID = rcr.getCode();
@@ -1938,7 +1938,7 @@ public class EVSSearch implements Serializable {
 								}
 							}
 							//store to concept according to the number of defitions exist for a concept if already not stored
-							if (!sConSet.contains(sConID)) {
+							if (!sConSet.contains(sConID)) {	//GF29786 - comparing concepts based on EVS identifier and save it
 								vConList = this.storeConceptToBean(vConList,
 										definitions, dtsVocab, sConName, sDispName,
 										conCodeType, sConID, ilevel, sStatus,
@@ -2108,6 +2108,7 @@ public class EVSSearch implements Serializable {
 								termStr, //the text to match
 								algorithm, //the match algorithm to use
 								null );//the language to match (null matches all)
+						logger.debug("EVSSearch:doConceptQuery() nodeSet retrieved from lexEVS.");	//GF29786 - geting the concept list from lexevs based on synonyms done
 					}
 				}
 			// call the evs to get resutls
@@ -2189,6 +2190,9 @@ public class EVSSearch implements Serializable {
 						conCodeType, sConID, dtsVocab, dbVocab, ilevel,
 						"", "", "", sStatus, sSemantic, sMType, sMCode);
 				conBean.markNVPConcept(conBean, session);
+//				if(conBean.getCONCEPT_NAME().contains("Breast Cancer pTX TNM")) {	//GF29786
+//					logger.info(conBean.toString());
+//				}
 				vCons.addElement(conBean); //add concept bean to the vector
 			}
 
@@ -2256,7 +2260,7 @@ public class EVSSearch implements Serializable {
 								Constructors.createLocalNameList("value"), //the Property Name to match
 								null, //the Property Type to match (null matches all)
 								termStr, //the text to match
-								"contains", //the match algorithm to use	//GF29786
+								"contains", //the match algorithm to use
 								null );//the language to match (null matches all)
 
 					}
@@ -2272,10 +2276,9 @@ public class EVSSearch implements Serializable {
 						//meta keyword search
 						nodeSet = nodeSet.restrictToMatchingDesignations(termStr, //the text to match 
 								CodedNodeSet.SearchDesignationOption.PREFERRED_ONLY,  //whether to search all designation, only Preferred or only Non-Preferred
-								"contains", //the match algorithm to use	//GF29786
+								"contains", //the match algorithm to use
 								null); //the language to match (null matches all)
 
-					//GF29786 - this might not get everything??? JT
 					concepts = nodeSet.resolveToList(
 							null, //Sorts used to sort results (null means sort by match score)
 							null, //PropertyNames to resolve (null resolves all)
@@ -3665,15 +3668,18 @@ public class EVSSearch implements Serializable {
 	            Association[] associations = targetof.getAssociation();
 	            for (int i = 0; i < associations.length; i++) {
 	                Association assoc = associations[i];
-	                AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
-	                for (int j = 0; j < acl.length; j++) {
-	                    AssociatedConcept ac = acl[j];
-	                    if (resolveConcepts)
-	                    	ret.put(ac.getCode(), ac);
-	                    else
-	                    	ret.put(ac.getCode(), ac.getEntityDescription().getContent());
+	                if (assoc!= null && assoc.getAssociatedConcepts() != null &&
+	                		assoc.getAssociatedConcepts().getAssociatedConcept() != null) {	//blank screen due to NPE on superconcept
+		                AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
+		                for (int j = 0; j < acl.length; j++) {
+		                    AssociatedConcept ac = acl[j];
+		                    if (resolveConcepts)
+		                    	ret.put(ac.getCode(), ac);
+		                    else
+		                    	ret.put(ac.getCode(), ac.getEntityDescription().getContent());
+		                }
 	                }
-	            }    
+	            }
             } else {
             
             	AssociationList sourceOf = ref.getSourceOf();
