@@ -1,5 +1,14 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
+import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.cdecurate.util.ToolConstants;
+import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
+import gov.nih.nci.cadsr.common.TimeWatch;
+import gov.nih.nci.cadsr.persist.ac.Admin_Components_Mgr;
+import gov.nih.nci.cadsr.persist.exception.DBException;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -9,14 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
-
-import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
-import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
-import gov.nih.nci.cadsr.cdecurate.util.DataManager;
-import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
-import gov.nih.nci.cadsr.common.TimeWatch;
-import gov.nih.nci.cadsr.persist.ac.Admin_Components_Mgr;
-import gov.nih.nci.cadsr.persist.exception.DBException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -2314,6 +2315,12 @@ public class SearchServlet extends CurationServlet {
            ToolURL.setEVSBioPortalDisplayName(session, "EVS BioPortal");
         }
         
+    	/*
+		 * Per GForge#30445, updated HelpURL to retrieve CurationToolHelpURL
+		 * from a properties file
+		 */
+		ToolURL.setCurationToolHelpURL(session, ToolConstants.ONLINE_HELP_URL);
+		/*
         vList = new Vector();
         vList = getAC.getToolOptionData("CURATION", "HELP.HOME", "");
         aURL = null;
@@ -2325,7 +2332,7 @@ public class SearchServlet extends CurationServlet {
         }
         ToolURL.setCurationToolHelpURL(session, aURL);
         session.setAttribute("curationToolHelpURL", aURL);
-        
+        */
         vList = new Vector();
         vList = getAC.getToolOptionData("CURATION", "BUSINESS.RULES.URL", "");
         aURL = null;
