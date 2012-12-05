@@ -8,7 +8,6 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 // import files
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ClockTime;
-import gov.nih.nci.cadsr.cdecurate.util.HelpURL;
 import gov.nih.nci.cadsr.common.TimeWatch;
 
 import java.io.InputStream;
