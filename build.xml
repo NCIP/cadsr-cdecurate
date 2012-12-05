@@ -48,6 +48,7 @@
 	<filter token="CADSR.DS.PSWD" value="${CADSR.DS.PSWD}" />
 	<filter token="JBOSS.LOG.DIR" value="${JBOSS.LOG.DIR}" />
 	<filter token="appl.version" value="${appl.version}" />
+	<filter token="help.url" value="${help.url}"/>
 	<filter token="trackStatements" value="${track.statements}" />
 	<filter token="logLevel" value="${log.level}" />
 
