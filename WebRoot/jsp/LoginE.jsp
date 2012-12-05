@@ -9,10 +9,10 @@
 <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
 
 <%@ page import="java.util.*" %>
-<%@ page import="gov.nih.nci.cadsr.cdecurate.util.HelpURL"%>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolConstants"%>
 <script language="JavaScript" type="text/JavaScript">
 <!--
- var helpUrl = "<%=HelpURL.getCurationToolHelpURL(pageContext)%>";
+ var helpUrl = "<%=ToolConstants.ONLINE_HELP_URL%>";
  function MM_reloadPage(init) {  //reloads the window if Nav4 resized
   if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
     document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
