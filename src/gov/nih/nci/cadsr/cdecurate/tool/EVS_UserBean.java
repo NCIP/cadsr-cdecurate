@@ -934,7 +934,9 @@ public final class EVS_UserBean implements Serializable
       }
       //get include meta vocabs
       Vector<String> metavocab = new Vector<String>();
-      vList = getAC.getToolOptionData("CURATION", "%.INCLUDEMETA", "");  //
+      Vector metaVList = new Vector();
+      metaVList = getAC.getToolOptionData("CURATION", "%.INCLUDEMETA", "");  //GF32446
+      vList = getAC.getToolOptionData("CURATION", "%.INCLUDEMETA", "");
       if (vList != null && vList.size() > 0)
       {
         for (int i=0; i<vList.size(); i++)
@@ -986,7 +988,7 @@ public final class EVS_UserBean implements Serializable
               metaBean.setMETACODE_TYPE(sType);
               String sValue = tob.getVALUE();
               metaBean.setMETACODE_FILTER(sValue);
-              hMeta.put(sKey, metaBean);
+              hMeta.put(sKey, metaBean);	//GF32446
             }
           }
         }
@@ -1039,7 +1041,8 @@ public final class EVS_UserBean implements Serializable
         String toolprop = getAC.getVocabInd(sVocab)+"%"; //"EVS.VOCAB." + vocabInd + "%";
       //System.out.println(sVocab + toolprop);
           Vector vocabList = getAC.getToolOptionData("CURATION", toolprop,"");
-          vBean = this.storeVocabAttr(vBean, vocabList);  //call method to add vocab specific attributges
+          vBean = this.storeVocabAttr(vBean, vocabList);  //call method to add vocab specific attributges	//GF32446
+          vBean = this.storeVocabAttr(vBean, metaVList);  //call method to add metavocab specific attributges
           //put this bean in the hash table
           hvoc.put(sVocab, vBean);
         }
@@ -1052,6 +1055,7 @@ public final class EVS_UserBean implements Serializable
     {
       logger.error("Error: getEVSInfoFromDSR " + e.toString(), e);
     }
+    logger.debug("getEVSInfoFromDSR done");
   }
 
 
@@ -1103,7 +1107,7 @@ public final class EVS_UserBean implements Serializable
           if (sType.indexOf("PROPERTY.RETIRED")>0)
             vuBean.setPropRetCon(sValue);  //("Concept_Status");
           if (sType.indexOf("PROPERTY.SEMANTIC")>0)
-            vuBean.setPropSemantic(sValue);  //("Semantic");
+            vuBean.setPropSemantic(sValue);  //("Semantic");	//GF32446
           if (sType.indexOf("PROPERTY.NAMESEARCH")>0)
             vuBean.setPropName(sValue);  //("");  //vocab property used to search the concept name
           if (sType.indexOf("PROPERTY.NAMEDISPLAY")>0)
