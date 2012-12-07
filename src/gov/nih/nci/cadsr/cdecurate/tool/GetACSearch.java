@@ -10015,7 +10015,7 @@ public class GetACSearch implements Serializable
         }finally{
         	rs = SQLHelper.closeResultSet(rs);
             cstmt = SQLHelper.closeCallableStatement(cstmt);
-            SQLHelper.closeConnection(m_servlet.getConn());		//GF32438
+//            SQLHelper.closeConnection(m_servlet.getConn());		//GF32438
         }
         return vList;
     }
