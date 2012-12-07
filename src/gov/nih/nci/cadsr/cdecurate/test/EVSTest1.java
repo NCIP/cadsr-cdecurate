@@ -40,11 +40,11 @@ import oracle.jdbc.pool.OracleDataSource;
  * 
  * Useful SQL -
 	select tool_name, property, VALUE from sbrext.tool_options_view_ext where Tool_name = 'EVSAPI' and Property = 'URL'
-	select tool_name, property, VALUE from sbrext.tool_options_view_ext where Tool_name = 'CURATION' and Property = 'EVS.URL'
+	//select tool_name, property, VALUE from sbrext.tool_options_view_ext where Tool_name = 'CURATION' and Property = 'EVS.URL'
 	update sbrext.tool_options_view_ext set Value = 'http://lexevsapi51.nci.nih.gov/lexevsapi51' where Tool_name = 'EVSAPI' and Property = 'URL'
-	update sbrext.tool_options_view_ext set Value = 'http://lexevsapi51.nci.nih.gov/lexevsapi51' where Tool_name = 'CURATION' and Property = 'EVS.URL'
+	//update sbrext.tool_options_view_ext set Value = 'http://lexevsapi51.nci.nih.gov/lexevsapi51' where Tool_name = 'CURATION' and Property = 'EVS.URL'
 	update sbrext.tool_options_view_ext set Value = 'http://lexevsapi60.nci.nih.gov/lexevsapi60' where Tool_name = 'EVSAPI' and Property = 'URL'
-	update sbrext.tool_options_view_ext set Value = 'http://lexevsapi60.nci.nih.gov/lexevsapi60' where Tool_name = 'CURATION' and Property = 'EVS.URL'
+	//update sbrext.tool_options_view_ext set Value = 'http://lexevsapi60.nci.nih.gov/lexevsapi60' where Tool_name = 'CURATION' and Property = 'EVS.URL'
  *
  * Setup -
  * 1. Add two arguments in Run/Debug configuration i.e.
@@ -52,7 +52,7 @@ import oracle.jdbc.pool.OracleDataSource;
  * 2. Add the directory of the test (where EVSTest1.xml/log4j.xml are) into the classpath e.g.
  * [YOUR PROJECT DIR]/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test
  * 3. Add the directory of the conf (where application-config-client.xml) into the classpath e.g.
- * [YOUR PROJECT DIR]/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test
+ * [YOUR PROJECT DIR]/cdecurate/conf
  * 4. Choose Run/Debug
  * 
  * @author lhebel
@@ -447,6 +447,7 @@ public class EVSTest1
             for (TOOL_OPTION_Bean obj : topts)
             {
                 _logger.warn(obj.getVALUE());
+                _logger.info("TOOL_NAME '" + obj.getTOOL_NAME() + "' VALUE '" + obj.getVALUE() + "'");
             }
         }
     }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="gov/nih/nci/cadsr/cdecurate/test/SoundsLike.java|gov/nih/nci/cadsr/cdecurate/test/Util.java" kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/antlr-2.7.6.jar"/>
 	<classpathentry kind="lib" path="lib/jasper-runtime.jar"/>
 	<classpathentry kind="lib" path="lib/jboss-system.jar"/>
@@ -31,7 +31,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-pool-1.3.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-validator-1.3.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/dlbadapter.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/hibernate3.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jakarta-regexp-1.4.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jaxrpc.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-core-2.4.0.jar"/>
@@ -42,7 +41,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sdk-client-framework.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sdk-grid-remoting.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sdk-security.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/umlslicense.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/poi-3.7-20101029.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/poi-ooxml-3.7-20101029.jar"/>
