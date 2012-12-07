@@ -1041,8 +1041,8 @@ public final class EVS_UserBean implements Serializable
         String toolprop = getAC.getVocabInd(sVocab)+"%"; //"EVS.VOCAB." + vocabInd + "%";
       //System.out.println(sVocab + toolprop);
           Vector vocabList = getAC.getToolOptionData("CURATION", toolprop,"");
-          vBean = this.storeVocabAttr(vBean, vocabList);  //call method to add vocab specific attributges	//GF32446
-          vBean = this.storeVocabAttr(vBean, metaVList);  //call method to add metavocab specific attributges
+          vBean = this.storeVocabAttr(vBean, vocabList);  //call method to add vocab specific attributges	
+          vBean = this.storeVocabAttr(vBean, metaVList);  //call method to add metavocab specific attributges//GF32446
           //put this bean in the hash table
           hvoc.put(sVocab, vBean);
         }
@@ -1107,16 +1107,17 @@ public final class EVS_UserBean implements Serializable
           if (sType.indexOf("PROPERTY.RETIRED")>0)
             vuBean.setPropRetCon(sValue);  //("Concept_Status");
           if (sType.indexOf("PROPERTY.SEMANTIC")>0)
-            vuBean.setPropSemantic(sValue);  //("Semantic");	//GF32446
+            vuBean.setPropSemantic(sValue);  //("Semantic");	
           if (sType.indexOf("PROPERTY.NAMESEARCH")>0)
             vuBean.setPropName(sValue);  //("");  //vocab property used to search the concept name
           if (sType.indexOf("PROPERTY.NAMEDISPLAY")>0)
             vuBean.setPropNameDisp(sValue);  //("");  //vocab proeprty used to get the concept name display
           if (sType.indexOf("SEARCHTYPE")>0)  //get vocab search type
             vuBean.setNameType(sValue);  //("NameType");
-          if (sType.indexOf("INCLUDEMETA")>0)
+          if (sType.indexOf("INCLUDEMETA")>0)//GF32446 this is sMetaName value.
           {
             vuBean.setIncludeMeta(sValue);  //("");   //name of meta vocab to include with the other vocab
+            logger.debug("sValue = [" + sValue + "]");
             this.setMetaDispName(sValue);  //("NCI Metathesaurus");  //store it in the main bean too for easy access
           }
           if (sType.indexOf("DEFAULT_DEFINITION")>0)
@@ -1124,6 +1125,7 @@ public final class EVS_UserBean implements Serializable
             vuBean.setDefDefaultValue(sValue);  //("No Value Exists.");  //default value for the definition
             this.setDefDefaultValue(sValue);  //("No Value Exists.");  //also for the main beandefault value for the definition
           }
+          logger.debug("sType = [" + sType + "]");
         }
       }
     }
