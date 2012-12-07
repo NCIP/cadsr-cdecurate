@@ -80,7 +80,6 @@
 			<fileset dir="conf">
 				<include name="application-*.*" />
 				<include name="gov.*.*" />
-				<include name="log4j.properties" />
 				<include name="mapping.*" />
 				<include name="*-mapping.*" />
 			</fileset>
@@ -89,6 +88,11 @@
 
 	<target name="dist" depends="compile" description="Assembles the deployment artifacts into the dist folders.">
 		<echo>Assembling artifacts ...</echo>
+<!--		
+		<copy tofile="${root.dir}/WEB-INF/classes/application-config-client.xml" filtering="false">
+			<fileset file="conf/application-config-client.xml" />
+		</copy>
+-->		
 		<copy tofile="${root.dir}/WEB-INF/classes/curationtool.properties" filtering="true">
 			<fileset file="conf/template.curationtool.properties" />
 		</copy>
@@ -111,9 +115,6 @@
 		-->
 		<copy tofile="${dist.dir}/jboss/jboss-log4j.xml" filtering="true">
 			<fileset file="conf/template.cdecurate-jboss-log4j.xml" />
-		</copy>
-		<copy tofile="${dist.dir}/jboss/log4j.properties" filtering="false">
-				<fileset file="conf/log4j.properties" />
 		</copy>
 
 		<copy todir="${classes.dir}/gov/nih/nci/cadsr/cdecurate/tool" filtering="true">
@@ -245,7 +246,6 @@
 			
 		<copy todir="${JBOSS.SERVER.DIR}/conf">
 		   <fileset file="${dist.dir}/jboss/jboss-log4j.xml"/>
-		   <fileset file="${dist.dir}/jboss/log4j.properties"/>
 		</copy>
 		   	
 		<sleep seconds="15" />
