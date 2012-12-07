@@ -41,14 +41,16 @@
             <property name="serviceUrl" value="http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService"/>
             <property name="serviceInterface" value="org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService"/>
             <property name="httpInvokerRequestExecutor">
-                <bean class="org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor"/>
+                 <bean class="org.LexGrid.LexBIG.caCore.client.proxy.ProxyUnwrappingHttpInvokerRequestExecutor">
+                	<property name="proxyHelper" ref="DistributedProxyHelper"/>
+                </bean>
              </property>
        </bean>
       
       <bean id="EvsAuthenticationProvider" class="org.acegisecurity.providers.rcp.RemoteAuthenticationProvider">
             <property name="remoteAuthenticationManager">
                   <bean class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-                      <property name="serviceUrl" value="http://localhost:8080/lexevsapi50/http/applicationService"/>
+                      <property name="serviceUrl" value="http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService"/>
                       <property name="serviceInterface" value="org.acegisecurity.providers.rcp.RemoteAuthenticationManager"/>
                   </bean>
             </property>
@@ -86,7 +88,9 @@
                                           &lt;property name=&quot;serviceUrl&quot; value=&quot;URL_KEY/http/applicationService&quot;/&gt;
                                           &lt;property name=&quot;serviceInterface&quot; value=&quot;org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService&quot;/&gt;
                                           &lt;property name=&quot;httpInvokerRequestExecutor&quot;&gt;
-                                                &lt;bean class=&quot;org.acegisecurity.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor&quot;/&gt;
+                                                &lt;bean class=&quot;org.LexGrid.LexBIG.caCore.client.proxy.ProxyUnwrappingHttpInvokerRequestExecutor&quot;&gt;
+                									&lt;property name=&quot;proxyHelper&quot; ref=&quot;DistributedProxyHelper&quot;/&gt;
+                                          		&lt;/bean&gt;
                                           &lt;/property&gt;
                                     &lt;/bean&gt;
                               &lt;/property&gt;

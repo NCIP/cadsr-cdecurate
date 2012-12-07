@@ -1968,10 +1968,14 @@ public class EVSSearch implements Serializable {
 							"ERROR - EVSSearch-doVocabSearch - vocab result : "
 							+ ee.toString(), ee);
 				}
+		        logger.debug("sMetaName = [" + sMetaName + "] isMetaSearch = [" + isMetaSearch + "]");
 				//do the meta thesaurus search if meta name exists and if meta search is true
-				if (sMetaName != null && !sMetaName.equals("") && isMetaSearch)		//JT - "Semantic Type" empty issue due to sMetaName is empty
+				if (sMetaName != null && !sMetaName.equals("") && isMetaSearch)	{	//GF32446 - "Semantic Type" empty issue due to sMetaName is empty
+			        logger.debug("doMetaSearch calling with termStr = [" + termStr + "] sSearchIn = [" + sSearchIn + "] sMetaSource = [" + sMetaSource + "] iMetaLimit = [" + iMetaLimit + "] sMetaName = [" + sMetaName + "]");
 					vConList = this.doMetaSearch(vConList, termStr, sSearchIn,
 							sMetaSource, iMetaLimit, sMetaName);
+			        logger.info("doMetaSearch called");
+				}
 		} catch (Exception ee) {
 			logger.error("ERROR - EVSSearch-doVocabSearch : " + ee.toString(),
 					ee);

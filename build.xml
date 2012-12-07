@@ -88,11 +88,11 @@
 
 	<target name="dist" depends="compile" description="Assembles the deployment artifacts into the dist folders.">
 		<echo>Assembling artifacts ...</echo>
-<!--		
+
 		<copy tofile="${root.dir}/WEB-INF/classes/application-config-client.xml" filtering="false">
 			<fileset file="conf/application-config-client.xml" />
 		</copy>
--->		
+
 		<copy tofile="${root.dir}/WEB-INF/classes/curationtool.properties" filtering="true">
 			<fileset file="conf/template.curationtool.properties" />
 		</copy>
