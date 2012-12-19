@@ -8,6 +8,7 @@ package gov.nih.nci.cadsr.cdecurate.test;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.InvalidPropertiesFormatException;
@@ -47,7 +48,8 @@ public class TestConnections
           if (propFile_ == null || propFile_.equals(""))
             propFile_ = "DBConnection.xml";
           _propFile = propFile_;
-          FileInputStream in = new FileInputStream(_propFile);
+//          FileInputStream in = new FileInputStream(_propFile);
+          InputStream in = ClassLoader.getSystemResourceAsStream(_propFile);
           _prop.loadFromXML(in);
           in.close();
       }
@@ -105,21 +107,27 @@ public class TestConnections
 
       // Open the database connection. If the format contains colons ( : ) this will be a thin
       // client connection. Otherwise this will be a thick client connection.
-      OracleDataSource ods = new OracleDataSource();
-      if (dburl.indexOf(':') > 0)
-      {
-          String parts[] = dburl.split("[:]");
-          ods.setDriverType("thin");
-          ods.setServerName(parts[0]);
-          ods.setPortNumber(Integer.parseInt(parts[1]));
-          ods.setServiceName(parts[2]);
-      }
-      else
-      {
-          ods.setDriverType("oci8");
-          ods.setTNSEntryName(dburl);
-      }
-      _conn = ods.getConnection(user, pswd);
+//      OracleDataSource ods = new OracleDataSource();
+//      if (dburl.indexOf(':') > 0)
+//      {
+//          String parts[] = dburl.split("[:]");
+//          ods.setDriverType("thin");
+//          ods.setServerName(parts[0]);
+//          ods.setPortNumber(Integer.parseInt(parts[1]));
+//          ods.setServiceName(parts[2]);
+//      }
+//      else
+//      {
+//          ods.setDriverType("oci8");
+//          ods.setTNSEntryName(dburl);
+//      }
+//      _conn = ods.getConnection(user, pswd);
+      try {
+		_conn = getConnection(user, pswd);
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
       
       // No updates should be done using this connection.
       _conn.setAutoCommit(false);
@@ -127,6 +135,23 @@ public class TestConnections
       return _conn;
   }
 
+	public Connection getConnection(String username, String password)
+			throws Exception {
+		String dbtype = "oracle";
+		String dbserver = "137.187.181.4"; String dbname = "DSRDEV"; //dev
+//		String dbserver = "137.187.181.89"; String dbname = "DSRQA";
+		int port = 1551;
+		ConnectionUtil cu = new ConnectionUtil();
+		cu.setUserName(username);
+		cu.setPassword(password);
+		cu.setDbms(dbtype);
+		cu.setDbName(dbname);
+		cu.setServerName(dbserver);
+		cu.setPortNumber(port);
+		Connection conn = cu.getConnection();
+		return conn;
+	}
+	
   /**
    * Close the database connection.
    * 
