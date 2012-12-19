@@ -7,7 +7,7 @@
 <properties>
     
         <!-- Specify the caDSR database being used by the Curation Tool to be tested.-->
-        <entry key="DSurl">cbiodb2-d.nci.nih.gov:1521:CBDEV</entry>
+        <entry key="DSurl">137.187.181.4:1551:DSRDEV</entry>
         <entry key="DSusername">sbrext</entry>
         <entry key="DSpassword">jjuser</entry>
         
