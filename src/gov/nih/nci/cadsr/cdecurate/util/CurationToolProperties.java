@@ -16,22 +16,22 @@ public class CurationToolProperties implements Serializable {
 	private Properties props = null;
 	private static CurationToolProperties CurationToolProperties = null;
 
-	static {
-		try {
-			if (CurationToolProperties.CurationToolProperties == null) {
-				CurationToolProperties.CurationToolProperties = new CurationToolProperties();
-			}
-		} catch (Exception e) {
-			System.out.println("Error in getFactory() : " + e);
-		}
-	}
-
 	private CurationToolProperties() throws IOException {
 		props = loadProps();
 	}
 
 	public static CurationToolProperties getFactory() {
-		return CurationToolProperties.CurationToolProperties;
+		try {
+			if (CurationToolProperties == null) {
+				CurationToolProperties = new CurationToolProperties();
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		}
+		return CurationToolProperties;
 	}
 
 	private Properties loadProps() throws IOException {
