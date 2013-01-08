@@ -29,7 +29,7 @@ import org.LexGrid.concepts.Entity;
  * Setup -
  * You need to 
  * 
- * 1. add all libraries under LexEVS_60_client_lib/
+ * 1. add all libraries under testlib/LexEVS_60_client_lib/
  * 2. add conf/ directory (it needs application-config-client.xml)
  * 
  * Sample output -

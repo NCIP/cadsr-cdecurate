@@ -5,27 +5,29 @@
  -->
 
 <properties>
+<!--    
 	<property vmid="vm1">
-	<valuemeaning
-   	editvmname="LOW"
-   	editvmdesc="Lower than reference range"
-   	editvmlongname="Low"
-   	selvmname=""
-   	selvmdesc=""
-   	selvmlongname=""
-   	selvmidseq=""
-   	selvmcondr=""   	
-   	></valuemeaning> 
+		<valuemeaning
+		   	editvmname="LOW"
+		   	editvmdesc="Lower than reference range"
+		   	editvmlongname="Low"
+		   	selvmname=""
+		   	selvmdesc=""
+		   	selvmlongname=""
+		   	selvmidseq=""
+		   	selvmcondr="">
+		</valuemeaning> 
 		<concept id="con1" vm="LOW"
-   	conname="Low"
-   	conid="C54722"
-   	condefn="A minimum level or position or degree; less than normal in degree or intensity or amount."
-   	condefsrc="NCI-GLOSS"
-   	conorigin="NCI Thesaurus"
-   	consrc="NCI_CONCEPT_CODE"
-   	conidseq=""
-   	></concept>
-<!-- 		<concept id="con2" vm="LOW"
+		   	conname="Low"
+		   	conid="C54722"
+		   	condefn="A minimum level or position or degree; less than normal in degree or intensity or amount."
+		   	condefsrc="NCI-GLOSS"
+		   	conorigin="NCI Thesaurus"
+		   	consrc="NCI_CONCEPT_CODE"
+		   	conidseq="">
+		</concept>
+-		
+<concept id="con2" vm="LOW"
    	conname="Pressure"
    	conid="C54723"
    	condefn="pressure."
@@ -33,8 +35,10 @@
    	conorigin="NCI Thesaurus"
    	consrc="NCI_CONCEPT_CODE"
    	conidseq=""
-   	></concept>  -->
+   	></concept>
+-
   </property>
+  <property vmid="vmend">Adios</property>
   <property vmid="vm3"> 	 	
 	<valuemeaning
    	editvmname="Education Level"
@@ -42,6 +46,8 @@
    	editvmlongname="Education Level"
    	></valuemeaning> 
    </property> 
+-->
+
   <property vmid="vm4"> 	 	
 	<valuemeaning
    	editvmname="Adverse Event Domain"
@@ -55,5 +61,4 @@
    	></valuemeaning> 
    </property> 
    
-  <property vmid="vmend">Adios</property>
 </properties>
