@@ -2112,7 +2112,7 @@ public class EVSSearch implements Serializable {
 								termStr, //the text to match
 								algorithm, //the match algorithm to use
 								null );//the language to match (null matches all)
-						logger.debug("EVSSearch:doConceptQuery() nodeSet retrieved from lexEVS.");	//GF29786 - geting the concept list from lexevs based on synonyms done
+						logger.debug("EVSSearch:doConceptQuery() nodeSet retrieved from lexEVS.");	//GF29786 - geting the concept list from lexevs based on synonyms done (old way???)
 					}
 				}
 			// call the evs to get resutls
@@ -2254,7 +2254,7 @@ public class EVSSearch implements Serializable {
 						types[0] = CodedNodeSet.PropertyType.PRESENTATION;
 
 						nodeSet = nodeSet.restrictToProperties(
-								Constructors.createLocalNameList("propertyType"), 
+								null, //Constructors.createLocalNameList("propertyType"),	//GF32446
 								types, 
 								Constructors.createLocalNameList(sMetaSource), 
 								null, 
@@ -2264,7 +2264,7 @@ public class EVSSearch implements Serializable {
 								Constructors.createLocalNameList("value"), //the Property Name to match
 								null, //the Property Type to match (null matches all)
 								termStr, //the text to match
-								"contains", //the match algorithm to use
+								"nonLeadingWildcardLiteralSubString", //the match algorithm to use
 								null );//the language to match (null matches all)
 
 					}
@@ -2280,7 +2280,7 @@ public class EVSSearch implements Serializable {
 						//meta keyword search
 						nodeSet = nodeSet.restrictToMatchingDesignations(termStr, //the text to match 
 								CodedNodeSet.SearchDesignationOption.PREFERRED_ONLY,  //whether to search all designation, only Preferred or only Non-Preferred
-								"contains", //the match algorithm to use
+								"nonLeadingWildcardLiteralSubString", //the match algorithm to use
 								null); //the language to match (null matches all)
 
 					concepts = nodeSet.resolveToList(
@@ -3764,14 +3764,18 @@ public class EVSSearch implements Serializable {
 		multiple = termStr.indexOf(' ') > 0;
 		
 		
-		if (starts)
+		if (starts) {
 			algorithm = "startsWith";
-		if (contains || ends)
-			algorithm = "contains";
-		if (multiple && starts && ends)
+		}
+		if (contains || ends) {
+			algorithm = "contains";	//GF29786
+		}
+		if (multiple && starts && ends) {
 			algorithm = "nonLeadingWildcardLiteralSubString";
-		if (multiple && starts && ends && contains)
-			algorithm = "contains";
+		}
+		if (multiple && starts && ends && contains) {
+			algorithm = "contains";	//GF29786
+		}
 		
 		return algorithm;
 	}
