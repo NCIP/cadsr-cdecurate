@@ -1995,7 +1995,7 @@ public class InsACService implements Serializable {
 	            pstmt = SQLHelper.closePreparedStatement(pstmt);
 
 				// oc-prop-context is not unique
-				if (sReturnID != null && !sReturnID.equals(""))
+				if (sReturnID != null && !sReturnID.equals(""))	//GF30681
 					uniqueMsg = "Combination of Object Class, Property and Context already exists in DEC with Public ID(s): "
 							+ sReturnID + "<br>";
 				else // check if it exists in other contexts
@@ -2011,7 +2011,7 @@ public class InsACService implements Serializable {
 					while (rs.next())
 						sReturnID = rs.getString(1);
 					// oc-prop is not unique in other contexts
-					if (sReturnID != null && !sReturnID.equals(""))
+					if (sReturnID != null && !sReturnID.equals("")) //GF30681
 						uniqueMsg = "Warning: DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
 								+ sReturnID + "<br>";
 				}
