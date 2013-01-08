@@ -26,6 +26,7 @@ import org.xml.sax.SAXException;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import gov.nih.nci.cadsr.cdecurate.tool.ConceptAction;
 import gov.nih.nci.cadsr.cdecurate.tool.ConceptForm;
+import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
 import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.VMAction;
 import gov.nih.nci.cadsr.cdecurate.tool.VMForm;
@@ -54,19 +55,29 @@ public class TestVM
     {
         logXML = args[0];
     }
-    logger.initLogger(logXML);
+//    logger.initLogger(logXML);
     //initialize connection
     String connXML = "";
     if (args.length > 1)
       connXML = args[1];
     varCon = new TestConnections(connXML, logger);
     VMForm vmdata = new VMForm();
+    try {
+		vmdata.setDBConnection(varCon.openConnection());
+		CurationServlet cdeserv = new CurationServlet(); 
+		cdeserv.setConn(varCon.openConnection());
+		vmdata.setCurationServlet(cdeserv);
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
     TestVM testvm = new TestVM();
-    logger.start();
-    logger.info("started vm test");
+//    logger.start();
+//    logger.info("started vm test");
     
-    if (args.length >2) 
-      VMpropFile = args[2];
+//    if (args.length >2) 
+//      VMpropFile = args[2];
+  VMpropFile = "/Users/ag/demo/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/TestVMCase.xml";
 
     //load properties with prop file name from input parameter
   //  if (args.length >2)      
@@ -81,7 +92,7 @@ public class TestVM
     
   //  testvm.switchCaseEx(2);
     //end the logger
-    logger.end();
+//    logger.end();
   }
 
   private void doValidateValues(VMForm vmdata)
@@ -626,10 +637,10 @@ public class TestVM
           //call teh vm to validate other vm and store new one
           readVMdata(attr, data, true);
         }
-       // System.out.println(" concept vm " + sVM.toString());
+        System.out.println(">>>concept vm " + sVM.toString());
         if (node.getNodeName().equals("concept") && attr.getNamedItem("vm") != null && attr.getNamedItem("vm").getNodeValue().equals(sVM.toString()))
         {
-         // System.out.println("get concepts vector " + attr.getNamedItem("vm").getNodeValue());
+          System.out.println("get concepts vector " + attr.getNamedItem("vm").getNodeValue());
           //call con method to validate con and store it back in the data
           readConData(attr, data);
         }
@@ -643,10 +654,10 @@ public class TestVM
         NodeList children = node.getChildNodes();
         for (int x=0; x<children.getLength(); x++)
         {
-          // System.out.println(x + " parent " + node.getNodeName() + " child : " + children.item(x).getNodeName());
+           System.out.println(x + " parent " + node.getNodeName() + " child : " + children.item(x).getNodeName());
            if (children.item(x) != null)
            {
-            // System.out.println(" explore node called ");
+             System.out.println(" explore node called ");
              exploreNode(children.item(x), sVM, data);
            }
         } 
