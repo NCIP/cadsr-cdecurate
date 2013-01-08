@@ -2256,7 +2256,7 @@ public class EVSSearch implements Serializable {
 						nodeSet = nodeSet.restrictToProperties(
 								null, //Constructors.createLocalNameList("propertyType"),	//GF32446
 								types, 
-								Constructors.createLocalNameList(sMetaSource), 
+								Constructors.createLocalNameList(sMetaSource),
 								null, 
 								null);
 
@@ -2276,12 +2276,27 @@ public class EVSSearch implements Serializable {
 								"exactMatch", //the match algorithm to use
 								null //the language to match (null matches all)
 						);
-					else
-						//meta keyword search
+					else {
+						//GF29786 Following lines of code added according to kim Ong's email ---------BEGIN
+						CodedNodeSet.PropertyType[] types =
+			            new CodedNodeSet.PropertyType[] { CodedNodeSet.PropertyType.PRESENTATION };
+				        try {
+				        	nodeSet =
+				        			nodeSet.restrictToProperties(null, types, 
+				        					null, //Constructors.createLocalNameList(sMetaSource),	//GF29786 "All Sources" is not valid anymore in 6.X EVS
+				        					null, null);	
+				        } catch (Exception ex) {
+				        	ex.printStackTrace();
+				        	return null;
+				        }
+			        	//-------------------------END------------------------
+
+				        //meta keyword search
 						nodeSet = nodeSet.restrictToMatchingDesignations(termStr, //the text to match 
 								CodedNodeSet.SearchDesignationOption.PREFERRED_ONLY,  //whether to search all designation, only Preferred or only Non-Preferred
 								"nonLeadingWildcardLiteralSubString", //the match algorithm to use
 								null); //the language to match (null matches all)
+					}
 
 					concepts = nodeSet.resolveToList(
 							null, //Sorts used to sort results (null means sort by match score)
