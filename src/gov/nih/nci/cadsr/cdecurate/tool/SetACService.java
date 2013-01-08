@@ -1808,7 +1808,7 @@ public class SetACService implements Serializable
 						if (sPropL != null && !sPropL.equals("") && (propID == null || propID.equals("")))
 							strPropInvalid = strPropInvalid + sMsg;
 					}
-					//check oc prop combination already exists in the database
+					//check oc prop combination already exists in the database //begin of GF30681
 					else if (!sOriginAction.equals("BlockEditDEC"))
 					{
 						if ((objID != null && !objID.equals("")) && (propID != null && !propID.equals(""))){
@@ -1824,7 +1824,7 @@ public class SetACService implements Serializable
 							strOCInvalid = strOCInvalid + strInValid;
 							strPropInvalid  = strPropInvalid + strInValid;
 						}
-					}
+					} //end of GF30681
 				}
 				if (checkValidityOC.equals("Yes")){
 					//add appropriate message to attributes of oc and prop only if there is no invalid message
@@ -1864,7 +1864,7 @@ public class SetACService implements Serializable
 					}
 
 				}
-				UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Object Class", sOCL, bNotMandatory, 255, strOCInvalid, sOriginAction, strOCValid);
+				UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Object Class", sOCL, bNotMandatory, 255, strOCInvalid, sOriginAction, strOCValid);	//GF30681
 				//UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Property", s, bNotMandatory, 255, strPropInvalid, sOriginAction, strPropValid);	//GF31953
 			}
 			else
