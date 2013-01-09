@@ -41,6 +41,7 @@ import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
 import org.LexGrid.LexBIG.DataModel.Core.ConceptReference;
 import org.LexGrid.LexBIG.DataModel.Core.NameAndValue;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.LexGrid.LexBIG.Impl.LexBIGServiceImpl;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeGraph;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
@@ -2260,6 +2261,11 @@ public class EVSSearch implements Serializable {
 								null, 
 								null);
 
+//JT - not sure how this helps, commented out
+//						ConceptReferenceList crl = new ConceptReferenceList();
+//                        crl.addConceptReference(ConvenienceMethods.createConceptReference(termStr, "NCI MetaThesaurus"));
+//                        nodeSet = nodeSet.restrictToCodes(crl);
+                        
 						nodeSet = nodeSet.restrictToMatchingProperties(
 								Constructors.createLocalNameList("value"), //the Property Name to match
 								null, //the Property Type to match (null matches all)
@@ -2300,13 +2306,20 @@ public class EVSSearch implements Serializable {
 
 					concepts = nodeSet.resolveToList(
 							null, //Sorts used to sort results (null means sort by match score)
-							null, //PropertyNames to resolve (null resolves all)
+							null,		//PropertyNames to resolve (null resolves all)
 							null,  //PropertyTypess to resolve (null resolves all)
-							1000	  //cap the number of results returned (-1 resolves all)
+							1	//1000	  //cap the number of results returned (-1 resolves all)
 					);
-
+					
+					//GF32446 Following lines of code given by kim Ong's but didn't work ---------BEGIN
+//			        String scheme = "NCI_Thesaurus";
+//			        CodingSchemeVersionOrTag csvt = null;
+//			        ConceptReferenceList crefs = ConvenienceMethods.createConceptReferenceList(new String[] { termStr }, scheme);
+//			        concepts = evsService.getCodingSchemeConcepts(scheme, csvt).restrictToStatus(
+//			                ActiveOption.ALL, null).restrictToCodes(crefs).resolveToList(null, null, null, 1);
+					//---------END
 				} catch (Exception ex) {
-					logger.error("doMetaSearch evsSearch: " + ex.toString(), ex);	//JT - lexvs error here!!!
+					logger.error("doMetaSearch evsSearch: " + ex.toString(), ex);
 				}
 				if (concepts != null && concepts.getResolvedConceptReferenceCount() > 0) {
 					String sConName = "";
@@ -2323,19 +2336,19 @@ public class EVSSearch implements Serializable {
 //						ResolvedConceptReference rcr = concepts.getResolvedConceptReference(i);
 						ResolvedConceptReference rcr = (ResolvedConceptReference) concepts.enumerateResolvedConceptReference()	//GF32446 need to get to next element to get to "Semantic Type"
 			                    .nextElement();
-						
+
 						if (rcr != null) {
 							Property[] props = rcr.getEntity().getProperty();
 							Presentation[] presentations = rcr.getEntity().getPresentation();
 							Definition[] definitions = rcr.getEntity().getDefinition();
-							
+
 							sConName = rcr.getEntityDescription().getContent();
 							sConID = rcr.getCode();
 
 							sCodeType = this.getNCIMetaCodeType(sConID, "byID");
 
 							//get semantic types
-							sSemantic = this.getMetaSemantics(props);	//GF32446 get the Semantic Type
+							sSemantic = this.getMetaSemantics(props);	//GF32446
 							//get preferred source code from atom collection
 							sCodeSrc = this.getPrefMetaCode(presentations);
 
@@ -2361,7 +2374,7 @@ public class EVSSearch implements Serializable {
 								conBean.setEVSBean(sDefinition, sDefSource,
 										sConName, sConName, sCodeType, sConID,
 										sVocab, sVocab, iLevel, "", "", "", "",
-										sSemantic, "", "");		//GF32446 JT is this setting it correctly???
+										sSemantic, "", "");
 								conBean.setPREF_VOCAB_CODE(sCodeSrc); //store pref code in the bean
 								vList.addElement(conBean); //add concept bean to vector              
 							}
@@ -2373,7 +2386,7 @@ public class EVSSearch implements Serializable {
 			}
 			return vList;
 	}
-
+    
 	/**
 	 * @param conID
 	 * @param ftrType
