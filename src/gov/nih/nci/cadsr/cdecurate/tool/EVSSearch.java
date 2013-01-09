@@ -2320,20 +2320,22 @@ public class EVSSearch implements Serializable {
 						if (sSearchIn.equals("MetaCode") && i > 0)
 							break;
 						//get concept properties
-						ResolvedConceptReference rcr = concepts.getResolvedConceptReference(i);
-
+//						ResolvedConceptReference rcr = concepts.getResolvedConceptReference(i);
+						ResolvedConceptReference rcr = (ResolvedConceptReference) concepts.enumerateResolvedConceptReference()	//GF32446 need to get to next element to get to "Semantic Type"
+			                    .nextElement();
+						
 						if (rcr != null) {
 							Property[] props = rcr.getEntity().getProperty();
 							Presentation[] presentations = rcr.getEntity().getPresentation();
 							Definition[] definitions = rcr.getEntity().getDefinition();
-
+							
 							sConName = rcr.getEntityDescription().getContent();
 							sConID = rcr.getCode();
 
 							sCodeType = this.getNCIMetaCodeType(sConID, "byID");
 
 							//get semantic types
-							sSemantic = this.getMetaSemantics(props);	//TBD - JT "Semantic Type" might be empty here?
+							sSemantic = this.getMetaSemantics(props);	//GF32446 get the Semantic Type
 							//get preferred source code from atom collection
 							sCodeSrc = this.getPrefMetaCode(presentations);
 
@@ -2359,7 +2361,7 @@ public class EVSSearch implements Serializable {
 								conBean.setEVSBean(sDefinition, sDefSource,
 										sConName, sConName, sCodeType, sConID,
 										sVocab, sVocab, iLevel, "", "", "", "",
-										sSemantic, "", "");
+										sSemantic, "", "");		//GF32446 JT is this setting it correctly???
 								conBean.setPREF_VOCAB_CODE(sCodeSrc); //store pref code in the bean
 								vList.addElement(conBean); //add concept bean to vector              
 							}
@@ -2427,10 +2429,13 @@ public class EVSSearch implements Serializable {
 
 		for (Property prop: properties) {
 			String name = prop.getPropertyName();
+            System.out.println(new StringBuffer().append("\tProperty name: ").append(prop.getPropertyName())
+                    .append(" Text: ").append(prop.getValue().getContent()).toString());
 			if (name != null && name.equals("Semantic_Type")) {
-				if (!sSemantic.equals(""))
-					sSemantic += "; ";
-				sSemantic += prop.getValue().getContent();
+				if (!sSemantic.equals("")) {
+					sSemantic = sSemantic + "; ";
+				}
+				sSemantic = sSemantic + prop.getValue().getContent();
 			}
 		}
 		return sSemantic;
