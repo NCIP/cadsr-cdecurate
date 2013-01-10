@@ -46,7 +46,7 @@ import oracle.jdbc.pool.OracleDataSource;
 	update sbrext.tool_options_view_ext set Value = 'http://lexevsapi60.nci.nih.gov/lexevsapi60' where Tool_name = 'EVSAPI' and Property = 'URL'
 	//update sbrext.tool_options_view_ext set Value = 'http://lexevsapi60.nci.nih.gov/lexevsapi60' where Tool_name = 'CURATION' and Property = 'EVS.URL'
 
-	select tool_name, property, VALUE from sbrext.tool_options_view_ext where Tool_name = 'CURATION' and Property = '%.INCLUDEMETA'
+	select tool_name, property, VALUE from sbrext.tool_options_view_ext where Tool_name = 'CURATION' and Property like '%.INCLUDEMETA'
 	//e.g. TOOL_NAME=CURATION, PROPERTY=EVS.VOCAB.24.INCLUDEMETA, VALUE=NCI Metathesaurus
 	insert into sbrext.tool_options_view_ext (Tool_name, Property, Value) Values('CURATION', 'EVS.VOCAB.25.INCLUDEMETA', 'NCI Thesaurus')
  *
