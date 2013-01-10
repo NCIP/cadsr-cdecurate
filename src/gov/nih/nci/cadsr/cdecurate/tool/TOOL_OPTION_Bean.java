@@ -219,4 +219,12 @@ public class TOOL_OPTION_Bean implements Serializable
       return this.LANGUAGE;
   }
 
+	@Override
+	public String toString() {
+		return "TOOL_OPTION_Bean [RETURN_CODE=" + RETURN_CODE
+				+ ", TOOL_OPTION_IDSEQ=" + TOOL_OPTION_IDSEQ + ", TOOL_NAME="
+				+ TOOL_NAME + ", PROPERTY=" + PROPERTY + ", VALUE=" + VALUE
+				+ ", LANGUAGE=" + LANGUAGE + "]";
+	}
+  
 }  //end class
