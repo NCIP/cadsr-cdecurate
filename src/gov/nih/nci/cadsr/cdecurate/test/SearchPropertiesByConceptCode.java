@@ -376,7 +376,7 @@ public class SearchPropertiesByConceptCode {
 //                Util.displayMessage(new StringBuffer().append("\tProperty name: ").append(prop.getPropertyName())
 //                        .append(" text: ").append(prop.getValue().getContent()).toString());
               System.out.println(new StringBuffer().append("\tProperty name: ").append(prop.getPropertyName())
-              .append(" text: ").append(prop.getValue().getContent()).toString());
+              .append(" Text: ").append(prop.getValue().getContent()).toString());
             }
 
         } else {
