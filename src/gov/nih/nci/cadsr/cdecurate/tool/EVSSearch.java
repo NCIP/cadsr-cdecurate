@@ -1335,7 +1335,7 @@ public class EVSSearch implements Serializable {
 			this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab,m_eUser);
 		} catch (Exception e1) {
 			e1.printStackTrace();
-			logger.error("EVSSearch:getSuperConceptNamesImmediate() registerSecurityToken [" + e1 + "]");	//JT
+			logger.error("EVSSearch:getSuperConceptNamesImmediate() registerSecurityToken [" + e1 + "]");
 		}
 		
 		if (dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue")) 
@@ -1391,7 +1391,7 @@ public class EVSSearch implements Serializable {
 				this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab, m_eUser);
 			} catch (Exception e) {
 				e.printStackTrace();
-				logger.error("EVSSearch:getSuperConceptNames() registerSecurityToken [" + e + "]");	//JT
+				logger.error("EVSSearch:getSuperConceptNames() registerSecurityToken [" + e + "]");
 			}
 			
 			if (conceptCode.equals("") && !conceptName.equals(""))
@@ -1878,7 +1878,10 @@ public class EVSSearch implements Serializable {
 							String vocabMetaType = "", vocabMetaCode = "";
 
 							ResolvedConceptReference rcr = new ResolvedConceptReference();
-							rcr = (ResolvedConceptReference) lstResults.getResolvedConceptReference(i);
+//							rcr = (ResolvedConceptReference) lstResults.getResolvedConceptReference(i);
+							rcr = (ResolvedConceptReference) lstResults.enumerateResolvedConceptReference()	//GF32446 need to get to next element to get to "Semantic Type"
+				                    .nextElement();
+
 							if (!rcr.getEntity().isIsActive()){
 								if (sIncludeRet != null
 										&& sIncludeRet.equals("Include"))
@@ -1938,6 +1941,9 @@ public class EVSSearch implements Serializable {
 									}
 								}
 							}
+							//get semantic types
+							sSemantic = this.getMetaSemantics(props);	//GF32446 - might not need this!!! see above
+							
 							//store to concept according to the number of defitions exist for a concept if already not stored
 							if (!sConSet.contains(sConID)) {	//GF29786 - comparing concepts based on EVS identifier and save it
 								vConList = this.storeConceptToBean(vConList,
@@ -2105,6 +2111,7 @@ public class EVSSearch implements Serializable {
 								algorithm, //the match algorithm to use
 								null); //the language to match (null matches all)
 					else if (vocabType.equals("PropType")) { // do concept prop search
+						//GF32446 this cause Semantic_Type to not to be included
 						LocalNameList lnl = new LocalNameList();
 						lnl.addEntry(sPropIn);
 						nodeSet = nodeSet.restrictToMatchingProperties(
@@ -2113,6 +2120,7 @@ public class EVSSearch implements Serializable {
 								termStr, //the text to match
 								algorithm, //the match algorithm to use
 								null );//the language to match (null matches all)
+						
 						logger.debug("EVSSearch:doConceptQuery() nodeSet retrieved from lexEVS.");	//GF29786 - geting the concept list from lexevs based on synonyms done (old way???)
 					}
 				}
@@ -2124,6 +2132,7 @@ public class EVSSearch implements Serializable {
 				Iterator iter = hType.keySet().iterator();
 				while (iter.hasNext()){
 					String propName = (String) iter.next();
+					System.out.println("EVSSearch:doConceptQuery() propName [" + propName + "]");
 					lnl.addEntry(propName);
 				}
 				
@@ -2261,7 +2270,7 @@ public class EVSSearch implements Serializable {
 								null, 
 								null);
 
-//JT - not sure how this helps, commented out
+//Given by Tracy - not sure how this helps, commented out
 //						ConceptReferenceList crl = new ConceptReferenceList();
 //                        crl.addConceptReference(ConvenienceMethods.createConceptReference(termStr, "NCI MetaThesaurus"));
 //                        nodeSet = nodeSet.restrictToCodes(crl);
