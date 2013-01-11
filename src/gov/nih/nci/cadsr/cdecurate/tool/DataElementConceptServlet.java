@@ -1065,16 +1065,16 @@ public class DataElementConceptServlet extends CurationServlet {
 				if (vObjectClass != null && vObjectClass.size()>0){ 
 
 
-					vObjectClass = this.getMatchingThesarusconcept(vObjectClass, "Object Class");
-					m_DEC = this.updateOCAttribues(vObjectClass, m_DEC);
+					vObjectClass = this.getMatchingThesarusconcept(vObjectClass, "Object Class");	//get the matching concept from EVS based on the caDSR's CDR (object class)
+					m_DEC = this.updateOCAttribues(vObjectClass, m_DEC);	//populate caDSR's DEC bean based on VO (from EVS results)
 
-					this.checkChosenConcepts(session,codes, defs, vObjectClass, "OC");
+					this.checkChosenConcepts(session,codes, defs, vObjectClass, "OC");	//make sure user's chosen/edited definition is not different from the EVS definition???
 				} 
 
 				if (blockBean.getcaDSR_COMPONENT() != null && blockBean.getcaDSR_COMPONENT().equals("Concept Class")){
 					m_DEC.setDEC_OCL_IDSEQ("");  
 				}else {//Object Class or from vocabulary
-					if(blockBean.getcaDSR_COMPONENT() != null && !selectedOCQualifiers){//if selected existing object class 
+					if(blockBean.getcaDSR_COMPONENT() != null && !selectedOCQualifiers){//if selected existing object class (JT just checking getcaDSR_COMPONENT???)
 						ValidationStatusBean statusBean = new ValidationStatusBean();
 						statusBean.setStatusMessage("**  Using existing "+blockBean.getcaDSR_COMPONENT()+" "+blockBean.getLONG_NAME()+" ("+blockBean.getID()+"v"+blockBean.getVERSION()+") from "+blockBean.getCONTEXT_NAME());
 						statusBean.setCondrExists(true);
@@ -1086,7 +1086,7 @@ public class DataElementConceptServlet extends CurationServlet {
 						m_DEC.setDEC_OCL_IDSEQ("");   
 					}
 				}
-				DataManager.setAttribute(session, "vObjectClass", vObjectClass);
+				DataManager.setAttribute(session, "vObjectClass", vObjectClass);	//save EVS VO in session
 			}
 			if (sComp.equals("Property") || sComp.equals("PropertyClass") || sComp.equals("PropertyQualifier")){
 				vProperty = (Vector) session.getAttribute("vProperty");
@@ -1127,7 +1127,7 @@ public class DataElementConceptServlet extends CurationServlet {
 				m_DEC = (DEC_Bean) this.getACNames(nullEVS, "Search", m_DEC);
 			else if (nameAction.equals("blockName"))
 				m_DEC = (DEC_Bean) this.getACNames(nullEVS, "blockName", m_DEC);
-			DataManager.setAttribute(session, "m_DEC", m_DEC);
+			DataManager.setAttribute(session, "m_DEC", m_DEC);	//set the user's selection + data from EVS in the DEC in session (for submission later on)
 		}
 		catch (Exception e)
 		{
@@ -2108,7 +2108,7 @@ public class DataElementConceptServlet extends CurationServlet {
 		// add oc primary attributes to the dec bean
 		EVS_Bean pBean =(EVS_Bean)vObjectClass.get(0); 
 		String nvpValue = "";
-		if (checkNVP(pBean))
+		if (checkNVP(pBean))	//JT what is this check for?
 			nvpValue="::"+pBean.getNVP_CONCEPT_VALUE();
 		if (pBean.getLONG_NAME() != null)
 			decBean.setDEC_OCL_NAME_PRIMARY(pBean.getLONG_NAME()+nvpValue);
@@ -2201,6 +2201,6 @@ public class DataElementConceptServlet extends CurationServlet {
 
 	public static boolean checkNVP(EVS_Bean eCon) {
 
-		return (eCon.getNAME_VALUE_PAIR_IND() > 0 && eCon.getLONG_NAME().indexOf("::") < 1 && eCon.getNVP_CONCEPT_VALUE().length() > 0);
+		return (eCon.getNAME_VALUE_PAIR_IND() > 0 && eCon.getLONG_NAME().indexOf("::") < 1 && eCon.getNVP_CONCEPT_VALUE().length() > 0);	//JT not sure what is this checking for, second portion could be buggy!!!
 	}
 }

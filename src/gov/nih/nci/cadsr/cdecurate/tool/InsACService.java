@@ -6178,7 +6178,7 @@ public class InsACService implements Serializable {
 				for (int i = 0; i < resultList.size(); i++) {
 					ResultVO vo = resultList.get(i);
 					if (vo.getContext() != null) {
-						if (vo.getContext().equals(defaultContext.get("name"))) {
+						if (vo.getContext().equals(defaultContext.get("name"))) {	//TBD - JT if it is caBIG context, add it, but based on the user's latest requirement, check should be based on other context as well!
 							foundBeanList.add(vo);
 						}
 					}

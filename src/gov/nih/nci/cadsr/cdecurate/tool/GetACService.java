@@ -1355,6 +1355,7 @@ public class GetACService implements Serializable
         try
         {
             cstmt = db_.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_TOOL_OPTIONS(?,?,?,?,?)}");
+            logger.debug("GetACService:getToolOptionData calling Oracle function [" + String.format("SBREXT_CDE_CURATOR_PKG.SEARCH_TOOL_OPTIONS(?,?,%s,%s,%s)", tool_, prop_, value_) + "]");
             cstmt.registerOutParameter(4, OracleTypes.CURSOR);
             cstmt.registerOutParameter(5, OracleTypes.VARCHAR);
             cstmt.setString(1, tool_);
@@ -1362,6 +1363,7 @@ public class GetACService implements Serializable
             cstmt.setString(3, value_);
             // Now we are ready to call the stored procedure
             cstmt.execute();
+            logger.debug("GetACService:getToolOptionData SBREXT_CDE_CURATOR_PKG.SEARCH_TOOL_OPTIONS executed.");
             // store the output in the result set
             rs = (ResultSet) cstmt.getObject(4);
             if (rs != null)
@@ -1375,6 +1377,9 @@ public class GetACService implements Serializable
                     TO_Bean.setPROPERTY(rs.getString("PROPERTY"));
                     TO_Bean.setVALUE(rs.getString("VALUE"));
                     TO_Bean.setLANGUAGE(rs.getString("UA_NAME"));
+//                    if("%.INCLUDEMETA".equals(prop_)) {
+//                    	System.out.println("GetACService:getToolOptionData TO_Bean [" + TO_Bean.toString() + "]");
+//                    }
                     vList.addElement(TO_Bean);
                 }
             }
