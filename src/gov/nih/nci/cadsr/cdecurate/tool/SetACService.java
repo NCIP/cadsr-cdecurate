@@ -673,7 +673,7 @@ public class SetACService implements Serializable
 			//Check Definition against (constructed) chosen definition, add to Alt Def if not same, add Warning in vValidate vector.
 			System.out.println("req [" + req + "] req.getSession() [" + req.getSession() + "] noldDef [" + oldDef + "] ");
 			String chosenDef = constructChosenDefinition(req.getSession(), "DEC", oldDef);
-			if (!chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
+			if (chosenDef != null && !chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
 				String warningMessage = "Valid \n Note: Your chosen definition is being replaced by standard definition.  Your chosen definition is being added as an alternate definition if it does not exist already.";
 				UtilService.setValPageVector(vValidate, "Alternate Definition",chosenDef, false, 0, warningMessage, sOriginAction);
@@ -932,7 +932,7 @@ public class SetACService implements Serializable
 		if (vProperty != null && vProperty.size() > 0)
 		{
 			String propDef = vProperty.elementAt(0);
-			if (propDef.startsWith("*")) { //Add only if new 
+			if (propDef != null && propDef.startsWith("*")) { //Add only if new 
 				propDef = propDef.substring(1); //peel off the *
 				if (!sDef.equals(""))
 					sDef += "_"; // add definition
