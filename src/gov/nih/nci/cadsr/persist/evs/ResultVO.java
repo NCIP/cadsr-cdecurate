@@ -97,7 +97,12 @@ public class ResultVO {
 	public void setContext(String context) {
 		this.context = context;
 	}
+	@Override
+	public String toString() {
+		return "ResultVO [condr_IDSEQ=" + condr_IDSEQ + ", iDSEQ=" + iDSEQ
+				+ ", long_name=" + long_name + ", publicId=" + publicId
+				+ ", version=" + version + ", asl_name=" + asl_name
+				+ ", context=" + context + "]";
+	}
 	
-	
-
 }
