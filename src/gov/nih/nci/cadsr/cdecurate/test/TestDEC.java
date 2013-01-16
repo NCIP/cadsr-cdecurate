@@ -59,7 +59,22 @@ public class TestDEC
 	CurationServlet m_servlet = null;
 
   /**
+   * Useful SQLs -
    * 
+   * To check overall CDR:
+   * SELECT cdr.condr_idseq, oc.oc_idseq as idseq, oc.long_name, oc.oc_id as public_id, oc.version, oc.asl_name, c.name AS context FROM (SELECT ccv.condr_idseq FROM (SELECT COUNT (*) AS cnt FROM conlist) conlistcnt, conlist hits INNER JOIN sbrext.component_concepts_view_ext ccv ON ccv.con_idseq = hits.con_idseq AND ccv.display_order = hits.display_order AND NVL (ccv.concept_value, chr(1)) = NVL (hits.concept_value, chr(1)) GROUP BY ccv.condr_idseq, conlistcnt.cnt HAVING COUNT (*) = conlistcnt.cnt INTERSECT SELECT ccv.condr_idseq FROM (SELECT COUNT (*) AS cnt FROM conlist) conlistcnt, sbrext.component_concepts_view_ext ccv GROUP BY ccv.condr_idseq, conlistcnt.cnt HAVING COUNT (*) = conlistcnt.cnt) cdr LEFT OUTER JOIN sbrext.object_classes_view_ext oc ON oc.condr_idseq = cdr.condr_idseq LEFT OUTER JOIN sbr.contexts_view c ON c.conte_idseq = oc.conte_idseq WHERE oc.conte_idseq NOT IN (SELECT value FROM sbrext.tool_options_view_ext where tool_name = 'caDSR' and property like 'EXCLUDE.CONTEXT.%' and value = oc.conte_idseq)
+   *
+   * To check individual tables -
+   	select count(*) as obj_count,-1 as prop_count,-1 as rule, -1 as compo,-1 as dec from object_classes_view_ext
+   	union
+   	select -1,count(*),-1,-1,-1 from properties_view_ext
+	union
+   	select -1,-1,count(*),-1,-1 from con_derivation_rules_view_ext
+	union
+	select -1,-1,-1,count(*),-1 from component_concepts_view_ext
+	union
+	select -1,-1,-1,-1,count(*) from data_element_concepts_view
+   *
    */
   public TestDEC()
   {
