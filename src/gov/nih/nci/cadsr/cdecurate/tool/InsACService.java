@@ -3,6 +3,8 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.database.Alternates;
+import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.persist.concept.Con_Derivation_Rules_Ext_Mgr;
@@ -2011,7 +2013,7 @@ public class InsACService implements Serializable {
 					while (rs.next())
 						sReturnID = rs.getString(1);
 					// oc-prop is not unique in other contexts
-					if (sReturnID != null && !sReturnID.equals("")) //GF30681
+					if (sReturnID != null && !sReturnID.equals(""))
 						uniqueMsg = "Warning: DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
 								+ sReturnID + "<br>";
 				}
@@ -2027,6 +2029,40 @@ public class InsACService implements Serializable {
 		return uniqueMsg;
 	}
 
+	public String checkDECUniqueOCPropPair(String sOCID, String sPropID) {
+		ResultSet rs = null;
+		PreparedStatement pstmt = null;
+		String uniqueMsg = "";
+		try {
+			if (m_servlet.getConn() == null)
+				m_servlet.ErrorLogin(m_classReq, m_classRes);
+			else {
+				pstmt = m_servlet
+						.getConn()
+						.prepareStatement(
+								"select long_name, OC_IDSEQ, PROP_IDSEQ, date_created, dec_id from data_element_concepts_view where OC_IDSEQ = ? and PROP_IDSEQ = ? order by date_created desc");
+				pstmt.setString(1, sOCID); // oc id
+				pstmt.setString(2, sPropID); // prop id
+				rs = pstmt.executeQuery(); // call teh query
+				String sReturnID = "";
+				while (rs.next())
+					sReturnID = rs.getString("dec_id");
+					// oc-prop is not unique in existing DEC
+					if (sReturnID != null && !sReturnID.equals(""))
+						uniqueMsg = "Warning: DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
+								+ sReturnID + "<br>";
+			}
+		} catch (Exception e) {
+			logger.error(
+					"ERROR in InsACService-checkUniqueOCPropPair for exception : "
+							+ e.toString(), e);
+		}finally{
+			rs = SQLHelper.closeResultSet(rs);
+		    pstmt = SQLHelper.closePreparedStatement(pstmt);
+		}
+		return uniqueMsg;
+	}
+	
 	   /**
 	    * to created object class, property and qualifier value from EVS into cadsr. Retrieves the session bean m_DEC.
 	    * calls 'insAC.setDECQualifier' to insert the database.

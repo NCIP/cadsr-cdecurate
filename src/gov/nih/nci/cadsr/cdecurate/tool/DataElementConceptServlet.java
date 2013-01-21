@@ -502,6 +502,10 @@ public class DataElementConceptServlet extends CurationServlet {
 		String oldPropIdseq = (String)session.getAttribute("oldPropIdseq");
 		String checkValidityOC = "Yes";
 		String checkValidityProp = "Yes";
+		//begin GF30681
+		session.setAttribute("checkValidityOC", "Yes");
+		session.setAttribute("checkValidityProp", "Yes");
+		//end GF30681
 		EVS_Bean m_OC = new EVS_Bean();
 		EVS_Bean m_PC = new EVS_Bean();
 		EVS_Bean m_OCQ = new EVS_Bean();

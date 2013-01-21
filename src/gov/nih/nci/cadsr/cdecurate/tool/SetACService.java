@@ -1821,6 +1821,12 @@ public class SetACService implements Serializable
 						}else if ((vOC == null || vOC.size()<1) && (propID != null && !propID.equals(""))){
 							strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction);
 						}
+
+						//GF30681
+						if ((objID != null && !objID.equals("")) && (propID != null && !propID.equals(""))){
+							strInValid = insAC.checkDECUniqueOCPropPair(objID, propID);
+						}
+						
 						if (strInValid.startsWith("Warning")) {
 							strWarning += strInValid;
 						} else {
