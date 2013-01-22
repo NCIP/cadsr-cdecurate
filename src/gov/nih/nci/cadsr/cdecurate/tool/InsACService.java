@@ -1998,8 +1998,8 @@ public class InsACService implements Serializable {
 
 				// oc-prop-context is not unique
 				if (sReturnID != null && !sReturnID.equals(""))	//GF30681
-					uniqueMsg = "Combination of Object Class, Property and Context already exists in DEC with Public ID(s): "
-							+ sReturnID + "<br>";
+					uniqueMsg = "Warning: Combination of Object Class, Property and Context already exists in DEC with Public ID(s): "
+							+ sReturnID + "<br>"; //GF30681---- Added "Warning" to message to enable submit button.
 				else // check if it exists in other contexts
 				{
 					pstmt = m_servlet
@@ -2017,6 +2017,7 @@ public class InsACService implements Serializable {
 						uniqueMsg = "Warning: DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
 								+ sReturnID + "<br>";
 				}
+				
 			}
 		} catch (Exception e) {
 			logger.error(
@@ -2029,10 +2030,18 @@ public class InsACService implements Serializable {
 		return uniqueMsg;
 	}
 
-	public String checkDECUniqueOCPropPair(String sOCID, String sPropID) {
+	public String checkDECUniqueOCPropPair(DEC_Bean mDEC) {
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
 		String uniqueMsg = "";
+		String longName = mDEC.getDEC_LONG_NAME();
+		String sOCID = mDEC.getDEC_OCL_IDSEQ();
+		if (sOCID == null)
+			sOCID = "";
+		String sPropID = mDEC.getDEC_PROPL_IDSEQ();
+		if (sPropID == null)
+			sPropID = "";
+		
 		try {
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
@@ -2040,9 +2049,13 @@ public class InsACService implements Serializable {
 				pstmt = m_servlet
 						.getConn()
 						.prepareStatement(
-								"select long_name, OC_IDSEQ, PROP_IDSEQ, date_created, dec_id from data_element_concepts_view where OC_IDSEQ = ? and PROP_IDSEQ = ? order by date_created desc");
-				pstmt.setString(1, sOCID); // oc id
-				pstmt.setString(2, sPropID); // prop id
+								"select long_name, OC_IDSEQ, PROP_IDSEQ, date_created, dec_id from data_element_concepts_view where "
+						//+"OC_IDSEQ = ? and PROP_IDSEQ = ? "
+						+ " long_name = ?"
+						+ " order by date_created desc");
+//				pstmt.setString(1, sOCID); // oc id
+//				pstmt.setString(2, sPropID); // prop id
+				pstmt.setString(1, longName); // long name
 				rs = pstmt.executeQuery(); // call teh query
 				String sReturnID = "";
 				while (rs.next())
@@ -6302,9 +6315,24 @@ public class InsACService implements Serializable {
 					}
 				}
 			}
+			
+			
 		} else {//if all the concepts does not exist
 			statusBean.setStatusMessage("**  Creating a new "+type + " in caBIG");
 		}
+         
+/*
+         //use the existing DEC if exists
+		String strInValid = insAC.checkDECUniqueOCPropPair(m_DEC);
+		if ((idseq != null) && !(idseq.equals(""))) {
+			statusBean.setStatusMessage(strInValid);
+			statusBean.setCondrExists(true);
+//			statusBean.setCondrIDSEQ(condrIDSEQ);
+//			statusBean.setEvsBeanExists(true);
+//			statusBean.setEvsBeanIDSEQ(idseq);
+		}
+*/
+         
         return statusBean;
 	}
 
