@@ -1824,7 +1824,7 @@ public class SetACService implements Serializable
 
 						//GF30681
 						if ((objID != null && !objID.equals("")) && (propID != null && !propID.equals(""))){
-							strInValid = insAC.checkDECUniqueOCPropPair(objID, propID);
+							strInValid = insAC.checkDECUniqueOCPropPair(m_DEC);
 						}
 						
 						if (strInValid.startsWith("Warning")) {
