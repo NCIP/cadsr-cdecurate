@@ -17,8 +17,8 @@
 		<%
     String sOriginAction = (String)session.getAttribute("originAction");
     if (sOriginAction == null) sOriginAction = "";
-    boolean isValid = true;
-    boolean isValidFlag = true;
+    boolean isValid = false;
+    //boolean isValidFlag = true;
     String sStat2 = "";
     Vector vValidate = new Vector();
     vValidate = (Vector)request.getAttribute("vValidate");
@@ -30,14 +30,15 @@
         sStat2 = sStat.substring(0,24);
       if(sStat2 == null) sStat2 = "";
       if(sStat.startsWith("Valid") || sStat.equals("No Change") || sStat2.equals("Warning: This DEC should")
-      || sStat2.equals("Warning: a Data Element ") || sStat2.equals("Warning: DEC's with comb"))  
+      || sStat2.equals("Warning: a Data Element ") || sStat2.equals("Warning: DEC's with comb")) {
           isValid = true; // this just keeps the status quo
-      else
+      }
+      /*else
       {
         isValidFlag = false; // we have true failure here     
-      }
+      }*/
     }
-    isValid = isValidFlag;
+    //isValid = isValidFlag;
 //System.out.println("isValid: " + isValid);
     String sDECAction = (String)session.getAttribute("DECAction");
     session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");  //remove the status messge if any

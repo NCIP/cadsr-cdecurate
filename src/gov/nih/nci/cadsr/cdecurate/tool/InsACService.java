@@ -1998,7 +1998,7 @@ public class InsACService implements Serializable {
 
 				// oc-prop-context is not unique
 				if (sReturnID != null && !sReturnID.equals(""))	//GF30681
-					uniqueMsg = "Warning: Combination of Object Class, Property and Context already exists in DEC with Public ID(s): "
+					uniqueMsg = "Combination of Object Class, Property and Context already exists in DEC with Public ID(s): "
 							+ sReturnID + "<br>"; //GF30681---- Added "Warning" to message to enable submit button.
 				else // check if it exists in other contexts
 				{
@@ -2014,7 +2014,7 @@ public class InsACService implements Serializable {
 						sReturnID = rs.getString(1);
 					// oc-prop is not unique in other contexts
 					if (sReturnID != null && !sReturnID.equals(""))
-						uniqueMsg = "Warning: DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
+						uniqueMsg = "DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
 								+ sReturnID + "<br>";
 				}
 				
@@ -2062,7 +2062,7 @@ public class InsACService implements Serializable {
 					sReturnID = rs.getString("dec_id");
 					// oc-prop is not unique in existing DEC
 					if (sReturnID != null && !sReturnID.equals(""))
-						uniqueMsg = "Warning: DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
+						uniqueMsg = "DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
 								+ sReturnID + "<br>";
 			}
 		} catch (Exception e) {
@@ -6179,19 +6179,20 @@ public class InsACService implements Serializable {
 		ArrayList<ResultVO>  resultList = new ArrayList();
 		Evs_Mgr mgr = null;
 		if (type.equals("Object Class")){
-			  mgr = new Object_Classes_Ext_Mgr();
-		  }else if (type.equals("Property")){
-			  mgr = new Properties_Ext_Mgr();
-		  }else if (type.equals("Representation Term")){
-		      mgr = new Representations_Ext_Mgr();
-		  }
-	      statusBean.setAllConceptsExists(true);
+			mgr = new Object_Classes_Ext_Mgr();
+		} else if (type.equals("Property")){
+			mgr = new Properties_Ext_Mgr();
+		} else if (type.equals("Representation Term")){
+			mgr = new Representations_Ext_Mgr();
+		}
+		
+	   statusBean.setAllConceptsExists(true);
 
 	   for(int i=0; i<evsBeanList.size(); i++){
    	    EVS_Bean conceptBean = (EVS_Bean) evsBeanList.elementAt(i);
    	    String conIdseq = this.getConcept("", conceptBean, false);
    	    if (conIdseq == null || conIdseq.equals("")){
-   		  statusBean.setAllConceptsExists(false);
+   		  statusBean.setAllConceptsExists(false);	//GF30681
    		  break;
    	   }
          }
