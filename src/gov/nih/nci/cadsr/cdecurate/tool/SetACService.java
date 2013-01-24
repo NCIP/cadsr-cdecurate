@@ -1722,7 +1722,7 @@ public class SetACService implements Serializable
 					}
 
 					//set the condr idseq of OC to DEC
-					if (ocStatusBean.isAllConceptsExists()){
+					if (ocStatusBean.isAllConceptsExists()){	//JT checking all concepts exists???
 						if (!ocStatusBean.isNewVersion()) {
 							if (ocStatusBean.isCondrExists() && ocStatusBean.getCondrIDSEQ() != null && !ocStatusBean.getCondrIDSEQ().equals("")){
 								m_DEC.setDEC_OC_CONDR_IDSEQ(ocStatusBean.getCondrIDSEQ());
@@ -1823,9 +1823,9 @@ public class SetACService implements Serializable
 						}
 
 						//GF30681
-						if ((objID != null && !objID.equals("")) && (propID != null && !propID.equals(""))){
-							strInValid = insAC.checkDECUniqueOCPropPair(m_DEC);
-						}
+//						if ((objID != null && !objID.equals("")) && (propID != null && !propID.equals(""))){
+//							strInValid = insAC.checkDECUniqueOCPropPair(m_DEC);
+//						}
 						
 						if (strInValid.startsWith("Warning")) {
 							strWarning += strInValid;
