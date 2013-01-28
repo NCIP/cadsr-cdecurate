@@ -199,6 +199,22 @@ public class NCICurationServlet extends HttpServlet
      */
     public void service(HttpServletRequest req, HttpServletResponse res)
     {
+    	HttpSession session1 = req.getSession();
+    	Enumeration attributeNames = session1.getAttributeNames();
+    	System.out.println("NCICurationServlet:begin -------------------------------------------------");
+    	String name = null;
+    	String value = null;
+    	while (attributeNames.hasMoreElements()) {
+    	    try {
+				name = (String) attributeNames.nextElement();
+				value = (String) session1.getAttribute(name);
+				System.out.println(name + "=" + value);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				System.out.println("Exception with name [" + name + "] exception = " + e);
+			}
+    	}
+    	System.out.println("NCICurationServlet:end -------------------------------------------------");
 		//this should cause minimal overhead, or can be totally before production
 		TimeWatch watch;
 		if(TimeWatch.ENABLED) {
