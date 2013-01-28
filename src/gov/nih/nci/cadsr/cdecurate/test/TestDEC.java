@@ -110,6 +110,13 @@ select long_name, OC_IDSEQ, PROP_IDSEQ, date_created, dec_id from data_element_c
    * To check the history table:
 	select date_created from AC_HISTORIES_VIEW order by date_created desc	--not used in GF30681?
 	//admin_components_view
+   * To delete DEC for test:
+LONG_NAME	OC_IDSEQ	PROP_IDSEQ	DATE_CREATED	DEC_ID	
+Blood Type	FC6EDF54-F468-6443-E034-0003BA3F9857	C8B96C2F-3963-607A-E034-0003BA12F5E7	2013-01-18 00:00:00.0	3632700	
+Blood Type	FC6EDF54-F468-6443-E034-0003BA3F9857	C8B96C2F-3963-607A-E034-0003BA12F5E7	2013-01-17 00:00:00.0	3632680	
+
+delete from data_element_concepts_view where dec_id = '3632680'
+
    *
    */
   public TestDEC()
