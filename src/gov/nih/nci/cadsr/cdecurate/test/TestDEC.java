@@ -116,7 +116,31 @@ Blood Type	FC6EDF54-F468-6443-E034-0003BA3F9857	C8B96C2F-3963-607A-E034-0003BA12
 Blood Type	FC6EDF54-F468-6443-E034-0003BA3F9857	C8B96C2F-3963-607A-E034-0003BA12F5E7	2013-01-17 00:00:00.0	3632680	
 
 delete from data_element_concepts_view where dec_id = '3632680'
+   * New logics of DEC duplicate check based on the user's request
+Example used is for DEC (Abnormal Blood Pressure Laboratory Procedure Outcome):
 
+select CONDR_IDSEQ from CON_DERIVATION_RULES_EXT where name = 'C25401:C54706:C25294';
+CONDR_IDSEQ	
+882481AB-C1B2-B9EA-E040-BB89AD430DD0	
+
+select 
+OC_ID, PREFERRED_NAME, CONDR_IDSEQ
+from object_classes_ext 
+where CONDR_IDSEQ = '882481AB-C1B2-B9EA-E040-BB89AD430DD0';
+OC_ID	PREFERRED_NAME	CONDR_IDSEQ	
+3105248	C25401:C54706:C25294	882481AB-C1B2-B9EA-E040-BB89AD430DD0	
+
+select PROP_ID, PREFERRED_NAME, CONDR_IDSEQ
+from properties_view_ext
+where CONDR_IDSEQ = '882481AB-C1B2-B9EA-E040-BB89AD430DD0'
+order by date_created desc
+[no results]
+
+--the following does not seem to be used
+select * from component_concepts_view_ext
+where CONDR_IDSEQ = '882481AB-C1B2-B9EA-E040-BB89AD430DD0'
+order by date_created desc
+   
    *
    */
   public TestDEC()
