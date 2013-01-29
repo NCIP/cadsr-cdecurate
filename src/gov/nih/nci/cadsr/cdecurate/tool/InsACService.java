@@ -6106,7 +6106,7 @@ public class InsACService implements Serializable {
            	 }
          }
          }
-    	 sReturnCode = this.setDEC(sAction, dec, sInsertFor, oldDEC);
+    	 sReturnCode = this.setDEC(sAction, dec, sInsertFor, oldDEC);	//GF30681 final duplicate check
     	}catch(Exception e){
     		logger.error("ERROR in InsACService-setDEC for other : "+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
