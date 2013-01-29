@@ -1059,16 +1059,20 @@ public class InsACService implements Serializable {
 					dec.setDEC_PROP_QUALIFIER_DB(null);
 				}
 				// insert newly created row into hold vector
-				if (sReturnCode != null && sAction.equals("INS"))
+				if (sReturnCode != null && sAction.equals("INS")){
+					logger.debug("sReturnCode at 1063 of InsACService.java is" + sReturnCode);
 					this
 							.storeStatusMsg("\\t "
 									+ sReturnCode
 									+ " : Unable to create new Data Element Concept Successfully.");
+				}
 				else if ((sReturnCode == null || (sReturnCode != null && sAction
 						.equals("UPD")))
 						&& !sDEC_ID.equals("")) {
+					logger.info("******called at 1072 of InsACServie.java");
 					// store the status message in the session
 					if (sAction.equals("INS")) {
+						logger.debug("sReturnCode at 1063 of InsACService.java is" + sReturnCode);
 						String sPublicID = this.getPublicID(sDEC_ID);
 						dec.setDEC_DEC_ID(sPublicID);
 						this.storeStatusMsg("Public ID : "
@@ -1076,9 +1080,11 @@ public class InsACService implements Serializable {
 						this
 								.storeStatusMsg("\\t Successfully created New Data Element Concept.");
 					} else if (sAction.equals("UPD") && sReturnCode != null
-							&& !sReturnCode.equals(""))
+							&& !sReturnCode.equals("")){
+						logger.debug("sReturnCode at 1084 of InsACService.java is" + sReturnCode);
 						this.storeStatusMsg("\\t " + sReturnCode
 								+ " : Unable to update mandatory attributes.");
+					}
 
 					// store returncode in request to track it all through this
 					// request
@@ -1978,6 +1984,7 @@ public class InsACService implements Serializable {
 					|| setAction.equalsIgnoreCase("editDECfromDE")
 					|| menuAction.equals("NewDECVersion"))
 				sPublicID = mDEC.getDEC_DEC_ID();
+			logger.debug("At Line 1987 of InsACService.java,OC ID"+sOCID+"Prop ID"+sPropID+"Context Id"+sContID+"DEC Public Id"+sPublicID);
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
@@ -1998,7 +2005,7 @@ public class InsACService implements Serializable {
 
 				// oc-prop-context is not unique
 				if (sReturnID != null && !sReturnID.equals(""))	//GF30681
-					uniqueMsg = "Combination of Object Class, Property and Context already exists in DEC with Public ID(s): "
+					uniqueMsg = "Warning:Combination of Object Class, Property and Context already exists in DEC with Public ID(s): "
 							+ sReturnID + "<br>"; //GF30681---- Added "Warning" to message to enable submit button.
 				else // check if it exists in other contexts
 				{
@@ -2014,7 +2021,7 @@ public class InsACService implements Serializable {
 						sReturnID = rs.getString(1);
 					// oc-prop is not unique in other contexts
 					if (sReturnID != null && !sReturnID.equals(""))
-						uniqueMsg = "DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
+						uniqueMsg = "Warning:DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
 								+ sReturnID + "<br>";
 				}
 				
@@ -2062,7 +2069,7 @@ public class InsACService implements Serializable {
 					sReturnID = rs.getString("dec_id");
 					// oc-prop is not unique in existing DEC
 					if (sReturnID != null && !sReturnID.equals(""))
-						uniqueMsg = "DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
+						uniqueMsg = "Warning:DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
 								+ sReturnID + "<br>";
 			}
 		} catch (Exception e) {
@@ -5243,6 +5250,7 @@ public class InsACService implements Serializable {
 
 				cstmt.setString(2, evsBean.getIDSEQ()); // con idseq
 				cstmt.setString(3, evsBean.getCONCEPT_IDENTIFIER()); // concept
+				logger.debug("EVS Bean at Line 5252 of InsACService.java IDSEQ"+evsBean.getIDSEQ()+"CONCEPT_IDENTIFIER"+evsBean.getCONCEPT_IDENTIFIER());
 				// code
 				// Now we are ready to call the stored procedure
 				cstmt.execute();
@@ -6033,6 +6041,7 @@ public class InsACService implements Serializable {
 							String ocIdseq = this.createEvsBean(userName, ocStatusBean.getCondrIDSEQ(), conteIdseq, "Object Class");
 							if (ocIdseq != null && !ocIdseq.equals("")) {
 								dec.setDEC_OCL_IDSEQ(ocIdseq);
+								logger.debug("At Line 6044 of InsACService.java DEC_OCL_IDSEQ"+ocIdseq+"DEC_OC_CONDR_IDSEQ"+ocStatusBean.getCondrIDSEQ());
 							}
 						} else {
 							// Create Condr
@@ -6041,10 +6050,12 @@ public class InsACService implements Serializable {
 							// Create Object Class
 							if (condrIdseq != null && !condrIdseq.equals("")) {
 								dec.setDEC_OC_CONDR_IDSEQ(condrIdseq);
+								logger.debug("At Line 6053 DEC_OC_CONDR_IDSEQ"+condrIdseq);
 								ocIdseq = this.createEvsBean(userName, condrIdseq, conteIdseq, "Object Class");
 							}
 							if (ocIdseq != null && !ocIdseq.equals("")) {
 								dec.setDEC_OCL_IDSEQ(ocIdseq);
+								logger.debug("At Line 6058 of InsACService.java DEC_OCL_IDSEQ"+ocIdseq);
 							}
 						}
 
@@ -6075,6 +6086,7 @@ public class InsACService implements Serializable {
 							String propIdseq = this.createEvsBean(userName, propStatusBean.getCondrIDSEQ(), conteIdseq, "Property");
 							if (propIdseq != null && !propIdseq.equals("")) {
 								dec.setDEC_PROPL_IDSEQ(propIdseq);
+								logger.debug("At Line 6089 of InsACService.java DEC_PROPL_IDSEQ"+propIdseq+"DEC_PROP_CONDR_IDSEQ"+propStatusBean.getCondrIDSEQ());
 							}
 						} else {
 							// Create Condr
@@ -6083,10 +6095,12 @@ public class InsACService implements Serializable {
 							// Create Property
 							if (condrIdseq != null && !condrIdseq.equals("")) {
 								dec.setDEC_PROP_CONDR_IDSEQ(condrIdseq);
+								logger.debug("At Line 6098 of InsACService.java DEC_PROP_CONDR_IDSEQ"+condrIdseq);
 								propIdseq = this.createEvsBean(userName, condrIdseq, conteIdseq,"Property");
 							}
 							if (propIdseq != null && !propIdseq.equals("")) {
 								dec.setDEC_PROPL_IDSEQ(propIdseq);
+								logger.debug("At Line 6103 of InsACService.java DEC_PROPL_IDSEQ"+propIdseq);
 							}
 						}
 	       	 }else{
@@ -6106,7 +6120,8 @@ public class InsACService implements Serializable {
            	 }
          }
          }
-    	 sReturnCode = this.setDEC(sAction, dec, sInsertFor, oldDEC);	//GF30681 final duplicate check
+    	 sReturnCode = this.setDEC(sAction, dec, sInsertFor, oldDEC);	//GF30681 final duplicate check (new)
+
     	}catch(Exception e){
     		logger.error("ERROR in InsACService-setDEC for other : "+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
@@ -6194,6 +6209,8 @@ public class InsACService implements Serializable {
    	    if (conIdseq == null || conIdseq.equals("")){
    		  statusBean.setAllConceptsExists(false);	//GF30681
    		  break;
+   	   }else {
+   		   logger.debug("conIdseq at Line 6204 of InsACService.java"+conIdseq);
    	   }
          }
 	      //if all the concepts exists
@@ -6210,6 +6227,7 @@ public class InsACService implements Serializable {
 				statusBean.setStatusMessage("**  Creating a new "+type + " in caBIG");
 				statusBean.setCondrExists(false);
 				statusBean.setEvsBeanExists(false);
+				logger.info("At Line 6222 of InsACService.java");
 			} else {
 
 				String idseq = null;
@@ -6246,7 +6264,9 @@ public class InsACService implements Serializable {
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
 							statusBean.setEvsBeanExists(false);
+							logger.debug("At Line 6259 of InsACService.java"+statusBean.statusMessage);
 							return statusBean;
+							
 						}
 					}
 					//if none are found in different context and condr exists, create new (oc or prop or rep term) in caBIG
@@ -6256,6 +6276,7 @@ public class InsACService implements Serializable {
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
 							statusBean.setEvsBeanExists(false);
+							logger.info("At Line 6271 of InsACService.java");
 							return statusBean;
 						}
 
@@ -6280,6 +6301,8 @@ public class InsACService implements Serializable {
 						statusBean.setCondrIDSEQ(condrIDSEQ);
 						statusBean.setEvsBeanExists(true);
 						statusBean.setEvsBeanIDSEQ(idseq);
+						logger.debug("Condr_IDSEQ at Line 6296 of InsACService.java"+condrIDSEQ);
+						
 					} else {
 						if (foundBeanList != null && foundBeanList.size() > 0) {
 							//if none are found with a Workflow Status RELEASED, select one with a Workflow Status DRAFT NEW or DRAFT MOD.
@@ -6302,6 +6325,7 @@ public class InsACService implements Serializable {
 							statusBean.setCondrIDSEQ(condrIDSEQM);
 							statusBean.setEvsBeanExists(true);
 							statusBean.setEvsBeanIDSEQ(idseqM);
+							logger.info("At Line 6320 of InsACService.java");
 						} else {
 							//If none are found, select any other Workflow Status and create a New Version of it.
 							ResultVO vo = foundBeanList.get(0);
@@ -6311,6 +6335,7 @@ public class InsACService implements Serializable {
 							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
 							statusBean.setEvsBeanExists(true);
 							statusBean.setEvsBeanIDSEQ(vo.getIDSEQ());
+							logger.info("At Line 6330 of InsACService.java");
 						}
 
 					}
