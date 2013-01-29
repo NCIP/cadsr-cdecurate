@@ -1368,8 +1368,11 @@ public class DataElementConceptServlet extends CurationServlet {
 						|| sOriginAction.equals("CreateNewDECfromEditDE"))
 					doInsertDECfromDEAction(sOriginAction);
 				// FROM MENU, TEMPLATE, VERSION
-				else
+				else{
+					logger.info("*****************doInsertDEC called");
 					doInsertDECfromMenuAction();
+				}
+					
 			}
 		}
 	} // end of doInsertDEC
@@ -1507,6 +1510,7 @@ public class DataElementConceptServlet extends CurationServlet {
 		// doInsertDECBlocks(m_classReq, m_classRes, null); //insert any building blocks from Thesaurus first
 		if (sMenuAction.equals("NewDECVersion"))
 		{
+			logger.info("**************called at 1513 of DECs.java");
 			// udpate the status message with DEC name and ID
 			storeStatusMsg("Data Element Concept Name : " + DECBean.getDEC_LONG_NAME());
 			storeStatusMsg("Public ID : " + DECBean.getDEC_DEC_ID());
@@ -1540,10 +1544,12 @@ public class DataElementConceptServlet extends CurationServlet {
 		}
 		else
 		{
+			logger.info("**************doSetDEC called at 1546 of DECs.java");
 			ret = insAC.doSetDEC("INS", DECBean, "New", oldDECBean);
 		}
 		if ((ret == null) || ret.equals(""))
 		{
+			logger.info("**************called at 1551 of DECs.java");
 			// DataManager.setAttribute(session, "statusMessage", "New Data Element Concept is created successfully.");
 			DataManager.setAttribute(session, "DECPageAction", "nothing");
 			// String sContext = (String) session.getAttribute("sDefaultContext");
@@ -1565,6 +1571,7 @@ public class DataElementConceptServlet extends CurationServlet {
 			// go back to create dec page to create another one
 			else
 			{
+				logger.info("**************called at 1573 of DECs.java");
 				DECBean = new DEC_Bean();
 				DECBean.setDEC_ASL_NAME("DRAFT NEW");
 				DECBean.setAC_PREF_NAME_TYPE("SYS");
@@ -1589,10 +1596,16 @@ public class DataElementConceptServlet extends CurationServlet {
 		{
 			DataManager.setAttribute(session, "DECPageAction", "validate");
 			// forward to create or edit pages
-			if (isUpdateSuccess == false)
+			if (isUpdateSuccess == false){
+				logger.info("**************called at 1599 of DECs.java");
 				ForwardJSP(m_classReq, m_classRes, "/SearchResultsPage.jsp");
-			else
+			}
+				
+			else{
+				logger.info("**************called at 1604 of DECs.java");
 				ForwardJSP(m_classReq, m_classRes, "/CreateDECPage.jsp");
+			}
+				
 		}
 	}
 
