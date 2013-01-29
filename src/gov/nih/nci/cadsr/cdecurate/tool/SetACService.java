@@ -1726,9 +1726,11 @@ public class SetACService implements Serializable
 						if (!ocStatusBean.isNewVersion()) {
 							if (ocStatusBean.isCondrExists() && ocStatusBean.getCondrIDSEQ() != null && !ocStatusBean.getCondrIDSEQ().equals("")){
 								m_DEC.setDEC_OC_CONDR_IDSEQ(ocStatusBean.getCondrIDSEQ());
+								logger.debug("At Line 1729 of SetACService.java OC CondrIDSEQ"+ocStatusBean.getCondrIDSEQ());
 							}
 							if (ocStatusBean.isEvsBeanExists()&& ocStatusBean.getEvsBeanIDSEQ() != null && !ocStatusBean.getEvsBeanIDSEQ().equals("")){
 								m_DEC.setDEC_OCL_IDSEQ(ocStatusBean.getEvsBeanIDSEQ());
+								logger.debug("At Line 1733 of SetACService.java OC EvsBeanIDSEQ"+ocStatusBean.getEvsBeanIDSEQ());
 							}
 							DataManager.setAttribute(session, "ocStatusBean", ocStatusBean);
 						}
@@ -1772,9 +1774,11 @@ public class SetACService implements Serializable
 						if (!propStatusBean.isNewVersion()) {
 							if (propStatusBean.isCondrExists() && propStatusBean.getCondrIDSEQ() != null && !propStatusBean.getCondrIDSEQ().equals("")){
 								m_DEC.setDEC_PROP_CONDR_IDSEQ(propStatusBean.getCondrIDSEQ());
+								logger.debug("At Line 1777 of SetACService.java Property CondrIDSEQ"+propStatusBean.getCondrIDSEQ());
 							}
 							if (propStatusBean.isEvsBeanExists() && propStatusBean.getEvsBeanIDSEQ() != null && !propStatusBean.getEvsBeanIDSEQ().equals("")){
 								m_DEC.setDEC_PROPL_IDSEQ(propStatusBean.getEvsBeanIDSEQ());
+								logger.debug("At Line 1781 of SetACService.java Property EvsBeanIDSEQ"+propStatusBean.getEvsBeanIDSEQ());
 							}
 							DataManager.setAttribute(session, "propStatusBean", propStatusBean);
 						}
@@ -1815,21 +1819,26 @@ public class SetACService implements Serializable
 					else if (!sOriginAction.equals("BlockEditDEC"))
 					{
 						if ((objID != null && !objID.equals("")) && (propID != null && !propID.equals(""))){
+							logger.info("At Line 1822 of SetACService.java");
 							strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction);
 						}else if ((objID != null && !objID.equals("")) &&  (vPROP == null || vPROP.size()<1)){
+							logger.info("At Line 1825 of SetACService.java");
 							strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction);
 						}else if ((vOC == null || vOC.size()<1) && (propID != null && !propID.equals(""))){
+							logger.info("At Line 1828 of SetACService.java");
 							strInValid = insAC.checkUniqueOCPropPair(m_DEC, "UniqueAndVersion", sOriginAction);
 						}
-
+						logger.debug("At Line 1831 of SetACService.java strInvalid"+strInValid);
 						//GF30681
 //						if ((objID != null && !objID.equals("")) && (propID != null && !propID.equals(""))){
 //							strInValid = insAC.checkDECUniqueOCPropPair(m_DEC);
 //						}
 						
 						if (strInValid.startsWith("Warning")) {
+							logger.info("At Line 1838 of SetACService.java");
 							strWarning += strInValid;
 						} else {
+							logger.info("At Line 1841 of SetACService.java");
 							strOCInvalid = strOCInvalid + strInValid;
 							strPropInvalid  = strPropInvalid + strInValid;
 						}
@@ -1873,6 +1882,7 @@ public class SetACService implements Serializable
 					}
 
 				}
+				logger.debug("At Line 1883 of SetACService.java,strOCInvalid"+strOCInvalid+"strOCValid"+strOCValid+"strPropInvalid"+strPropInvalid+"strPropValid"+strPropValid);
 				UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Object Class", sOCL, bNotMandatory, 255, strOCInvalid, sOriginAction, strOCValid);	//GF30681
 				//UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Property", s, bNotMandatory, 255, strPropInvalid, sOriginAction, strPropValid);	//GF31953
 			}
@@ -3710,11 +3720,11 @@ public class SetACService implements Serializable
 			sID = (String)req.getParameter("decIDSEQ");
 			if(sID != null)
 				m_DEC.setDEC_DEC_IDSEQ(sID);
-
+			logger.debug("DECIDSEQ at Line 3712 of SetACService.java"+sID);
 			sID = (String)req.getParameter("CDE_IDTxt");
 			if(sID != null)
 				m_DEC.setDEC_DEC_ID(sID);
-
+			logger.debug("DECIDSEQ at Line 3716 of SetACService.java"+sID);
 			if(sOriginAction.equals("BlockEditDEC"))
 				sID = "";
 			else
@@ -3743,6 +3753,7 @@ public class SetACService implements Serializable
 			{
 				sName = m_util.removeNewLineChar(sName);
 				m_DEC.setDEC_LONG_NAME(sName);
+				logger.debug("DEC_LONG_NAME at Line 3745 of SetACService.java"+sName);
 			}
 
 			//set PREFERRED_NAME
@@ -3754,6 +3765,7 @@ public class SetACService implements Serializable
 			{
 				sName = m_util.removeNewLineChar(sName);
 				m_DEC.setDEC_PREFERRED_NAME(sName);
+				logger.debug("PreferredName at Line 3756 of SetACService.java"+sName);
 			}
 
 			//set DEC_PREFERRED_DEFINITION
@@ -3762,6 +3774,7 @@ public class SetACService implements Serializable
 			{
 				sName = m_util.removeNewLineChar(sName);
 				m_DEC.setDEC_PREFERRED_DEFINITION(sName);
+				logger.debug("DEC_PREFERRED_DEFINITION at Line 3765 of SetACService.java"+sName);
 			}
 
 			sID = (String)req.getParameter("selConceptualDomain");
