@@ -1,9 +1,5 @@
 SET DEFINE OFF;
 
-delete SBREXT.tool_options_view_ext t 
-where t.tool_name = 'CURATION' 
-and t.property = 'HELP.HOME';
-
 update SBREXT.TOOL_OPTIONS_EXT t set VALUE =    ('CDE_IDSEQ,DEC_IDSEQ,VD_IDSEQ,Conceptual Domain Public ID,Conceptual Domain Short Name,Conceptual Domain Version,Conceptual Domain Context Name,Classification Scheme Public ID,DDE Methods,Representation Concept Origin,Value Domain Concept Origin,Property Concept Origin,Object Class Concept Origin,Derivation Type Description,DDE Preferred Name,DDE Preferred Definition,Document Organization')
 where t.tool_name = 'CURATION' and T.PROPERTY = 'CUSTOM.COLUMN.EXCLUDED';
 
