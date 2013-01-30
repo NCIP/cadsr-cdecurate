@@ -32,6 +32,8 @@ public class LinksMenuTag extends MenuTag {
         String formBuilderDName = ToolURL.getFormBuilderDisplayName(this.pageContext);
         String evsBioPortalLink = "window.open('" + ToolURL.getEVSBioPortalUrl(this.pageContext) +"', '_blank')";
         String evsBioPortalDName = ToolURL.getEVSBioPortalDisplayName(this.pageContext);
+        String passwordChangeStationLink = "window.open('" + ToolURL.getPasswordChangeStationURL(this.pageContext) +"', '_blank')";//GF32153
+        String passwordChangeStationLinkDName = ToolURL.getPasswordChangeStationDispalyName(this.pageContext);//GF32153
 		try {
 			linksMenu.println("<dl class=\"menu\">"
 					          + generateDT("",adminToolLink,adminToolDName)  
@@ -43,6 +45,8 @@ public class LinksMenuTag extends MenuTag {
 					          + generateDT("",umlBrowserLink,umlBrowserDName)
 					          + separator()
 					          + generateDT("",evsBioPortalLink,evsBioPortalDName)
+					          + separator()
+					          + generateDT("",passwordChangeStationLink,passwordChangeStationLinkDName)//GF32153
 					          + generateDT("","window.open('https://gforge.nci.nih.gov', '_blank')","NCI GForge")
 					          + generateDT("","window.open('https://wiki.nci.nih.gov', '_blank')","NCI Wiki")
 					          +"</dl>");

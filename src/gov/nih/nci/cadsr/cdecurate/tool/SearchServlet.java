@@ -2142,6 +2142,39 @@ public class SearchServlet extends CurationServlet {
            ToolURL.setBrowserDispalyName(session, "CDE Browser");
         }
         
+        //===========GF32153 Add link to Password Change Station =====START
+        
+        vList = new Vector();
+        vList = getAC.getToolOptionData("PasswordChangeStation", "URL", "");
+        aURL = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+                aURL = tob.getVALUE();
+        }
+        if (aURL != null) {
+        	 ToolURL.setPasswordChangeStationURL(session, aURL);
+		}else{
+			ToolURL.setPasswordChangeStationURL(session, "https://cadsrpasswordchange.nci.nih.gov/");
+		}
+        vList = new Vector();
+        vList = getAC.getToolOptionData("PasswordChangeStation", "DISPLAY.NAME", "");
+        dName = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+            	dName = tob.getVALUE();
+        }
+        if (dName != null){
+           ToolURL.setPasswordChangeStationDispalyName(session, dName);
+        }else{
+           ToolURL.setPasswordChangeStationDispalyName(session, "Reset Password");
+        }
+        
+        //=========GF32153 Add link to Password Change Station===========END
+        
         vList = new Vector();
         vList = getAC.getToolOptionData("SENTINEL", "URL", "");
         aURL = null;

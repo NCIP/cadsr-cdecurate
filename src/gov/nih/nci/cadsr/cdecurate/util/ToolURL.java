@@ -29,6 +29,7 @@ public class ToolURL {
 	public static final String curationToolBusinessRulesURL = "curationToolBusinessRulesURL";
 	public static final String evsBrowserConceptURL = "evsBrowserConceptURL";
 	public static final String deDetailsCDEBrowserURL = "deDetailsCDEBrowserURL";
+	public static final String passwordChangeStationURL = "PasswordChangeStationURL";
 	public static final String browserDispalyName = "BrowserDispalyName";
 	public static final String sentinelDispalyName = "SentinelDispalyName";
 	public static final String umlBrowserDispalyName = "UMLBrowserDispalyName";
@@ -37,6 +38,7 @@ public class ToolURL {
 	public static final String cadsrAPIDispalyName = "CadsrAPIDispalyName";
 	public static final String formBuilderDisplayName = "FormBuilderDisplayName";
 	public static final String evsBioPortalDisplayName = "EVSBioPortalDisplayName";
+	public static final String passwordChangeStationDisplayName = "passwordChangeStationDisplayName";
 	
 	
 	/**
@@ -76,6 +78,31 @@ public class ToolURL {
 		return (String) context_.getSession().getAttribute(browserDispalyName);
 	}
 
+	//========GF32153 Add link to Password Change Station========START
+	
+	public static final void setPasswordChangeStationURL(HttpSession session_, String url_) {
+		DataManager.setAttribute(session_, passwordChangeStationURL,
+				(url_ == null) ? defaultUrl : url_);
+	}
+
+	public static final String getPasswordChangeStationURL(PageContext context_) {
+		return (String) context_.getSession().getAttribute(passwordChangeStationURL);
+	}
+
+	public static final String getPasswordChangeStationURL(HttpSession session) {
+		return (String) session.getAttribute(passwordChangeStationURL);
+	}
+
+	public static final void setPasswordChangeStationDispalyName(HttpSession session_, String name_) {
+		DataManager.setAttribute(session_, passwordChangeStationDisplayName, name_);
+	}
+
+	public static final String getPasswordChangeStationDispalyName(PageContext context_) {
+		return (String) context_.getSession().getAttribute(passwordChangeStationDisplayName);
+	}
+	
+	//=========GF32153 Add link to Password Change Station==========END
+	
 	public static final void setSentinelUrl(HttpSession session_, String url_) {
 		DataManager.setAttribute(session_, sentinelUrl,
 				(url_ == null) ? defaultUrl : url_);
