@@ -4,6 +4,8 @@
 -->
 
 <%@ page session="true"%>
+<%@ page import="gov.nih.nci.cadsr.common.Constants" %>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 	<head>
@@ -23,6 +25,9 @@
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<%
+String ocCDR = "";
+String propCDR = "";
+		
     Vector vContext = (Vector)session.getAttribute("vWriteContextDEC");
     Vector vContextID = (Vector)session.getAttribute("vWriteContextDEC_ID");
     Vector vStatus = (Vector)session.getAttribute("vStatusDEC");
@@ -514,6 +519,7 @@
 													<%for (int i = 0; vOCQualifierNames.size()>i; i++)
                               {
                                 String sQualName = (String)vOCQualifierNames.elementAt(i);
+                                ocCDR += (String)vOCQualifierCodes.elementAt(i);
                               %>
 													<option value="<%=sQualName%>" <%if(i==0){%> selected <%}%>>
 														<%=sQualName%>
@@ -530,6 +536,10 @@
 												</select>
 											</td>
 										</tr>
+							<%
+                                ocCDR += sOCCCode ;
+                                System.out.println("================>>>>> OC CDR = " + ocCDR);
+							%>			
 										<tr>
 											<td colspan="3">
 												&nbsp;&nbsp;
@@ -642,6 +652,7 @@
 													<%for (int i = 0; vPropQualifierNames.size()>i; i++)
                               {
                                 String sQualName = (String)vPropQualifierNames.elementAt(i);
+                                propCDR += (String)vPropQualifierCodes.elementAt(i);
                               %>
 													<option value="<%=sQualName%>" <%if(i==0){%> selected <%}%>>
 														<%=sQualName%>
@@ -658,6 +669,10 @@
 												</select>
 											</td>
 										</tr>
+							<%
+                                propCDR += sPCCCode;
+                                System.out.println("================>>>>> Prop CDR = " + propCDR);
+							%>			
 										<tr>
 											<td colspan="3">
 												&nbsp;&nbsp;
@@ -1348,6 +1363,9 @@
 				</option>
 				<%  }
   }   
+
+session.setAttribute(Constants.DEC_CDR_NAME, ocCDR + propCDR);
+System.out.println("dec_cdr_name = [" + session.getAttribute(Constants.DEC_CDR_NAME) + "]");
 %>
 			</select>
 			<script language="javascript">

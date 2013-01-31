@@ -239,6 +239,8 @@ public class DEC_Bean extends AC_Bean
 
     private String                             AC_PREF_NAME_TYPE;
 
+    private String                             CDR_NAME;
+
     /**
      * Constructor
      */
@@ -2117,4 +2119,14 @@ public class DEC_Bean extends AC_Bean
     	String displayName = this.DEC_LONG_NAME + "   "+ this.DEC_DEC_ID+ " v " + this.DEC_VERSION;
     	return displayName;
     }
+
+    //GF30681
+	public String getCDR_NAME() {
+		return CDR_NAME;
+	}
+
+	public void setCDR_NAME(String cDR_NAME) {
+		CDR_NAME = cDR_NAME;
+	}
+    
 }
