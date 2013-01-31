@@ -43,10 +43,10 @@ public class LinksMenuTag extends MenuTag {
 					          + generateDT("",cdeBrowserLink,cdeBrowserDName)
 					          + generateDT("",formBuilderLink,formBuilderDName)
 					          + generateDT("",umlBrowserLink,umlBrowserDName)
+					          + generateDT("",passwordChangeStationLink,passwordChangeStationLinkDName)//GF32153
 					          + separator()
 					          + generateDT("",evsBioPortalLink,evsBioPortalDName)
 					          + separator()
-					          + generateDT("",passwordChangeStationLink,passwordChangeStationLinkDName)//GF32153
 					          + generateDT("","window.open('https://gforge.nci.nih.gov', '_blank')","NCI GForge")
 					          + generateDT("","window.open('https://wiki.nci.nih.gov', '_blank')","NCI Wiki")
 					          +"</dl>");

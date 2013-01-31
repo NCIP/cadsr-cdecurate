@@ -2156,7 +2156,7 @@ public class SearchServlet extends CurationServlet {
         if (aURL != null) {
         	 ToolURL.setPasswordChangeStationURL(session, aURL);
 		}else{
-			ToolURL.setPasswordChangeStationURL(session, "https://cadsrpasswordchange.nci.nih.gov/");
+			ToolURL.setPasswordChangeStationURL(session, ToolConstants.LINKS_PCS_URL);
 		}
         vList = new Vector();
         vList = getAC.getToolOptionData("PasswordChangeStation", "DISPLAY.NAME", "");
@@ -2170,7 +2170,7 @@ public class SearchServlet extends CurationServlet {
         if (dName != null){
            ToolURL.setPasswordChangeStationDispalyName(session, dName);
         }else{
-           ToolURL.setPasswordChangeStationDispalyName(session, "Reset Password");
+           ToolURL.setPasswordChangeStationDispalyName(session, ToolConstants.LINKS_PCS_NAME);
         }
         
         //=========GF32153 Add link to Password Change Station===========END

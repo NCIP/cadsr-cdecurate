@@ -49,6 +49,8 @@
 	<filter token="JBOSS.LOG.DIR" value="${JBOSS.LOG.DIR}" />
 	<filter token="appl.version" value="${appl.version}" />
 	<filter token="help.url" value="${help.url}"/>
+	<filter token="LINKS.PCS.HOST.URL" value="${LINKS.PCS.HOST.URL}"/>
+	<filter token="LINKS.PCS.NAME" value="${LINKS.PCS.NAME}"/>
 	<filter token="trackStatements" value="${track.statements}" />
 	<filter token="logLevel" value="${log.level}" />
 
