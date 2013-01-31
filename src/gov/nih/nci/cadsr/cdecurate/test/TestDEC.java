@@ -59,6 +59,15 @@ public class TestDEC
 	CurationServlet m_servlet = null;
 
   /**
+   * Files involved -
+   * 
+1. InsACService.java
+2. SetACService.java
+3. DataElementConceptServlet.java
+4. Results.jsp
+5. CreateDEC.jsp
+6. gf30681_update_ac_exists.sql
+
    * Useful SQLs -
    * 
    * To check overall CDR:

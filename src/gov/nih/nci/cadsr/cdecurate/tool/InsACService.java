@@ -7,6 +7,7 @@ import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.persist.concept.Con_Derivation_Rules_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.de.DeComp;
 import gov.nih.nci.cadsr.persist.de.DeErrorCodes;
@@ -1173,6 +1174,10 @@ public class InsACService implements Serializable {
 								.storeStatusMsg("\\t Successfully updated Data Element Concept.");
 				}
 			}
+			
+			//GF30681 update the CDR in dec table
+			updateDECUniqueCDRName("CDR name here");
+			
 			this.storeStatusMsg("\\n");
 			// capture the duration
 			// logger.info(m_servlet.getLogMessage(m_classReq, "setDEC", "end
@@ -2037,11 +2042,61 @@ public class InsACService implements Serializable {
 		return uniqueMsg;
 	}
 
-	public String checkDECUniqueOCPropPair(DEC_Bean mDEC) {
+	public String updateDECUniqueCDRName(String decId) {
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
 		String uniqueMsg = "";
-		String longName = mDEC.getDEC_LONG_NAME();
+		HttpSession session = m_classReq.getSession();
+		String cdrName = (String)session.getAttribute(Constants.DEC_CDR_NAME);
+		String sOCID = decId;	//mDEC.getDEC_OCL_IDSEQ();
+		if (sOCID == null)
+			sOCID = "";
+		//String sPropID = mDEC.getDEC_PROPL_IDSEQ();
+		//if (sPropID == null)
+		//	sPropID = "";
+		
+		try {
+			if (m_servlet.getConn() == null)
+				m_servlet.ErrorLogin(m_classReq, m_classRes);
+			else {
+				pstmt = m_servlet
+						.getConn()
+						.prepareStatement(
+								"select long_name, CDR_NAME, date_created, dec_id from data_element_concepts where "
+						+ " CDR_NAME = ?"
+						+ " order by date_created desc");
+//				pstmt.setString(1, sOCID); // oc id
+//				pstmt.setString(2, sPropID); // prop id
+//				pstmt.setString(1, longName); // long name
+				pstmt.setString(1, cdrName); // cdr name of the DEC
+				rs = pstmt.executeQuery(); // call teh query
+				String sReturnID = "";
+				while (rs.next())
+					sReturnID = rs.getString("dec_id");
+					logger.debug("DEC with CDR name [" + rs.getString("CDR_NAME") + "] found!");
+					// oc-prop is not unique in existing DEC
+					if (sReturnID != null && !sReturnID.equals(""))
+						uniqueMsg = "Warning:DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
+								+ sReturnID + "<br>";
+			}
+		} catch (Exception e) {
+			logger.error(
+					"ERROR in InsACService-checkUniqueOCPropPair for exception : "
+							+ e.toString(), e);
+		}finally{
+			rs = SQLHelper.closeResultSet(rs);
+		    pstmt = SQLHelper.closePreparedStatement(pstmt);
+		}
+		return uniqueMsg;
+	}
+	
+	public String checkDECUniqueCDRName(DEC_Bean mDEC) {
+		ResultSet rs = null;
+		PreparedStatement pstmt = null;
+		String uniqueMsg = "";
+//		String longName = mDEC.getDEC_LONG_NAME();
+		HttpSession session = m_classReq.getSession();
+		String cdrName = (String)session.getAttribute(Constants.DEC_CDR_NAME);
 		String sOCID = mDEC.getDEC_OCL_IDSEQ();
 		if (sOCID == null)
 			sOCID = "";
@@ -2056,17 +2111,18 @@ public class InsACService implements Serializable {
 				pstmt = m_servlet
 						.getConn()
 						.prepareStatement(
-								"select long_name, OC_IDSEQ, PROP_IDSEQ, date_created, dec_id from data_element_concepts_view where "
-						//+"OC_IDSEQ = ? and PROP_IDSEQ = ? "
-						+ " long_name = ?"
+								"select long_name, CDR_NAME, date_created, dec_id from data_element_concepts where "
+						+ " CDR_NAME = ?"
 						+ " order by date_created desc");
 //				pstmt.setString(1, sOCID); // oc id
 //				pstmt.setString(2, sPropID); // prop id
-				pstmt.setString(1, longName); // long name
+//				pstmt.setString(1, longName); // long name
+				pstmt.setString(1, cdrName); // cdr name of the DEC
 				rs = pstmt.executeQuery(); // call teh query
 				String sReturnID = "";
 				while (rs.next())
 					sReturnID = rs.getString("dec_id");
+					logger.debug("DEC with CDR name [" + rs.getString("CDR_NAME") + "] found!");
 					// oc-prop is not unique in existing DEC
 					if (sReturnID != null && !sReturnID.equals(""))
 						uniqueMsg = "Warning:DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
@@ -6347,17 +6403,19 @@ public class InsACService implements Serializable {
 			statusBean.setStatusMessage("**  Creating a new "+type + " in caBIG");
 		}
          
-/*
-         //use the existing DEC if exists
-		String strInValid = insAC.checkDECUniqueOCPropPair(m_DEC);
-		if ((idseq != null) && !(idseq.equals(""))) {
+		//GF30681 ---- begin new CDR rule !!!
+        //use the existing DEC if exists based on the new CDR for DEC
+ 		HttpSession session = m_classReq.getSession();
+ 		DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
+		String strInValid = "";	//checkDECUniqueCDRName(m_DEC); //TBD - need to add a column cdr_name into dec table first
+		if (strInValid != null && !strInValid.equals("")) {
 			statusBean.setStatusMessage(strInValid);
 			statusBean.setCondrExists(true);
 //			statusBean.setCondrIDSEQ(condrIDSEQ);
 //			statusBean.setEvsBeanExists(true);
 //			statusBean.setEvsBeanIDSEQ(idseq);
 		}
-*/
+		//GF30681 ---- end new CDR rule !!!
          
         return statusBean;
 	}
