@@ -26,6 +26,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ import javax.servlet.http.HttpSession;
 import oracle.jdbc.driver.OracleTypes;
 
 import org.apache.log4j.Logger;
+//import org.joda.time.DateTimeUtils;
 
 
 /**
@@ -1080,6 +1082,10 @@ public class InsACService implements Serializable {
 								+ dec.getDEC_DEC_ID());
 						this
 								.storeStatusMsg("\\t Successfully created New Data Element Concept.");
+						
+						//GF30681 update the CDR in dec table
+						updateDECUniqueCDRName(sPublicID, (String)session.getAttribute(Constants.DEC_CDR_NAME));
+						
 					} else if (sAction.equals("UPD") && sReturnCode != null
 							&& !sReturnCode.equals("")){
 						logger.debug("sReturnCode at 1084 of InsACService.java is" + sReturnCode);
@@ -1169,14 +1175,15 @@ public class InsACService implements Serializable {
 
 					sReturn = (String) m_classReq.getAttribute("retcode");
 					if (sAction.equals("UPD")
-							&& (sReturn == null || sReturn.equals("")))
+							&& (sReturn == null || sReturn.equals(""))) {
 						this
 								.storeStatusMsg("\\t Successfully updated Data Element Concept.");
+						
+						//GF30681 update the CDR in dec table
+						updateDECUniqueCDRName(sDEC_ID, (String)session.getAttribute(Constants.DEC_CDR_NAME));
+					}
 				}
 			}
-			
-			//GF30681 update the CDR in dec table
-			updateDECUniqueCDRName("CDR name here");
 			
 			this.storeStatusMsg("\\n");
 			// capture the duration
@@ -2041,19 +2048,13 @@ public class InsACService implements Serializable {
         }
 		return uniqueMsg;
 	}
+	
+	
 
-	public String updateDECUniqueCDRName(String decId) {
+	public boolean checkDECUniqueCDRName(String decId, String cdr) {
+		boolean retVal = false;
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
-		String uniqueMsg = "";
-		HttpSession session = m_classReq.getSession();
-		String cdrName = (String)session.getAttribute(Constants.DEC_CDR_NAME);
-		String sOCID = decId;	//mDEC.getDEC_OCL_IDSEQ();
-		if (sOCID == null)
-			sOCID = "";
-		//String sPropID = mDEC.getDEC_PROPL_IDSEQ();
-		//if (sPropID == null)
-		//	sPropID = "";
 		
 		try {
 			if (m_servlet.getConn() == null)
@@ -2063,21 +2064,21 @@ public class InsACService implements Serializable {
 						.getConn()
 						.prepareStatement(
 								"select long_name, CDR_NAME, date_created, dec_id from data_element_concepts where "
-						+ " CDR_NAME = ?"
+						+ " dec_id = ?"
 						+ " order by date_created desc");
-//				pstmt.setString(1, sOCID); // oc id
-//				pstmt.setString(2, sPropID); // prop id
-//				pstmt.setString(1, longName); // long name
-				pstmt.setString(1, cdrName); // cdr name of the DEC
-				rs = pstmt.executeQuery(); // call teh query
+				pstmt.setString(1, decId); // DEC id
+				rs = pstmt.executeQuery();
 				String sReturnID = "";
-				while (rs.next())
+				String sCdrReturn = "";
+				while (rs.next()) {
 					sReturnID = rs.getString("dec_id");
-					logger.debug("DEC with CDR name [" + rs.getString("CDR_NAME") + "] found!");
+					sCdrReturn = rs.getString("CDR_NAME");
+					logger.debug("DEC [" + decId + "] with CDR name [" + sCdrReturn + "] found!");
 					// oc-prop is not unique in existing DEC
-					if (sReturnID != null && !sReturnID.equals(""))
-						uniqueMsg = "Warning:DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
-								+ sReturnID + "<br>";
+					retVal = true;
+					break;
+				}
+					
 			}
 		} catch (Exception e) {
 			logger.error(
@@ -2087,46 +2088,28 @@ public class InsACService implements Serializable {
 			rs = SQLHelper.closeResultSet(rs);
 		    pstmt = SQLHelper.closePreparedStatement(pstmt);
 		}
-		return uniqueMsg;
+		return retVal;
 	}
 	
-	public String checkDECUniqueCDRName(DEC_Bean mDEC) {
+	public int updateDECUniqueCDRName(String decId, String cdr) {
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
-		String uniqueMsg = "";
-//		String longName = mDEC.getDEC_LONG_NAME();
-		HttpSession session = m_classReq.getSession();
-		String cdrName = (String)session.getAttribute(Constants.DEC_CDR_NAME);
-		String sOCID = mDEC.getDEC_OCL_IDSEQ();
-		if (sOCID == null)
-			sOCID = "";
-		String sPropID = mDEC.getDEC_PROPL_IDSEQ();
-		if (sPropID == null)
-			sPropID = "";
+		int count = -1;
 		
 		try {
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
-			else {
-				pstmt = m_servlet
-						.getConn()
-						.prepareStatement(
-								"select long_name, CDR_NAME, date_created, dec_id from data_element_concepts where "
-						+ " CDR_NAME = ?"
-						+ " order by date_created desc");
-//				pstmt.setString(1, sOCID); // oc id
-//				pstmt.setString(2, sPropID); // prop id
-//				pstmt.setString(1, longName); // long name
-				pstmt.setString(1, cdrName); // cdr name of the DEC
-				rs = pstmt.executeQuery(); // call teh query
-				String sReturnID = "";
-				while (rs.next())
-					sReturnID = rs.getString("dec_id");
-					logger.debug("DEC with CDR name [" + rs.getString("CDR_NAME") + "] found!");
-					// oc-prop is not unique in existing DEC
-					if (sReturnID != null && !sReturnID.equals(""))
-						uniqueMsg = "Warning:DEC's with combination of Object Class and Property already exists in other contexts with Public ID(s): "
-								+ sReturnID + "<br>";
+			else {				
+				pstmt = m_servlet.getConn().prepareStatement("update data_element_concepts set CDR_NAME = ? where dec_id = ?");
+				pstmt.setString(1, cdr); // cdr name of the DEC
+				pstmt.setString(2, decId);
+				count = pstmt.executeUpdate();
+				m_servlet.getConn().commit();
+	        	logger.debug("DEC [" + decId + "] cdr updated with [" + cdr + "] done.");
+				
+				if(count == 0) {
+					throw new Exception("Not able to update CDR of DEC with public id [" + decId + "]");
+				}
 			}
 		} catch (Exception e) {
 			logger.error(
@@ -2136,7 +2119,7 @@ public class InsACService implements Serializable {
 			rs = SQLHelper.closeResultSet(rs);
 		    pstmt = SQLHelper.closePreparedStatement(pstmt);
 		}
-		return uniqueMsg;
+		return count;
 	}
 	
 	   /**

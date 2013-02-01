@@ -516,10 +516,12 @@ String propCDR = "";
 													<%if (vOCQualifierNames.size()<1) {%>
 													<option value=""></option>
 													<% } else { %>
-													<%for (int i = 0; vOCQualifierNames.size()>i; i++)
+													<%
+													ocCDR = "";
+													for (int i = 0; vOCQualifierNames.size()>i; i++)
                               {
                                 String sQualName = (String)vOCQualifierNames.elementAt(i);
-                                ocCDR += (String)vOCQualifierCodes.elementAt(i);
+                                ocCDR += ":" + (String)vOCQualifierCodes.elementAt(i);
                               %>
 													<option value="<%=sQualName%>" <%if(i==0){%> selected <%}%>>
 														<%=sQualName%>
@@ -537,7 +539,7 @@ String propCDR = "";
 											</td>
 										</tr>
 							<%
-                                ocCDR += sOCCCode ;
+                                ocCDR += ":" + sOCCCode ;
                                 System.out.println("================>>>>> OC CDR = " + ocCDR);
 							%>			
 										<tr>
@@ -649,10 +651,12 @@ String propCDR = "";
 													<%if (vPropQualifierNames.size()<1) {%>
 													<option value=""></option>
 													<% } else { %>
-													<%for (int i = 0; vPropQualifierNames.size()>i; i++)
+													<%
+													propCDR = "";
+													for (int i = 0; vPropQualifierNames.size()>i; i++)
                               {
                                 String sQualName = (String)vPropQualifierNames.elementAt(i);
-                                propCDR += (String)vPropQualifierCodes.elementAt(i);
+                                propCDR += ":" + (String)vPropQualifierCodes.elementAt(i);
                               %>
 													<option value="<%=sQualName%>" <%if(i==0){%> selected <%}%>>
 														<%=sQualName%>
@@ -670,7 +674,7 @@ String propCDR = "";
 											</td>
 										</tr>
 							<%
-                                propCDR += sPCCCode;
+                                propCDR += ":" + sPCCCode;
                                 System.out.println("================>>>>> Prop CDR = " + propCDR);
 							%>			
 										<tr>
@@ -1362,9 +1366,10 @@ String propCDR = "";
 					<%=sPropQualifierDB%>
 				</option>
 				<%  }
-  }   
+  }
 
-session.setAttribute(Constants.DEC_CDR_NAME, ocCDR + propCDR);
+//GF30681
+session.setAttribute(Constants.DEC_CDR_NAME, ocCDR + ":" + propCDR);
 System.out.println("dec_cdr_name = [" + session.getAttribute(Constants.DEC_CDR_NAME) + "]");
 %>
 			</select>

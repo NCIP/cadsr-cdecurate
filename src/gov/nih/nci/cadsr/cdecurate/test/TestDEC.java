@@ -155,6 +155,8 @@ order by date_created desc
   public TestDEC()
   {
   }
+
+  
   /**
    * @param args
    */
@@ -186,6 +188,21 @@ order by date_created desc
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
+
+    /*
+select date_created, dec_id, long_name, cdr_name from data_element_concepts
+where dec_id = '3632820'
+order by date_created desc
+     */
+//	  HttpSession session = m_classReq.getSession();
+	  InsACService ins = new InsACService(null, null, testdec.m_servlet);
+	  String testCDR = "cxxxcyyyc456";
+	  ins.checkDECUniqueCDRName("3632820", testCDR);
+	  ins.updateDECUniqueCDRName("3632820", testCDR);
+  }
+  
+  
+  public void testOthers(TestDEC testdec) {
 //    logger.start();
 //    logger.info("started vm test");
     
@@ -242,9 +259,10 @@ order by date_created desc
     //end the logger
 //    logger.end();
 	
-	System.out.println("strWarning [" + strWarning + "]");
+	System.out.println("strWarning [" + strWarning + "]");	  
+	  
   }
-
+  
 	/**
 	 * ====================== This is a mockup method of the real SetACService.setDECValueFromPage ======================
 	 * To check whether data is unique value in the database for the selected
