@@ -3790,6 +3790,21 @@ public class SetACService implements Serializable
 				if(sName != null) m_DEC.setDEC_CD_NAME(sName);
 			}
 
+			//===============GF32398=======START
+			//set DE_REG_STATUS
+			sName = (String)req.getParameter("selRegStatus");
+			if (sName != null)
+				m_DEC.setDEC_REG_STATUS(sName);
+
+			logger.debug("RegStatus is "+ sName+"**********");
+			
+			//set DE_REG_STATUS_ID
+			sName = (String)req.getParameter("regStatusIDSEQ");
+			if (sName != null)
+				m_DEC.setDEC_REG_STATUS_IDSEQ(sName);
+			
+			logger.debug("RegStatusID is "+ sName+"**********");
+			//=============GF32398=======END
 			//set DEC_SOURCE
 			sName = (String)req.getParameter("selSource");
 			if(sName != null)
@@ -4227,6 +4242,22 @@ public class SetACService implements Serializable
 				}
 			}
 
+			//===============GF32398=======START
+			//set DE_REG_STATUS
+			sName = (String)req.getParameter("selRegStatus");
+			if (sName != null)
+				m_VD.setVD_REG_STATUS(sName);
+
+			logger.debug("RegStatus is "+ sName+"**********");
+			
+			//set DE_REG_STATUS_ID
+			sName = (String)req.getParameter("regStatusIDSEQ");
+			if (sName != null)
+				m_VD.setVD_REG_STATUS_IDSEQ(sName);
+			
+			logger.debug("RegStatusID is "+ sName+"**********");
+			//=============GF32398=======END
+			
 			//set VD_ASL_NAME
 			sName = (String)req.getParameter("selStatus");
 			if(sName != null)

@@ -242,8 +242,10 @@ public class SearchServlet extends CurationServlet {
                         DataManager.setAttribute(session, "originAction", "QuestionSearch");
                         getACSearch.getACQuestion();
                     }
-                    else
+                    else {
+                    	logger.info("at line 246 of SearchServlet.java***********");
                         getACSearch.getACKeywordResult(m_classReq, m_classRes);
+                    }
                     // forward to search result page of main search
                     ForwardJSP(m_classReq, m_classRes, "/SearchResultsPage.jsp");
                 }
@@ -1435,8 +1437,8 @@ public class SearchServlet extends CurationServlet {
             vCompAtt.addElement("Long Name");
             vCompAtt.addElement("Public ID");
             vCompAtt.addElement("Version");
-//            vCompAtt.addElement("Registration Status");//GF32398
-            logger.info("at line 1439 of SearchServlet.java");
+            vCompAtt.addElement("Registration Status");//GF32398
+            logger.info("at line 1440 of SearchServlet.java");
             vCompAtt.addElement("Workflow Status");
             vCompAtt.addElement("Context");
             vCompAtt.addElement("Definition");
@@ -1460,8 +1462,8 @@ public class SearchServlet extends CurationServlet {
             vCompAtt.addElement("Long Name");
             vCompAtt.addElement("Public ID");
             vCompAtt.addElement("Version");
-//            vCompAtt.addElement("Registration Status");//GF32398
-            logger.info("at line 1464 of SearchServlet.java");
+            vCompAtt.addElement("Registration Status");//GF32398
+            logger.info("at line 1465 of SearchServlet.java");
             vCompAtt.addElement("Workflow Status");
             vCompAtt.addElement("Context");
             vCompAtt.addElement("Definition");
@@ -1814,10 +1816,9 @@ public class SearchServlet extends CurationServlet {
             vDefaultAttr.addElement("Long Name");
             vDefaultAttr.addElement("Public ID");
             vDefaultAttr.addElement("Version");
-            if (searchAC.equals("DataElement") 
-//            		|| searchAC.equals("DataElementConcept") || searchAC.equals("ValueDomain")	//GF32398
-            		)
+            if (searchAC.equals("DataElement")|| searchAC.equals("DataElementConcept") || searchAC.equals("ValueDomain")) { //GF32398
                 vDefaultAttr.addElement("Registration Status");
+            }
             vDefaultAttr.addElement("Workflow Status");
             // only if search is Data element
             if (searchAC.equals("DataElement"))

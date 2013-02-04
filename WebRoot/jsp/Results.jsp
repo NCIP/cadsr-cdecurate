@@ -1648,6 +1648,48 @@ function ShowSelectedRowss(){
 				}
 				%>
 
+				<!-- Registration status filter GF32398-->
+				<%
+							if (sSearchAC.equals("DataElementConcept") || sSearchAC.equals("ValueDomain")) {
+				%>          
+                <tr>
+                 <td>
+                     <div class="scSubItem">
+                         <b>Registration Status</b>      
+                 </td>        
+                </tr>
+                <tr>
+                   <td><div style="padding-left: 20px">
+						<select name="listRegStatus" size="1" style="width: 185"
+							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
+							<option value="allReg"
+								<%if (vRegStatus == null || vRegStatus.size()==0 
+              || sRegStatus == null || sRegStatus.equals("") || sRegStatus.equals("allReg")){%>
+								selected <%}%>>
+								All Statuses
+							</option>
+							<%
+										if (vRegStatus != null) {
+										for (int i = 0; vRegStatus.size() > i; i++) {
+									String sReg = (String) vRegStatus.elementAt(i);
+							%>
+							<option value="<%=sReg%>" <%if(sReg.equals(sRegStatus)){%>
+								selected <%}%>>
+								<%=sReg%>
+							</option>
+							<%
+									}
+									}
+							%>
+						</select></div>
+					</td>
+				
+				</tr>
+				<%
+				}
+				%>          
+                
+                <!-- Registration status filter GF32398-->
               
               <!-- workflow status filter for all ACs except csi, pv, vm -->
 				<%
@@ -1702,6 +1744,7 @@ function ShowSelectedRowss(){
 									String sStatusName = (String) vStatusDEC.elementAt(i);
 							%>
 							<option value="<%=sStatusName%>"
+								<!--if(sStatusName.equals("RELEASED")){ -->
 								<%if((vStatus != null) && (vStatus.contains(sStatusName))){%>
 								selected <%}%>>
 								<%=sStatusName%>
