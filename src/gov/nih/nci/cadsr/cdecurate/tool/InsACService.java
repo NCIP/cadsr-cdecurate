@@ -1180,7 +1180,7 @@ public class InsACService implements Serializable {
 								.storeStatusMsg("\\t Successfully updated Data Element Concept.");
 						
 						//GF30681 update the CDR in dec table
-						updateDECUniqueCDRName(sDEC_ID, (String)session.getAttribute(Constants.DEC_CDR_NAME));
+						updateDECUniqueCDRName(this.getPublicID(sDEC_ID), (String)session.getAttribute(Constants.DEC_CDR_NAME));
 					}
 				}
 			}
@@ -6390,14 +6390,16 @@ public class InsACService implements Serializable {
         //use the existing DEC if exists based on the new CDR for DEC
  		HttpSession session = m_classReq.getSession();
  		DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
-		String strInValid = checkDECUniqueCDRName(m_DEC.getDEC_DEC_ID(), (String)session.getAttribute(Constants.DEC_CDR_NAME)); //TBD - need to add a column cdr_name into dec table first
-		if (strInValid != null && !strInValid.equals("")) {
-			statusBean.setStatusMessage(strInValid);
-			statusBean.setCondrExists(true);
-//			statusBean.setCondrIDSEQ(condrIDSEQ);
-//			statusBean.setEvsBeanExists(true);
-//			statusBean.setEvsBeanIDSEQ(idseq);
-		}
+ 		if(m_DEC != null) {
+			String strInValid = checkDECUniqueCDRName(m_DEC.getDEC_DEC_ID(), (String)session.getAttribute(Constants.DEC_CDR_NAME)); //TBD - need to add a column cdr_name into dec table first
+			if (strInValid != null && !strInValid.equals("")) {
+				statusBean.setStatusMessage(strInValid);
+				statusBean.setCondrExists(true);
+	//			statusBean.setCondrIDSEQ(condrIDSEQ);
+	//			statusBean.setEvsBeanExists(true);
+	//			statusBean.setEvsBeanIDSEQ(idseq);
+			}
+ 		}
 		//GF30681 ---- end new CDR rule !!!
          
         return statusBean;

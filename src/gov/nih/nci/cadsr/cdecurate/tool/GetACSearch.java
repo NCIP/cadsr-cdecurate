@@ -212,6 +212,7 @@ public class GetACSearch implements Serializable
                     sStatus = "";
                 // filter by registration status
                 String sRegStatus = (String) req.getParameter("listRegStatus");
+                logger.debug("at line 215 of GetACSearch.java***********"+ sRegStatus);
                 DataManager.setAttribute(session, "serRegStatus", sRegStatus);
                 if (sRegStatus == null || sRegStatus.equals("allReg"))
                     sRegStatus = "";
@@ -488,12 +489,14 @@ public class GetACSearch implements Serializable
                     }
                     else if (sSearchAC.equals("DataElementConcept"))
                     {
+                    	logger.info("at line 492 of GetACsearch.java***********");
                         doDECSearch("", sKeyword, "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo,
                                         sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", "", dVersion,
                                         sCDid, "", "", "", "", vAC, sRecordsDisplayed);
                     }
                     else if (sSearchAC.equals("ValueDomain"))
                     {
+                    	logger.info("at line 499 of GetACsearch.java***********");
                         doVDSearch("", sKeyword, "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
                                         sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", dVersion, sCDid,
                                         "", "", "", "", "", "", sDataType, vAC, sRecordsDisplayed);
@@ -1832,6 +1835,9 @@ public class GetACSearch implements Serializable
                         DECBean.setAC_CONCEPT_NAME(rs.getString("con_name"));
                         DECBean.setALTERNATE_NAME(rs.getString("alt_name"));
                         DECBean.setREFERENCE_DOCUMENT(rs.getString("rd_name"));
+                        DECBean.setDEC_REG_STATUS("REG_STATUS");//GF32398
+                        DECBean.setDEC_REG_STATUS_IDSEQ("REG_STATUS_ID");//GF32398
+                        logger.info("at line 1840 of GetACsearch.java***********");
                         vList.addElement(DECBean);
                         // store the ocl name or propl name in the request
                         String reslabel = "Search Results for Data Element Concept associated with - ";
@@ -2046,6 +2052,9 @@ public class GetACSearch implements Serializable
                         VDBean.setALTERNATE_NAME(rs.getString("alt_name"));
                         VDBean.setREFERENCE_DOCUMENT(rs.getString("rd_name"));
                         VDBean.setVD_IN_FORM(isVDinForm(VDBean.getVD_VD_IDSEQ(), VDBean.getVD_TYPE_FLAG()));
+                        VDBean.setVD_REG_STATUS("REG_STATUS");//GF32398
+                        VDBean.setVD_REG_STATUS_IDSEQ("REG_STATUS_ID");//GF32398
+                        logger.info("at line 2057 of GetACsearch.java***********");
                         // get permissible value
                         s = rs.getString("min_value");
                         if (s != null && !s.equals(""))
@@ -3513,6 +3522,8 @@ public class GetACSearch implements Serializable
                     vResult.addElement(DECBean.getDEC_DEC_ID());
                 if (vSelAttr.contains("Version"))
                     vResult.addElement(DECBean.getDEC_VERSION());
+                if (vSelAttr.contains("Registration Status"))//GF32398
+                    vResult.addElement(DECBean.getDEC_REG_STATUS());//GF32398
                 if (vSelAttr.contains("Workflow Status"))
                     vResult.addElement(DECBean.getDEC_ASL_NAME());
                 if (vSelAttr.contains("Context"))
@@ -3659,6 +3670,8 @@ public class GetACSearch implements Serializable
                     vResult.addElement(VDBean.getVD_VD_ID());
                 if (vSelAttr.contains("Version"))
                     vResult.addElement(VDBean.getVD_VERSION());
+                if (vSelAttr.contains("Registration Status"))//GF32398
+                    vResult.addElement(VDBean.getVD_REG_STATUS());//GF32398
                 if (vSelAttr.contains("Workflow Status"))
                     vResult.addElement(VDBean.getVD_ASL_NAME());
                 if (vSelAttr.contains("Context"))

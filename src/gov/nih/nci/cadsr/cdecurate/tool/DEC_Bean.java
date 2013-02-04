@@ -240,6 +240,10 @@ public class DEC_Bean extends AC_Bean
     private String                             AC_PREF_NAME_TYPE;
 
     private String                             CDR_NAME;
+    
+    private String 							   DEC_REG_STATUS;//GF32398
+    
+    private String 							   DEC_REG_STATUS_IDSEQ;//GF32398
 
     /**
      * Constructor
@@ -339,10 +343,33 @@ public class DEC_Bean extends AC_Bean
         this.setAC_SYS_PREF_NAME(copyBean.getAC_SYS_PREF_NAME());
         this.setAC_USER_PREF_NAME(copyBean.getAC_USER_PREF_NAME());
         this.setAC_PREF_NAME_TYPE(copyBean.getAC_PREF_NAME_TYPE());
+        this.setDEC_REG_STATUS(copyBean.getDEC_REG_STATUS());//GF32398
+        this.setDEC_REG_STATUS_IDSEQ(copyBean.getDEC_REG_STATUS_IDSEQ());//GF32398
+        
         return this;
     }
 
-    /**
+    //=======GF32398===========START
+    
+    public String getDEC_REG_STATUS() {
+		return DEC_REG_STATUS;
+	}
+
+	public void setDEC_REG_STATUS(String dEC_REG_STATUS) {
+		DEC_REG_STATUS = dEC_REG_STATUS;
+	}
+
+	public String getDEC_REG_STATUS_IDSEQ() {
+		return DEC_REG_STATUS_IDSEQ;
+	}
+
+	public void setDEC_REG_STATUS_IDSEQ(String dEC_REG_STATUS_IDSEQ) {
+		DEC_REG_STATUS_IDSEQ = dEC_REG_STATUS_IDSEQ;
+	}
+
+	//========GF32398===========END
+	
+	/**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
      *
      * @param s

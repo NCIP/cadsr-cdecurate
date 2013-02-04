@@ -292,6 +292,10 @@ public class VD_Bean extends AC_Bean
     private Vector<PV_Bean>      removed_VDPVList;
 
     private boolean 			 VD_IN_FORM = false;
+    
+    private String 				 VD_REG_STATUS;//GF32398
+    
+    private String 				 VD_REG_STATUS_IDSEQ;//GF32398
     /**
      * Constructor
      */
@@ -403,6 +407,8 @@ public class VD_Bean extends AC_Bean
         this.setReferenceConceptList(copyBean.getReferenceConceptList());
         this.setRemoved_VDPVList(copyBean.cloneVDPVVector(copyBean.getRemoved_VDPVList()));
         this.setVD_IN_FORM(copyBean.getVD_IN_FORM());
+        this.setVD_REG_STATUS(copyBean.getVD_REG_STATUS());//GF32398
+        this.setVD_REG_STATUS_IDSEQ(copyBean.getVD_REG_STATUS_IDSEQ());//GF32398
         return this;
     }
 
@@ -423,6 +429,25 @@ public class VD_Bean extends AC_Bean
     }
 
     // Set Properties
+    //=======GF32398===========START
+    
+    public String getVD_REG_STATUS() {
+		return VD_REG_STATUS;
+	}
+
+	public void setVD_REG_STATUS(String vD_REG_STATUS) {
+		VD_REG_STATUS = vD_REG_STATUS;
+	}
+
+	public String getVD_REG_STATUS_IDSEQ() {
+		return VD_REG_STATUS_IDSEQ;
+	}
+
+	public void setVD_REG_STATUS_IDSEQ(String vD_REG_STATUS_IDSEQ) {
+		VD_REG_STATUS_IDSEQ = vD_REG_STATUS_IDSEQ;
+	}
+	
+	//=======GF32398===========END
     /**
      * The setRETURN_CODE method sets the RETURN_CODE for this bean.
      *
@@ -434,7 +459,8 @@ public class VD_Bean extends AC_Bean
         this.RETURN_CODE = s;
     }
 
-    /**
+
+	/**
      * The setVD_VD_IDSEQ method sets the VD_VD_IDSEQ for this bean.
      *
      * @param s
