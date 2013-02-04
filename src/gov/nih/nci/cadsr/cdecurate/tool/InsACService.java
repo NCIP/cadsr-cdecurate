@@ -2049,10 +2049,9 @@ public class InsACService implements Serializable {
 		return uniqueMsg;
 	}
 	
-	
-
-	public boolean checkDECUniqueCDRName(String decId, String cdr) {
-		boolean retVal = false;
+	public String checkDECUniqueCDRName(String decId, String cdr) {
+		//boolean retVal = false;
+		String retVal = "";
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
 		
@@ -2073,10 +2072,11 @@ public class InsACService implements Serializable {
 				while (rs.next()) {
 					sReturnID = rs.getString("dec_id");
 					sCdrReturn = rs.getString("CDR_NAME");
-					logger.debug("DEC [" + decId + "] with CDR name [" + sCdrReturn + "] found!");
+					retVal = "DEC [" + decId + "] with CDR name [" + sCdrReturn + "] found!";
+					logger.debug(retVal);
 					// oc-prop is not unique in existing DEC
-					retVal = true;
-					break;
+					//retVal = true;
+					break;	//in theory, according to the requirement, there should not be more than one dec!
 				}
 					
 			}
@@ -6390,7 +6390,7 @@ public class InsACService implements Serializable {
         //use the existing DEC if exists based on the new CDR for DEC
  		HttpSession session = m_classReq.getSession();
  		DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
-		String strInValid = "";	//checkDECUniqueCDRName(m_DEC); //TBD - need to add a column cdr_name into dec table first
+		String strInValid = checkDECUniqueCDRName(m_DEC.getDEC_DEC_ID(), (String)session.getAttribute(Constants.DEC_CDR_NAME)); //TBD - need to add a column cdr_name into dec table first
 		if (strInValid != null && !strInValid.equals("")) {
 			statusBean.setStatusMessage(strInValid);
 			statusBean.setCondrExists(true);
