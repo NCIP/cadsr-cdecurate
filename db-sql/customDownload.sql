@@ -204,6 +204,9 @@ Insert into SBREXT.CUSTOM_DOWNLOAD_TYPES
  Values
    ('concepts_list_t', 7, 'Primary Flag', 'String', 7);
 
+-- GF11372
+insert into sbrext.tool_options_view_ext (Tool_name, Property, Value) values('CURATION', 'CUSTOM_DOWNLOAD_LIMIT', '5000')
+   
 /* Formatted on 5/11/2011 4:39:16 PM (QP5 v5.115.810.9015) */
 CREATE OR REPLACE FORCE VIEW SBREXT.cde_excel_generator_view (
    cde_idseq,
