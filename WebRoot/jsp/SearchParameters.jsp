@@ -1238,6 +1238,53 @@ function LoadKeyHandler()
 				<%
 				}
 				%>
+				<!-- Registration status filter============GF32398===START-->
+				<%
+							if (sSearchAC.equals("DataElementConcept")
+							|| sSearchAC.equals("ValueDomain")) {
+				%>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td style="height: 20" valign=bottom>
+						<b> Registration Status </b>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td>
+						<select name="listRegStatus" size="1" style="width: 172px"
+							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
+							<option value="allReg"
+								<%if (vRegStatus == null || vRegStatus.size()==0 
+              || sRegStatus == null || sRegStatus.equals("") || sRegStatus.equals("allReg")){%>
+								selected <%}%>>
+								All Statuses
+							</option>
+							<%
+										if (vRegStatus != null) {
+										for (int i = 0; vRegStatus.size() > i; i++) {
+									String sReg = (String) vRegStatus.elementAt(i);
+							%>
+							<option value="<%=sReg%>" <%if(sReg.equals(sRegStatus)){%>
+								selected <%}%>>
+								<%=sReg%>
+							</option>
+							<%
+									}
+									}
+							%>
+						</select>
+					</td>
+				</tr>
+				<%
+				}
+				%>
+				<!-- Registration status filter============GF32398====END-->
+				
 				<!-- workflow status filter for all ACs except csi, pv, vm -->
 				<%
 							if (!sSearchAC.equals("ClassSchemeItems")
@@ -1298,7 +1345,10 @@ function LoadKeyHandler()
 									String sStatusName = (String) vStatusDEC.elementAt(i);
 							%>
 							<option value="<%=sStatusName%>"
-								<%if((vStatus != null) && (vStatus.contains(sStatusName))){%>
+								<%-- <%if((vStatus != null) && (vStatus.contains(sStatusName))){%>
+								selected <%}%>> --%>
+								//For GF30681 to set default work flow status as RELEASED when search for DataElement Concept
+								<%if(sStatusName.equals("RELEASED")){%>
 								selected <%}%>>
 								<%=sStatusName%>
 							</option>
