@@ -1,7 +1,12 @@
+--GF11372
+
 SET DEFINE OFF;
 
-update SBREXT.TOOL_OPTIONS_EXT t set VALUE =    ('CDE_IDSEQ,DEC_IDSEQ,VD_IDSEQ,Conceptual Domain Public ID,Conceptual Domain Short Name,Conceptual Domain Version,Conceptual Domain Context Name,Classification Scheme Public ID,DDE Methods,Representation Concept Origin,Value Domain Concept Origin,Property Concept Origin,Object Class Concept Origin,Derivation Type Description,DDE Preferred Name,DDE Preferred Definition,Document Organization')
-where t.tool_name = 'CURATION' and T.PROPERTY = 'CUSTOM.COLUMN.EXCLUDED';
+insert into sbrext.tool_options_view_ext (tool_name, property, value)
+values('CURATION', 'CUSTOM.COLUMN.EXCLUDED', 'CDE_IDSEQ,DEC_IDSEQ,VD_IDSEQ,Conceptual Domain Public ID,Conceptual Domain Short Name,Conceptual Domain Version,Conceptual Domain Context Name,Classification Scheme Public ID,DDE Methods,Representation Concept Origin,Value Domain Concept Origin,Property Concept Origin,Object Class Concept Origin,Derivation Type Description,DDE Preferred Name,DDE Preferred Definition,Document Organization');
+
+insert into sbrext.tool_options_view_ext (tool_name, property, Value) 
+values('CURATION', 'CUSTOM_DOWNLOAD_LIMIT', '5000');
 
 DROP TABLE SBREXT.CUSTOM_DOWNLOAD_TYPES CASCADE CONSTRAINTS;
 
@@ -204,9 +209,6 @@ Insert into SBREXT.CUSTOM_DOWNLOAD_TYPES
  Values
    ('concepts_list_t', 7, 'Primary Flag', 'String', 7);
 
--- GF11372
-insert into sbrext.tool_options_view_ext (Tool_name, Property, Value) values('CURATION', 'CUSTOM_DOWNLOAD_LIMIT', '5000')
-   
 /* Formatted on 5/11/2011 4:39:16 PM (QP5 v5.115.810.9015) */
 CREATE OR REPLACE FORCE VIEW SBREXT.cde_excel_generator_view (
    cde_idseq,
