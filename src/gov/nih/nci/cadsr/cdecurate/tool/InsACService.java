@@ -765,9 +765,10 @@ public class InsACService implements Serializable {
 			if (sInsFor.equals("BlockVersion"))
 				sInsertFor = "Version";
 			// add the dec name into the message
-			if (sAction.equals("INS"))
-				this.storeStatusMsg("Data Element Concept Name : "
-						+ dec.getDEC_LONG_NAME());
+			if (sAction.equals("INS")) {
+				//GF30681
+				//this.storeStatusMsg("Data Element Concept Name : " + dec.getDEC_LONG_NAME());
+			}
 			// store versioned status message
 			if (sInsertFor.equals("Version"))
 				this.storeStatusMsg("\\t Created new version successfully.");
@@ -1063,11 +1064,19 @@ public class InsACService implements Serializable {
 				}
 				// insert newly created row into hold vector
 				if (sReturnCode != null && sAction.equals("INS")){
-					logger.debug("sReturnCode at 1063 of InsACService.java is" + sReturnCode);
-					this
-							.storeStatusMsg("\\t "
-									+ sReturnCode
-									+ " : Unable to create new Data Element Concept Successfully.");
+					if (sReturnCode.equalsIgnoreCase("API_DEC_300")) {//GF30681
+						//Place the reuse logic here.
+						logger.debug("DEC already exists with DEC_Id"+sDEC_ID);
+						this.storeStatusMsg("Data Element Concept Name : ["
+								+ dec.getDEC_LONG_NAME() + "] already exists");
+					}else{
+						logger.debug("sReturnCode at 1063 of InsACService.java is" + sReturnCode);
+						this
+								.storeStatusMsg("\\t "
+										+ sReturnCode
+										+ " : Unable to create new Data Element Concept Successfully.");
+					}
+					
 				}
 				else if ((sReturnCode == null || (sReturnCode != null && sAction
 						.equals("UPD")))
@@ -2100,7 +2109,7 @@ public class InsACService implements Serializable {
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {				
-				pstmt = m_servlet.getConn().prepareStatement("update data_element_concepts set CDR_NAME = ? where dec_id = ?");
+				pstmt = m_servlet.getConn().prepareStatement("update sbr.data_element_concepts set CDR_NAME = ? where dec_id = ?");
 				pstmt.setString(1, cdr); // cdr name of the DEC
 				pstmt.setString(2, decId);
 				count = pstmt.executeUpdate();
@@ -2115,6 +2124,7 @@ public class InsACService implements Serializable {
 			logger.error(
 					"ERROR in InsACService-checkUniqueOCPropPair for exception : "
 							+ e.toString(), e);
+			System.out.println("updateDECUniqueCDRName: Error = [" + e + "]");
 		}finally{
 			rs = SQLHelper.closeResultSet(rs);
 		    pstmt = SQLHelper.closePreparedStatement(pstmt);

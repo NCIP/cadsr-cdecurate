@@ -1345,10 +1345,7 @@ function LoadKeyHandler()
 									String sStatusName = (String) vStatusDEC.elementAt(i);
 							%>
 							<option value="<%=sStatusName%>"
-								<%-- <%if((vStatus != null) && (vStatus.contains(sStatusName))){%>
-								selected <%}%>> --%>
-								//For GF30681 to set default work flow status as RELEASED when search for DataElement Concept
-								<%if(sStatusName.equals("RELEASED")){%>
+								<%if((vStatus != null) && (vStatus.contains(sStatusName))){%>
 								selected <%}%>>
 								<%=sStatusName%>
 							</option>
