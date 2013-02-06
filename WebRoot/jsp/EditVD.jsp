@@ -49,6 +49,7 @@
 		  //Vector vContextID = (Vector) session.getAttribute("vWriteContextVD_ID");
 			Vector vCS = null;
 			Vector vCS_ID = null;
+			Vector vRegStatus = null;//GF32398
 			 
 			 vDataTypes = (Vector) session.getAttribute("vDataType");
 			 vDataTypeDesc = (Vector) session.getAttribute("vDataTypeDesc");
@@ -69,6 +70,7 @@
 		     //Vector vContextID = (Vector) session.getAttribute("vWriteContextVD_ID");
 			 vCS = (Vector) session.getAttribute("vCS");
 			 vCS_ID = (Vector) session.getAttribute("vCS_ID");
+			 vRegStatus = (Vector) session.getAttribute("vRegStatus");//GF32398
            }
            
 			VD_Bean m_VD = new VD_Bean();
@@ -141,7 +143,12 @@
 			if (sRepTermID == null)
 				sRepTermID = "";
 			String sRepTerm = ""; //make the rep term using the concepts
-            
+			String sRegStatus = m_VD.getVD_REG_STATUS();//GF32398
+			if (sRegStatus == null)//GF32398
+				sRegStatus = "";//GF32398
+			String sRegStatusIDSEQ = m_VD.getVD_REG_STATUS_IDSEQ();//GF32398
+			if (sRegStatusIDSEQ == null)//GF32398
+				sRegStatusIDSEQ = "";//GF32398
             String evsConceptUrl = ToolURL.getEVSBrowserConceptUrl(pageContext);
             String repTermUrl = null;
 			String sRepTermVocab = m_VD.getVD_REP_EVS_CUI_ORIGEN();
@@ -1228,6 +1235,43 @@ function openEVSConceptsWindow(){
 						</td>
 					</tr>
 
+					<%--================GF32398==========START --%>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<%=item++%>
+						)
+					</td>
+					<td>
+					<% if (!isView) { %>
+						<font color="#FF0000">
+							Select
+						</font>
+						<% } %>
+						Registration Status
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td height="25" valign="top">
+						<%	if (!isView) {	%>
+						<select name="selRegStatus" size="1" style="Width: 50%"
+							onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selRegStatus',helpUrl); return false">
+						
+							<option value="" selected></option>
+							<%	if (vRegStatus != null) {
+										for (int i = 0; vRegStatus.size() > i; i++) {
+											String sReg = (String) vRegStatus.elementAt(i);
+											boolean isOK = true;
+											if (isOK) {	%>
+											<option value="<%=sReg%>" <%if(sReg.equals(sRegStatus)){%>selected <%}%>><%=sReg%></option>
+										<%	}	}	} %>
+						
+						</select><%}else{%><input type="text" size="100" value="<%=sRegStatus%>" readonly><%}%>
+					</td>
+				</tr>
+				<%--================GF32398==========END --%>
 					<tr height="25" valign="bottom">
 						<td align=right>
 							<%
@@ -2163,6 +2207,7 @@ function openEVSConceptsWindow(){
 					<input type="hidden" name="RepCCode" value="<%=sRepCCode%>">
 					<input type="hidden" name="RepCCodeDB" value="<%=sRepCCodeDB%>">
 					<input type="hidden" name="nameTypeChange" value="<%=nameChanged%>">
+					<input type="hidden" name="regStatusIDSEQ" value="<%=sRegStatusIDSEQ%>">//GF32398
 
 					<select name="selCSCSIHidden" size="1" style="visibility:hidden;" multiple></select>
 					<select name="selACCSIHidden" size="1" style="visibility:hidden;" multiple></select>

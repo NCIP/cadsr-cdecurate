@@ -32,6 +32,7 @@
         Vector vSource = null;
         Vector vCS = null;
         Vector vCS_ID = null;
+        Vector vRegStatus = null;//GF32398
         if (!isView){
             vContext = (Vector)session.getAttribute("vWriteContextDEC");
             //Vector vContextID = (Vector)session.getAttribute("vWriteContextDEC_ID");
@@ -42,6 +43,7 @@
             vSource = (Vector)session.getAttribute("vSource");
             vCS = (Vector)session.getAttribute("vCS");
             vCS_ID = (Vector)session.getAttribute("vCS_ID");
+            vRegStatus = (Vector) session.getAttribute("vRegStatus");//GF32398
         }
     
     UtilService serUtil = new UtilService();
@@ -94,6 +96,12 @@
     String sPropClass = m_DEC.getDEC_PROPL_NAME();
     String sObjClassPrimary = m_DEC.getDEC_OCL_NAME_PRIMARY();
     String sPropClassPrimary = m_DEC.getDEC_PROPL_NAME_PRIMARY();
+    String sRegStatus = m_DEC.getDEC_REG_STATUS();//GF32398
+	if (sRegStatus == null)//GF32398
+		sRegStatus = "";//GF32398
+    String sRegStatusIDSEQ = m_DEC.getDEC_REG_STATUS_IDSEQ();//GF32398
+	if (sRegStatusIDSEQ == null)//GF32398
+		sRegStatusIDSEQ = "";//GF32398
     if(sObjClass == null) sObjClass = "";
     if(sPropClass == null) sPropClass = "";
      
@@ -1069,6 +1077,43 @@
 				      <% } %>		
 					</td>
 				</tr>
+				<%--================GF32398==========START --%>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<%=item++%>
+						)
+					</td>
+					<td>
+					<% if (!isView) { %>
+						<font color="#FF0000">
+							Select
+						</font>
+						<% } %>
+						Registration Status
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td height="25" valign="top">
+						<%	if (!isView) {	%>
+						<select name="selRegStatus" size="1" style="Width: 50%"
+							onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selRegStatus',helpUrl); return false">
+						
+							<option value="" selected></option>
+							<%	if (vRegStatus != null) {
+										for (int i = 0; vRegStatus.size() > i; i++) {
+											String sReg = (String) vRegStatus.elementAt(i);
+											boolean isOK = true;
+											if (isOK) {	%>
+											<option value="<%=sReg%>" <%if(sReg.equals(sRegStatus)){%>selected <%}%>><%=sReg%></option>
+										<%	}	}	} %>
+						
+						</select><%}else{%><input type="text" size="100" value="<%=sRegStatus%>" readonly><%}%>
+					</td>
+				</tr>
+				<%--================GF32398==========END --%>
 				<tr height="25" valign="bottom">
 					<td align=right>
 						<%if(!sOriginAction.equals("BlockEditDEC") && (!isView)){%>
@@ -1549,6 +1594,7 @@
 
 			<input type="hidden" name="pageAction" value="nothing">
 			<input type="hidden" name="decIDSEQ" value="<%=sDECIDSEQ%>">
+			<input type="hidden" name="regStatusIDSEQ" value="<%=sRegStatusIDSEQ%>">//GF32398
 			<input type="hidden" name="openToTree" value="">
 			<input type="hidden" name="OCQualCCode" value="">
 			<input type="hidden" name="OCQualCCodeDB" value="">
