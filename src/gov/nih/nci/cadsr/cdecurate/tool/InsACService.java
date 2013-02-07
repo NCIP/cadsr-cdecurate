@@ -788,6 +788,7 @@ public class InsACService implements Serializable {
 			// String sLanguage = dec.getDEC_LANGUAGE();
 			String sSource = dec.getDEC_SOURCE();
 			String sDEC_ID = dec.getDEC_DEC_IDSEQ();
+			String sCDRName = (String)session.getAttribute(Constants.DEC_CDR_NAME);		//GF30681
 			String sChangeNote = dec.getDEC_CHANGE_NOTE();
 
 			// check if it is valid oc/prop for block dec at submit
@@ -945,7 +946,8 @@ public class InsACService implements Serializable {
 				cstmt = m_servlet
 						.getConn()
 						.prepareCall(
-								"{call SBREXT_SET_ROW.SET_DEC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+								  //"{call SBREXT_SET_ROW.SET_DEC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+								"{call SBREXT.DEC_ACTIONS.SET_DEC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");	//GF30681
 				// cstmt.registerOutParameter(1,
 				// java.sql.Types.VARCHAR);//ua_name
 				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // return
@@ -995,6 +997,8 @@ public class InsACService implements Serializable {
 				cstmt.registerOutParameter(24, java.sql.Types.VARCHAR); // deleted
 				// ind
 				cstmt.registerOutParameter(25, java.sql.Types.VARCHAR); // origin
+				// cdr_name
+				cstmt.registerOutParameter(26, java.sql.Types.VARCHAR); // cdr_name
 
 				// Set the In parameters (which are inherited from the
 				// PreparedStatement class)
@@ -1038,6 +1042,7 @@ public class InsACService implements Serializable {
 				cstmt.setString(18, sEndDate); // sEndDate - can be null
 				cstmt.setString(19, sChangeNote);
 				cstmt.setString(25, sSource);
+				cstmt.setString(26, sCDRName);
 				// Now we are ready to call the stored procedure
 				cstmt.execute();
 				// capture the duration
@@ -1093,7 +1098,7 @@ public class InsACService implements Serializable {
 								.storeStatusMsg("\\t Successfully created New Data Element Concept.");
 						
 						//GF30681 update the CDR in dec table
-						updateDECUniqueCDRName(sPublicID, (String)session.getAttribute(Constants.DEC_CDR_NAME));
+//						updateDECUniqueCDRName(sPublicID, (String)session.getAttribute(Constants.DEC_CDR_NAME));
 						
 					} else if (sAction.equals("UPD") && sReturnCode != null
 							&& !sReturnCode.equals("")){
@@ -1189,7 +1194,7 @@ public class InsACService implements Serializable {
 								.storeStatusMsg("\\t Successfully updated Data Element Concept.");
 						
 						//GF30681 update the CDR in dec table
-						updateDECUniqueCDRName(this.getPublicID(sDEC_ID), (String)session.getAttribute(Constants.DEC_CDR_NAME));
+//						updateDECUniqueCDRName(this.getPublicID(sDEC_ID), (String)session.getAttribute(Constants.DEC_CDR_NAME));
 					}
 				}
 			}
@@ -2100,6 +2105,7 @@ public class InsACService implements Serializable {
 		return retVal;
 	}
 	
+	/*
 	public int updateDECUniqueCDRName(String decId, String cdr) {
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
@@ -2131,6 +2137,8 @@ public class InsACService implements Serializable {
 		}
 		return count;
 	}
+	*/
+
 	
 	   /**
 	    * to created object class, property and qualifier value from EVS into cadsr. Retrieves the session bean m_DEC.
