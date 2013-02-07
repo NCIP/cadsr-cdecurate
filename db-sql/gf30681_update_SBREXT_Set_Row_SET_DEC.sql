@@ -2,8 +2,10 @@
 /*
  * Fix related to issue https://gforge.nci.nih.gov/tracker/index.php?func=detail&aid=30681.
  */
-CREATE OR REPLACE PROCEDURE SET_DEC(
- P_RETURN_CODE        OUT    VARCHAR2
+CREATE OR REPLACE PACKAGE DEC_ACTIONS AS  -- spec
+PROCEDURE SET_DEC(
+P_UA_NAME          IN VARCHAR2
+,P_RETURN_CODE        OUT    VARCHAR2
 ,P_ACTION                   IN     VARCHAR2
 ,P_DEC_DEC_IDSEQ         IN OUT VARCHAR2
 ,P_DEC_PREFERRED_NAME     IN OUT VARCHAR2
@@ -26,9 +28,41 @@ CREATE OR REPLACE PROCEDURE SET_DEC(
 ,P_DEC_MODIFIED_BY         OUT    VARCHAR2
 ,P_DEC_DATE_MODIFIED     OUT    VARCHAR2
 ,P_DEC_DELETED_IND         OUT    VARCHAR2
-,P_DEC_ORIGIN               IN     VARCHAR2 DEFAULT NULL
-,P_DEC_CDR_NAME               IN     VARCHAR2
- )  IS -- 15-Jul-2003, W. Ver Hoef
+,P_DEC_ORIGIN               IN     VARCHAR2 DEFAULT NULL	-- 15-Jul-2003, W. Ver Hoef
+,P_DEC_CDR_NAME               IN     VARCHAR2  --GF30681
+);
+ END DEC_ACTIONS;
+/
+CREATE OR REPLACE PACKAGE BODY DEC_ACTIONS AS  -- body
+ 
+PROCEDURE SET_DEC(
+P_UA_NAME          IN VARCHAR2
+,P_RETURN_CODE        OUT    VARCHAR2
+,P_ACTION                   IN     VARCHAR2
+,P_DEC_DEC_IDSEQ         IN OUT VARCHAR2
+,P_DEC_PREFERRED_NAME     IN OUT VARCHAR2
+,P_DEC_CONTE_IDSEQ         IN OUT VARCHAR2
+,P_DEC_VERSION             IN OUT NUMBER
+,P_DEC_PREFERRED_DEFINITION IN OUT VARCHAR2
+,P_DEC_CD_IDSEQ             IN OUT VARCHAR2
+,P_DEC_ASL_NAME             IN OUT VARCHAR2
+,P_DEC_LATEST_VERSION_IND   IN OUT VARCHAR2
+,P_DEC_LONG_NAME         IN OUT VARCHAR2
+,P_DEC_OC_IDSEQ             IN OUT VARCHAR2
+,P_DEC_PROP_IDSEQ           IN OUT VARCHAR2
+,P_DEC_PROPERTY_QUALIFIER IN OUT VARCHAR2
+,P_DEC_OBJ_CLASS_QUALIFIER IN OUT VARCHAR2
+,P_DEC_BEGIN_DATE         IN OUT VARCHAR2
+,P_DEC_END_DATE             IN OUT VARCHAR2
+,P_DEC_CHANGE_NOTE         IN OUT VARCHAR2
+,P_DEC_CREATED_BY         OUT    VARCHAR2
+,P_DEC_DATE_CREATED         OUT    VARCHAR2
+,P_DEC_MODIFIED_BY         OUT    VARCHAR2
+,P_DEC_DATE_MODIFIED     OUT    VARCHAR2
+,P_DEC_DELETED_IND         OUT    VARCHAR2
+,P_DEC_ORIGIN               IN     VARCHAR2 DEFAULT NULL 
+,P_DEC_CDR_NAME               IN     VARCHAR2	--GF30681
+)  IS -- 15-Jul-2003, W. Ver Hoef
 /******************************************************************************
    NAME:       SET_DEC
    PURPOSE:    Inserts or Updates a Single Row Of Data Element Concept Based on either
@@ -46,7 +80,7 @@ CREATE OR REPLACE PROCEDURE SET_DEC(
                 validation of optional parameters
    2.1        03/19/2004  W. Ver Hoef      1. substituted UNASSIGNED with function
                                               call to get_default_asl
-   2.2        1/30/2013   JT               Added CDR_NAME column
+
 ******************************************************************************/
 
   v_version     data_element_concepts_view.version%TYPE;
@@ -59,6 +93,7 @@ CREATE OR REPLACE PROCEDURE SET_DEC(
   v_dec_rec     cg$data_element_concepts_view.cg$row_type;
   v_dec_ind     cg$data_element_concepts_view.cg$ind_type;
   v_asl_name    data_element_concepts_view.asl_name%TYPE;
+  v_cdr_name    data_element_concepts_view.cdr_name%TYPE;
 
 BEGIN
 
@@ -67,6 +102,9 @@ BEGIN
   IF P_ACTION NOT IN ('INS','UPD','DEL') THEN
     P_RETURN_CODE := 'API_DEC_700'; -- Invalid action
     RETURN;
+  END IF;
+  IF p_ua_name IS NOT NULL THEN
+    admin_security_util.seteffectiveuser(p_ua_name);
   END IF;
 
   IF P_ACTION = 'INS' THEN             --we are inserting a record
@@ -108,6 +146,7 @@ BEGIN
   END IF;
 
   IF P_ACTION = 'UPD' THEN              --we are updating a record
+   admin_security_util.seteffectiveuser(p_ua_name);
     IF P_DEC_DEC_IDSEQ IS  NULL THEN
       P_RETURN_CODE := 'API_DEC_400' ;  --for updates the ID IS mandatory
    RETURN;
@@ -136,7 +175,7 @@ BEGIN
       END IF;
     END IF;
     P_DEC_DELETED_IND       := 'Yes';
-    P_DEC_MODIFIED_BY       := 'USER';
+    P_DEC_MODIFIED_BY       := P_UA_NAME; --USER;
     P_DEC_DATE_MODIFIED     := TO_CHAR(SYSDATE);
     v_dec_rec.dec_idseq     := P_DEC_DEC_IDSEQ;
     v_dec_rec.deleted_ind   := P_DEC_DELETED_IND;
@@ -329,7 +368,7 @@ BEGIN
  -- 16-Jul-2003, W. Ver Hoef - replace parameter p_dec_dec_idseq with v_dec_idseq varible
     v_dec_idseq         := admincomponent_crud.cmr_guid;
     P_DEC_DATE_CREATED  := TO_CHAR(SYSDATE);
-    P_DEC_CREATED_BY    := ADMIN_SECURITY_UTIL.effective_user;
+    P_DEC_CREATED_BY    := P_UA_NAME; --USER;
     P_DEC_DATE_MODIFIED := NULL;
     P_DEC_MODIFIED_BY   := NULL;
     P_DEC_DELETED_IND   := 'No';
@@ -358,6 +397,7 @@ BEGIN
     v_dec_rec.oc_idseq             := P_DEC_OC_IDSEQ;
     v_dec_rec.prop_idseq           := P_DEC_PROP_IDSEQ;
  v_dec_rec.origin               := P_DEC_ORIGIN;  -- 15-Jul-2003, W. Ver Hoef
+ v_cdr_name               := P_DEC_CDR_NAME;  --GF30681
  SELECT cde_id_seq.NEXTVAL -- When transaction_type := 'VERSION' as below,
  INTO v_dec_rec.dec_id     -- BIU trigger won't properly assign a value
  FROM dual;                -- so we have to set it here.
@@ -429,7 +469,7 @@ BEGIN
     END IF;
 
     P_DEC_DATE_MODIFIED := TO_CHAR(SYSDATE);
-    P_DEC_MODIFIED_BY   := ADMIN_SECURITY_UTIL.effective_user;
+    P_DEC_MODIFIED_BY   := P_UA_NAME;--USER;
     P_DEC_DELETED_IND   := 'No';
 
     v_dec_rec.date_modified := TO_DATE(P_DEC_DATE_MODIFIED);
@@ -618,4 +658,25 @@ EXCEPTION
     P_RETURN_CODE := 'OTHERS';
     NULL;
 END SET_DEC;
+END DEC_ACTIONS;
+/
+  GRANT EXECUTE ON "SBREXT"."DEC_ACTIONS" TO PUBLIC;
+/ 
+  GRANT EXECUTE ON "SBREXT"."DEC_ACTIONS" TO "CDEBROWSER";
+/ 
+  GRANT DEBUG ON "SBREXT"."DEC_ACTIONS" TO "CDEBROWSER";
+/ 
+  GRANT EXECUTE ON "SBREXT"."DEC_ACTIONS" TO "DATA_LOADER";
+/
+  GRANT DEBUG ON "SBREXT"."DEC_ACTIONS" TO "DATA_LOADER";
+/ 
+  GRANT EXECUTE ON "SBREXT"."DEC_ACTIONS" TO "SBR" WITH GRANT OPTION;
+/ 
+  GRANT DEBUG ON "SBREXT"."DEC_ACTIONS" TO "SBR" WITH GRANT OPTION;
+/ 
+  GRANT EXECUTE ON "SBREXT"."DEC_ACTIONS" TO "APPLICATION_USER";
+/ 
+  GRANT DEBUG ON "SBREXT"."DEC_ACTIONS" TO "APPLICATION_USER";
+/ 
+  GRANT EXECUTE ON "SBREXT"."DEC_ACTIONS" TO "DER_USER";
 /
