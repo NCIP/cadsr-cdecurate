@@ -1,3 +1,4 @@
+-- run this as SBREXT user
 /*
  * Fix related to issue https://gforge.nci.nih.gov/tracker/index.php?func=detail&aid=30681.
  */
