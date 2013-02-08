@@ -667,7 +667,7 @@ BEGIN
             ,CHANGE_NOTE
             ,PROP_IDSEQ
             ,ORIGIN
---             ,CDR_NAME	--GF30681
+            ,CDR_NAME	--GF30681
             ,DEC_ID)
         VALUES
             (cg$rec.OC_IDSEQ
@@ -694,7 +694,7 @@ BEGIN
             ,cg$rec.CHANGE_NOTE
             ,cg$rec.PROP_IDSEQ
             ,cg$rec.ORIGIN
---             ,cg$rec.CDR_NAME		--GF30681
+            ,cg$rec.CDR_NAME		--GF30681
             ,cg$rec.DEC_ID
 );
         doLobs(cg$rec, cg$ind);
@@ -751,6 +751,8 @@ BEGIN
         cg$tableind(idx).PROP_IDSEQ := cg$ind.PROP_IDSEQ;
         cg$table(idx).ORIGIN := cg$rec.ORIGIN;
         cg$tableind(idx).ORIGIN := cg$ind.ORIGIN;
+		cg$table(idx).CDR_NAME := cg$rec.CDR_NAME; ----GF30681
+        cg$tableind(idx).CDR_NAME := cg$ind.CDR_NAME; --GF30681
         cg$table(idx).DEC_ID := cg$rec.DEC_ID;
         cg$tableind(idx).DEC_ID := cg$ind.DEC_ID;
         idx := idx + 1;

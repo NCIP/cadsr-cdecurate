@@ -2116,7 +2116,7 @@ public class InsACService implements Serializable {
 		return uniqueMsg;
 	}
 	
-	public String checkDECUniqueCDRName(String decId, String cdr) {
+	public String checkDECUniqueCDRName(String cdr) {
 		//boolean retVal = false;
 		String retVal = "";
 		ResultSet rs = null;
@@ -2129,23 +2129,22 @@ public class InsACService implements Serializable {
 				pstmt = m_servlet
 						.getConn()
 						.prepareStatement(
-								"select long_name, CDR_NAME, date_created, dec_id from sbr.data_element_concepts where "
-						+ " dec_id = ?"
+								"select long_name, CDR_NAME, date_created, dec_id from sbr.data_element_concepts_view where "
+						+ " CDR_NAME = ?"
 						+ " order by date_created desc");
-				pstmt.setString(1, decId); // DEC id
+				pstmt.setString(1, cdr);
 				rs = pstmt.executeQuery();
 				String sReturnID = "";
 				String sCdrReturn = "";
 				while (rs.next()) {
 					sReturnID = rs.getString("dec_id");
 					sCdrReturn = rs.getString("CDR_NAME");
-					retVal = "DEC [" + decId + "] with CDR name [" + sCdrReturn + "] found!";
+					retVal = "DEC [" + sReturnID + "] with CDR name [" + sCdrReturn + "] found!";
 					logger.debug(retVal);
 					// oc-prop is not unique in existing DEC
 					//retVal = true;
 					break;	//in theory, according to the requirement, there should not be more than one dec!
 				}
-					
 			}
 		} catch (Exception e) {
 			logger.error(
@@ -6462,8 +6461,8 @@ public class InsACService implements Serializable {
         //use the existing DEC if exists based on the new CDR for DEC
  		HttpSession session = m_classReq.getSession();
  		DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
- 		if(m_DEC != null) {
-			String strInValid = checkDECUniqueCDRName(m_DEC.getDEC_DEC_ID(), (String)session.getAttribute(Constants.DEC_CDR_NAME)); //TBD - need to add a column cdr_name into dec table first
+// 		if(m_DEC != null) {
+			String strInValid = checkDECUniqueCDRName((String)session.getAttribute(Constants.DEC_CDR_NAME));
 			if (strInValid != null && !strInValid.equals("")) {
 				statusBean.setStatusMessage(strInValid);
 				statusBean.setCondrExists(true);
@@ -6471,7 +6470,7 @@ public class InsACService implements Serializable {
 	//			statusBean.setEvsBeanExists(true);
 	//			statusBean.setEvsBeanIDSEQ(idseq);
 			}
- 		}
+// 		}
 		//GF30681 ---- end new CDR rule !!!
          
         return statusBean;
