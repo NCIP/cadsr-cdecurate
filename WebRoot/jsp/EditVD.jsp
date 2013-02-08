@@ -1235,43 +1235,7 @@ function openEVSConceptsWindow(){
 						</td>
 					</tr>
 
-					<%--================GF32398==========START --%>
-				<tr height="25" valign="bottom">
-					<td align=right>
-						<%=item++%>
-						)
-					</td>
-					<td>
-					<% if (!isView) { %>
-						<font color="#FF0000">
-							Select
-						</font>
-						<% } %>
-						Registration Status
-					</td>
-				</tr>
-				<tr>
-					<td>
-						&nbsp;
-					</td>
-					<td height="25" valign="top">
-						<%	if (!isView) {	%>
-						<select name="selRegStatus" size="1" style="Width: 50%"
-							onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selRegStatus',helpUrl); return false">
-						
-							<option value="" selected></option>
-							<%	if (vRegStatus != null) {
-										for (int i = 0; vRegStatus.size() > i; i++) {
-											String sReg = (String) vRegStatus.elementAt(i);
-											boolean isOK = true;
-											if (isOK) {	%>
-											<option value="<%=sReg%>" <%if(sReg.equals(sRegStatus)){%>selected <%}%>><%=sReg%></option>
-										<%	}	}	} %>
-						
-						</select><%}else{%><input type="text" size="100" value="<%=sRegStatus%>" readonly><%}%>
-					</td>
-				</tr>
-				<%--================GF32398==========END --%>
+					
 					<tr height="25" valign="bottom">
 						<td align=right>
 							<%
@@ -1404,6 +1368,43 @@ function openEVSConceptsWindow(){
 							}
 						%>
 					</tr>
+					<%--================GF32398==========START --%>
+				<tr height="25" valign="bottom">
+					<td align=right>
+						<%=item++%>
+						)
+					</td>
+					<td>
+					<% if (!isView) { %>
+						<font color="#FF0000">
+							Select
+						</font>
+						<% } %>
+						Registration Status
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td height="25" valign="top">
+						<%	if (!isView) {	%>
+						<select name="selRegStatus" size="1" style="Width: 50%"
+							onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selRegStatus',helpUrl); return false">
+						
+							<option value="" selected></option>
+							<%	if (vRegStatus != null) {
+										for (int i = 0; vRegStatus.size() > i; i++) {
+											String sReg = (String) vRegStatus.elementAt(i);
+											boolean isOK = true;
+											if (isOK) {	%>
+											<option value="<%=sReg%>" <%if(sReg.equals(sRegStatus)){%>selected <%}%>><%=sReg%></option>
+										<%	}	}	} %>
+						
+						</select><%}else{%><input type="text" size="100" value="<%=sRegStatus%>" readonly><%}%>
+					</td>
+				</tr>
+				<%--================GF32398==========END --%>
 					<tr height="25" valign="bottom">
 						<td align=right>
 							<%
