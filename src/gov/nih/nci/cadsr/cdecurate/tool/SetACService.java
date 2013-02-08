@@ -733,6 +733,19 @@ public class SetACService implements Serializable
 				}
 			}
 			UtilService.setValPageVector(vValidate, "Version", s, bMandatory, iNoLengthLimit, strInValid, sOriginAction);
+			
+			//===============GF32398=======START=====Validation of regstatus===========
+			//registration status
+			s = m_DEC.getDEC_REG_STATUS();
+			if (s == null) s = "";
+			strInValid = "";
+
+			// if (s.equalsIgnoreCase("Standard") || s.equalsIgnoreCase("Candidate") || s.equalsIgnoreCase("Proposed"))
+			if (m_vRegStatus.contains(s))
+				strInValid = this.checkDECOCExist(m_DEC.getDEC_DEC_IDSEQ(), req, res);
+			UtilService.setValPageVector(vValidate, "Registration Status", s, bNotMandatory, 50, strInValid, sOriginAction);
+
+			//===============GF32398=======END=====Validation of regstatus===========
 
 			//add begin and end dates to the validate vector
 			String sB = m_DEC.getDEC_BEGIN_DATE();
@@ -2875,7 +2888,8 @@ public class SetACService implements Serializable
 			Vector vList = new Vector();
 			//get the DEC attributes from the ID
 			GetACSearch serAC = new GetACSearch(req, res, m_servlet);
-			serAC.doDECSearch(sDECid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", vList, "0");
+			//=====added one more parameter reg status GF32398===========
+			serAC.doDECSearch(sDECid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", vList, "0");
 			if (vList != null)
 			{
 				//loop through hte list and find if oc exists

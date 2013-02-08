@@ -170,8 +170,8 @@ public class DataElementConceptServlet extends CurationServlet {
         	// get VD's attributes from the database again
         	GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
         	if (sDECID != null && !sDECID.equals(""))
-        		serAC.doDECSearch(sDECID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "",
-        				"", "", vList, "0");
+        		serAC.doDECSearch(sDECID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "",
+        				"", "", vList, "0");//===gf32398== added one more parameter regstatus
         	// forward editVD page with this bean
         	if (vList.size() > 0)
         	{
@@ -280,8 +280,8 @@ public class DataElementConceptServlet extends CurationServlet {
 			// get VD's attributes from the database again
 			GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
 			if (sDECID != null && !sDECID.equals(""))
-				serAC.doDECSearch(sDECID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "",
-						"", "", vList, "0");
+				serAC.doDECSearch(sDECID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "",
+						"", "", vList, "0");//===gf32398== added one more parameter regstatus
 			if (vList.size() > 0)
 			{
 				DECBean = (DEC_Bean) vList.elementAt(0);
@@ -377,8 +377,8 @@ public class DataElementConceptServlet extends CurationServlet {
 		{
 			Vector vList = new Vector();
 			GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
-			serAC.doDECSearch(sDEC_ID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "",
-					"", vList, "0");
+			serAC.doDECSearch(sDEC_ID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "",
+					"", vList, "0");//===gf32398== added one more parameter regstatus
 			// forward editDEC page with this bean
 			if (vList.size() > 0)
 			{
@@ -2100,8 +2100,8 @@ public class DataElementConceptServlet extends CurationServlet {
 		GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
 		if (acID != null && !acID.equals(""))
 		{
-			serAC.doDECSearch(acID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "",
-					"", "", vList, "0");
+			serAC.doDECSearch(acID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "",
+					"", "", vList, "0");//===gf32398== added one more parameter regstatus
 		}
 		if (vList.size() > 0) // get all attributes
 		{

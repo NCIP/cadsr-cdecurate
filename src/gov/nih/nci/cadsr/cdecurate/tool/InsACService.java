@@ -1138,7 +1138,60 @@ public class InsACService implements Serializable {
 						// oldpublic
 						// id
 					}
+					
+					//===========GF32398====Insert/update/delete regstatus=======START
 					String sReturn = "";
+					if (dec.getDEC_REG_STATUS() != null
+							&& !dec.getDEC_REG_STATUS().equals("")) {
+						logger.debug("line 1141 of InsACSErvice.java registration value is "+dec.getDEC_REG_STATUS()+"************");	//JT
+						dec.setDEC_REG_STATUS_IDSEQ(this.getAC_REG(sDEC_ID));
+						if (dec.getDEC_REG_STATUS_IDSEQ() == null
+								|| dec.getDEC_REG_STATUS_IDSEQ().equals("")){
+							logger.info("line 1146 of InsACSErvice.java ************");
+							sReturn = this.setReg_Status("INS", "", sDEC_ID, dec
+									.getDEC_REG_STATUS());
+						}
+							
+						else{
+							logger.info("line 1151 of InsACSErvice.java ************");
+							sReturn = this.setReg_Status("UPD", dec
+									.getDEC_REG_STATUS_IDSEQ(), sDEC_ID, dec
+									.getDEC_REG_STATUS());
+						}
+							
+						if (sReturn != null && !sReturn.equals("")){
+							logger.info("line 1158 of InsACSErvice.java ************");
+							this.storeStatusMsg("\\t "
+									+ sReturn
+									+ " : Unable to update Registration Status.");
+						}
+							
+					} else {
+						// delete if reg status is empty and idseq is not null
+						if (dec.getDEC_REG_STATUS_IDSEQ() != null
+								&& !dec.getDEC_REG_STATUS_IDSEQ().equals("")){
+							logger.info("line 1168 of InsACSErvice.java ************");
+							sReturn = this.setReg_Status("DEL", dec
+									.getDEC_REG_STATUS_IDSEQ(), sDEC_ID, dec
+									.getDEC_REG_STATUS());
+						}
+							
+						if (sReturn != null && !sReturn.equals("")){
+							logger.info("line 1175 of InsACSErvice.java ************");
+							this
+							.storeStatusMsg("\\t "
+									+ sReturn
+									+ " : Unable to remove Registration Status.");
+						}
+							
+					}
+					// store returncode in request to track it all through this
+					// request
+					if (sAction.equals("UPD") && sReturn != null
+							&& !sReturn.equals(""))
+						m_classReq.setAttribute("retcode", sReturn);
+					//===========GF32398====Insert/update/delete regstatusw=======END
+					
 					// insert and delete ac-csi relationship
 					Vector<AC_CSI_Bean> vAC_CS = dec.getAC_AC_CSI_VECTOR();
 					GetACSearch getAC = new GetACSearch(m_classReq, m_classRes,
@@ -2076,7 +2129,7 @@ public class InsACService implements Serializable {
 				pstmt = m_servlet
 						.getConn()
 						.prepareStatement(
-								"select long_name, CDR_NAME, date_created, dec_id from data_element_concepts where "
+								"select long_name, CDR_NAME, date_created, dec_id from sbr.data_element_concepts where "
 						+ " dec_id = ?"
 						+ " order by date_created desc");
 				pstmt.setString(1, decId); // DEC id
@@ -4388,6 +4441,7 @@ public class InsACService implements Serializable {
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeStatement(cstmt);
 		}
+		logger.debug("line 4444 of InsACSErvice.java reg id value is "+regID+"************");
 		return regID;
 	} // end getAC_REG
 

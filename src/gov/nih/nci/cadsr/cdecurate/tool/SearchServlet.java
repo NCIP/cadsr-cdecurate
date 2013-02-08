@@ -558,11 +558,11 @@ public class SearchServlet extends CurationServlet {
         if (acID != null && !acID.equals(""))
         {
             if (acName != null && acName.equals("ObjectClass"))
-                getACSearch.doDECSearch("", "", "", "", "", "", "", "", "", "", "", "", "", acID, "", "", 0, "", "",
-                                "", "", "", vList, "0");
+                getACSearch.doDECSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", acID, "", "", 0, "", "",
+                                "", "", "", vList, "0");//===gf32398== added one more parameter regstatus
             if (acName != null && acName.equals("Property"))
-                getACSearch.doDECSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", acID, "", 0, "", "",
-                                "", "", "", vList, "0");
+                getACSearch.doDECSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", acID, "", 0, "", "",
+                                "", "", "", vList, "0");//===gf32398== added one more parameter regstatus
         }
         m_classReq.setAttribute("pageAct", acName);
         m_classReq.setAttribute("lstDECResult", vList);
@@ -1177,8 +1177,8 @@ public class SearchServlet extends CurationServlet {
                 else if (sSearchAC.equals("ConceptClass"))
                     conID = sID;
                 Vector vRes = new Vector();
-                getACSearch.doDECSearch("", "", "", "", "", "", "", "", "", "", "", "", "", ocID, propID, "", 0, cdID,
-                                deID, cscsiID, conID, "", vRes, "0");
+                getACSearch.doDECSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", ocID, propID, "", 0, cdID,
+                                deID, cscsiID, conID, "", vRes, "0");//===gf32398== added one more parameter regstatus
                 DataManager.setAttribute(session, "vSelRows", vRes);
                 // do attributes after the search so no "two simultaneous request" errors
                 vSelVector = this.getDefaultAttr("DataElementConcept", sSearchIn);

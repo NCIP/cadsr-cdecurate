@@ -285,7 +285,8 @@ public class GetACSearch implements Serializable
                     }
                     else if (sSearchAC.equals("DataElementConcept"))
                     {
-                        doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sModifiedFrom,
+                    	 //===added regStatus parameter for GF32398
+                        doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sRegStatus, sModifiedFrom,
                                         sModifiedTo, sCreator, sModifier, sMinID, "", "", "", dVersion, sCDid, "", "",
                                         "", "", vAC, sRecordsDisplayed);
                     }
@@ -411,7 +412,8 @@ public class GetACSearch implements Serializable
                     }
                     else if (sSearchAC.equals("DataElementConcept"))
                     {
-                        doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sModifiedFrom,
+                    	 //===added regStatus parameter for GF32398
+                        doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sRegStatus, sModifiedFrom,
                                         sModifiedTo, sCreator, sModifier, "", "", "", sOrigin, dVersion, sCDid, "", "",
                                         "", "", vAC, sRecordsDisplayed);
                     }
@@ -439,7 +441,8 @@ public class GetACSearch implements Serializable
                     }
                     else if (sSearchAC.equals("DataElementConcept"))
                     {
-                        doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sModifiedFrom,
+                    	 //===added regStatus parameter for GF32398
+                        doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sRegStatus, sModifiedFrom,
                                         sModifiedTo, sCreator, sModifier, "", "", "", "", dVersion, sCDid, "", "", "",
                                         sCon, vAC, sRecordsDisplayed);
                     }
@@ -489,8 +492,9 @@ public class GetACSearch implements Serializable
                     }
                     else if (sSearchAC.equals("DataElementConcept"))
                     {
-                    	logger.info("at line 492 of GetACsearch.java***********");
-                        doDECSearch("", sKeyword, "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo,
+                    	logger.info("at line 495 of GetACsearch.java***********");
+                    	 //===added regStatus parameter for GF32398
+                        doDECSearch("", sKeyword, "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sRegStatus,
                                         sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", "", dVersion,
                                         sCDid, "", "", "", "", vAC, sRecordsDisplayed);
                     }
@@ -1720,8 +1724,9 @@ public class GetACSearch implements Serializable
      * @param vList
      *            returns Vector of DEbean.
      */
+    //===added regStatus parameter for GF32398
     public void doDECSearch(String DEC_IDSEQ, String InString, String ContID, String ContName, String sVersion,
-                    String ASLName, String sCreatedFrom, String sCreatedTo, String sModifiedFrom, String sModifiedTo,
+                    String ASLName, String sCreatedFrom, String sCreatedTo, String regStatus, String sModifiedFrom, String sModifiedTo,
                     String sCreator, String sModifier, String DEC_ID, String sObject, String sProperty, String sOrigin,
                     double dVersion, String sCDid, String deIDseq, String cscsiIDseq, String conIDseq, String conName,
                     Vector vList, String sRecordsDisplayed)
@@ -1738,7 +1743,7 @@ public class GetACSearch implements Serializable
             else
             {
                 cstmt = m_servlet.getConn()
-                                .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_DEC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+                                .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_DEC(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
                 // Now tie the placeholders with actual parameters.
                 cstmt.registerOutParameter(7, OracleTypes.CURSOR);
                 cstmt.setString(1, ContID);
@@ -1747,22 +1752,23 @@ public class GetACSearch implements Serializable
                 cstmt.setString(4, ASLName);
                 cstmt.setString(5, DEC_IDSEQ);
                 cstmt.setString(6, DEC_ID);
-                cstmt.setString(8, sOrigin);
-                cstmt.setString(9, sObject);
-                cstmt.setString(10, sProperty);
-                cstmt.setString(11, sCreatedFrom);
-                cstmt.setString(12, sCreatedTo);
-                cstmt.setString(13, sModifiedFrom);
-                cstmt.setString(14, sModifiedTo);
-                cstmt.setString(15, sCreator);
-                cstmt.setString(16, sModifier);
-                cstmt.setString(17, sVersion);
-                cstmt.setDouble(18, dVersion);
-                cstmt.setString(19, sCDid);
-                cstmt.setString(20, deIDseq);
-                cstmt.setString(21, cscsiIDseq);
-                cstmt.setString(22, conName);
-                cstmt.setString(23, conIDseq);
+                cstmt.setString(8, regStatus);
+                cstmt.setString(9, sOrigin);
+                cstmt.setString(10, sObject);
+                cstmt.setString(11, sProperty);
+                cstmt.setString(12, sCreatedFrom);
+                cstmt.setString(13, sCreatedTo);
+                cstmt.setString(14, sModifiedFrom);
+                cstmt.setString(15, sModifiedTo);
+                cstmt.setString(16, sCreator);
+                cstmt.setString(17, sModifier);
+                cstmt.setString(18, sVersion);
+                cstmt.setDouble(19, dVersion);
+                cstmt.setString(20, sCDid);
+                cstmt.setString(21, deIDseq);
+                cstmt.setString(22, cscsiIDseq);
+                cstmt.setString(23, conName);
+                cstmt.setString(24, conIDseq);
                 // Now we are ready to call the stored procedure
                 cstmt.execute();
                 // store the output in the resultset
@@ -1835,8 +1841,18 @@ public class GetACSearch implements Serializable
                         DECBean.setAC_CONCEPT_NAME(rs.getString("con_name"));
                         DECBean.setALTERNATE_NAME(rs.getString("alt_name"));
                         DECBean.setREFERENCE_DOCUMENT(rs.getString("rd_name"));
-                        DECBean.setDEC_REG_STATUS("REG_STATUS");//GF32398
-                        DECBean.setDEC_REG_STATUS_IDSEQ("REG_STATUS_ID");//GF32398
+                        //===========GF32398====START======
+                        if (rs.getString("registration_status") != null) {
+                        	 DECBean.setDEC_REG_STATUS(rs.getString("registration_status"));//GF32398
+						}else{
+							 DECBean.setDEC_REG_STATUS("REG_STATUS");//GF32398
+						}
+                        if (rs.getString("ar_idseq") != null) {
+                        	 DECBean.setDEC_REG_STATUS_IDSEQ(rs.getString("ar_idseq"));//GF32398	
+						}else{
+							 DECBean.setDEC_REG_STATUS_IDSEQ("REG_STATUS_ID");//GF32398
+						}
+                      //===========GF32398====END======
                         logger.info("at line 1840 of GetACsearch.java***********");
                         vList.addElement(DECBean);
                         // store the ocl name or propl name in the request
@@ -4906,7 +4922,8 @@ public class GetACSearch implements Serializable
             DEBean.setAC_PREF_NAME_TYPE("");
             String sDECid = DEBean.getDE_DEC_IDSEQ();
             Vector vDECList = new Vector();
-            doDECSearch(sDECid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "",
+            //====added one more parameter regstatus for GF32398===========
+            doDECSearch(sDECid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "",
                             vDECList, "0");
             if (vDECList != null && vDECList.size() > 0)
                 DEBean.setDE_DEC_Bean((DEC_Bean) vDECList.elementAt(0));
@@ -7933,27 +7950,31 @@ public class GetACSearch implements Serializable
             	//TODO Add iOffset and iTotalRecords
                 if (sSearchIn.equals("minID"))
                 {
-                    doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sModifiedFrom,
+                	//===added sRegStatus parameter for GF32398===
+                    doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sRegStatus, sModifiedFrom, 
                                     sModifiedTo, sCreator, sModifier, sMinID, "", "", "", dVersion, sCDid, "", "", "",
                                     "", vAC, sRecordsDisplayed);
                 }
                 else if (sSearchIn.equals("origin"))
                 {
                     String sOrigin = sKeyword;
-                    doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sModifiedFrom,
+                  //===added sRegStatus parameter for GF32398===
+                    doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sRegStatus, sModifiedFrom,
                                     sModifiedTo, sCreator, sModifier, "", "", "", sOrigin, dVersion, sCDid, "", "", "",
                                     "", vAC, sRecordsDisplayed);
                 }
                 else if (sSearchIn.equals("concept"))
                 {
                     String sCon = sKeyword;
-                    doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sModifiedFrom,
+                  //===added sRegStatus parameter for GF32398===
+                    doDECSearch("", "", "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sRegStatus, sModifiedFrom,
                                     sModifiedTo, sCreator, sModifier, "", "", "", "", dVersion, sCDid, "", "", "",
                                     sCon, vAC, sRecordsDisplayed);
                 }
                 else
                 {
-                    doDECSearch("", sKeyword, "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sModifiedFrom,
+                	//===added sRegStatus parameter for GF32398===
+                    doDECSearch("", sKeyword, "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sRegStatus, sModifiedFrom,
                                     sModifiedTo, sCreator, sModifier, "", "", "", "", dVersion, sCDid, "", "", "", "",
                                     vAC, sRecordsDisplayed);
                 }
