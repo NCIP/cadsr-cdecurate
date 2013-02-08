@@ -113,7 +113,7 @@ select cd_id, version, context from sbr.conceptual_domains_view where cd_id = '2
 select date_created from con_derivation_rules_view_ext order by date_created desc
 select date_created from component_concepts_view_ext order by date_created desc
 
-select cdr_name, long_name, date_created, dec_id, long_name from data_element_concepts_view 
+select cdr_name, dec_id, long_name, date_created, long_name from data_element_concepts_view 
 where dec_id = '3632902'
 order by date_created desc --long_name should show "Blood Type"
 
@@ -200,7 +200,7 @@ order by date_created desc
 //	  HttpSession session = m_classReq.getSession();
 	  InsACService ins = new InsACService(null, null, testdec.m_servlet);
 	  String testCDR = "cxxxcyyyc456";
-	  ins.checkDECUniqueCDRName("3632820", testCDR);
+	  ins.checkDECUniqueCDRName(testCDR);
 //	  ins.updateDECUniqueCDRName("3632820", testCDR);
   }
   

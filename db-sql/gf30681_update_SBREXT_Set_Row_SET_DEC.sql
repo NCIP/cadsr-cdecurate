@@ -207,6 +207,7 @@ BEGIN
     v_dec_ind.deleted_ind          := TRUE;
  v_dec_ind.dec_id               := FALSE;  -- 15-Jul-2003, W. Ver Hoef
  v_dec_ind.origin               := FALSE;
+ v_dec_ind.cdr_name               := FALSE; -- GF30681
     BEGIN
       cg$data_element_concepts_view.upd(v_dec_rec,v_dec_ind);
       RETURN;
@@ -397,7 +398,7 @@ BEGIN
     v_dec_rec.oc_idseq             := P_DEC_OC_IDSEQ;
     v_dec_rec.prop_idseq           := P_DEC_PROP_IDSEQ;
  v_dec_rec.origin               := P_DEC_ORIGIN;  -- 15-Jul-2003, W. Ver Hoef
- v_cdr_name               := P_DEC_CDR_NAME;  --GF30681
+ v_dec_rec.cdr_name               := P_DEC_CDR_NAME;  --GF30681
  SELECT cde_id_seq.NEXTVAL -- When transaction_type := 'VERSION' as below,
  INTO v_dec_rec.dec_id     -- BIU trigger won't properly assign a value
  FROM dual;                -- so we have to set it here.
@@ -427,6 +428,7 @@ BEGIN
     v_dec_ind.prop_idseq           := TRUE;
  v_dec_ind.dec_id               := TRUE;  -- 15-Jul-2003, W. Ver Hoef
  v_dec_ind.origin               := TRUE;
+ v_dec_ind.cdr_name               := TRUE; --GF30681
 
     BEGIN
       --meta_global_pkg.transaction_type := 'VERSION';
