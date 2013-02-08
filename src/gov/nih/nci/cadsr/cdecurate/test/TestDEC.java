@@ -113,7 +113,10 @@ select cd_id, version, context from sbr.conceptual_domains_view where cd_id = '2
 select date_created from con_derivation_rules_view_ext order by date_created desc
 select date_created from component_concepts_view_ext order by date_created desc
 
-select date_created, dec_id, long_name from data_element_concepts_view order by date_created desc --long_name should show "Blood Type"
+select cdr_name, long_name, date_created, dec_id, long_name from data_element_concepts_view 
+where dec_id = '3632902'
+order by date_created desc --long_name should show "Blood Type"
+
 select long_name, OC_IDSEQ, PROP_IDSEQ, date_created, dec_id from data_element_concepts_view order by date_created desc
 
    * To check the history table:
@@ -198,7 +201,7 @@ order by date_created desc
 	  InsACService ins = new InsACService(null, null, testdec.m_servlet);
 	  String testCDR = "cxxxcyyyc456";
 	  ins.checkDECUniqueCDRName("3632820", testCDR);
-	  ins.updateDECUniqueCDRName("3632820", testCDR);
+//	  ins.updateDECUniqueCDRName("3632820", testCDR);
   }
   
   
