@@ -2139,7 +2139,12 @@ public class InsACService implements Serializable {
 				while (rs.next()) {
 					sReturnID = rs.getString("dec_id");
 					sCdrReturn = rs.getString("CDR_NAME");
-					retVal = "DEC [" + sReturnID + "] with CDR name [" + sCdrReturn + "] found!";
+					sCdrReturn = sCdrReturn.substring(1, sCdrReturn.length());
+					retVal = "\\t Existing dec public id " + sReturnID
+					+ " already exists in the data base.\\n";
+					m_classReq.setAttribute("retcode", "Exception");
+					this.storeStatusMsg("\\t Exception : Unable to create Data Element Concept. " + retVal);
+					
 					logger.debug(retVal);
 					// oc-prop is not unique in existing DEC
 					//retVal = true;
@@ -6141,6 +6146,26 @@ public class InsACService implements Serializable {
         	    propStatusBean = this.evsBeanCheck(vProperty, defaultContext, "", "Property");
          	  }
          	}
+         	
+    		//GF30681 ---- begin new CDR rule !!!
+            //use the existing DEC if exists based on the new CDR for DEC
+     		//DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
+			String strInValid = checkDECUniqueCDRName((String)session.getAttribute(Constants.DEC_CDR_NAME));
+			if (strInValid != null && !strInValid.equals("")) {
+//				statusBean.setStatusMessage(strInValid);
+//				statusBean.setCondrExists(true);
+//				statusBean.setCondrIDSEQ(condrIDSEQ);
+//				statusBean.setEvsBeanExists(true);
+//				statusBean.setEvsBeanIDSEQ(idseq);
+				sReturnCode = strInValid;
+			}
+    		//GF30681 ---- end new CDR rule !!!
+         	
+         	
+         	if(sReturnCode != null && !sReturnCode.equals("")) {	//begin of GF30681 final duplicate check (new)
+         		//do nothing
+         		logger.info("Exising DEC found with CDR!");
+         	} else {	//existing check continues
          	if (checkValidityOC.equals("Yes")){
          	//set OC if it is null
          	if ((vObjectClass != null && vObjectClass.size()>0)){
@@ -6230,8 +6255,8 @@ public class InsACService implements Serializable {
            	 }
          }
          }
-    	 sReturnCode = this.setDEC(sAction, dec, sInsertFor, oldDEC);	//GF30681 final duplicate check (new)
-
+    	 sReturnCode = this.setDEC(sAction, dec, sInsertFor, oldDEC);
+		} 	//end of GF30681 final duplicate check (new)
     	}catch(Exception e){
     		logger.error("ERROR in InsACService-setDEC for other : "+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
@@ -6311,20 +6336,22 @@ public class InsACService implements Serializable {
 			mgr = new Representations_Ext_Mgr();
 		}
 		
-	   statusBean.setAllConceptsExists(true);
+		statusBean.setAllConceptsExists(true);
 
-	   for(int i=0; i<evsBeanList.size(); i++){
-   	    EVS_Bean conceptBean = (EVS_Bean) evsBeanList.elementAt(i);
-   	    String conIdseq = this.getConcept("", conceptBean, false);
-   	    if (conIdseq == null || conIdseq.equals("")){
-   		  statusBean.setAllConceptsExists(false);	//GF30681
-   		  break;
-   	   }else {
-   		   logger.debug("conIdseq at Line 6204 of InsACService.java"+conIdseq);
-   	   }
-         }
-	      //if all the concepts exists
-         if (statusBean.isAllConceptsExists()) {
+		for(int i=0; i<evsBeanList.size(); i++){
+			EVS_Bean conceptBean = (EVS_Bean) evsBeanList.elementAt(i);
+			String conIdseq = this.getConcept("", conceptBean, false);
+			if (conIdseq == null || conIdseq.equals("")){
+				statusBean.setAllConceptsExists(false);	//GF30681
+				break;
+			}else {
+				logger.debug("conIdseq at Line 6204 of InsACService.java"+conIdseq);
+			}
+        }
+	    
+		
+		//if all the concepts exists
+        if (statusBean.isAllConceptsExists()) {
 			ArrayList<ConBean> conBeanList = this.getConBeanList(evsBeanList, statusBean.isAllConceptsExists());
 			try {
 				 resultList = mgr.isCondrExists(conBeanList, m_servlet.getConn());
@@ -6456,22 +6483,6 @@ public class InsACService implements Serializable {
 		} else {//if all the concepts does not exist
 			statusBean.setStatusMessage("**  Creating a new "+type + " in caBIG");
 		}
-         
-		//GF30681 ---- begin new CDR rule !!!
-        //use the existing DEC if exists based on the new CDR for DEC
- 		HttpSession session = m_classReq.getSession();
- 		DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
-// 		if(m_DEC != null) {
-			String strInValid = checkDECUniqueCDRName((String)session.getAttribute(Constants.DEC_CDR_NAME));
-			if (strInValid != null && !strInValid.equals("")) {
-				statusBean.setStatusMessage(strInValid);
-				statusBean.setCondrExists(true);
-	//			statusBean.setCondrIDSEQ(condrIDSEQ);
-	//			statusBean.setEvsBeanExists(true);
-	//			statusBean.setEvsBeanIDSEQ(idseq);
-			}
-// 		}
-		//GF30681 ---- end new CDR rule !!!
          
         return statusBean;
 	}
