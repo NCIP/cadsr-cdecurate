@@ -1547,6 +1547,7 @@ public class DataElementConceptServlet extends CurationServlet {
 			logger.info("**************doSetDEC called at 1546 of DECs.java");
 			ret = insAC.doSetDEC("INS", DECBean, "New", oldDECBean);
 		}
+		
 		if ((ret == null) || ret.equals(""))
 		{
 			logger.info("**************called at 1551 of DECs.java");
