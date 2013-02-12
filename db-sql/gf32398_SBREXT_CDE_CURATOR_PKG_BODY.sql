@@ -1975,11 +1975,11 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
             '
  DEC.conte_idseq     = c.conte_idseq
  AND asl.asl_name = DEC.asl_name
- AND ar.ac_idseq (+)= DEC.de_idseq
+ AND ar.ac_idseq (+)= DEC.dec_idseq
  AND DEC.cd_idseq    = cd.cd_idseq
  AND DEC.oc_idseq    = oc.oc_idseq     (+)
  AND DEC.prop_idseq  = prop.prop_idseq (+)
- AND DEC.de_idseq    = ar.ac_idseq (+)
+ AND DEC.dec_idseq    = ar.ac_idseq (+)
  AND DEC.dec_idseq   = des.ac_idseq    (+) ';
         IF v_search_string IS NOT NULL THEN
             -- 25-Mar-2004, W. Ver Hoef commented out comparison to u.name
