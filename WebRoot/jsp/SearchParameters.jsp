@@ -1321,8 +1321,13 @@ function LoadKeyHandler()
 									if (!sSearchAC.equals("Questions")) {
 							%>
 							<option value="AllStatus"
-								<%if (vStatus == null || vStatus.size()==0 || sAssocSearch.equals("true")){%>
-								selected <%}%>>
+								<%if (vStatus == null || vStatus.size()==0 || sAssocSearch.equals("true")){
+								//GF30681 need to default for others not DEC search
+								if (!(vStatusDEC != null && sSearchAC.equals("DataElementConcept"))) {
+								%>
+								selected 
+								<%}}%>
+							>
 								All Statuses
 							</option>
 							<!--store the status list as per the search component  -->
@@ -1345,7 +1350,10 @@ function LoadKeyHandler()
 									String sStatusName = (String) vStatusDEC.elementAt(i);
 							%>
 							<option value="<%=sStatusName%>"
-								<%if((vStatus != null) && (vStatus.contains(sStatusName))){%>
+								<%-- <%if((vStatus != null) && (vStatus.contains(sStatusName))){%>
+								selected <%}%>> --%>
+								<%-- To show default workflow status as "RELEASED GF30681"--%>
+							<%if(sStatusName.equals("RELEASED")){%>
 								selected <%}%>>
 								<%=sStatusName%>
 							</option>
