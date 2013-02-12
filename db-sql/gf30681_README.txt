@@ -1,5 +1,5 @@
 /*
- * Notes related to issue https://gforge.nci.nih.gov/tracker/index.php?func=detail&aid=30681.
+ * Notes related to issue https://gforge.nci.nih.gov/tracker/index.php?func=detail&aid=32398.
  */
 Some of the scripts need to be executed in the correct order for them to work. They are showed as below -
 
