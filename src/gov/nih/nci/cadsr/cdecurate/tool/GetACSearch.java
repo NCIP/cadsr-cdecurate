@@ -1842,16 +1842,16 @@ public class GetACSearch implements Serializable
                         DECBean.setALTERNATE_NAME(rs.getString("alt_name"));
                         DECBean.setREFERENCE_DOCUMENT(rs.getString("rd_name"));
                         //===========GF32398====START======
-                        if (rs.getString("registration_status") != null) {
+                       // if (rs.getString("registration_status") != null) {
                         	 DECBean.setDEC_REG_STATUS(rs.getString("registration_status"));//GF32398
-						}else{
-							 DECBean.setDEC_REG_STATUS("REG_STATUS");//GF32398
-						}
-                        if (rs.getString("ar_idseq") != null) {
+						//}else{
+							// DECBean.setDEC_REG_STATUS("REG_STATUS");//GF32398
+						//}
+                       // if (rs.getString("ar_idseq") != null) {
                         	 DECBean.setDEC_REG_STATUS_IDSEQ(rs.getString("ar_idseq"));//GF32398	
-						}else{
-							 DECBean.setDEC_REG_STATUS_IDSEQ("REG_STATUS_ID");//GF32398
-						}
+						//}else{
+							// DECBean.setDEC_REG_STATUS_IDSEQ("REG_STATUS_ID");//GF32398
+						//}
                       //===========GF32398====END======
                         logger.info("at line 1840 of GetACsearch.java***********");
                         vList.addElement(DECBean);
