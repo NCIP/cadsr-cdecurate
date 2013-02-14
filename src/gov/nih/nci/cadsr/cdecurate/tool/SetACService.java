@@ -1156,6 +1156,18 @@ public class SetACService implements Serializable
 			}
 			UtilService.setValPageVector(vValidate, "Version", s, bMandatory, iNoLengthLimit, strInValid, sOriginAction);
 
+			//===============GF32398=======START=====Validation of regstatus===========
+			//registration status
+			s = m_VD.getVD_REG_STATUS();
+			if (s == null) s = "";
+			strInValid = "";
+
+			// if (s.equalsIgnoreCase("Standard") || s.equalsIgnoreCase("Candidate") || s.equalsIgnoreCase("Proposed"))
+			if (m_vRegStatus.contains(s))
+				strInValid = "";
+			UtilService.setValPageVector(vValidate, "Registration Status", s, bNotMandatory, 50, strInValid, sOriginAction);
+
+			//===============GF32398=======END=====Validation of regstatus===========
 			s = m_VD.getVD_DATA_TYPE();
 			if (s == null) s = "";
 			UtilService.setValPageVector(vValidate, "Data Type", s, bMandatory, 20, "", sOriginAction);
@@ -1540,6 +1552,22 @@ public class SetACService implements Serializable
 				strInValid = "";
 				UtilService.setValPageVector(vValidate, "Registration Status", s, bNotMandatory, 50, strInValid, sOriginAction);
 			}
+			//==============GF32398=====START
+			if (sACType.equals("DataElementConcept"))
+			{
+				s = dec.getDEC_REG_STATUS();
+				if (s == null) s = "";
+				strInValid = "";
+				UtilService.setValPageVector(vValidate, "Registration Status", s, bNotMandatory, 50, strInValid, sOriginAction);
+			}
+			if (sACType.equals("ValueDomain"))
+			{
+				s = vd.getVD_REG_STATUS();
+				if (s == null) s = "";
+				strInValid = "";
+				UtilService.setValPageVector(vValidate, "Registration Status", s, bNotMandatory, 50, strInValid, sOriginAction);
+			}
+			//==============GF32398=====END
 			//data type attributes
 			if (sACType.equals("ValueDomain"))
 			{

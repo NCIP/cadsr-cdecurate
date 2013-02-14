@@ -431,6 +431,7 @@
        ,p_vd_idseq                 IN       VARCHAR2
        ,p_vd_id                    IN       VARCHAR2
        ,p_vd_search_res            OUT      type_vd_search
+       ,p_reg_status               IN       VARCHAR2 DEFAULT NULL   -- 12-Feb-2013, for GF32398
        ,p_origin                   IN       VARCHAR2 DEFAULT NULL   -- 16-Feb-2004, W. Ver Hoef added per SPRF_2.1_17
        ,p_created_starting_date    IN       VARCHAR2
                 DEFAULT NULL   -- 19-feb-2004, W. Ver Hoef added params per SPRF_2.1_10

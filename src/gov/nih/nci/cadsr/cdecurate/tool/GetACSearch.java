@@ -292,7 +292,8 @@ public class GetACSearch implements Serializable
                     }
                     else if (sSearchAC.equals("ValueDomain"))
                     {
-                        doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
+                    	//==added one more parameter sRegStatus ====GF32398
+                        doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo, sRegStatus,
                                         sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID, "", "", dVersion,
                                         sCDid, "", "", "", "", "", "", sDataType, vAC, sRecordsDisplayed);
                     }
@@ -395,7 +396,8 @@ public class GetACSearch implements Serializable
                     }
                     else if (sSearchAC.equals("ValueDomain"))
                     {
-                        doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
+                    	//==added one more parameter sRegStatus ====GF32398
+                        doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo, sRegStatus,
                                         sModifiedFrom, sModifiedTo, sCreator, sModifier, "", permValue, "", dVersion,
                                         sCDid, "", "", "", "", "", "", sDataType, vAC, sRecordsDisplayed);
                     }
@@ -419,7 +421,8 @@ public class GetACSearch implements Serializable
                     }
                     else if (sSearchAC.equals("ValueDomain"))
                     {
-                        doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
+                    	//==added one more parameter sRegStatus ====GF32398
+                        doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo, sRegStatus,
                                         sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", sOrigin, dVersion,
                                         sCDid, "", "", "", "", "", "", sDataType, vAC, sRecordsDisplayed);
                     }
@@ -448,7 +451,8 @@ public class GetACSearch implements Serializable
                     }
                     else if (sSearchAC.equals("ValueDomain"))
                     {
-                        doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
+                    	//==added one more parameter sRegStatus ====GF32398
+                        doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo, sRegStatus,
                                         sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", dVersion, sCDid,
                                         "", "", "", "", "", sCon, sDataType, vAC, sRecordsDisplayed);
                     }
@@ -501,7 +505,8 @@ public class GetACSearch implements Serializable
                     else if (sSearchAC.equals("ValueDomain"))
                     {
                     	logger.info("at line 499 of GetACsearch.java***********");
-                        doVDSearch("", sKeyword, "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
+                    	//==added one more parameter sRegStatus ====GF32398
+                        doVDSearch("", sKeyword, "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,sRegStatus,
                                         sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", dVersion, sCDid,
                                         "", "", "", "", "", "", sDataType, vAC, sRecordsDisplayed);
                     }
@@ -1842,16 +1847,16 @@ public class GetACSearch implements Serializable
                         DECBean.setALTERNATE_NAME(rs.getString("alt_name"));
                         DECBean.setREFERENCE_DOCUMENT(rs.getString("rd_name"));
                         //===========GF32398====START======
-                       // if (rs.getString("registration_status") != null) {
+//                        if (rs.getString("registration_status") != null) {
                         	 DECBean.setDEC_REG_STATUS(rs.getString("registration_status"));//GF32398
-						//}else{
-							// DECBean.setDEC_REG_STATUS("REG_STATUS");//GF32398
-						//}
-                       // if (rs.getString("ar_idseq") != null) {
+//						}else{
+//							 DECBean.setDEC_REG_STATUS("REG_STATUS");//GF32398
+//						}
+//                        if (rs.getString("ar_idseq") != null) {
                         	 DECBean.setDEC_REG_STATUS_IDSEQ(rs.getString("ar_idseq"));//GF32398	
-						//}else{
-							// DECBean.setDEC_REG_STATUS_IDSEQ("REG_STATUS_ID");//GF32398
-						//}
+//						}else{
+//							 DECBean.setDEC_REG_STATUS_IDSEQ("REG_STATUS_ID");//GF32398
+//						}
                       //===========GF32398====END======
                         logger.info("at line 1840 of GetACsearch.java***********");
                         vList.addElement(DECBean);
@@ -1943,8 +1948,9 @@ public class GetACSearch implements Serializable
      * @param vList
      *            returns Vector of DEbean.
      */
+    //==added one more parameter regStatus ====GF32398
     public void doVDSearch(String VD_IDSEQ, String InString, String ContID, String ContName, String sVersion,
-                    String VDType, String ASLName, String sCreatedFrom, String sCreatedTo, String sModifiedFrom,
+                    String VDType, String ASLName, String sCreatedFrom, String sCreatedTo, String regStatus, String sModifiedFrom,
                     String sModifiedTo, String sCreator, String sModifier, String VD_ID, String sPermValue,
                     String sOrigin, double dVersion, String sCDid, String pvIDseq, String deIDseq, String cscsiIDseq,
                     String conIDseq, String vmIDseq, String conName, String sData, Vector vList, String sRecordsDisplayed)
@@ -1962,7 +1968,7 @@ public class GetACSearch implements Serializable
             else
             {
                 cstmt = m_servlet.getConn()
-                                .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+                                .prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
                 // Now tie the placeholders with actual parameters.
                 cstmt.registerOutParameter(7, OracleTypes.CURSOR);
                 cstmt.setString(1, ContID);
@@ -1971,25 +1977,26 @@ public class GetACSearch implements Serializable
                 cstmt.setString(4, ASLName);
                 cstmt.setString(5, VD_IDSEQ);
                 cstmt.setString(6, VD_ID);
-                cstmt.setString(8, sOrigin);
-                cstmt.setString(9, sCreatedFrom);
-                cstmt.setString(10, sCreatedTo);
-                cstmt.setString(11, sModifiedFrom);
-                cstmt.setString(12, sModifiedTo);
-                cstmt.setString(13, sCreator);
-                cstmt.setString(14, sModifier);
-                cstmt.setString(15, sPermValue);
-                cstmt.setString(16, sVersion);
-                cstmt.setString(17, VDType);
-                cstmt.setDouble(18, dVersion);
-                cstmt.setString(19, sCDid);
-                cstmt.setString(20, pvIDseq);
-                cstmt.setString(21, deIDseq);
-                cstmt.setString(22, sData);
-                cstmt.setString(23, cscsiIDseq);
-                cstmt.setString(24, conName);
-                cstmt.setString(25, conIDseq);
-                cstmt.setString(26, vmIDseq);
+                cstmt.setString(8, regStatus);	//GF32398
+                cstmt.setString(9, sOrigin);
+                cstmt.setString(10, sCreatedFrom);
+                cstmt.setString(11, sCreatedTo);
+                cstmt.setString(12, sModifiedFrom);
+                cstmt.setString(13, sModifiedTo);
+                cstmt.setString(14, sCreator);
+                cstmt.setString(15, sModifier);
+                cstmt.setString(16, sPermValue);
+                cstmt.setString(17, sVersion);
+                cstmt.setString(18, VDType);
+                cstmt.setDouble(19, dVersion);
+                cstmt.setString(20, sCDid);
+                cstmt.setString(21, pvIDseq);
+                cstmt.setString(22, deIDseq);
+                cstmt.setString(23, sData);
+                cstmt.setString(24, cscsiIDseq);
+                cstmt.setString(25, conName);
+                cstmt.setString(26, conIDseq);
+                cstmt.setString(27, vmIDseq);
                 // Now we are ready to call the stored procedure
                 cstmt.execute();
                 // store the output in the resultset
@@ -2068,8 +2075,8 @@ public class GetACSearch implements Serializable
                         VDBean.setALTERNATE_NAME(rs.getString("alt_name"));
                         VDBean.setREFERENCE_DOCUMENT(rs.getString("rd_name"));
                         VDBean.setVD_IN_FORM(isVDinForm(VDBean.getVD_VD_IDSEQ(), VDBean.getVD_TYPE_FLAG()));
-                        VDBean.setVD_REG_STATUS("REG_STATUS");//GF32398
-                        VDBean.setVD_REG_STATUS_IDSEQ("REG_STATUS_ID");//GF32398
+                        VDBean.setVD_REG_STATUS(rs.getString("registration_status"));	//GF32398
+                        VDBean.setVD_REG_STATUS_IDSEQ(rs.getString("ar_idseq"));	//GF32398
                         logger.info("at line 2057 of GetACsearch.java***********");
                         // get permissible value
                         s = rs.getString("min_value");
@@ -4731,6 +4738,8 @@ public class GetACSearch implements Serializable
         {
             DECBean.setDEC_VERSION("1.0");
             DECBean.setDEC_ASL_NAME("");
+            DECBean.setDEC_REG_STATUS("");	//GF32398
+            DECBean.setDEC_REG_STATUS_IDSEQ("");	//GF32398
         }
         // make the workflow status to empty if
         if (sMenu.equals("NewDECVersion"))
@@ -4929,7 +4938,8 @@ public class GetACSearch implements Serializable
                 DEBean.setDE_DEC_Bean((DEC_Bean) vDECList.elementAt(0));
             String sVDid = DEBean.getDE_VD_IDSEQ();
             Vector vVDList = new Vector();
-            doVDSearch(sVDid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "",
+          //==added one more parameter regstatus before 0 ====GF32398
+            doVDSearch(sVDid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "",
                             "", "", "", vVDList, "0");
             if (vVDList != null && vVDList.size() > 0)
                 DEBean.setDE_VD_Bean((VD_Bean) vVDList.elementAt(0));
@@ -4989,6 +4999,8 @@ public class GetACSearch implements Serializable
         {
             VDBean.setVD_VERSION("1.0");
             VDBean.setVD_ASL_NAME("");
+            VDBean.setVD_REG_STATUS("");	//GF32398
+            VDBean.setVD_REG_STATUS_IDSEQ("");	//GF32398
         }
         // make the workflow status to empty if
         if (sMenu.equals("NewVDVersion"))
@@ -5440,7 +5452,8 @@ public class GetACSearch implements Serializable
             {
                 String sVDid = DEBean.getDE_VD_IDSEQ();
                 Vector vVDList = new Vector();
-                doVDSearch(sVDid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "",
+              //==added one more parameter regstatus before 0 ====GF32398
+                doVDSearch(sVDid, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "",
                                 "", "", "", "", vVDList, "0");
                 if (vVDList != null && vVDList.size() > 0)
                     DEBean.setDE_VD_Bean((VD_Bean) vVDList.elementAt(0));
@@ -6020,6 +6033,8 @@ public class GetACSearch implements Serializable
                 returnValue = curBean.getDEC_CRF_NAME();
             else if (curField.equals("TypeName"))
                 returnValue = curBean.getDEC_TYPE_NAME();
+            else if (curField.equals("regStatus"))	//GF32398
+                returnValue = curBean.getDEC_REG_STATUS();	//GF32398
             else if (curField.equals("minID"))
                 returnValue = curBean.getDEC_DEC_ID();
             else if (curField.equals("Origin"))
@@ -6222,6 +6237,8 @@ public class GetACSearch implements Serializable
                 returnValue = curBean.getVD_CRF_NAME();
             else if (curField.equals("TypeName"))
                 returnValue = curBean.getVD_TYPE_NAME();
+            else if (curField.equals("regStatus"))	//GF32398
+                returnValue = curBean.getVD_REG_STATUS();	//GF32398
             else if (curField.equals("minID"))
                 returnValue = curBean.getVD_VD_ID();
             else if (curField.equals("Origin"))
@@ -7985,34 +8002,39 @@ public class GetACSearch implements Serializable
             {
                 if (sSearchIn.equals("minID"))
                 {
-                    doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
+                	//==added one more parameter sRegStatus ====GF32398
+                    doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo, sRegStatus,
                                     sModifiedFrom, sModifiedTo, sCreator, sModifier, sMinID, "", "", dVersion, sCDid,
                                     "", "", "", "", "", "", sDataType, vAC, sRecordsDisplayed);
                 }
                 else if (sSearchIn.equals("permValue"))
                 {
+                	//==added one more parameter sRegStatus ====GF32398
                     String sPermValue = sKeyword;
-                    doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
+                    doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo, sRegStatus,
                                     sModifiedFrom, sModifiedTo, sCreator, sModifier, "", sPermValue, "", dVersion,
                                     sCDid, "", "", "", "", "", "", sDataType, vAC, sRecordsDisplayed);
                 }
                 else if (sSearchIn.equals("origin"))
                 {
+                	//==added one more parameter sRegStatus ====GF32398
                     String sOrigin = sKeyword;
-                    doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
+                    doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo, sRegStatus,
                                     sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", sOrigin, dVersion, sCDid,
                                     "", "", "", "", "", "", sDataType, vAC, sRecordsDisplayed);
                 }
                 else if (sSearchIn.equals("concept"))
                 {
+                	//==added one more parameter sRegStatus ====GF32398
                     String sCon = sKeyword;
-                    doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
+                    doVDSearch("", "", "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo, sRegStatus,
                                     sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", dVersion, sCDid, "",
                                     "", "", "", "", sCon, sDataType, vAC, sRecordsDisplayed);
                 }
                 else
                 {
-                    doVDSearch("", sKeyword, "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,
+                	//==added one more parameter sRegStatus ====GF32398
+                    doVDSearch("", sKeyword, "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo,sRegStatus,
                                     sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", dVersion, sCDid, "",
                                     "", "", "", "", "", sDataType, vAC, sRecordsDisplayed);
                 }
