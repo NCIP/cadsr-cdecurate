@@ -430,22 +430,43 @@ public class VD_Bean extends AC_Bean
 
     // Set Properties
     //=======GF32398===========START
-    
-    public String getVD_REG_STATUS() {
-		return VD_REG_STATUS;
-	}
-
+   
+    /**
+     * The setVD_REG_STATUS method sets the vD_REG_STATUS for this bean.
+     *
+     * @param s The vD_REG_STATUS to set
+    */
 	public void setVD_REG_STATUS(String vD_REG_STATUS) {
 		VD_REG_STATUS = vD_REG_STATUS;
 	}
-
-	public String getVD_REG_STATUS_IDSEQ() {
-		return VD_REG_STATUS_IDSEQ;
+	
+	 /**
+     * The getVD_REG_STATUS method returns the VD_REG_STATUS for this bean.
+     *
+     * @return String The VD_REG_STATUS
+     */
+    public String getVD_REG_STATUS() {
+		return VD_REG_STATUS;
 	}
-
+    
+    /**
+	   * The setVD_REG_STATUS_IDSEQ method sets the VD_REG_STATUS_IDSEQ for this bean.
+	   *
+	   * @param s The VD_REG_STATUS_IDSEQ to set
+	  */
 	public void setVD_REG_STATUS_IDSEQ(String vD_REG_STATUS_IDSEQ) {
 		VD_REG_STATUS_IDSEQ = vD_REG_STATUS_IDSEQ;
 	}
+	
+	 /**
+	  * The getVD_REG_STATUS_IDSEQ method returns the VD_REG_STATUS_IDSEQ for this bean.
+	  *
+	  * @return String The VD_REG_STATUS_IDSEQ
+	  */
+	public String getVD_REG_STATUS_IDSEQ() {
+		return VD_REG_STATUS_IDSEQ;
+	}
+	 
 	
 	//=======GF32398===========END
     /**

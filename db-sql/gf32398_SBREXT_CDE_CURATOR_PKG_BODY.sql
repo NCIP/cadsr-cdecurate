@@ -2369,6 +2369,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
        ,p_vd_idseq                 IN       VARCHAR2
        ,p_vd_id                    IN       VARCHAR2   -- 01-Jul-2003, W. Ver Hoef
        ,p_vd_search_res            OUT      type_vd_search
+       ,p_reg_status               IN       VARCHAR2 DEFAULT NULL   -- 12-Feb-2013, for GF32398.
        ,p_origin                   IN       VARCHAR2 DEFAULT NULL   -- 16-Feb-2004, W. Ver Hoef added per SPRF_2.1_17
        ,p_created_starting_date    IN       VARCHAR2
                 DEFAULT NULL   -- 19-Feb-2004, W. Ver Hoef added params per SPRF_2.1_10
@@ -2511,6 +2512,8 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
  ,des.DESIG_IDSEQ                     lae_des_idseq
  ,vd.vd_id
  ,vd.origin
+ ,ar.ar_idseq	--GF32398
+ ,ar.registration_status	--GF32398
  ,vd.date_created
  ,vd.date_modified
  ,sbrext_cde_curator_pkg.get_ua_full_name(vd.created_by)  created_by
@@ -2521,6 +2524,8 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
  ,vd.condr_idseq vd_condr_idseq
  ,NVL(r.long_name,r.preferred_name) rep_long_name
  ,r.asl_name rep_asl_name
+ ,rsl.display_order		--GF32398
+ ,rsl.registration_status	--GF32398
  ,asl.display_order
  ,asl.asl_name
  ,sbrext_cde_curator_pkg.Get_One_Con_Name(NULL, vd.vd_idseq) con_name
@@ -2533,15 +2538,19 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
      sbr.value_domains_view       vd
     ,sbr.conceptual_domains_view  cd
     ,sbr.contexts_view            c
+    ,ac_registrations_view ar	--GF32398
     ,sbr.ac_status_lov_view asl
+    ,sbr.reg_status_lov_view rsl	--GF32398
     ,sbrext.de_cn_language_view   des
     ,sbrext.REPRESENTATIONS_EXT   r ';
         v_where :=
             '
  vd.conte_idseq   = c.conte_idseq
  AND asl.asl_name = vd.asl_name
+ AND ar.ac_idseq (+)= vd.vd_idseq	--GF32398 added new join
  AND vd.cd_idseq  = cd.cd_idseq
  AND vd.vd_idseq  = des.ac_idseq (+)
+ AND vd.vd_idseq    = ar.ac_idseq (+)	--GF32398 added new join
  AND vd.rep_idseq = r.rep_idseq  (+) ';
         IF v_search_string IS NOT NULL THEN
             -- 25-Mar-2004, W. Ver Hoef commented out comparison to u.name
@@ -2633,6 +2642,12 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
             v_where := v_where || '
  AND vd.vd_id = ' ||   '''' || p_vd_id || '''';
         END IF;
+        -- begin of GF32398
+        IF ( p_reg_status IS NOT NULL ) THEN
+            v_where := v_where || '
+ AND ar.registration_status = ''' || p_reg_status || '''';
+        END IF;
+        -- end of GF32398
         -- 16-Feb-2004, W. Ver Hoef added comparison
         IF ( p_origin IS NOT NULL ) THEN
             v_where := v_where || '
@@ -2858,7 +2873,8 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
  ) AND '
                 || v_where;
         END IF;
-        v_sql := v_select || v_from || ' WHERE ' || v_where || '  ORDER BY asl.display_order, upper(vd.long_name )';   -- 03-Mar-2004, W. Ver Hoef
+        v_sql := v_select || v_from || ' WHERE ' || v_where || '  ORDER BY rsl.display_order, --GF32398 added rsl.display_order
+        asl.display_order, upper(vd.long_name )';   -- 03-Mar-2004, W. Ver Hoef
         /*
           i := 1;
           WHILE (i < LENGTH(v_sql)) LOOP

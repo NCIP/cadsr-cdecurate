@@ -351,21 +351,44 @@ public class DEC_Bean extends AC_Bean
 
     //=======GF32398===========START
     
+    /**
+     * The setDEC_REG_STATUS method sets the DEC_REG_STATUS for this bean.
+     *
+     * @param s The DEC_REG_STATUS to set
+    */
+    
+	public void setDEC_REG_STATUS(String dEC_REG_STATUS) {
+		DEC_REG_STATUS = dEC_REG_STATUS;
+	}
+	
+	 /**
+     * The getDEC_REG_STATUS method returns the DEC_REG_STATUS for this bean.
+     *
+     * @return String The DEC_REG_STATUS
+     */
     public String getDEC_REG_STATUS() {
 		return DEC_REG_STATUS;
 	}
 
-	public void setDEC_REG_STATUS(String dEC_REG_STATUS) {
-		DEC_REG_STATUS = dEC_REG_STATUS;
+    /**
+	   * The setDEC_REG_STATUS_IDSEQ method sets the DEC_REG_STATUS_IDSEQ for this bean.
+	   *
+	   * @param s The DEC_REG_STATUS_IDSEQ to set
+	  */
+    
+    public void setDEC_REG_STATUS_IDSEQ(String dEC_REG_STATUS_IDSEQ) {
+		DEC_REG_STATUS_IDSEQ = dEC_REG_STATUS_IDSEQ;
 	}
-
+    
+    /**
+	  * The getDEC_REG_STATUS_IDSEQ method returns the DEC_REG_STATUS_IDSEQ for this bean.
+	  *
+	  * @return String The DEC_REG_STATUS_IDSEQ
+	  */
 	public String getDEC_REG_STATUS_IDSEQ() {
 		return DEC_REG_STATUS_IDSEQ;
 	}
 
-	public void setDEC_REG_STATUS_IDSEQ(String dEC_REG_STATUS_IDSEQ) {
-		DEC_REG_STATUS_IDSEQ = dEC_REG_STATUS_IDSEQ;
-	}
 
 	//========GF32398===========END
 	

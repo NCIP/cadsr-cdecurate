@@ -559,6 +559,58 @@ public class InsACService implements Serializable {
 					vd.setVD_MODIFIED_BY(getFullName(cstmt.getString(33)));
 					vd.setVD_DATE_MODIFIED(m_util.getCurationDate(cstmt
 							.getString(34)));
+					//===========GF32398====Insert/update/delete regstatus=======START
+					String sReturned = "";
+					if (vd.getVD_REG_STATUS() != null
+							&& !vd.getVD_REG_STATUS().equals("")) {
+						logger.debug("line 566 of InsACSErvice.java registration value is "+vd.getVD_REG_STATUS()+"************");
+						vd.setVD_REG_STATUS_IDSEQ(this.getAC_REG(sVD_ID));
+						if (vd.getVD_REG_STATUS_IDSEQ() == null
+								|| vd.getVD_REG_STATUS_IDSEQ().equals("")){
+							logger.info("line 570 of InsACSErvice.java ************");
+							sReturned = this.setReg_Status("INS", "", sVD_ID, vd
+									.getVD_REG_STATUS());
+						}
+							
+						else{
+							logger.info("line 576 of InsACSErvice.java ************");
+							sReturned = this.setReg_Status("UPD", vd
+									.getVD_REG_STATUS_IDSEQ(), sVD_ID, vd
+									.getVD_REG_STATUS());
+						}
+							
+						if (sReturned != null && !sReturned.equals("")){
+							logger.info("line 583 of InsACSErvice.java ************");
+							this.storeStatusMsg("\\t "
+									+ sReturned
+									+ " : Unable to update Registration Status.");
+						}
+							
+					} else {
+						// delete if reg status is empty and idseq is not null
+						if (vd.getVD_REG_STATUS_IDSEQ() != null
+								&& !vd.getVD_REG_STATUS_IDSEQ().equals("")){
+							logger.info("line 593 of InsACSErvice.java ************");
+							sReturned = this.setReg_Status("DEL", vd
+									.getVD_REG_STATUS_IDSEQ(), sVD_ID, vd
+									.getVD_REG_STATUS());
+						}
+							
+						if (sReturned != null && !sReturned.equals("")){
+							logger.info("line 600 of InsACSErvice.java ************");
+							this
+							.storeStatusMsg("\\t "
+									+ sReturned
+									+ " : Unable to remove Registration Status.");
+						}
+							
+					}
+					// store returncode in request to track it all through this
+					// request
+					if (sAction.equals("UPD") && sReturned != null
+							&& !sReturned.equals(""))
+						m_classReq.setAttribute("retcode", sReturned);
+					//===========GF32398====Insert/update/delete regstatus=======END
 					// insert the vd pv relationships in vd_pvs table if not
 					// block edit
 					if (!sOriginAction.equals("BlockEditVD")) {

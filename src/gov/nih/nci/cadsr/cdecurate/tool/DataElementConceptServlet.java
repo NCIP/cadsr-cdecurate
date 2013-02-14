@@ -1638,6 +1638,13 @@ public class DataElementConceptServlet extends CurationServlet {
 			sCDName = "";
 		if (!sCDName.equals("") && !sCDName.equals(null))
 			DECBeanSR.setDEC_CD_NAME(sCDName);
+		//begin===============GF32398========
+		  String RegStatus = dec.getDEC_REG_STATUS();
+          if (RegStatus == null)
+              RegStatus = "";
+          if (!RegStatus.equals(""))
+              DECBeanSR.setDEC_REG_STATUS(RegStatus);
+        //end=================GF32398========
 		String sBeginDate = dec.getDEC_BEGIN_DATE();
 		if (sBeginDate == null)
 			sBeginDate = "";
@@ -1658,6 +1665,11 @@ public class DataElementConceptServlet extends CurationServlet {
 			changeNote = "";
 		if (!changeNote.equals(""))
 			DECBeanSR.setDEC_CHANGE_NOTE(changeNote);
+		//begin===========GF32398======
+		  String oldReg = DECBeanSR.getDEC_REG_STATUS();
+          if (oldReg == null)
+              oldReg = "";
+         //end=========GF32398=========
 		// get cs-csi from the page into the DECBean for block edit
 		Vector<AC_CSI_Bean> vAC_CS = dec.getAC_AC_CSI_VECTOR();
 		if (vAC_CS != null)

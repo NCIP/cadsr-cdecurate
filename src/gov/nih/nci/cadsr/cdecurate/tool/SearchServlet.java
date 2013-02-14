@@ -1205,7 +1205,8 @@ public class SearchServlet extends CurationServlet {
                 else if (sSearchAC.equals("ValueMeaning"))
                 	vmID = sID;
                 Vector vRes = new Vector();
-                getACSearch.doVDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, cdID, pvID,
+              //==added one more parameter regstatus ====GF32398
+                getACSearch.doVDSearch("", "", "", "", "", "", "", "","", "", "", "", "", "", "", "", "", 0, cdID, pvID,
                                 deID, cscsiID, conID,vmID, "", "", vRes, "0");
                 DataManager.setAttribute(session, "vSelRows", vRes);
                 // do attributes after the search so no "two simultaneous request" errors

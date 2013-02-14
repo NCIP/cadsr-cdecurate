@@ -411,7 +411,8 @@ public class ValueDomainServlet extends CurationServlet {
 		{
 			Vector vList = new Vector();
 			GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
-			serAC.doVDSearch(sVDID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", "",
+			//==added one more parameter regstatus ====GF32398
+			serAC.doVDSearch(sVDID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", "",
 					"", "", vList, "0");
 			// forward editVD page with this bean
 			if (vList.size() > 0)
@@ -1674,6 +1675,13 @@ public class ValueDomainServlet extends CurationServlet {
 			sCDName = "";
 		if (!sCDName.equals("") && !sCDName.equals(null))
 			VDBeanSR.setVD_CD_NAME(sCDName);
+		//===============GF32398========START
+		  String RegStatus = vd.getVD_REG_STATUS();
+        if (RegStatus == null)
+            RegStatus = "";
+        if (!RegStatus.equals(""))
+        	VDBeanSR.setVD_REG_STATUS(RegStatus);
+      //===============GF32398========END
 		String sAslName = vd.getVD_ASL_NAME();
 		if (sAslName == null)
 			sAslName = "";
@@ -1739,6 +1747,11 @@ public class ValueDomainServlet extends CurationServlet {
 			changeNote = "";
 		if (!changeNote.equals(""))
 			VDBeanSR.setVD_CHANGE_NOTE(changeNote);
+		//===========GF32398======START
+		  String oldReg = VDBeanSR.getVD_REG_STATUS();
+        if (oldReg == null)
+            oldReg = "";
+       //=========GF32398=========END
 		// get cs-csi from the page into the DECBean for block edit
 		Vector vAC_CS = vd.getAC_AC_CSI_VECTOR();
 		if (vAC_CS != null)
@@ -2314,7 +2327,8 @@ public class ValueDomainServlet extends CurationServlet {
 			//get VD's attributes from the database again
 			GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
 			if (sVDID != null && !sVDID.equals(""))
-				serAC.doVDSearch(sVDID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", "", "", "",vList, "0");
+				//==added one more parameter regstatus before 0 ====GF32398
+				serAC.doVDSearch(sVDID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "", "", "", "",vList, "0");
 			//forward editVD page with this bean
 			if (vList.size() > 0)
 			{
@@ -2349,7 +2363,8 @@ public class ValueDomainServlet extends CurationServlet {
 		GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);
 		if (acID != null && !acID.equals(""))
 		{
-			serAC.doVDSearch(acID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "",
+			//==added one more parameter regstatus before 0 ====GF32398
+			serAC.doVDSearch(acID, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", "", "", "",
 					"", "", "", vList, "0");
 		}
 		if (vList.size() > 0) // get all attributes
