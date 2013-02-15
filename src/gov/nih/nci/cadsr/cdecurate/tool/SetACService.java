@@ -3794,8 +3794,16 @@ public class SetACService implements Serializable
 			if(sName != null)
 			{
 				sName = m_util.removeNewLineChar(sName);
-				m_DEC.setDEC_LONG_NAME(sName);
-				logger.debug("DEC_LONG_NAME at Line 3745 of SetACService.java"+sName);
+				//GF32004------START
+				if(sName.indexOf("Integer::")>-1) {
+					sName=sName.replace("Integer::", "");
+					m_DEC.setDEC_LONG_NAME(sName);
+					
+				}else {
+					m_DEC.setDEC_LONG_NAME(sName);
+				}
+				//GF32004------END
+				logger.debug("DEC_LONG_NAME at Line 3745 of SetACService.java"+m_DEC.getDEC_LONG_NAME());
 			}
 
 			//set PREFERRED_NAME
