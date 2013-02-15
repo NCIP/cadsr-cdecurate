@@ -13,12 +13,14 @@
 	}catch (Exception e){	   
 	}   
 	String ver = "1";
+	if(version != null) { //GF32004 not related to ticket, but found it during regression test
     String[] aVer = version.split("[^0-9]");
     if (aVer.length > 0 && aVer[0] != null) {
       ver = aVer[0];
       if (aVer.length > 1 && aVer[1] != null){
         ver = ver + "." + aVer[1];
       }
+   }
    }
 	
 %>
