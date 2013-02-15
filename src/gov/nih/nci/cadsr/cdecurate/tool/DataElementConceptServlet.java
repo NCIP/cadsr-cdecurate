@@ -1182,7 +1182,7 @@ public class DataElementConceptServlet extends CurationServlet {
 						rebuiltDefs.add("*"+defs.get(codeCounter));
 
 						//if definitions don't match, put up a warning.
-						if (!defs.get(codeCounter).equals(usedDef))
+						if (defs  != null && usedDef != null && !defs.get(codeCounter).equals(usedDef))	//GF32004 not related to this ticket, but found NPE during the test
 							warning = true;
 					
 				}
