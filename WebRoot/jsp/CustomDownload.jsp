@@ -36,7 +36,9 @@
             <input type="hidden" name="cdlColumns" value=""/>
        
 	      <button type="button" onClick="submitSelectedColumnNames('Excel');">Download Excel</button>
+<!-- GF31701
 		  <button type="button" onClick="submitSelectedColumnNames('XML');">Download XML</button>
+-->
 	      <button type="button" onClick="toggleView();">Refresh Preview</button>
 	      	<input type="checkbox" name="fillIn" value="true"/> Check to fill in all values.
       </form>
