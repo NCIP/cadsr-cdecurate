@@ -1945,16 +1945,16 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
  ,DEC.PROP_IDSEQ
  ,DEC.dec_id
  ,DEC.ORIGIN
- ,ar.ar_idseq
- ,ar.registration_status
+ ,ar.ar_idseq --GF32398
+ ,ar.registration_status --GF32398
  ,DEC.date_created
  ,DEC.date_modified
  ,sbrext_cde_curator_pkg.get_ua_full_name(DEC.created_by)  created_by
  ,sbrext_cde_curator_pkg.get_ua_full_name(DEC.modified_by) modified_by
  ,prop.asl_name prop_asl_name
  ,oc.asl_name oc_asl_name
- ,rsl.display_order
- ,rsl.registration_status
+ ,rsl.display_order --GF32398
+ ,rsl.registration_status --GF32398
  ,asl.display_order
  ,asl.asl_name
  ,sbrext_cde_curator_pkg.Get_One_Con_Name(DEC.dec_idseq, NULL) con_name
@@ -1965,9 +1965,9 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
  FROM sbr.data_element_concepts_view  DEC
      ,sbr.conceptual_domains_view     cd
      ,sbr.contexts_view               c
-     ,ac_registrations_view ar
+     ,ac_registrations_view ar --GF32398
      ,sbr.ac_status_lov_view asl
-     ,sbr.reg_status_lov_view rsl
+     ,sbr.reg_status_lov_view rsl --GF32398
      ,sbrext.object_classes_view_ext  oc
      ,sbrext.properties_view_ext      prop
      ,sbrext.de_cn_language_view      des ';
@@ -1975,11 +1975,12 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
             '
  DEC.conte_idseq     = c.conte_idseq
  AND asl.asl_name = DEC.asl_name
- AND ar.ac_idseq (+)= DEC.dec_idseq
+ AND ar.ac_idseq (+)= DEC.dec_idseq --GF32398
+ AND rsl.registration_status (+)= ar.registration_status --GF32398
  AND DEC.cd_idseq    = cd.cd_idseq
  AND DEC.oc_idseq    = oc.oc_idseq     (+)
  AND DEC.prop_idseq  = prop.prop_idseq (+)
- AND DEC.dec_idseq    = ar.ac_idseq (+)
+ AND DEC.dec_idseq    = ar.ac_idseq (+) --GF32398
  AND DEC.dec_idseq   = des.ac_idseq    (+) ';
         IF v_search_string IS NOT NULL THEN
             -- 25-Mar-2004, W. Ver Hoef commented out comparison to u.name
@@ -2059,7 +2060,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
             v_where := v_where || '
  AND DEC.dec_id = ''' || p_dec_id || '''';
         END IF;
-        -- 07-Feb-2013 FRO GF32398
+        -- 07-Feb-2013 FOR GF32398
         IF ( p_reg_status IS NOT NULL ) THEN
             v_where := v_where || '
  AND ar.registration_status = ''' || p_reg_status || '''';
@@ -2548,6 +2549,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
  vd.conte_idseq   = c.conte_idseq
  AND asl.asl_name = vd.asl_name
  AND ar.ac_idseq (+)= vd.vd_idseq	--GF32398 added new join
+ AND rsl.registration_status (+)= ar.registration_status --GF32398 added new join
  AND vd.cd_idseq  = cd.cd_idseq
  AND vd.vd_idseq  = des.ac_idseq (+)
  AND vd.vd_idseq    = ar.ac_idseq (+)	--GF32398 added new join
