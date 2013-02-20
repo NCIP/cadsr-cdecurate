@@ -1596,7 +1596,7 @@
 
 			<input type="hidden" name="pageAction" value="nothing">
 			<input type="hidden" name="decIDSEQ" value="<%=sDECIDSEQ%>">
-			<input type="hidden" name="regStatusIDSEQ" value="<%=sRegStatusIDSEQ%>">//GF32398
+			<input type="hidden" name="regStatusIDSEQ" value="<%=sRegStatusIDSEQ%>"> <!-- GF32398 -->
 			<input type="hidden" name="openToTree" value="">
 			<input type="hidden" name="OCQualCCode" value="">
 			<input type="hidden" name="OCQualCCodeDB" value="">
