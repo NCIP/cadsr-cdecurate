@@ -2208,7 +2208,7 @@ function openEVSConceptsWindow(){
 					<input type="hidden" name="RepCCode" value="<%=sRepCCode%>">
 					<input type="hidden" name="RepCCodeDB" value="<%=sRepCCodeDB%>">
 					<input type="hidden" name="nameTypeChange" value="<%=nameChanged%>">
-					<input type="hidden" name="regStatusIDSEQ" value="<%=sRegStatusIDSEQ%>">//GF32398
+					<input type="hidden" name="regStatusIDSEQ" value="<%=sRegStatusIDSEQ%>"> <!-- GF32398 -->
 
 					<select name="selCSCSIHidden" size="1" style="visibility:hidden;" multiple></select>
 					<select name="selACCSIHidden" size="1" style="visibility:hidden;" multiple></select>
