@@ -3,17 +3,22 @@
  * Notes related to issue https://gforge.nci.nih.gov/tracker/index.php?func=detail&aid=30681.
  */
 SET SERVEROUTPUT ON;
+
+-- Backing up for rollback, in case of failed deployment/production release
+CREATE TABLE SBR.DATA_ELEMENT_CONCEPTS_BACKUP AS SELECT * FROM SBR.DATA_ELEMENT_CONCEPTS
+/
  
 DECLARE
 OC_CDR_NAME VARCHAR2(100);
 PROP_CDR_NAME VARCHAR2(100);
-CDR_NAME VARCHAR2(100);
+NEW_CDR_NAME VARCHAR2(100);
  
 CURSOR CDR IS
  Select DISTINCT DEC_IDSEQ, LONG_NAME, DEC_ID  from SBR.DATA_ELEMENT_CONCEPTS 
- where CDR_NAME is NULL 
- and DEC_IDSEQ is not null
-and OC_IDSEQ is NOT NULL and PROP_IDSEQ is NOT NULL 
+ where 
+--  CDR_NAME is NULL and
+ DEC_IDSEQ is not null and 
+ OC_IDSEQ is NOT NULL and PROP_IDSEQ is NOT NULL 
  ;
 
 BEGIN
@@ -43,14 +48,15 @@ and CONDR_IDSEQ is NOT NULL
 end;
 
 -- DBMS_OUTPUT.put_line('.');
-CDR_NAME:=':' || OC_CDR_NAME || ':' || PROP_CDR_NAME;
+NEW_CDR_NAME:=':' || OC_CDR_NAME || ':' || PROP_CDR_NAME;
 
--- Update SBR.DATA_ELEMENT_CONCEPTS SET CDR_NAME=CDR_NAME where DEC_IDSEQ=DECID.DEC_IDSEQ;
+-- DBMS_OUTPUT.put_line('********* Updating DEC_IDSEQ [' || DECID.DEC_IDSEQ || '] CDR_NAME with [' || NEW_CDR_NAME || '] ...');
 
--- DBMS_OUTPUT.put_line('DEC_IDSEQ = ' || DECID.DEC_IDSEQ || ' LONG NAME = ' || DECID.LONG_NAME || ' CDR_NAME set to [' || CDR_NAME || ']');
+Update SBR.DATA_ELEMENT_CONCEPTS SET CDR_NAME=NEW_CDR_NAME where DEC_IDSEQ=DECID.DEC_IDSEQ;
+
+-- DBMS_OUTPUT.put_line('DEC_IDSEQ = ' || DECID.DEC_IDSEQ || ' LONG NAME = ' || DECID.LONG_NAME || ' CDR_NAME set to [' || NEW_CDR_NAME || '] *********');
 
 END LOOP;
 
 END;
- /
- 
+/
