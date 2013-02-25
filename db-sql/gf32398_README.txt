@@ -76,14 +76,4 @@ SQL>
 
 *** UNDOING CHANGES ***
 
-The following scripts can be run to rollback changes made for this fix:
-
-SQL> @gf32398_SBREXT_CDE_CURATOR_PKG_SPEC-rollback.sql
-
-Package created.
-
-SQL> @gf32398_SBREXT_CDE_CURATOR_PKG_BODY-rollback.sql
-
-Package body created.
-
-SQL> 
+Please use the previous version in the SVN.
