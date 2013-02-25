@@ -1,6 +1,9 @@
 -- run with SBREXT user
-create or replace 
-PACKAGE          "SBREXT_CDE_CURATOR_PKG" AS
+--------------------------------------------------------
+--  DDL for Package SBREXT_CDE_CURATOR_PKG
+--------------------------------------------------------
+
+  CREATE OR REPLACE PACKAGE "SBREXT"."SBREXT_CDE_CURATOR_PKG" AS
     PROCEDURE set_de(
         p_return_code               OUT      VARCHAR2
        ,p_action                    IN       VARCHAR2
@@ -325,6 +328,7 @@ PACKAGE          "SBREXT_CDE_CURATOR_PKG" AS
        ,p_dec_idseq                IN       VARCHAR2
        ,p_dec_id                   IN       VARCHAR2
        ,p_dec_search_res           OUT      type_dec_search
+       ,p_reg_status               IN       VARCHAR2 DEFAULT NULL   -- 07-Feb-2013, for //GF32398
        ,p_origin                   IN       VARCHAR2 DEFAULT NULL   -- 16-Feb-2004, W. Ver Hoef added per SPRF_2.1_17
        ,p_oc_idseq                 IN       VARCHAR2 DEFAULT NULL   -- 16-Feb-2004, W. Ver Hoef added per SPRF_2.1_14
        ,p_prop_idseq               IN       VARCHAR2 DEFAULT NULL   -- 16-Feb-2004, W. Ver Hoef added per SPRF_2.1_14
@@ -427,6 +431,7 @@ PACKAGE          "SBREXT_CDE_CURATOR_PKG" AS
        ,p_vd_idseq                 IN       VARCHAR2
        ,p_vd_id                    IN       VARCHAR2
        ,p_vd_search_res            OUT      type_vd_search
+       ,p_reg_status               IN       VARCHAR2 DEFAULT NULL   -- 12-Feb-2013, for GF32398
        ,p_origin                   IN       VARCHAR2 DEFAULT NULL   -- 16-Feb-2004, W. Ver Hoef added per SPRF_2.1_17
        ,p_created_starting_date    IN       VARCHAR2
                 DEFAULT NULL   -- 19-feb-2004, W. Ver Hoef added params per SPRF_2.1_10
@@ -1280,4 +1285,23 @@ PACKAGE          "SBREXT_CDE_CURATOR_PKG" AS
     PRAGMA RESTRICT_REFERENCES( Get_Crtl_Name, WNDS, RNPS );
 
 END;
+ 
 /
+
+  GRANT EXECUTE ON "SBREXT"."SBREXT_CDE_CURATOR_PKG" TO "CDEBROWSER";
+ 
+  GRANT DEBUG ON "SBREXT"."SBREXT_CDE_CURATOR_PKG" TO "CDEBROWSER";
+ 
+  GRANT EXECUTE ON "SBREXT"."SBREXT_CDE_CURATOR_PKG" TO "DATA_LOADER";
+ 
+  GRANT DEBUG ON "SBREXT"."SBREXT_CDE_CURATOR_PKG" TO "DATA_LOADER";
+ 
+  GRANT EXECUTE ON "SBREXT"."SBREXT_CDE_CURATOR_PKG" TO "SBR" WITH GRANT OPTION;
+ 
+  GRANT DEBUG ON "SBREXT"."SBREXT_CDE_CURATOR_PKG" TO "SBR" WITH GRANT OPTION;
+ 
+  GRANT EXECUTE ON "SBREXT"."SBREXT_CDE_CURATOR_PKG" TO "APPLICATION_USER";
+ 
+  GRANT DEBUG ON "SBREXT"."SBREXT_CDE_CURATOR_PKG" TO "APPLICATION_USER";
+ 
+  GRANT EXECUTE ON "SBREXT"."SBREXT_CDE_CURATOR_PKG" TO "DER_USER";
