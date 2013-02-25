@@ -96,7 +96,4 @@ Grant succeeded.
 
 *** UNDOING CHANGES ***
 
-Most scripts that belong to this tickets have a corresponding *-rollback.sql, try to run that first if found. Otherwise, if
-SVN is available, please get the previous version of the script.
-
-Last resort, please request the DBA to refresh (say SBR package specs and bodies) the database back to Feb 13, 2013 (last known good copy).
+Please use the previous version in the SVN.
