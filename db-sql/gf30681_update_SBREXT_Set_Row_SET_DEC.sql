@@ -1,1623 +1,684 @@
--- run with SBREXT user
---------------------------------------------------------
---  File created - Wednesday-February-13-2013   
---------------------------------------------------------
--- Unable to render PACKAGE DDL for object SBREXT.SBREXT_SET_ROW with DBMS_METADATA attempting internal generator.
-CREATE OR REPLACE
-PACKAGE SBREXT.SBREXT_SET_ROW 
-AS
+-- run this as SBREXT user
+/*
+ * Fix related to issue https://gforge.nci.nih.gov/tracker/index.php?func=detail&aid=30681.
+ */
+CREATE OR REPLACE PACKAGE DEC_ACTIONS AS  -- spec
+PROCEDURE SET_DEC(
+P_UA_NAME          IN VARCHAR2
+,P_RETURN_CODE        OUT    VARCHAR2
+,P_ACTION                   IN     VARCHAR2
+,P_DEC_DEC_IDSEQ         IN OUT VARCHAR2
+,P_DEC_PREFERRED_NAME     IN OUT VARCHAR2
+,P_DEC_CONTE_IDSEQ         IN OUT VARCHAR2
+,P_DEC_VERSION             IN OUT NUMBER
+,P_DEC_PREFERRED_DEFINITION IN OUT VARCHAR2
+,P_DEC_CD_IDSEQ             IN OUT VARCHAR2
+,P_DEC_ASL_NAME             IN OUT VARCHAR2
+,P_DEC_LATEST_VERSION_IND   IN OUT VARCHAR2
+,P_DEC_LONG_NAME         IN OUT VARCHAR2
+,P_DEC_OC_IDSEQ             IN OUT VARCHAR2
+,P_DEC_PROP_IDSEQ           IN OUT VARCHAR2
+,P_DEC_PROPERTY_QUALIFIER IN OUT VARCHAR2
+,P_DEC_OBJ_CLASS_QUALIFIER IN OUT VARCHAR2
+,P_DEC_BEGIN_DATE         IN OUT VARCHAR2
+,P_DEC_END_DATE             IN OUT VARCHAR2
+,P_DEC_CHANGE_NOTE         IN OUT VARCHAR2
+,P_DEC_CREATED_BY         OUT    VARCHAR2
+,P_DEC_DATE_CREATED         OUT    VARCHAR2
+,P_DEC_MODIFIED_BY         OUT    VARCHAR2
+,P_DEC_DATE_MODIFIED     OUT    VARCHAR2
+,P_DEC_DELETED_IND         OUT    VARCHAR2
+,P_DEC_ORIGIN               IN     VARCHAR2 DEFAULT NULL	-- 15-Jul-2003, W. Ver Hoef
+,P_DEC_CDR_NAME               IN     VARCHAR2  --GF30681
+);
+ END DEC_ACTIONS;
+/
+CREATE OR REPLACE PACKAGE BODY DEC_ACTIONS AS  -- body
+ 
+PROCEDURE SET_DEC(
+P_UA_NAME          IN VARCHAR2
+,P_RETURN_CODE        OUT    VARCHAR2
+,P_ACTION                   IN     VARCHAR2
+,P_DEC_DEC_IDSEQ         IN OUT VARCHAR2
+,P_DEC_PREFERRED_NAME     IN OUT VARCHAR2
+,P_DEC_CONTE_IDSEQ         IN OUT VARCHAR2
+,P_DEC_VERSION             IN OUT NUMBER
+,P_DEC_PREFERRED_DEFINITION IN OUT VARCHAR2
+,P_DEC_CD_IDSEQ             IN OUT VARCHAR2
+,P_DEC_ASL_NAME             IN OUT VARCHAR2
+,P_DEC_LATEST_VERSION_IND   IN OUT VARCHAR2
+,P_DEC_LONG_NAME         IN OUT VARCHAR2
+,P_DEC_OC_IDSEQ             IN OUT VARCHAR2
+,P_DEC_PROP_IDSEQ           IN OUT VARCHAR2
+,P_DEC_PROPERTY_QUALIFIER IN OUT VARCHAR2
+,P_DEC_OBJ_CLASS_QUALIFIER IN OUT VARCHAR2
+,P_DEC_BEGIN_DATE         IN OUT VARCHAR2
+,P_DEC_END_DATE             IN OUT VARCHAR2
+,P_DEC_CHANGE_NOTE         IN OUT VARCHAR2
+,P_DEC_CREATED_BY         OUT    VARCHAR2
+,P_DEC_DATE_CREATED         OUT    VARCHAR2
+,P_DEC_MODIFIED_BY         OUT    VARCHAR2
+,P_DEC_DATE_MODIFIED     OUT    VARCHAR2
+,P_DEC_DELETED_IND         OUT    VARCHAR2
+,P_DEC_ORIGIN               IN     VARCHAR2 DEFAULT NULL 
+,P_DEC_CDR_NAME               IN     VARCHAR2	--GF30681
+)  IS -- 15-Jul-2003, W. Ver Hoef
 /******************************************************************************
-   NAME:       SBREXT_SET_ROW
-   PURPOSE:    This Package holds all the API's to get a single row of data
-               from a table
+   NAME:       SET_DEC
+   PURPOSE:    Inserts or Updates a Single Row Of Data Element Concept Based on either
+               DEC_IDSEQ or Preferred Name, Context and Version
 
    REVISIONS:
    Ver        Date        Author           Description
    ---------  ----------  ---------------  ------------------------------------
-   1.0        10/18/2001  Prerna Aggarwal  1. Created this package
-   2.0        07/15/2003  W. Ver Hoef      1. Added origin parameter to
-                                              set_de, set_dec.
-   2.0        07/22/2003  W. Ver Hoef      1. Added code for origin parameter
-                                              to set_object_class.
-   2.0        07/23/2003  W. Ver Hoef      1. Added origin parameter/code to
-                                              set_property, set_proto, set_qc,
-                                              set_representation.
-   2.0        07/24/2003  W. Ver Hoef      1. Added origin parameter to
-                                              set_vd, set_vd_pvs.
-   2.3        10/23/2006  S. Alred         1. Added overloaded versions of set_vm
-                                              and set_vm_condr to return new
-                                              vm_idseq value.
+   1.0        10/22/2001  Prerna Aggarwal  1. Created this procedure
+   2.0        07/15/2003  W. Ver Hoef      1. added parameter for origin and code
+                                              also for dec_id
+             2. fixed proper setting of p_dec_dec_idseq
+                out parameter
+             3. added "is not null" condition for
+                validation of optional parameters
+   2.1        03/19/2004  W. Ver Hoef      1. substituted UNASSIGNED with function
+                                              call to get_default_asl
 
 ******************************************************************************/
 
-PROCEDURE SET_VD(
-P_RETURN_CODE                         OUT    VARCHAR2
-, P_ACTION                           IN     VARCHAR2
-, P_VD_VD_IDSEQ                           IN OUT VARCHAR2
-, P_VD_PREFERRED_NAME                  IN OUT VARCHAR2
-, P_VD_CONTE_IDSEQ                    IN OUT VARCHAR2
-, P_VD_VERSION                        IN OUT NUMBER
-, P_VD_PREFERRED_DEFINITION            IN OUT VARCHAR2
-, P_VD_CD_IDSEQ                        IN OUT VARCHAR2
-, P_VD_ASL_NAME                        IN OUT VARCHAR2
-, P_VD_LATEST_VERSION_IND            IN OUT VARCHAR2
-, P_VD_DTL_NAME                        IN OUT VARCHAR2
-, P_VD_MAX_LENGTH_NUM                IN OUT NUMBER
-, P_VD_LONG_NAME                    IN OUT VARCHAR2
-, P_VD_FORML_NAME                     IN OUT VARCHAR2
-, P_FORML_DESCRIPTION               IN OUT VARCHAR2
-, P_FORML_COMMENT                    IN OUT VARCHAR2
-, P_VD_UOML_NAME                     IN OUT VARCHAR2
-, P_UOML_DESCRIPTION                 IN OUT VARCHAR2
-, P_UOML_COMMENT                     IN OUT VARCHAR2
-, P_VD_LOW_VALUE_NUM                IN OUT VARCHAR2
-, P_VD_HIGH_VALUE_NUM                IN OUT VARCHAR2
-, P_VD_MIN_LENGTH_NUM                IN OUT NUMBER
-, P_VD_DECIMAL_PLACE                 IN OUT NUMBER
-, P_VD_CHAR_SET_NAME                IN OUT VARCHAR2
-, P_VD_BEGIN_DATE                    IN OUT VARCHAR2
-, P_VD_END_DATE                        IN OUT VARCHAR2
-, P_VD_CHANGE_NOTE                    IN OUT VARCHAR2
-, P_VD_TYPE_FLAG                    IN OUT VARCHAR2
-, P_VD_CREATED_BY                    OUT    VARCHAR2
-, P_VD_DATE_CREATED                    OUT    VARCHAR2
-, P_VD_MODIFIED_BY                    OUT    VARCHAR2
-, P_VD_DATE_MODIFIED                OUT    VARCHAR2
-, P_VD_DELETED_IND                    OUT    VARCHAR2
-, P_VD_REP_IDSEQ                    IN VARCHAR2 DEFAULT NULL
-, P_VD_QUALIFIER_NAME               IN VARCHAR2 DEFAULT NULL
-, P_VD_ORIGIN                       IN VARCHAR2 DEFAULT NULL); -- 24-JUL-2003, W. Ver Hoef
-
-PROCEDURE SET_VD(
- P_RETURN_CODE                         OUT    VARCHAR2
-,P_VD_CON_ARRAY                        IN     VARCHAR2
-, P_ACTION                           IN     VARCHAR2
-, P_VD_VD_IDSEQ                           IN OUT VARCHAR2
-, P_VD_PREFERRED_NAME                  IN OUT VARCHAR2
-, P_VD_CONTE_IDSEQ                    IN OUT VARCHAR2
-, P_VD_VERSION                        IN OUT NUMBER
-, P_VD_PREFERRED_DEFINITION            IN OUT VARCHAR2
-, P_VD_CD_IDSEQ                        IN OUT VARCHAR2
-, P_VD_ASL_NAME                        IN OUT VARCHAR2
-, P_VD_LATEST_VERSION_IND            IN OUT VARCHAR2
-, P_VD_DTL_NAME                        IN OUT VARCHAR2
-, P_VD_MAX_LENGTH_NUM                IN OUT NUMBER
-, P_VD_LONG_NAME                    IN OUT VARCHAR2
-, P_VD_FORML_NAME                     IN OUT VARCHAR2
-, P_FORML_DESCRIPTION               IN OUT VARCHAR2
-, P_FORML_COMMENT                    IN OUT VARCHAR2
-, P_VD_UOML_NAME                     IN OUT VARCHAR2
-, P_UOML_DESCRIPTION                 IN OUT VARCHAR2
-, P_UOML_COMMENT                     IN OUT VARCHAR2
-, P_VD_LOW_VALUE_NUM                IN OUT VARCHAR2
-, P_VD_HIGH_VALUE_NUM                IN OUT VARCHAR2
-, P_VD_MIN_LENGTH_NUM                IN OUT NUMBER
-, P_VD_DECIMAL_PLACE                 IN OUT NUMBER
-, P_VD_CHAR_SET_NAME                IN OUT VARCHAR2
-, P_VD_BEGIN_DATE                    IN OUT VARCHAR2
-, P_VD_END_DATE                        IN OUT VARCHAR2
-, P_VD_CHANGE_NOTE                    IN OUT VARCHAR2
-, P_VD_TYPE_FLAG                    IN OUT VARCHAR2
-, P_VD_CREATED_BY                    OUT    VARCHAR2
-, P_VD_DATE_CREATED                    OUT    VARCHAR2
-, P_VD_MODIFIED_BY                    OUT    VARCHAR2
-, P_VD_DATE_MODIFIED                OUT    VARCHAR2
-, P_VD_DELETED_IND                    OUT    VARCHAR2
-,  P_VD_CONDR_IDSEQ                 IN OUT VARCHAR2
-, P_VD_REP_IDSEQ                    IN VARCHAR2 DEFAULT NULL
-, P_VD_QUALIFIER_NAME               IN VARCHAR2 DEFAULT NULL
-, P_VD_ORIGIN                       IN VARCHAR2 DEFAULT NULL);
-PROCEDURE SET_DEC(
- P_RETURN_CODE                    OUT    VARCHAR2
-,P_ACTION                         IN     VARCHAR2
-,P_DEC_DEC_IDSEQ               IN OUT VARCHAR2
-,P_DEC_PREFERRED_NAME           IN OUT VARCHAR2
-,P_DEC_CONTE_IDSEQ               IN OUT VARCHAR2
-,P_DEC_VERSION                   IN OUT NUMBER
-,P_DEC_PREFERRED_DEFINITION    IN OUT VARCHAR2
-,P_DEC_CD_IDSEQ                   IN OUT VARCHAR2
-,P_DEC_ASL_NAME                   IN OUT VARCHAR2
-,P_DEC_LATEST_VERSION_IND      IN OUT VARCHAR2
-,P_DEC_LONG_NAME               IN OUT VARCHAR2
-,P_DEC_OC_IDSEQ                IN OUT VARCHAR2
-,P_DEC_PROP_IDSEQ              IN OUT VARCHAR2
-,P_DEC_PROPERTY_QUALIFIER       IN OUT VARCHAR2
-,P_DEC_OBJ_CLASS_QUALIFIER       IN OUT VARCHAR2
-,P_DEC_BEGIN_DATE               IN OUT VARCHAR2
-,P_DEC_END_DATE                   IN OUT VARCHAR2
-,P_DEC_CHANGE_NOTE               IN OUT VARCHAR2
-,P_DEC_CREATED_BY               OUT      VARCHAR2
-,P_DEC_DATE_CREATED               OUT      VARCHAR2
-,P_DEC_MODIFIED_BY               OUT      VARCHAR2
-,P_DEC_DATE_MODIFIED           OUT      VARCHAR2
-,P_DEC_DELETED_IND               OUT      VARCHAR2
-,P_DEC_ORIGIN                  IN     VARCHAR2 DEFAULT NULL ); -- 15-Jul-2003, W. Ver Hoef
-
-
-PROCEDURE SET_VM(
-P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_VM_SHORT_MEANING            IN OUT VARCHAR2
-,P_VM_DESCRIPTION            IN OUT VARCHAR2
-,P_VM_COMMENTS                IN OUT VARCHAR2
-,P_VM_BEGIN_DATE            IN OUT VARCHAR2
-,P_VM_END_DATE                IN OUT VARCHAR2
-,P_VM_CREATED_BY            OUT    VARCHAR2
-,P_VM_DATE_CREATED            OUT    VARCHAR2
-,P_VM_MODIFIED_BY            OUT    VARCHAR2
-,P_VM_DATE_MODIFIED            OUT    VARCHAR2)    ;
-
--- overloaded version
-PROCEDURE SET_VM(
-P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_VM_SHORT_MEANING            IN OUT VARCHAR2
-,P_VM_DESCRIPTION            IN OUT VARCHAR2
-,P_VM_COMMENTS                IN OUT VARCHAR2
-,P_VM_BEGIN_DATE            IN OUT VARCHAR2
-,P_VM_END_DATE                IN OUT VARCHAR2
-,P_VM_CREATED_BY            OUT    VARCHAR2
-,P_VM_DATE_CREATED            OUT    VARCHAR2
-,P_VM_MODIFIED_BY            OUT    VARCHAR2
-,P_VM_DATE_MODIFIED            OUT    VARCHAR2
-,P_VM_VM_IDSEQ              OUT VARCHAR2)    ;
-
--- another overloaded version (ScenPro, 4/24/2007)
-/*PROCEDURE SET_VM(
-     P_RETURN_CODE                OUT VARCHAR2
-    ,P_ACTION                   IN OUT VARCHAR2
-    ,P_CON_ARRAY                IN VARCHAR2
-    ,P_VM_IDSEQ                    IN OUT VARCHAR2
-    ,P_PREFERRED_NAME            IN OUT VARCHAR2
-    ,P_LONG_NAME                IN OUT VARCHAR2
-    ,P_PREFERRED_DEFINITION        IN OUT VARCHAR2
-    ,P_CONTE_IDSEQ                IN OUT VARCHAR2
-    ,P_ASL_NAME                    IN OUT VARCHAR2
-    ,P_VERSION                    IN OUT VARCHAR2
-    ,P_VM_ID                    IN OUT VARCHAR2
-    ,P_LATEST_VERSION_IND        IN OUT VARCHAR2
-    ,P_CONDR_IDSEQ                IN OUT VARCHAR2
-    ,P_DEFINITION_SOURCE        IN OUT VARCHAR2
-    ,P_ORIGIN                    IN OUT VARCHAR2
-    ,P_CHANGE_NOTE                IN OUT VARCHAR2
-    ,P_BEGIN_DATE                IN OUT VARCHAR2
-    ,P_END_DATE                    IN OUT VARCHAR2
-    ,P_CREATED_BY                OUT    VARCHAR2
-    ,P_DATE_CREATED                OUT    VARCHAR2
-    ,P_MODIFIED_BY                OUT    VARCHAR2
-    ,P_DATE_MODIFIED            OUT    VARCHAR2
-    )    ;
-
-*/
-PROCEDURE SET_PV(
-P_RETURN_CODE                    OUT VARCHAR2
-,P_ACTION                       IN VARCHAR2
-,P_PV_PV_IDSEQ                    IN OUT VARCHAR2
-,P_PV_VALUE                    IN OUT VARCHAR2
-,P_PV_SHORT_MEANING             IN OUT VARCHAR2
-,P_PV_BEGIN_DATE            IN OUT VARCHAR2
-,P_PV_MEANING_DESCRIPTION    IN OUT VARCHAR2
-,P_PV_LOW_VALUE_NUM            IN OUT NUMBER
-,P_PV_HIGH_VALUE_NUM            IN OUT NUMBER
-,P_PV_END_DATE                    IN OUT VARCHAR2
-,P_PV_CREATED_BY            OUT    VARCHAR2
-,P_PV_DATE_CREATED            OUT    VARCHAR2
-,P_PV_MODIFIED_BY            OUT    VARCHAR2
-,P_PV_DATE_MODIFIED            OUT    VARCHAR2);
-
-
-PROCEDURE SET_VD_PVS(
- P_RETURN_CODE                   OUT VARCHAR2
-,P_ACTION                   IN     VARCHAR2
-,P_VDPVS_VP_IDSEQ            IN OUT VARCHAR2
-,P_VDPVS_VD_IDSEQ            IN OUT VARCHAR2
-,P_VDPVS_PV_IDSEQ            IN OUT VARCHAR2
-,P_VDPVS_CONTE_IDSEQ        IN OUT VARCHAR2
-,P_VDPVS_DATE_CREATED           OUT VARCHAR2
-,P_VDPVS_CREATED_BY               OUT VARCHAR2
-,P_VDPVS_MODIFIED_BY           OUT VARCHAR2
-,P_VDPVS_DATE_MODIFIED           OUT VARCHAR2
-,P_VDPVS_ORIGIN             IN     VARCHAR2 DEFAULT NULL
-,P_VDPVS_BEGIN_DATE            IN     VARCHAR2 DEFAULT NULL
-,P_VDPVS_END_DATE                    IN  VARCHAR2 DEFAULT NULL
-,P_VDPVS_CON_IDSEQ  IN VARCHAR2 DEFAULT NULL); -- 24-JUL-2003, W. Ver Hoef
-
-
-PROCEDURE SET_DE(
-P_RETURN_CODE                 OUT    VARCHAR2
-,P_ACTION                   IN     VARCHAR2
-,P_DE_DE_IDSEQ                IN OUT VARCHAR2
-,P_DE_PREFERRED_NAME        IN OUT VARCHAR2
-,P_DE_CONTE_IDSEQ            IN OUT VARCHAR2
-,P_DE_VERSION                IN OUT NUMBER
-,P_DE_PREFERRED_DEFINITION  IN OUT VARCHAR2
-,P_DE_DEC_IDSEQ             IN OUT VARCHAR2
-,P_DE_VD_IDSEQ                IN OUT VARCHAR2
-,P_DE_ASL_NAME                IN OUT VARCHAR2
-,P_DE_LATEST_VERSION_IND    IN OUT VARCHAR2
-,P_DE_LONG_NAME                IN OUT VARCHAR2
-,P_DE_BEGIN_DATE            IN OUT VARCHAR2
-,P_DE_END_DATE                IN OUT VARCHAR2
-,P_DE_CHANGE_NOTE            IN OUT VARCHAR2
-,P_DE_CREATED_BY            OUT       VARCHAR2
-,P_DE_DATE_CREATED            OUT       VARCHAR2
-,P_DE_MODIFIED_BY            OUT       VARCHAR2
-,P_DE_DATE_MODIFIED            OUT       VARCHAR2
-,P_DE_DELETED_IND            OUT       VARCHAR2
-,P_DE_ORIGIN                IN     VARCHAR2 DEFAULT NULL ); -- 15-Jul-2003, W. Ver Hoef
-
-
-PROCEDURE SET_RD(
-P_RETURN_CODE                 OUT    VARCHAR2
-,P_ACTION                   IN     VARCHAR2
-,P_RD_RD_IDSEQ                IN OUT VARCHAR2
-,P_RD_NAME                    IN OUT VARCHAR2
-,P_RD_DCTL_NAME                IN OUT VARCHAR2
-,P_RD_AC_IDSEQ                IN OUT VARCHAR2
-,P_RD_ACH_IDSEQ                IN OUT VARCHAR2
-,P_RD_AR_IDSEQ                IN OUT VARCHAR2
-,P_RD_DOC_TEXT                IN OUT VARCHAR2
-,P_RD_ORG_IDSEQ                IN OUT VARCHAR2
-,P_RD_URL                      IN OUT VARCHAR2
-,P_RD_CREATED_BY            OUT       VARCHAR2
-,P_RD_DATE_CREATED            OUT       VARCHAR2
-,P_RD_MODIFIED_BY            OUT       VARCHAR2
-,P_RD_DATE_MODIFIED            OUT       VARCHAR2
-,P_RD_LAE_NAME              IN VARCHAR2 DEFAULT 'ENGLISH'
-,P_RD_CONTE_IDSEQ              IN VARCHAR2 DEFAULT NULL);
-
-
-PROCEDURE SET_DES(
-P_RETURN_CODE                 OUT    VARCHAR2
-,P_ACTION                   IN     VARCHAR2
-,P_DES_DESIG_IDSEQ                IN OUT VARCHAR2
-,P_DES_NAME                    IN OUT VARCHAR2
-,P_DES_DETL_NAME                IN OUT VARCHAR2
-,P_DES_AC_IDSEQ                IN OUT VARCHAR2
-,P_DES_CONTE_IDSEQ                IN OUT VARCHAR2
-,P_DES_LAE_NAME                IN OUT VARCHAR2
-,P_DES_CREATED_BY            OUT       VARCHAR2
-,P_DES_DATE_CREATED            OUT       VARCHAR2
-,P_DES_MODIFIED_BY            OUT       VARCHAR2
-,P_DES_DATE_MODIFIED            OUT       VARCHAR2);
-
-
-PROCEDURE  SET_CSCSI(
-P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_CSCSI_CS_CSI_IDSEQ        IN OUT VARCHAR2
-,P_CSCSI_CS_IDSEQ            IN OUT VARCHAR2
-,P_CSCSI_LABEL               IN OUT VARCHAR2
-,P_CSCSI_CSI_IDSEQ            IN OUT    VARCHAR2
-,P_CSCSI_P_CS_CSI_IDSEQ        IN OUT VARCHAR2
-,P_CSCSI_LINK_CS_CSI_IDSEQ    IN OUT VARCHAR2
-,P_CSCSI_DISPLAY_ORDER        IN OUT NUMBER
-,P_CSCSI_DATE_CREATED        OUT    VARCHAR2
-,P_CSCSI_CREATED_BY            OUT    VARCHAR2
-,P_CSCSI_MODIFIED_BY        OUT    VARCHAR2
-,P_CSCSI_DATE_MODIFIED        OUT    VARCHAR2);
-
-
-PROCEDURE  SET_ACCSI(
-P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_ACCSI_AC_CSI_IDSEQ        IN OUT VARCHAR2
-,P_ACCSI_AC_IDSEQ            IN OUT VARCHAR2
-,P_ACCSI_CS_CSI_IDSEQ        IN OUT    VARCHAR2
-,P_ACCSI_DATE_CREATED        OUT    VARCHAR2
-,P_ACCSI_CREATED_BY            OUT    VARCHAR2
-,P_ACCSI_MODIFIED_BY        OUT    VARCHAR2
-,P_ACCSI_DATE_MODIFIED        OUT    VARCHAR2);
-
-
-PROCEDURE SET_SRC(
-P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_SRC_SRC_NAME                IN OUT VARCHAR2
-,P_SRC_DESCRIPTION            IN OUT VARCHAR2
-,P_SRC_CREATED_BY            OUT    VARCHAR2
-,P_SRC_DATE_CREATED            OUT    VARCHAR2
-,P_SRC_MODIFIED_BY            OUT    VARCHAR2
-,P_SRC_DATE_MODIFIED        OUT    VARCHAR2);
-
-
-PROCEDURE SET_TS(
-P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN  VARCHAR2
-,P_TS_TS_IDSEQ                IN OUT VARCHAR2
-,P_TS_QC_IDSEQ                IN OUT VARCHAR2
-,P_TS_TSTL_NAME             IN OUT VARCHAR2
-,P_TS_TS_TEXT                IN OUT VARCHAR2
-,P_TS_TS_SEQ                IN OUT    NUMBER
-,P_TS_CREATED_BY            OUT    VARCHAR2
-,P_TS_DATE_CREATED            OUT    VARCHAR2
-,P_TS_MODIFIED_BY            OUT    VARCHAR2
-,P_TS_DATE_MODIFIED            OUT    VARCHAR2);
-
-
-PROCEDURE SET_ACSRC(
-P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_ACSRC_ACS_IDSEQ            IN OUT VARCHAR2
-,P_ACSRC_AC_IDSEQ            IN OUT VARCHAR2
-,P_ACSRC_SRC_NAME           IN OUT VARCHAR2
-,P_ACSRC_DATE_SUBMITTED        IN OUT    VARCHAR2
-,P_ACSRC_CREATED_BY            OUT    VARCHAR2
-,P_ACSRC_DATE_CREATED        OUT    VARCHAR2
-,P_ACSRC_MODIFIED_BY        OUT    VARCHAR2
-,P_ACSRC_DATE_MODIFIED        OUT    VARCHAR2);
-
-
-PROCEDURE SET_VPSRC(
-P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_VPSRC_VPS_IDSEQ            IN OUT VARCHAR2
-,P_VPSRC_VP_IDSEQ            IN OUT VARCHAR2
-,P_VPSRC_SRC_NAME           IN OUT VARCHAR2
-,P_VPSRC_DATE_SUBMITTED        IN OUT    VARCHAR2
-,P_VPSRC_CREATED_BY            OUT    VARCHAR2
-,P_VPSRC_DATE_CREATED        OUT    VARCHAR2
-,P_VPSRC_MODIFIED_BY        OUT    VARCHAR2
-,P_VPSRC_DATE_MODIFIED        OUT    VARCHAR2);
-
-
-PROCEDURE SET_QC(
- P_RETURN_CODE                     OUT    VARCHAR2
-,P_ACTION                       IN     VARCHAR2
-,P_QC_QC_IDSEQ                    IN OUT VARCHAR2
-,P_QC_VERSION                    IN OUT NUMBER
-,P_QC_PREFERRED_NAME            IN OUT VARCHAR2
-,P_QC_PREFERRED_DEFINITION      IN OUT VARCHAR2
-,P_QC_CONTE_IDSEQ                IN OUT VARCHAR2
-,P_QC_ASL_NAME                    IN OUT VARCHAR2
-,P_QC_QTL_NAME                    IN OUT VARCHAR2
-,P_QC_LONG_NAME                    IN OUT VARCHAR2
-,P_QC_LATEST_VERSION_IND        IN OUT VARCHAR2
-,P_QC_PROTO_IDSEQ                IN OUT VARCHAR2
-,P_QC_DE_IDSEQ                     IN OUT VARCHAR2
-,P_QC_VP_IDSEQ                    IN OUT VARCHAR2
-,P_QC_QC_MATCH_IDSEQ              IN OUT VARCHAR2
-,P_QC_QCDL_NAME                 IN OUT VARCHAR2
-,P_QC_QC_IDENTIFIER                IN OUT VARCHAR2
-,P_QC_MATCH_IND                    IN OUT VARCHAR2
-,P_QC_NEW_QC_IND                IN OUT VARCHAR2
-,P_QC_HIGHLIGHT_IND                IN OUT VARCHAR2
-,P_QC_CDE_DICTIONARY_ID            IN OUT VARCHAR2
-,P_QC_SYSTEM_MSGS                IN OUT VARCHAR2
-,P_QC_REVIEWER_FEEDBACK_EXT     IN OUT VARCHAR2
-,P_QC_REVIEWER_FEEDBACK_INT     IN OUT VARCHAR2
-,P_QC_REVIEWER_FEEDBACK_ACT      IN OUT VARCHAR2
-,P_QC_REVIEWED_BY               IN OUT VARCHAR2
-,P_QC_REVIEWED_DATE                IN OUT VARCHAR2
-,P_QC_APPROVED_BY                 IN OUT VARCHAR2
-,P_QC_APPROVED_DATE                IN OUT VARCHAR2
-,P_QC_BEGIN_DATE                IN OUT VARCHAR2
-,P_QC_END_DATE                  IN OUT VARCHAR2
-,P_QC_CHANGE_NOTE                IN OUT VARCHAR2
-,P_QC_SUB_LONG_NAME             IN OUT VARCHAR2
-,P_QC_GROUP_COMMENTS            IN OUT VARCHAR2
-,P_QC_VD_IDSEQ                    IN OUT VARCHAR2
-,P_QC_CREATED_BY                OUT       VARCHAR2
-,P_QC_DATE_CREATED                OUT       VARCHAR2
-,P_QC_MODIFIED_BY                OUT       VARCHAR2
-,P_QC_DATE_MODIFIED                OUT       VARCHAR2
-,P_QC_DELETED_IND                OUT       VARCHAR2
-,P_QC_SRC_NAME                  IN     VARCHAR2 DEFAULT NULL
-,P_QC_P_MOD_IDSEQ                IN     VARCHAR2 DEFAULT NULL
-,P_QC_P_QST_IDSEQ                IN     VARCHAR2 DEFAULT NULL
-,P_QC_P_VAL_IDSEQ                IN     VARCHAR2 DEFAULT NULL
-,P_QC_DN_CRF_IDSEQ                IN     VARCHAR2 DEFAULT NULL
-,P_QC_DISPALY_IND                  IN     VARCHAR2 DEFAULT NULL
-,P_QC_GROUP_ACTION              IN     VARCHAR2 DEFAULT NULL
-,P_QC_DE_LONG_NAME              IN     VARCHAR2 DEFAULT NULL
-,P_QC_VD_LONG_NAME              IN     VARCHAR2 DEFAULT NULL
-,P_QC_DEC_LONG_NAME              IN     VARCHAR2 DEFAULT NULL
-,P_QC_ORIGIN                    IN     VARCHAR2 DEFAULT NULL); -- 23-Jul-2003, W. Ver Hoef
-
-
-PROCEDURE SET_REL(
-P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_REL_TABLE                IN VARCHAR2
-,P_REL_REL_IDSEQ            IN OUT VARCHAR2
-,P_REL_P_IDSEQ                IN OUT VARCHAR2
-,P_REL_C_IDSEQ                IN OUT VARCHAR2
-,P_REL_RL_NAME                IN OUT VARCHAR2
-,P_REL_DISPLAY_ORDER        IN OUT NUMBER
-,P_REL_CREATED_BY            OUT    VARCHAR2
-,P_REL_DATE_CREATED            OUT    VARCHAR2
-,P_REL_MODIFIED_BY            OUT    VARCHAR2
-,P_REL_DATE_MODIFIED        OUT    VARCHAR2);
-
-
-PROCEDURE SET_PROTO(P_RETURN_CODE                  OUT VARCHAR2,
-                      P_ACTION                IN       VARCHAR2,
-                      P_PROTO_IDSEQ           IN OUT VARCHAR2,
-                        P_VERSION               IN OUT NUMBER,
-                      P_CONTE_IDSEQ           IN OUT VARCHAR2,
-                      P_PREFERRED_NAME        IN OUT VARCHAR2,
-                      P_PREFERRED_DEFINITION  IN OUT VARCHAR2,
-                      P_ASL_NAME              IN OUT VARCHAR2,
-                      P_LONG_NAME             IN OUT VARCHAR2,
-                      P_LATEST_VERSION_IND    IN OUT VARCHAR2,
-                      P_DELETED_IND           IN OUT VARCHAR2,
-                      P_BEGIN_DATE            IN OUT DATE,
-                      P_END_DATE              IN OUT DATE,
-                      P_PROTOCOL_ID           IN OUT VARCHAR2,
-                      P_TYPE                  IN OUT VARCHAR2,
-                      P_PHASE                 IN OUT VARCHAR2,
-                      P_LEAD_ORG              IN OUT VARCHAR2,
-                      P_CHANGE_TYPE           IN OUT VARCHAR2,
-                      P_CHANGE_NUMBER         IN OUT NUMBER,
-                      P_REVIEWED_DATE         IN OUT DATE,
-                      P_REVIEWED_BY           IN OUT VARCHAR2,
-                      P_APPROVED_DATE         IN OUT DATE,
-                      P_APPROVED_BY           IN OUT VARCHAR2,
-                      P_DATE_CREATED          IN OUT DATE,
-                      P_CREATED_BY            IN OUT VARCHAR2,
-                      P_DATE_MODIFIED         IN OUT DATE,
-                      P_MODIFIED_BY           IN OUT VARCHAR2,
-                      P_CHANGE_NOTE           IN OUT VARCHAR2,
-                    P_ORIGIN                IN     VARCHAR2 DEFAULT NULL); -- 23-Jul-2003, W. Ver Hoef
-
-
-PROCEDURE SET_CD_VMS(
-P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_CDVMS_CV_IDSEQ            IN OUT VARCHAR2
-,P_CDVMS_CD_IDSEQ            IN OUT VARCHAR2
-,P_CDVMS_SHORT_MEANING      IN OUT VARCHAR2
-,P_CDVMS_DESCRIPTION        IN OUT VARCHAR2
-,P_CDVMS_DATE_CREATED        OUT    VARCHAR2
-,P_CDVMS_CREATED_BY            OUT    VARCHAR2
-,P_CDVMS_MODIFIED_BY        OUT    VARCHAR2
-,P_CDVMS_DATE_MODIFIED        OUT    VARCHAR2);
-
-
-PROCEDURE SET_PROPERTY(
-P_RETURN_CODE                 OUT VARCHAR2
-,P_ACTION                  IN VARCHAR2
-,P_PROP_IDSEQ                  IN OUT VARCHAR2
-,P_PROP_PREFERRED_NAME      IN OUT VARCHAR2
-,P_PROP_LONG_NAME               IN OUT VARCHAR2
-,P_PROP_PREFERRED_DEFINITION    IN OUT VARCHAR2
-,P_PROP_CONTE_IDSEQ            IN OUT VARCHAR2
-,P_PROP_VERSION               IN OUT VARCHAR2
-,P_PROP_ASL_NAME              IN OUT VARCHAR2
-,P_PROP_LATEST_VERSION_IND      IN OUT VARCHAR2
-,P_PROP_CHANGE_NOTE         IN OUT VARCHAR2
-,P_PROP_ORIGIN      IN OUT VARCHAR2
-,P_PROP_DEFINITION_SOURCE         IN OUT VARCHAR2
-,P_PROP_BEGIN_DATE            IN OUT VARCHAR2
-,P_PROP_END_DATE                IN OUT VARCHAR2
-,P_PROP_DATE_CREATED            OUT VARCHAR2
-,P_PROP_CREATED_BY             OUT VARCHAR2
-,P_PROP_DATE_MODIFIED           OUT VARCHAR2
-,P_PROP_MODIFIED_BY             OUT VARCHAR2
-,P_PROP_DELETED_IND             OUT VARCHAR2
-,P_PROP_DESIG_NCI_CC_TYPE IN VARCHAR2  DEFAULT NULL
-,P_PROP_DESIG_NCI_CC_VAL IN VARCHAR2  DEFAULT NULL
-,P_PROP_DESIG_UMLS_CUI_TYPE IN VARCHAR2  DEFAULT NULL
-,P_PROP_DESIG_UMLS_CUI_VAL IN VARCHAR2  DEFAULT NULL
-,P_PROP_DESIG_TEMP_CUI_TYPE IN VARCHAR2  DEFAULT NULL
-,P_PROP_DESIG_TEMP_CUI_VAL IN VARCHAR2  DEFAULT NULL);
-
-PROCEDURE SET_PROP_CONDR(
-P_PROP_con_array           IN VARCHAR2
-,P_PROP_CONTE_IDSEQ            IN VARCHAR2
-,P_RETURN_CODE                   OUT VARCHAR2
-,P_PROP_PROP_IDSEQ                   OUT VARCHAR2
-,P_PROP_PREFERRED_NAME           OUT VARCHAR2
-,P_PROP_LONG_NAME              OUT VARCHAR2
-,P_PROP_PREFERRED_DEFINITION    OUT VARCHAR2
-,P_PROP_VERSION                OUT VARCHAR2
-,P_PROP_ASL_NAME               OUT VARCHAR2
-,P_PROP_LATEST_VERSION_IND     OUT VARCHAR2
-,P_PROP_CHANGE_NOTE               OUT VARCHAR2
-,P_PROP_ORIGIN                   OUT VARCHAR2
-,P_PROP_DEFINITION_SOURCE      OUT VARCHAR2
-,P_PROP_BEGIN_DATE             OUT VARCHAR2
-,P_PROP_END_DATE               OUT VARCHAR2
-,P_PROP_DATE_CREATED            OUT VARCHAR2
-,P_PROP_CREATED_BY               OUT VARCHAR2
-,P_PROP_DATE_MODIFIED           OUT VARCHAR2
-,P_PROP_MODIFIED_BY             OUT VARCHAR2
-,P_PROP_DELETED_IND             OUT VARCHAR2
-,P_PROP_CONDR_IDSEQ             OUT VARCHAR2
-,P_PROP_ID             OUT VARCHAR2);
-
-
-
-PROCEDURE SET_CONCEPT(
-P_RETURN_CODE                 OUT VARCHAR2
-,P_ACTION                  IN VARCHAR2
-,P_CON_IDSEQ                   OUT VARCHAR2
-,P_CON_PREFERRED_NAME      IN OUT VARCHAR2
-,P_CON_LONG_NAME               IN OUT VARCHAR2
-,P_CON_PREFERRED_DEFINITION    IN OUT VARCHAR2
-,P_CON_CONTE_IDSEQ            IN OUT VARCHAR2
-,P_CON_VERSION               IN OUT VARCHAR2
-,P_CON_ASL_NAME              IN OUT VARCHAR2
-,P_CON_LATEST_VERSION_IND      IN OUT VARCHAR2
-,P_CON_CHANGE_NOTE         IN OUT VARCHAR2
-,P_CON_ORIGIN      IN OUT VARCHAR2
-,P_CON_DEFINITION_SOURCE         IN OUT VARCHAR2
-,P_CON_EVS_SOURCE         IN OUT VARCHAR2
-,P_CON_BEGIN_DATE            IN OUT VARCHAR2
-,P_CON_END_DATE                IN OUT VARCHAR2
-,P_CON_DATE_CREATED            OUT VARCHAR2
-,P_CON_CREATED_BY             OUT VARCHAR2
-,P_CON_DATE_MODIFIED           OUT VARCHAR2
-,P_CON_MODIFIED_BY             OUT VARCHAR2
-,P_CON_DELETED_IND             OUT VARCHAR2);
-
-
-PROCEDURE SET_OBJECT_CLASS(
-P_RETURN_CODE                   OUT VARCHAR2
-,P_ACTION                     IN     VARCHAR2
-,P_OC_IDSEQ                 IN OUT VARCHAR2
-,P_OC_PREFERRED_NAME         IN OUT VARCHAR2
-,P_OC_LONG_NAME            IN OUT VARCHAR2
-,P_OC_PREFERRED_DEFINITION IN OUT VARCHAR2
-,P_OC_CONTE_IDSEQ          IN OUT VARCHAR2
-,P_OC_VERSION              IN OUT VARCHAR2
-,P_OC_ASL_NAME             IN OUT VARCHAR2
-,P_OC_LATEST_VERSION_IND   IN OUT VARCHAR2
-,P_OC_CHANGE_NOTE            IN OUT VARCHAR2
-,P_OC_ORIGIN                 IN OUT VARCHAR2
-,P_OC_DEFINITION_SOURCE    IN OUT VARCHAR2
-,P_OC_BEGIN_DATE           IN OUT VARCHAR2
-,P_OC_END_DATE             IN OUT VARCHAR2
-,P_OC_DATE_CREATED            OUT VARCHAR2
-,P_OC_CREATED_BY               OUT VARCHAR2
-,P_OC_DATE_MODIFIED           OUT VARCHAR2
-,P_OC_MODIFIED_BY             OUT VARCHAR2
-,P_OC_DELETED_IND             OUT VARCHAR2
-,P_OC_DESIG_NCI_CC_TYPE    IN     VARCHAR2  DEFAULT NULL
-,P_OC_DESIG_NCI_CC_VAL     IN     VARCHAR2  DEFAULT NULL
-,P_OC_DESIG_UMLS_CUI_TYPE  IN     VARCHAR2  DEFAULT NULL
-,P_OC_DESIG_UMLS_CUI_VAL   IN     VARCHAR2  DEFAULT NULL
-,P_OC_DESIG_TEMP_CUI_TYPE  IN     VARCHAR2  DEFAULT NULL
-,P_OC_DESIG_TEMP_CUI_VAL   IN     VARCHAR2  DEFAULT NULL);
-
-PROCEDURE SET_OC_CONDR(
-P_OC_con_array           IN VARCHAR2
-,P_OC_CONTE_IDSEQ            IN VARCHAR2
-,P_RETURN_CODE                   OUT VARCHAR2
-,P_OC_OC_IDSEQ                   OUT VARCHAR2
-,P_OC_PREFERRED_NAME           OUT VARCHAR2
-,P_OC_LONG_NAME              OUT VARCHAR2
-,P_OC_PREFERRED_DEFINITION    OUT VARCHAR2
-,P_OC_VERSION                OUT VARCHAR2
-,P_OC_ASL_NAME               OUT VARCHAR2
-,P_OC_LATEST_VERSION_IND     OUT VARCHAR2
-,P_OC_CHANGE_NOTE               OUT VARCHAR2
-,P_OC_ORIGIN                   OUT VARCHAR2
-,P_OC_DEFINITION_SOURCE      OUT VARCHAR2
-,P_OC_BEGIN_DATE             OUT VARCHAR2
-,P_OC_END_DATE               OUT VARCHAR2
-,P_OC_DATE_CREATED            OUT VARCHAR2
-,P_OC_CREATED_BY               OUT VARCHAR2
-,P_OC_DATE_MODIFIED           OUT VARCHAR2
-,P_OC_MODIFIED_BY             OUT VARCHAR2
-,P_OC_DELETED_IND             OUT VARCHAR2
-,P_OC_CONDR_IDSEQ             OUT VARCHAR2
-,P_OC_ID                      OUT VARCHAR2);
-
-PROCEDURE SET_REPRESENTATION(
-P_RETURN_CODE                 OUT VARCHAR2
-,P_ACTION                  IN VARCHAR2
-,P_REP_IDSEQ                  IN OUT VARCHAR2
-,P_REP_PREFERRED_NAME      IN OUT VARCHAR2
-,P_REP_LONG_NAME               IN OUT VARCHAR2
-,P_REP_PREFERRED_DEFINITION    IN OUT VARCHAR2
-,P_REP_CONTE_IDSEQ            IN OUT VARCHAR2
-,P_REP_VERSION               IN OUT VARCHAR2
-,P_REP_ASL_NAME              IN OUT VARCHAR2
-,P_REP_LATEST_VERSION_IND      IN OUT VARCHAR2
-,P_REP_CHANGE_NOTE         IN OUT VARCHAR2
-,P_REP_ORIGIN      IN OUT VARCHAR2
-,P_REP_DEFINITION_SOURCE         IN OUT VARCHAR2
-,P_REP_BEGIN_DATE            IN OUT VARCHAR2
-,P_REP_END_DATE                IN OUT VARCHAR2
-,P_REP_DATE_CREATED            OUT VARCHAR2
-,P_REP_CREATED_BY             OUT VARCHAR2
-,P_REP_DATE_MODIFIED           OUT VARCHAR2
-,P_REP_MODIFIED_BY             OUT VARCHAR2
-,P_REP_DELETED_IND             OUT VARCHAR2
-,P_REP_DESIG_NCI_CC_TYPE IN VARCHAR2  DEFAULT NULL
-,P_REP_DESIG_NCI_CC_VAL IN VARCHAR2  DEFAULT NULL
-,P_REP_DESIG_UMLS_CUI_TYPE IN VARCHAR2  DEFAULT NULL
-,P_REP_DESIG_UMLS_CUI_VAL IN VARCHAR2  DEFAULT NULL
-,P_REP_DESIG_TEMP_CUI_TYPE IN VARCHAR2  DEFAULT NULL
-,P_REP_DESIG_TEMP_CUI_VAL IN VARCHAR2  DEFAULT NULL);
-
-PROCEDURE SET_REP_CONDR(
-P_REP_con_array           IN VARCHAR2
-,P_REP_CONTE_IDSEQ            IN VARCHAR2
-,P_RETURN_CODE                   OUT VARCHAR2
-,P_REP_REP_IDSEQ                   OUT VARCHAR2
-,P_REP_PREFERRED_NAME           OUT VARCHAR2
-,P_REP_LONG_NAME              OUT VARCHAR2
-,P_REP_PREFERRED_DEFINITION    OUT VARCHAR2
-,P_REP_VERSION                OUT VARCHAR2
-,P_REP_ASL_NAME               OUT VARCHAR2
-,P_REP_LATEST_VERSION_IND     OUT VARCHAR2
-,P_REP_CHANGE_NOTE               OUT VARCHAR2
-,P_REP_ORIGIN                   OUT VARCHAR2
-,P_REP_DEFINITION_SOURCE      OUT VARCHAR2
-,P_REP_BEGIN_DATE             OUT VARCHAR2
-,P_REP_END_DATE               OUT VARCHAR2
-,P_REP_DATE_CREATED            OUT VARCHAR2
-,P_REP_CREATED_BY               OUT VARCHAR2
-,P_REP_DATE_MODIFIED           OUT VARCHAR2
-,P_REP_MODIFIED_BY             OUT VARCHAR2
-,P_REP_DELETED_IND             OUT VARCHAR2
-,P_REP_CONDR_IDSEQ             OUT VARCHAR2
-,P_REP_ID             OUT VARCHAR2);
-PROCEDURE SET_QUAL(
- P_RETURN_CODE                   OUT VARCHAR2
-,P_ACTION                   IN     VARCHAR2
-,P_QUAL_qualifier_name        IN OUT VARCHAR2
-,P_QUAL_DESCRIPTION            IN OUT VARCHAR2
-,P_QUAL_COMMENTS            IN OUT VARCHAR2
-,P_QUAL_CREATED_BY               OUT VARCHAR2
-,P_QUAL_DATE_CREATED           OUT VARCHAR2
-,P_QUAL_MODIFIED_BY               OUT VARCHAR2
-,P_QUAL_DATE_MODIFIED           OUT VARCHAR2
-,P_QUAL_CON_IDSEQ           IN VARCHAR2 DEFAULT NULL);
-
-
-PROCEDURE set_cd(
-  p_action                  IN     VARCHAR2
- ,p_cd_idseq                IN OUT VARCHAR2
- ,p_cd_version              IN OUT VARCHAR2
- ,p_cd_preferred_name       IN OUT VARCHAR2
- ,p_cd_conte_idseq          IN OUT VARCHAR2
- ,p_cd_long_name            IN OUT VARCHAR2
- ,p_cd_preferred_definition IN OUT VARCHAR2
- ,p_cd_dimensionality       IN OUT VARCHAR2
- ,p_cd_asl_name             IN OUT VARCHAR2
- ,p_cd_latest_version_ind   IN OUT VARCHAR2
- ,p_cd_begin_date           IN OUT DATE
- ,p_cd_end_date             IN OUT DATE
- ,p_cd_change_note          IN OUT VARCHAR2
- ,p_cd_origin               IN OUT VARCHAR2
- ,p_cd_created_by              OUT VARCHAR2
- ,p_cd_date_created            OUT VARCHAR2
- ,p_cd_modified_by             OUT VARCHAR2
- ,p_cd_date_modified           OUT VARCHAR2
- ,p_return_code                OUT VARCHAR2
- );
-
-
--- 16-Mar-2004, W. Ver Hoef - added per SPRF_2.1_06
-PROCEDURE set_complex_de(
-  p_action            IN  VARCHAR2
- ,p_cdt_p_de_idseq    IN  VARCHAR2
- ,p_cdt_methods       IN  VARCHAR2
- ,p_cdt_rule          IN  VARCHAR2
- ,p_cdt_concat_char   IN  VARCHAR2
- ,p_cdt_crtl_name     IN  VARCHAR2
- ,p_cdt_created_by    OUT VARCHAR2
- ,p_cdt_date_created  OUT VARCHAR2
- ,p_cdt_modified_by   OUT VARCHAR2
- ,p_cdt_date_modified OUT VARCHAR2
- ,p_return_code       OUT VARCHAR2
- );
-
-
--- 17-Mar-2004, W. Ver Hoef - added per SPRF_2.1_06a
-PROCEDURE set_cde_relationship(
-  p_action             IN     VARCHAR2
- ,p_cdr_idseq          IN OUT VARCHAR2
- ,p_cdr_p_de_idseq     IN OUT VARCHAR2
- ,p_cdr_c_de_idseq     IN OUT VARCHAR2
- ,p_cdr_display_order  IN OUT VARCHAR2
- ,p_cdr_created_by        OUT VARCHAR2
- ,p_cdr_date_created      OUT VARCHAR2
- ,p_cdr_modified_by       OUT VARCHAR2
- ,p_cdr_date_modified     OUT VARCHAR2
- ,p_return_code           OUT VARCHAR2
- );
-
-
--- 19-Mar-2004, W. Ver Hoef - added per SPRF_2.1_03
-PROCEDURE set_registration(
-  p_action                  IN     VARCHAR2
- ,p_ar_idseq                IN OUT VARCHAR2
- ,p_ar_ac_idseq             IN OUT VARCHAR2
- ,p_ar_registration_status  IN OUT VARCHAR2
- ,p_ar_created_by              OUT VARCHAR2
- ,p_ar_date_created            OUT VARCHAR2
- ,p_ar_modified_by             OUT VARCHAR2
- ,p_ar_date_modified           OUT VARCHAR2
- ,p_return_code                OUT VARCHAR2
- );
-
-PROCEDURE SET_VM_CONDR(
-P_vm_con_array           IN VARCHAR2
-,P_RETURN_CODE                OUT VARCHAR2
-,P_VM_SHORT_MEANING         IN  OUT VARCHAR2
-,P_VM_DESCRIPTION             OUT VARCHAR2
-,P_VM_COMMENTS                 OUT    VARCHAR2
-,P_VM_BEGIN_DATE             OUT    VARCHAR2
-,P_VM_END_DATE                 OUT    VARCHAR2
-,P_VM_CREATED_BY            OUT    VARCHAR2
-,P_VM_DATE_CREATED            OUT    VARCHAR2
-,P_VM_MODIFIED_BY            OUT    VARCHAR2
-,P_VM_DATE_MODIFIED            OUT    VARCHAR2
-,P_VM_CONDR_IDSEQ           out  VARCHAR2 );
-
-
--- overloaded version return vm_idseq
-PROCEDURE SET_VM_CONDR(
-P_vm_con_array               IN     VARCHAR2
-,P_RETURN_CODE                 OUT    VARCHAR2
-,P_VM_SHORT_MEANING         IN  OUT    VARCHAR2
-,P_VM_DESCRIPTION             OUT    VARCHAR2
-,P_VM_COMMENTS                 OUT    VARCHAR2
-,P_VM_BEGIN_DATE             OUT    VARCHAR2
-,P_VM_END_DATE                 OUT    VARCHAR2
-,P_VM_CREATED_BY             OUT    VARCHAR2
-,P_VM_DATE_CREATED             OUT    VARCHAR2
-,P_VM_MODIFIED_BY             OUT    VARCHAR2
-,P_VM_DATE_MODIFIED             OUT    VARCHAR2
-,P_VM_CONDR_IDSEQ            out    VARCHAR2
-,P_VM_VM_IDSEQ               OUT    VARCHAR2 );
-
-
-
--- SPRF_3.1_16i (TT#1001)
-PROCEDURE set_contact_comm (
-     p_return_code            OUT       VARCHAR2
-    ,p_action                 IN        VARCHAR2
-    ,p_ccomm_idseq            in  out   varchar2
-    ,p_org_idseq              in  out   varchar2
-    ,p_per_idseq              in  out   varchar2
-    ,p_ctl_name               in  out   varchar2
-    ,p_rank_order             in  out   number
-    ,p_cyber_address          in  out   varchar2
-    ,p_date_created           in  out   date
-    ,p_created_by             in  out   varchar2
-    ,p_date_modified          in  out   date
-    ,p_modified_by            in  out   varchar2);
-
--- SPRF_3.1_16j (TT#1001)
-PROCEDURE set_contact_addr (
-     p_return_code            OUT       VARCHAR2
-    ,p_action                 IN        VARCHAR2
-    ,p_caddr_idseq            in  out   varchar2
-    ,p_org_idseq              in  out   varchar2
-    ,p_per_idseq              in  out   varchar2
-    ,p_atl_name               in  out   varchar2
-    ,p_rank_order             in  out   number
-    ,p_addr_line1             in  out   varchar2
-    ,p_addr_line2             in  out   varchar2
-    ,p_city                   in  out   varchar2
-    ,p_state_prov             in  out   varchar2
-    ,p_postal_code            in  out   varchar2
-    ,p_country                in  out   varchar2
-    ,p_date_created           in  out   date
-    ,p_created_by             in  out   varchar2
-    ,p_date_modified          in  out   date
-    ,p_modified_by            in  out   varchar2);
-
--- SPRF_3.1_16k (TT#1001)
-/*PROCEDURE set_ac_contact (
-     p_return_code            OUT       VARCHAR2
-    ,p_action                 IN        VARCHAR2
-    ,p_acc_idseq              in  out   varchar2
-    ,p_org_idseq              in  out   varchar2
-    ,p_per_idseq              in  out   varchar2
-    ,p_ac_idseq               in  out   varchar2
-    ,p_rank_order             in  out   number
-    ,p_date_created           in  out   date
-    ,p_created_by             in  out   varchar2
-    ,p_date_modified          in  out   date
-    ,p_modified_by            in  out   varchar2
-    ,p_cs_csi_idseq           in  out   varchar2
-    ,p_ar_idseq              in  out   varchar2
-    ,p_contact_role           in  out   varchar2);*/
-
-    PROCEDURE SET_VD(
-  P_UA_NAME              IN  VARCHAR2
-, P_RETURN_CODE                     OUT VARCHAR2
-, P_ACTION                           IN  VARCHAR2
-, P_VD_VD_IDSEQ                       IN OUT VARCHAR2
-, P_VD_PREFERRED_NAME                  IN OUT VARCHAR2
-, P_VD_CONTE_IDSEQ                IN OUT VARCHAR2
-, P_VD_VERSION                        IN OUT NUMBER
-, P_VD_PREFERRED_DEFINITION        IN OUT VARCHAR2
-, P_VD_CD_IDSEQ                        IN OUT VARCHAR2
-, P_VD_ASL_NAME                        IN OUT VARCHAR2
-, P_VD_LATEST_VERSION_IND            IN OUT VARCHAR2
-, P_VD_DTL_NAME                        IN OUT VARCHAR2
-, P_VD_MAX_LENGTH_NUM                IN OUT NUMBER
-, P_VD_LONG_NAME                    IN OUT VARCHAR2
-, P_VD_FORML_NAME                 IN OUT VARCHAR2
-, P_FORML_DESCRIPTION               IN OUT VARCHAR2
-, P_FORML_COMMENT                    IN OUT VARCHAR2
-, P_VD_UOML_NAME                     IN OUT VARCHAR2
-, P_UOML_DESCRIPTION                 IN OUT VARCHAR2
-, P_UOML_COMMENT                     IN OUT VARCHAR2
-, P_VD_LOW_VALUE_NUM                IN OUT VARCHAR2
-, P_VD_HIGH_VALUE_NUM                IN OUT VARCHAR2
-, P_VD_MIN_LENGTH_NUM                IN OUT NUMBER
-, P_VD_DECIMAL_PLACE                 IN OUT NUMBER
-, P_VD_CHAR_SET_NAME                IN OUT VARCHAR2
-, P_VD_BEGIN_DATE                IN OUT VARCHAR2
-, P_VD_END_DATE                        IN OUT VARCHAR2
-, P_VD_CHANGE_NOTE                IN OUT VARCHAR2
-, P_VD_TYPE_FLAG                    IN OUT VARCHAR2
-, P_VD_CREATED_BY                   OUT VARCHAR2
-, P_VD_DATE_CREATED                   OUT VARCHAR2
-, P_VD_MODIFIED_BY                   OUT VARCHAR2
-, P_VD_DATE_MODIFIED                   OUT VARCHAR2
-, P_VD_DELETED_IND                   OUT VARCHAR2
-, P_VD_REP_IDSEQ                    IN VARCHAR2 DEFAULT NULL
-, P_VD_QUALIFIER_NAME               IN VARCHAR2 DEFAULT NULL
-, P_VD_ORIGIN                       IN VARCHAR2 DEFAULT NULL); -- 24-JUL-2003, W. Ver Hoef
-
-PROCEDURE SET_VD(
-  P_UA_NAME              IN  VARCHAR2
-, P_RETURN_CODE                         OUT    VARCHAR2
-, P_VD_CON_ARRAY                        IN     VARCHAR2
-, P_ACTION                           IN     VARCHAR2
-, P_VD_VD_IDSEQ                           IN OUT VARCHAR2
-, P_VD_PREFERRED_NAME                  IN OUT VARCHAR2
-, P_VD_CONTE_IDSEQ                    IN OUT VARCHAR2
-, P_VD_VERSION                        IN OUT NUMBER
-, P_VD_PREFERRED_DEFINITION            IN OUT VARCHAR2
-, P_VD_CD_IDSEQ                        IN OUT VARCHAR2
-, P_VD_ASL_NAME                        IN OUT VARCHAR2
-, P_VD_LATEST_VERSION_IND            IN OUT VARCHAR2
-, P_VD_DTL_NAME                        IN OUT VARCHAR2
-, P_VD_MAX_LENGTH_NUM                IN OUT NUMBER
-, P_VD_LONG_NAME                    IN OUT VARCHAR2
-, P_VD_FORML_NAME                     IN OUT VARCHAR2
-, P_FORML_DESCRIPTION               IN OUT VARCHAR2
-, P_FORML_COMMENT                    IN OUT VARCHAR2
-, P_VD_UOML_NAME                     IN OUT VARCHAR2
-, P_UOML_DESCRIPTION                 IN OUT VARCHAR2
-, P_UOML_COMMENT                     IN OUT VARCHAR2
-, P_VD_LOW_VALUE_NUM                IN OUT VARCHAR2
-, P_VD_HIGH_VALUE_NUM                IN OUT VARCHAR2
-, P_VD_MIN_LENGTH_NUM                IN OUT NUMBER
-, P_VD_DECIMAL_PLACE                 IN OUT NUMBER
-, P_VD_CHAR_SET_NAME                IN OUT VARCHAR2
-, P_VD_BEGIN_DATE                    IN OUT VARCHAR2
-, P_VD_END_DATE                        IN OUT VARCHAR2
-, P_VD_CHANGE_NOTE                    IN OUT VARCHAR2
-, P_VD_TYPE_FLAG                    IN OUT VARCHAR2
-, P_VD_CREATED_BY                    OUT    VARCHAR2
-, P_VD_DATE_CREATED                    OUT    VARCHAR2
-, P_VD_MODIFIED_BY                    OUT    VARCHAR2
-, P_VD_DATE_MODIFIED                OUT    VARCHAR2
-, P_VD_DELETED_IND                    OUT    VARCHAR2
-,  P_VD_CONDR_IDSEQ                 IN OUT VARCHAR2
-, P_VD_REP_IDSEQ                    IN VARCHAR2 DEFAULT NULL
-, P_VD_QUALIFIER_NAME               IN VARCHAR2 DEFAULT NULL
-, P_VD_ORIGIN                       IN VARCHAR2 DEFAULT NULL);
-
-PROCEDURE SET_DEC(
- P_UA_NAME              IN  VARCHAR2
-,P_RETURN_CODE                    OUT    VARCHAR2
-,P_ACTION                         IN     VARCHAR2
-,P_DEC_DEC_IDSEQ               IN OUT VARCHAR2
-,P_DEC_PREFERRED_NAME           IN OUT VARCHAR2
-,P_DEC_CONTE_IDSEQ               IN OUT VARCHAR2
-,P_DEC_VERSION                   IN OUT NUMBER
-,P_DEC_PREFERRED_DEFINITION    IN OUT VARCHAR2
-,P_DEC_CD_IDSEQ                   IN OUT VARCHAR2
-,P_DEC_ASL_NAME                   IN OUT VARCHAR2
-,P_DEC_LATEST_VERSION_IND      IN OUT VARCHAR2
-,P_DEC_LONG_NAME               IN OUT VARCHAR2
-,P_DEC_OC_IDSEQ                IN OUT VARCHAR2
-,P_DEC_PROP_IDSEQ              IN OUT VARCHAR2
-,P_DEC_PROPERTY_QUALIFIER       IN OUT VARCHAR2
-,P_DEC_OBJ_CLASS_QUALIFIER       IN OUT VARCHAR2
-,P_DEC_BEGIN_DATE               IN OUT VARCHAR2
-,P_DEC_END_DATE                   IN OUT VARCHAR2
-,P_DEC_CHANGE_NOTE               IN OUT VARCHAR2
-,P_DEC_CREATED_BY               OUT      VARCHAR2
-,P_DEC_DATE_CREATED               OUT      VARCHAR2
-,P_DEC_MODIFIED_BY               OUT      VARCHAR2
-,P_DEC_DATE_MODIFIED           OUT      VARCHAR2
-,P_DEC_DELETED_IND               OUT      VARCHAR2
-,P_DEC_ORIGIN                  IN     VARCHAR2 DEFAULT NULL ); -- 15-Jul-2003, W. Ver Hoef
-
-
-PROCEDURE SET_VM(
- P_UA_NAME            IN  VARCHAR2
-,P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_VM_SHORT_MEANING            IN OUT VARCHAR2
-,P_VM_DESCRIPTION            IN OUT VARCHAR2
-,P_VM_COMMENTS                IN OUT VARCHAR2
-,P_VM_BEGIN_DATE            IN OUT VARCHAR2
-,P_VM_END_DATE                IN OUT VARCHAR2
-,P_VM_CREATED_BY            OUT    VARCHAR2
-,P_VM_DATE_CREATED            OUT    VARCHAR2
-,P_VM_MODIFIED_BY            OUT    VARCHAR2
-,P_VM_DATE_MODIFIED            OUT    VARCHAR2)    ;
-
--- overloaded version
-PROCEDURE SET_VM(
- P_UA_NAME            IN  VARCHAR2
-,P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_VM_SHORT_MEANING        IN OUT VARCHAR2
-,P_VM_DESCRIPTION        IN OUT VARCHAR2
-,P_VM_COMMENTS                IN OUT VARCHAR2
-,P_VM_BEGIN_DATE            IN OUT VARCHAR2
-,P_VM_END_DATE                IN OUT VARCHAR2
-,P_VM_CREATED_BY            OUT    VARCHAR2
-,P_VM_DATE_CREATED            OUT    VARCHAR2
-,P_VM_MODIFIED_BY            OUT    VARCHAR2
-,P_VM_DATE_MODIFIED            OUT    VARCHAR2
-,P_VM_VM_IDSEQ              OUT VARCHAR2)    ;
-
--- another overloaded version (ScenPro, 4/24/2007)
-    PROCEDURE SET_VM(
-     P_UA_NAME              IN  VARCHAR2
-        ,P_RETURN_CODE                OUT VARCHAR2
-    ,P_ACTION                   IN OUT VARCHAR2
-    ,P_CON_ARRAY                IN VARCHAR2
-    ,P_VM_IDSEQ                    IN OUT VARCHAR2
-    ,P_PREFERRED_NAME            IN OUT VARCHAR2
-    ,P_LONG_NAME                IN OUT VARCHAR2
-    ,P_PREFERRED_DEFINITION        IN OUT VARCHAR2
-    ,P_CONTE_IDSEQ                IN OUT VARCHAR2
-    ,P_ASL_NAME                    IN OUT VARCHAR2
-    ,P_VERSION                    IN OUT VARCHAR2
-    ,P_VM_ID                    IN OUT VARCHAR2
-    ,P_LATEST_VERSION_IND        IN OUT VARCHAR2
-    ,P_CONDR_IDSEQ                IN OUT VARCHAR2
-    ,P_DEFINITION_SOURCE        IN OUT VARCHAR2
-    ,P_ORIGIN                    IN OUT VARCHAR2
-    ,P_CHANGE_NOTE                IN OUT VARCHAR2
-    ,P_BEGIN_DATE                IN OUT VARCHAR2
-    ,P_END_DATE                    IN OUT VARCHAR2
-    ,P_CREATED_BY                OUT    VARCHAR2
-    ,P_DATE_CREATED                OUT    VARCHAR2
-    ,P_MODIFIED_BY                OUT    VARCHAR2
-    ,P_DATE_MODIFIED            OUT    VARCHAR2
-    )    ;
-
-
-PROCEDURE SET_PV(
- P_UA_NAME              IN  VARCHAR2
-,P_RETURN_CODE                    OUT VARCHAR2
-,P_ACTION                       IN VARCHAR2
-,P_PV_PV_IDSEQ                    IN OUT VARCHAR2
-,P_PV_VALUE                    IN OUT VARCHAR2
-,P_PV_SHORT_MEANING             IN OUT VARCHAR2
-,P_PV_BEGIN_DATE            IN OUT VARCHAR2
-,P_PV_MEANING_DESCRIPTION    IN OUT VARCHAR2
-,P_PV_LOW_VALUE_NUM            IN OUT NUMBER
-,P_PV_HIGH_VALUE_NUM            IN OUT NUMBER
-,P_PV_END_DATE                    IN OUT VARCHAR2
-,P_PV_VM_IDSEQ                    IN OUT VARCHAR2
-,P_PV_CREATED_BY            OUT    VARCHAR2
-,P_PV_DATE_CREATED            OUT    VARCHAR2
-,P_PV_MODIFIED_BY            OUT    VARCHAR2
-,P_PV_DATE_MODIFIED            OUT    VARCHAR2);
-
-
-PROCEDURE SET_VD_PVS(
- P_UA_NAME              IN  VARCHAR2
-,P_RETURN_CODE                   OUT VARCHAR2
-,P_ACTION                   IN     VARCHAR2
-,P_VDPVS_VP_IDSEQ            IN OUT VARCHAR2
-,P_VDPVS_VD_IDSEQ            IN OUT VARCHAR2
-,P_VDPVS_PV_IDSEQ            IN OUT VARCHAR2
-,P_VDPVS_CONTE_IDSEQ        IN OUT VARCHAR2
-,P_VDPVS_DATE_CREATED           OUT VARCHAR2
-,P_VDPVS_CREATED_BY               OUT VARCHAR2
-,P_VDPVS_MODIFIED_BY           OUT VARCHAR2
-,P_VDPVS_DATE_MODIFIED           OUT VARCHAR2
-,P_VDPVS_ORIGIN             IN     VARCHAR2 DEFAULT NULL
-,P_VDPVS_BEGIN_DATE            IN     VARCHAR2 DEFAULT NULL
-,P_VDPVS_END_DATE                    IN  VARCHAR2 DEFAULT NULL
-,P_VDPVS_CON_IDSEQ  IN VARCHAR2 DEFAULT NULL); -- 24-JUL-2003, W. Ver Hoef
-
-
-PROCEDURE SET_DE(
- P_UA_NAME              IN  VARCHAR2
-,P_RETURN_CODE                 OUT    VARCHAR2
-,P_ACTION                   IN     VARCHAR2
-,P_DE_DE_IDSEQ                IN OUT VARCHAR2
-,P_DE_PREFERRED_NAME        IN OUT VARCHAR2
-,P_DE_CONTE_IDSEQ            IN OUT VARCHAR2
-,P_DE_VERSION                IN OUT NUMBER
-,P_DE_PREFERRED_DEFINITION  IN OUT VARCHAR2
-,P_DE_DEC_IDSEQ             IN OUT VARCHAR2
-,P_DE_VD_IDSEQ                IN OUT VARCHAR2
-,P_DE_ASL_NAME                IN OUT VARCHAR2
-,P_DE_LATEST_VERSION_IND    IN OUT VARCHAR2
-,P_DE_LONG_NAME                IN OUT VARCHAR2
-,P_DE_BEGIN_DATE            IN OUT VARCHAR2
-,P_DE_END_DATE                IN OUT VARCHAR2
-,P_DE_CHANGE_NOTE            IN OUT VARCHAR2
-,P_DE_CREATED_BY            OUT       VARCHAR2
-,P_DE_DATE_CREATED            OUT       VARCHAR2
-,P_DE_MODIFIED_BY            OUT       VARCHAR2
-,P_DE_DATE_MODIFIED            OUT       VARCHAR2
-,P_DE_DELETED_IND            OUT       VARCHAR2
-,P_DE_ORIGIN                IN     VARCHAR2 DEFAULT NULL ); -- 15-Jul-2003, W. Ver Hoef
-
-
-PROCEDURE SET_RD(
- P_UA_NAME              IN  VARCHAR2
-,P_RETURN_CODE                 OUT    VARCHAR2
-,P_ACTION                   IN     VARCHAR2
-,P_RD_RD_IDSEQ                IN OUT VARCHAR2
-,P_RD_NAME                    IN OUT VARCHAR2
-,P_RD_DCTL_NAME                IN OUT VARCHAR2
-,P_RD_AC_IDSEQ                IN OUT VARCHAR2
-,P_RD_ACH_IDSEQ                IN OUT VARCHAR2
-,P_RD_AR_IDSEQ                IN OUT VARCHAR2
-,P_RD_DOC_TEXT                IN OUT VARCHAR2
-,P_RD_ORG_IDSEQ                IN OUT VARCHAR2
-,P_RD_URL                      IN OUT VARCHAR2
-,P_RD_CREATED_BY            OUT       VARCHAR2
-,P_RD_DATE_CREATED            OUT       VARCHAR2
-,P_RD_MODIFIED_BY            OUT       VARCHAR2
-,P_RD_DATE_MODIFIED            OUT       VARCHAR2
-,P_RD_LAE_NAME              IN VARCHAR2 DEFAULT 'ENGLISH'
-,P_RD_CONTE_IDSEQ              IN VARCHAR2 DEFAULT NULL);
-
-
-PROCEDURE SET_DES(
- P_UA_NAME              IN  VARCHAR2
-,P_RETURN_CODE                 OUT    VARCHAR2
-,P_ACTION                   IN     VARCHAR2
-,P_DES_DESIG_IDSEQ                IN OUT VARCHAR2
-,P_DES_NAME                    IN OUT VARCHAR2
-,P_DES_DETL_NAME                IN OUT VARCHAR2
-,P_DES_AC_IDSEQ                IN OUT VARCHAR2
-,P_DES_CONTE_IDSEQ                IN OUT VARCHAR2
-,P_DES_LAE_NAME                IN OUT VARCHAR2
-,P_DES_CREATED_BY            OUT       VARCHAR2
-,P_DES_DATE_CREATED            OUT       VARCHAR2
-,P_DES_MODIFIED_BY            OUT       VARCHAR2
-,P_DES_DATE_MODIFIED            OUT       VARCHAR2);
-
-
-PROCEDURE  SET_CSCSI(
- P_UA_NAME              IN  VARCHAR2
-,P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_CSCSI_CS_CSI_IDSEQ        IN OUT VARCHAR2
-,P_CSCSI_CS_IDSEQ            IN OUT VARCHAR2
-,P_CSCSI_LABEL               IN OUT VARCHAR2
-,P_CSCSI_CSI_IDSEQ            IN OUT    VARCHAR2
-,P_CSCSI_P_CS_CSI_IDSEQ        IN OUT VARCHAR2
-,P_CSCSI_LINK_CS_CSI_IDSEQ    IN OUT VARCHAR2
-,P_CSCSI_DISPLAY_ORDER        IN OUT NUMBER
-,P_CSCSI_DATE_CREATED        OUT    VARCHAR2
-,P_CSCSI_CREATED_BY            OUT    VARCHAR2
-,P_CSCSI_MODIFIED_BY        OUT    VARCHAR2
-,P_CSCSI_DATE_MODIFIED        OUT    VARCHAR2);
-
-
-PROCEDURE  SET_ACCSI(
- P_UA_NAME              IN  VARCHAR2
-,P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_ACCSI_AC_CSI_IDSEQ        IN OUT VARCHAR2
-,P_ACCSI_AC_IDSEQ            IN OUT VARCHAR2
-,P_ACCSI_CS_CSI_IDSEQ        IN OUT    VARCHAR2
-,P_ACCSI_DATE_CREATED        OUT    VARCHAR2
-,P_ACCSI_CREATED_BY            OUT    VARCHAR2
-,P_ACCSI_MODIFIED_BY        OUT    VARCHAR2
-,P_ACCSI_DATE_MODIFIED        OUT    VARCHAR2);
-
-
-PROCEDURE SET_SRC(
- P_UA_NAME              IN  VARCHAR2
-,P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_SRC_SRC_NAME                IN OUT VARCHAR2
-,P_SRC_DESCRIPTION            IN OUT VARCHAR2
-,P_SRC_CREATED_BY            OUT    VARCHAR2
-,P_SRC_DATE_CREATED            OUT    VARCHAR2
-,P_SRC_MODIFIED_BY            OUT    VARCHAR2
-,P_SRC_DATE_MODIFIED        OUT    VARCHAR2);
-
-
-PROCEDURE SET_TS(
- P_UA_NAME              IN  VARCHAR2
-,P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN  VARCHAR2
-,P_TS_TS_IDSEQ                IN OUT VARCHAR2
-,P_TS_QC_IDSEQ                IN OUT VARCHAR2
-,P_TS_TSTL_NAME             IN OUT VARCHAR2
-,P_TS_TS_TEXT                IN OUT VARCHAR2
-,P_TS_TS_SEQ                IN OUT    NUMBER
-,P_TS_CREATED_BY            OUT    VARCHAR2
-,P_TS_DATE_CREATED            OUT    VARCHAR2
-,P_TS_MODIFIED_BY            OUT    VARCHAR2
-,P_TS_DATE_MODIFIED            OUT    VARCHAR2);
-
-
-PROCEDURE SET_ACSRC(
- P_UA_NAME              IN  VARCHAR2
-,P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_ACSRC_ACS_IDSEQ            IN OUT VARCHAR2
-,P_ACSRC_AC_IDSEQ            IN OUT VARCHAR2
-,P_ACSRC_SRC_NAME           IN OUT VARCHAR2
-,P_ACSRC_DATE_SUBMITTED        IN OUT    VARCHAR2
-,P_ACSRC_CREATED_BY            OUT    VARCHAR2
-,P_ACSRC_DATE_CREATED        OUT    VARCHAR2
-,P_ACSRC_MODIFIED_BY        OUT    VARCHAR2
-,P_ACSRC_DATE_MODIFIED        OUT    VARCHAR2);
-
-
-PROCEDURE SET_VPSRC(
- P_UA_NAME              IN  VARCHAR2
-,P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_VPSRC_VPS_IDSEQ            IN OUT VARCHAR2
-,P_VPSRC_VP_IDSEQ            IN OUT VARCHAR2
-,P_VPSRC_SRC_NAME           IN OUT VARCHAR2
-,P_VPSRC_DATE_SUBMITTED        IN OUT    VARCHAR2
-,P_VPSRC_CREATED_BY            OUT    VARCHAR2
-,P_VPSRC_DATE_CREATED        OUT    VARCHAR2
-,P_VPSRC_MODIFIED_BY        OUT    VARCHAR2
-,P_VPSRC_DATE_MODIFIED        OUT    VARCHAR2);
-
-
-PROCEDURE SET_QC(
- P_UA_NAME              IN  VARCHAR2
-,P_RETURN_CODE                     OUT    VARCHAR2
-,P_ACTION                       IN     VARCHAR2
-,P_QC_QC_IDSEQ                    IN OUT VARCHAR2
-,P_QC_VERSION                    IN OUT NUMBER
-,P_QC_PREFERRED_NAME            IN OUT VARCHAR2
-,P_QC_PREFERRED_DEFINITION      IN OUT VARCHAR2
-,P_QC_CONTE_IDSEQ                IN OUT VARCHAR2
-,P_QC_ASL_NAME                    IN OUT VARCHAR2
-,P_QC_QTL_NAME                    IN OUT VARCHAR2
-,P_QC_LONG_NAME                    IN OUT VARCHAR2
-,P_QC_LATEST_VERSION_IND        IN OUT VARCHAR2
-,P_QC_PROTO_IDSEQ                IN OUT VARCHAR2
-,P_QC_DE_IDSEQ                     IN OUT VARCHAR2
-,P_QC_VP_IDSEQ                    IN OUT VARCHAR2
-,P_QC_QC_MATCH_IDSEQ              IN OUT VARCHAR2
-,P_QC_QCDL_NAME                 IN OUT VARCHAR2
-,P_QC_QC_IDENTIFIER                IN OUT VARCHAR2
-,P_QC_MATCH_IND                    IN OUT VARCHAR2
-,P_QC_NEW_QC_IND                IN OUT VARCHAR2
-,P_QC_HIGHLIGHT_IND                IN OUT VARCHAR2
-,P_QC_CDE_DICTIONARY_ID            IN OUT VARCHAR2
-,P_QC_SYSTEM_MSGS                IN OUT VARCHAR2
-,P_QC_REVIEWER_FEEDBACK_EXT     IN OUT VARCHAR2
-,P_QC_REVIEWER_FEEDBACK_INT     IN OUT VARCHAR2
-,P_QC_REVIEWER_FEEDBACK_ACT      IN OUT VARCHAR2
-,P_QC_REVIEWED_BY               IN OUT VARCHAR2
-,P_QC_REVIEWED_DATE                IN OUT VARCHAR2
-,P_QC_APPROVED_BY                 IN OUT VARCHAR2
-,P_QC_APPROVED_DATE                IN OUT VARCHAR2
-,P_QC_BEGIN_DATE                IN OUT VARCHAR2
-,P_QC_END_DATE                  IN OUT VARCHAR2
-,P_QC_CHANGE_NOTE                IN OUT VARCHAR2
-,P_QC_SUB_LONG_NAME             IN OUT VARCHAR2
-,P_QC_GROUP_COMMENTS            IN OUT VARCHAR2
-,P_QC_VD_IDSEQ                    IN OUT VARCHAR2
-,P_QC_CREATED_BY                OUT       VARCHAR2
-,P_QC_DATE_CREATED                OUT       VARCHAR2
-,P_QC_MODIFIED_BY                OUT       VARCHAR2
-,P_QC_DATE_MODIFIED                OUT       VARCHAR2
-,P_QC_DELETED_IND                OUT       VARCHAR2
-,P_QC_SRC_NAME                  IN     VARCHAR2 DEFAULT NULL
-,P_QC_P_MOD_IDSEQ                IN     VARCHAR2 DEFAULT NULL
-,P_QC_P_QST_IDSEQ                IN     VARCHAR2 DEFAULT NULL
-,P_QC_P_VAL_IDSEQ                IN     VARCHAR2 DEFAULT NULL
-,P_QC_DN_CRF_IDSEQ                IN     VARCHAR2 DEFAULT NULL
-,P_QC_DISPALY_IND                  IN     VARCHAR2 DEFAULT NULL
-,P_QC_GROUP_ACTION              IN     VARCHAR2 DEFAULT NULL
-,P_QC_DE_LONG_NAME              IN     VARCHAR2 DEFAULT NULL
-,P_QC_VD_LONG_NAME              IN     VARCHAR2 DEFAULT NULL
-,P_QC_DEC_LONG_NAME              IN     VARCHAR2 DEFAULT NULL
-,P_QC_ORIGIN                    IN     VARCHAR2 DEFAULT NULL); -- 23-Jul-2003, W. Ver Hoef
-
-
-PROCEDURE SET_REL(
- P_UA_NAME              IN  VARCHAR2
-,P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_REL_TABLE                IN VARCHAR2
-,P_REL_REL_IDSEQ            IN OUT VARCHAR2
-,P_REL_P_IDSEQ                IN OUT VARCHAR2
-,P_REL_C_IDSEQ                IN OUT VARCHAR2
-,P_REL_RL_NAME                IN OUT VARCHAR2
-,P_REL_DISPLAY_ORDER        IN OUT NUMBER
-,P_REL_CREATED_BY            OUT    VARCHAR2
-,P_REL_DATE_CREATED            OUT    VARCHAR2
-,P_REL_MODIFIED_BY            OUT    VARCHAR2
-,P_REL_DATE_MODIFIED        OUT    VARCHAR2);
-
-
-PROCEDURE SET_PROTO(
-  P_UA_NAME              IN  VARCHAR2
- ,P_RETURN_CODE                  OUT VARCHAR2,
-P_ACTION                IN       VARCHAR2,
-P_PROTO_IDSEQ           IN OUT VARCHAR2,
-P_VERSION               IN OUT NUMBER,
-P_CONTE_IDSEQ           IN OUT VARCHAR2,
-P_PREFERRED_NAME        IN OUT VARCHAR2,
-P_PREFERRED_DEFINITION  IN OUT VARCHAR2,
-P_ASL_NAME              IN OUT VARCHAR2,
-P_LONG_NAME             IN OUT VARCHAR2,
-P_LATEST_VERSION_IND    IN OUT VARCHAR2,
-P_DELETED_IND           IN OUT VARCHAR2,
-P_BEGIN_DATE            IN OUT DATE,
-P_END_DATE              IN OUT DATE,
-P_PROTOCOL_ID           IN OUT VARCHAR2,
-P_TYPE                  IN OUT VARCHAR2,
-P_PHASE                 IN OUT VARCHAR2,
-P_LEAD_ORG              IN OUT VARCHAR2,
-P_CHANGE_TYPE           IN OUT VARCHAR2,
-P_CHANGE_NUMBER         IN OUT NUMBER,
-P_REVIEWED_DATE         IN OUT DATE,
-P_REVIEWED_BY           IN OUT VARCHAR2,
-P_APPROVED_DATE         IN OUT DATE,
-P_APPROVED_BY           IN OUT VARCHAR2,
-P_DATE_CREATED          IN OUT DATE,
-P_CREATED_BY            IN OUT VARCHAR2,
-P_DATE_MODIFIED         IN OUT DATE,
-P_MODIFIED_BY           IN OUT VARCHAR2,
-P_CHANGE_NOTE           IN OUT VARCHAR2,
-P_ORIGIN                IN     VARCHAR2 DEFAULT NULL); -- 23-Jul-2003, W. Ver Hoef
-
-
-PROCEDURE SET_CD_VMS(
-  P_UA_NAME              IN  VARCHAR2
- ,P_RETURN_CODE                OUT VARCHAR2
-,P_ACTION                   IN VARCHAR2
-,P_CDVMS_CV_IDSEQ            IN OUT VARCHAR2
-,P_CDVMS_CD_IDSEQ            IN OUT VARCHAR2
-,P_CDVMS_SHORT_MEANING      IN OUT VARCHAR2
-,P_CDVMS_DESCRIPTION        IN OUT VARCHAR2
-,P_CDVMS_VM_IDSEQ       IN OUT VARCHAR2
-,P_CDVMS_DATE_CREATED        OUT    VARCHAR2
-,P_CDVMS_CREATED_BY            OUT    VARCHAR2
-,P_CDVMS_MODIFIED_BY        OUT    VARCHAR2
-,P_CDVMS_DATE_MODIFIED        OUT    VARCHAR2);
-
-
-PROCEDURE SET_PROPERTY(
-  P_UA_NAME              IN  VARCHAR2
- ,P_RETURN_CODE                 OUT VARCHAR2
-,P_ACTION                  IN VARCHAR2
-,P_PROP_IDSEQ                  IN OUT VARCHAR2
-,P_PROP_PREFERRED_NAME      IN OUT VARCHAR2
-,P_PROP_LONG_NAME               IN OUT VARCHAR2
-,P_PROP_PREFERRED_DEFINITION    IN OUT VARCHAR2
-,P_PROP_CONTE_IDSEQ            IN OUT VARCHAR2
-,P_PROP_VERSION               IN OUT VARCHAR2
-,P_PROP_ASL_NAME              IN OUT VARCHAR2
-,P_PROP_LATEST_VERSION_IND      IN OUT VARCHAR2
-,P_PROP_CHANGE_NOTE         IN OUT VARCHAR2
-,P_PROP_ORIGIN      IN OUT VARCHAR2
-,P_PROP_DEFINITION_SOURCE         IN OUT VARCHAR2
-,P_PROP_BEGIN_DATE            IN OUT VARCHAR2
-,P_PROP_END_DATE                IN OUT VARCHAR2
-,P_PROP_DATE_CREATED            OUT VARCHAR2
-,P_PROP_CREATED_BY             OUT VARCHAR2
-,P_PROP_DATE_MODIFIED           OUT VARCHAR2
-,P_PROP_MODIFIED_BY             OUT VARCHAR2
-,P_PROP_DELETED_IND             OUT VARCHAR2
-,P_PROP_DESIG_NCI_CC_TYPE IN VARCHAR2  DEFAULT NULL
-,P_PROP_DESIG_NCI_CC_VAL IN VARCHAR2  DEFAULT NULL
-,P_PROP_DESIG_UMLS_CUI_TYPE IN VARCHAR2  DEFAULT NULL
-,P_PROP_DESIG_UMLS_CUI_VAL IN VARCHAR2  DEFAULT NULL
-,P_PROP_DESIG_TEMP_CUI_TYPE IN VARCHAR2  DEFAULT NULL
-,P_PROP_DESIG_TEMP_CUI_VAL IN VARCHAR2  DEFAULT NULL);
-
-PROCEDURE SET_PROP_CONDR(
-  P_UA_NAME              IN  VARCHAR2
- ,P_PROP_con_array           IN VARCHAR2
-,P_PROP_CONTE_IDSEQ            IN VARCHAR2
-,P_RETURN_CODE                   OUT VARCHAR2
-,P_PROP_PROP_IDSEQ                   OUT VARCHAR2
-,P_PROP_PREFERRED_NAME           OUT VARCHAR2
-,P_PROP_LONG_NAME              OUT VARCHAR2
-,P_PROP_PREFERRED_DEFINITION    OUT VARCHAR2
-,P_PROP_VERSION                OUT VARCHAR2
-,P_PROP_ASL_NAME               OUT VARCHAR2
-,P_PROP_LATEST_VERSION_IND     OUT VARCHAR2
-,P_PROP_CHANGE_NOTE               OUT VARCHAR2
-,P_PROP_ORIGIN                   OUT VARCHAR2
-,P_PROP_DEFINITION_SOURCE      OUT VARCHAR2
-,P_PROP_BEGIN_DATE             OUT VARCHAR2
-,P_PROP_END_DATE               OUT VARCHAR2
-,P_PROP_DATE_CREATED            OUT VARCHAR2
-,P_PROP_CREATED_BY               OUT VARCHAR2
-,P_PROP_DATE_MODIFIED           OUT VARCHAR2
-,P_PROP_MODIFIED_BY             OUT VARCHAR2
-,P_PROP_DELETED_IND             OUT VARCHAR2
-,P_PROP_CONDR_IDSEQ             OUT VARCHAR2
-,P_PROP_ID             OUT VARCHAR2);
-
-
-
-PROCEDURE SET_CONCEPT(
-  P_UA_NAME              IN  VARCHAR2
- ,P_RETURN_CODE                 OUT VARCHAR2
-,P_ACTION                  IN VARCHAR2
-,P_CON_IDSEQ                   OUT VARCHAR2
-,P_CON_PREFERRED_NAME      IN OUT VARCHAR2
-,P_CON_LONG_NAME               IN OUT VARCHAR2
-,P_CON_PREFERRED_DEFINITION    IN OUT VARCHAR2
-,P_CON_CONTE_IDSEQ            IN OUT VARCHAR2
-,P_CON_VERSION               IN OUT VARCHAR2
-,P_CON_ASL_NAME              IN OUT VARCHAR2
-,P_CON_LATEST_VERSION_IND      IN OUT VARCHAR2
-,P_CON_CHANGE_NOTE         IN OUT VARCHAR2
-,P_CON_ORIGIN      IN OUT VARCHAR2
-,P_CON_DEFINITION_SOURCE         IN OUT VARCHAR2
-,P_CON_EVS_SOURCE         IN OUT VARCHAR2
-,P_CON_BEGIN_DATE            IN OUT VARCHAR2
-,P_CON_END_DATE                IN OUT VARCHAR2
-,P_CON_DATE_CREATED            OUT VARCHAR2
-,P_CON_CREATED_BY             OUT VARCHAR2
-,P_CON_DATE_MODIFIED           OUT VARCHAR2
-,P_CON_MODIFIED_BY             OUT VARCHAR2
-,P_CON_DELETED_IND             OUT VARCHAR2);
-
-
-PROCEDURE SET_OBJECT_CLASS(
-  P_UA_NAME              IN  VARCHAR2
- ,P_RETURN_CODE                   OUT VARCHAR2
-,P_ACTION                     IN     VARCHAR2
-,P_OC_IDSEQ                 IN OUT VARCHAR2
-,P_OC_PREFERRED_NAME         IN OUT VARCHAR2
-,P_OC_LONG_NAME            IN OUT VARCHAR2
-,P_OC_PREFERRED_DEFINITION IN OUT VARCHAR2
-,P_OC_CONTE_IDSEQ          IN OUT VARCHAR2
-,P_OC_VERSION              IN OUT VARCHAR2
-,P_OC_ASL_NAME             IN OUT VARCHAR2
-,P_OC_LATEST_VERSION_IND   IN OUT VARCHAR2
-,P_OC_CHANGE_NOTE            IN OUT VARCHAR2
-,P_OC_ORIGIN                 IN OUT VARCHAR2
-,P_OC_DEFINITION_SOURCE    IN OUT VARCHAR2
-,P_OC_BEGIN_DATE           IN OUT VARCHAR2
-,P_OC_END_DATE             IN OUT VARCHAR2
-,P_OC_DATE_CREATED            OUT VARCHAR2
-,P_OC_CREATED_BY               OUT VARCHAR2
-,P_OC_DATE_MODIFIED           OUT VARCHAR2
-,P_OC_MODIFIED_BY             OUT VARCHAR2
-,P_OC_DELETED_IND             OUT VARCHAR2
-,P_OC_DESIG_NCI_CC_TYPE    IN     VARCHAR2  DEFAULT NULL
-,P_OC_DESIG_NCI_CC_VAL     IN     VARCHAR2  DEFAULT NULL
-,P_OC_DESIG_UMLS_CUI_TYPE  IN     VARCHAR2  DEFAULT NULL
-,P_OC_DESIG_UMLS_CUI_VAL   IN     VARCHAR2  DEFAULT NULL
-,P_OC_DESIG_TEMP_CUI_TYPE  IN     VARCHAR2  DEFAULT NULL
-,P_OC_DESIG_TEMP_CUI_VAL   IN     VARCHAR2  DEFAULT NULL);
-
-PROCEDURE SET_OC_CONDR(
-  P_UA_NAME              IN  VARCHAR2
- ,P_OC_con_array           IN VARCHAR2
-,P_OC_CONTE_IDSEQ            IN VARCHAR2
-,P_RETURN_CODE                   OUT VARCHAR2
-,P_OC_OC_IDSEQ                   OUT VARCHAR2
-,P_OC_PREFERRED_NAME           OUT VARCHAR2
-,P_OC_LONG_NAME              OUT VARCHAR2
-,P_OC_PREFERRED_DEFINITION    OUT VARCHAR2
-,P_OC_VERSION                OUT VARCHAR2
-,P_OC_ASL_NAME               OUT VARCHAR2
-,P_OC_LATEST_VERSION_IND     OUT VARCHAR2
-,P_OC_CHANGE_NOTE               OUT VARCHAR2
-,P_OC_ORIGIN                   OUT VARCHAR2
-,P_OC_DEFINITION_SOURCE      OUT VARCHAR2
-,P_OC_BEGIN_DATE             OUT VARCHAR2
-,P_OC_END_DATE               OUT VARCHAR2
-,P_OC_DATE_CREATED            OUT VARCHAR2
-,P_OC_CREATED_BY               OUT VARCHAR2
-,P_OC_DATE_MODIFIED           OUT VARCHAR2
-,P_OC_MODIFIED_BY             OUT VARCHAR2
-,P_OC_DELETED_IND             OUT VARCHAR2
-,P_OC_CONDR_IDSEQ             OUT VARCHAR2
-,P_OC_ID                      OUT VARCHAR2);
-
-PROCEDURE SET_REPRESENTATION(
-  P_UA_NAME              IN  VARCHAR2
- ,P_RETURN_CODE                 OUT VARCHAR2
-,P_ACTION                  IN VARCHAR2
-,P_REP_IDSEQ                  IN OUT VARCHAR2
-,P_REP_PREFERRED_NAME      IN OUT VARCHAR2
-,P_REP_LONG_NAME               IN OUT VARCHAR2
-,P_REP_PREFERRED_DEFINITION    IN OUT VARCHAR2
-,P_REP_CONTE_IDSEQ            IN OUT VARCHAR2
-,P_REP_VERSION               IN OUT VARCHAR2
-,P_REP_ASL_NAME              IN OUT VARCHAR2
-,P_REP_LATEST_VERSION_IND      IN OUT VARCHAR2
-,P_REP_CHANGE_NOTE         IN OUT VARCHAR2
-,P_REP_ORIGIN      IN OUT VARCHAR2
-,P_REP_DEFINITION_SOURCE         IN OUT VARCHAR2
-,P_REP_BEGIN_DATE            IN OUT VARCHAR2
-,P_REP_END_DATE                IN OUT VARCHAR2
-,P_REP_DATE_CREATED            OUT VARCHAR2
-,P_REP_CREATED_BY             OUT VARCHAR2
-,P_REP_DATE_MODIFIED           OUT VARCHAR2
-,P_REP_MODIFIED_BY             OUT VARCHAR2
-,P_REP_DELETED_IND             OUT VARCHAR2
-,P_REP_DESIG_NCI_CC_TYPE IN VARCHAR2  DEFAULT NULL
-,P_REP_DESIG_NCI_CC_VAL IN VARCHAR2  DEFAULT NULL
-,P_REP_DESIG_UMLS_CUI_TYPE IN VARCHAR2  DEFAULT NULL
-,P_REP_DESIG_UMLS_CUI_VAL IN VARCHAR2  DEFAULT NULL
-,P_REP_DESIG_TEMP_CUI_TYPE IN VARCHAR2  DEFAULT NULL
-,P_REP_DESIG_TEMP_CUI_VAL IN VARCHAR2  DEFAULT NULL);
-
-PROCEDURE SET_REP_CONDR(
-  P_UA_NAME              IN  VARCHAR2
- ,P_REP_con_array           IN VARCHAR2
-,P_REP_CONTE_IDSEQ            IN VARCHAR2
-,P_RETURN_CODE                   OUT VARCHAR2
-,P_REP_REP_IDSEQ                   OUT VARCHAR2
-,P_REP_PREFERRED_NAME           OUT VARCHAR2
-,P_REP_LONG_NAME              OUT VARCHAR2
-,P_REP_PREFERRED_DEFINITION    OUT VARCHAR2
-,P_REP_VERSION                OUT VARCHAR2
-,P_REP_ASL_NAME               OUT VARCHAR2
-,P_REP_LATEST_VERSION_IND     OUT VARCHAR2
-,P_REP_CHANGE_NOTE               OUT VARCHAR2
-,P_REP_ORIGIN                   OUT VARCHAR2
-,P_REP_DEFINITION_SOURCE      OUT VARCHAR2
-,P_REP_BEGIN_DATE             OUT VARCHAR2
-,P_REP_END_DATE               OUT VARCHAR2
-,P_REP_DATE_CREATED            OUT VARCHAR2
-,P_REP_CREATED_BY               OUT VARCHAR2
-,P_REP_DATE_MODIFIED           OUT VARCHAR2
-,P_REP_MODIFIED_BY             OUT VARCHAR2
-,P_REP_DELETED_IND             OUT VARCHAR2
-,P_REP_CONDR_IDSEQ             OUT VARCHAR2
-,P_REP_ID             OUT VARCHAR2);
-
-PROCEDURE SET_QUAL(
- P_UA_NAME              IN  VARCHAR2
-,P_RETURN_CODE                   OUT VARCHAR2
-,P_ACTION                   IN     VARCHAR2
-,P_QUAL_qualifier_name        IN OUT VARCHAR2
-,P_QUAL_DESCRIPTION            IN OUT VARCHAR2
-,P_QUAL_COMMENTS            IN OUT VARCHAR2
-,P_QUAL_CREATED_BY               OUT VARCHAR2
-,P_QUAL_DATE_CREATED           OUT VARCHAR2
-,P_QUAL_MODIFIED_BY               OUT VARCHAR2
-,P_QUAL_DATE_MODIFIED           OUT VARCHAR2
-,P_QUAL_CON_IDSEQ           IN VARCHAR2 DEFAULT NULL);
-
-
-PROCEDURE set_cd(
-  p_ua_name              IN  VARCHAR2
- ,p_action                  IN     VARCHAR2
- ,p_cd_idseq                IN OUT VARCHAR2
- ,p_cd_version              IN OUT VARCHAR2
- ,p_cd_preferred_name       IN OUT VARCHAR2
- ,p_cd_conte_idseq          IN OUT VARCHAR2
- ,p_cd_long_name            IN OUT VARCHAR2
- ,p_cd_preferred_definition IN OUT VARCHAR2
- ,p_cd_dimensionality       IN OUT VARCHAR2
- ,p_cd_asl_name             IN OUT VARCHAR2
- ,p_cd_latest_version_ind   IN OUT VARCHAR2
- ,p_cd_begin_date           IN OUT DATE
- ,p_cd_end_date             IN OUT DATE
- ,p_cd_change_note          IN OUT VARCHAR2
- ,p_cd_origin               IN OUT VARCHAR2
- ,p_cd_created_by              OUT VARCHAR2
- ,p_cd_date_created            OUT VARCHAR2
- ,p_cd_modified_by             OUT VARCHAR2
- ,p_cd_date_modified           OUT VARCHAR2
- ,p_return_code                OUT VARCHAR2
- );
-
-
--- 16-Mar-2004, W. Ver Hoef - added per SPRF_2.1_06
-PROCEDURE set_complex_de(
-  p_ua_name              IN  VARCHAR2
- ,p_action            IN  VARCHAR2
- ,p_cdt_p_de_idseq    IN  VARCHAR2
- ,p_cdt_methods       IN  VARCHAR2
- ,p_cdt_rule          IN  VARCHAR2
- ,p_cdt_concat_char   IN  VARCHAR2
- ,p_cdt_crtl_name     IN  VARCHAR2
- ,p_cdt_created_by    OUT VARCHAR2
- ,p_cdt_date_created  OUT VARCHAR2
- ,p_cdt_modified_by   OUT VARCHAR2
- ,p_cdt_date_modified OUT VARCHAR2
- ,p_return_code       OUT VARCHAR2
- );
-
-
--- 17-Mar-2004, W. Ver Hoef - added per SPRF_2.1_06a
-PROCEDURE set_cde_relationship(
-  p_ua_name              IN  VARCHAR2
- ,p_action             IN     VARCHAR2
- ,p_cdr_idseq          IN OUT VARCHAR2
- ,p_cdr_p_de_idseq     IN OUT VARCHAR2
- ,p_cdr_c_de_idseq     IN OUT VARCHAR2
- ,p_cdr_display_order  IN OUT VARCHAR2
- ,p_cdr_created_by        OUT VARCHAR2
- ,p_cdr_date_created      OUT VARCHAR2
- ,p_cdr_modified_by       OUT VARCHAR2
- ,p_cdr_date_modified     OUT VARCHAR2
- ,p_return_code           OUT VARCHAR2
- );
-
-
--- 19-Mar-2004, W. Ver Hoef - added per SPRF_2.1_03
-PROCEDURE set_registration(
-  p_ua_name              IN  VARCHAR2
- ,p_action                  IN     VARCHAR2
- ,p_ar_idseq                IN OUT VARCHAR2
- ,p_ar_ac_idseq             IN OUT VARCHAR2
- ,p_ar_registration_status  IN OUT VARCHAR2
- ,p_ar_created_by              OUT VARCHAR2
- ,p_ar_date_created            OUT VARCHAR2
- ,p_ar_modified_by             OUT VARCHAR2
- ,p_ar_date_modified           OUT VARCHAR2
- ,p_return_code                OUT VARCHAR2
- );
-
--- SPRF_3.1_16i (TT#1001)
-PROCEDURE set_contact_comm (
-     p_ua_name              IN  VARCHAR2
-    ,p_return_code            OUT       VARCHAR2
-    ,p_action                 IN        VARCHAR2
-    ,p_ccomm_idseq            in  out   varchar2
-    ,p_org_idseq              in  out   varchar2
-    ,p_per_idseq              in  out   varchar2
-    ,p_ctl_name               in  out   varchar2
-    ,p_rank_order             in  out   number
-    ,p_cyber_address          in  out   varchar2
-    ,p_date_created           in  out   date
-    ,p_created_by             in  out   varchar2
-    ,p_date_modified          in  out   date
-    ,p_modified_by            in  out   varchar2);
-
--- SPRF_3.1_16j (TT#1001)
-PROCEDURE set_contact_addr (
-     p_ua_name              IN  VARCHAR2
-    ,p_return_code            OUT       VARCHAR2
-    ,p_action                 IN        VARCHAR2
-    ,p_caddr_idseq            in  out   varchar2
-    ,p_org_idseq              in  out   varchar2
-    ,p_per_idseq              in  out   varchar2
-    ,p_atl_name               in  out   varchar2
-    ,p_rank_order             in  out   number
-    ,p_addr_line1             in  out   varchar2
-    ,p_addr_line2             in  out   varchar2
-    ,p_city                   in  out   varchar2
-    ,p_state_prov             in  out   varchar2
-    ,p_postal_code            in  out   varchar2
-    ,p_country                in  out   varchar2
-    ,p_date_created           in  out   date
-    ,p_created_by             in  out   varchar2
-    ,p_date_modified          in  out   date
-    ,p_modified_by            in  out   varchar2);
-
--- SPRF_3.1_16k (TT#1001)
-PROCEDURE set_ac_contact (
-     p_ua_name              IN  VARCHAR2
-    ,p_return_code            OUT       VARCHAR2
-    ,p_action                 IN        VARCHAR2
-    ,p_acc_idseq              in  out   varchar2
-    ,p_org_idseq              in  out   varchar2
-    ,p_per_idseq              in  out   varchar2
-    ,p_ac_idseq               in  out   varchar2
-    ,p_rank_order             in  out   number
-    ,p_date_created           in  out   date
-    ,p_created_by             in  out   varchar2
-    ,p_date_modified          in  out   date
-    ,p_modified_by            in  out   varchar2
-    ,p_cs_csi_idseq           in  out   varchar2
-    ,p_ar_idseq              in  out   varchar2
-    ,p_contact_role           in  out   varchar2);
-
-
-END Sbrext_Set_Row;
+  v_version     data_element_concepts_view.version%TYPE;
+  v_ac          data_element_concepts_view.dec_idseq%TYPE;
+  v_begin_date  DATE    := NULL;
+  v_end_date    DATE    := NULL;
+  v_new_version BOOLEAN := FALSE;
+  v_dec_idseq   VARCHAR2(36);
+
+  v_dec_rec     cg$data_element_concepts_view.cg$row_type;
+  v_dec_ind     cg$data_element_concepts_view.cg$ind_type;
+  v_asl_name    data_element_concepts_view.asl_name%TYPE;
+  v_cdr_name    data_element_concepts_view.cdr_name%TYPE;
+
+BEGIN
+
+  P_RETURN_CODE := NULL;
+
+  IF P_ACTION NOT IN ('INS','UPD','DEL') THEN
+    P_RETURN_CODE := 'API_DEC_700'; -- Invalid action
+    RETURN;
+  END IF;
+  IF p_ua_name IS NOT NULL THEN
+    admin_security_util.seteffectiveuser(p_ua_name);
+  END IF;
+
+  IF P_ACTION = 'INS' THEN             --we are inserting a record
+    IF P_DEC_DEC_IDSEQ IS NOT NULL THEN
+      P_RETURN_CODE := 'API_DEC_100' ;  --for inserts the ID is generated
+      RETURN;
+    ELSE
+      --Check to see that all mandatory parameters are either not NULL or have a default value.
+   IF P_DEC_PREFERRED_NAME IS NULL THEN
+     P_RETURN_CODE := 'API_DEC_101';  --Preferred Name cannot be null here
+  RETURN;
+      END IF;
+   IF P_DEC_CONTE_IDSEQ IS NULL THEN
+     P_RETURN_CODE := 'API_DEC_102'; --CONTE_IDSEQ cannot be null here
+  RETURN;
+   END IF;
+   IF P_DEC_PREFERRED_DEFINITION IS NULL THEN
+     P_RETURN_CODE := 'API_DEC_103'; --Preferred Definition cannot be null here
+  RETURN;
+   END IF;
+   IF P_DEC_ASL_NAME IS NULL THEN
+     -- 19-Mar-2004, W. Ver Hoef - substituted UNASSIGNED with the function call below
+     P_DEC_ASL_NAME := Sbrext_Common_Routines.get_default_asl('INS'); -- 'UNASSIGNED';
+   END IF;
+   IF P_DEC_VERSION IS NULL THEN
+     P_DEC_VERSION := Sbrext_Common_Routines.get_ac_version(P_DEC_PREFERRED_NAME,P_DEC_CONTE_IDSEQ,'DE_CONCEPT','HIGHEST') + 1;
+   END IF;
+   IF P_DEC_CD_IDSEQ IS NULL THEN
+     P_DEC_CD_IDSEQ := Sbrext_Common_Routines.get_cd(P_DEC_CONTE_IDSEQ);
+  IF P_DEC_CD_IDSEQ IS NULL THEN
+       P_RETURN_CODE := 'API_DEC_104'; --default CD_IDSEQ not found
+    RETURN;
+  END IF;
+   END IF;
+   IF P_DEC_LATEST_VERSION_IND IS NULL THEN
+     P_DEC_LATEST_VERSION_IND := 'No';
+   END IF;
+    END IF;
+  END IF;
+
+  IF P_ACTION = 'UPD' THEN              --we are updating a record
+   admin_security_util.seteffectiveuser(p_ua_name);
+    IF P_DEC_DEC_IDSEQ IS  NULL THEN
+      P_RETURN_CODE := 'API_DEC_400' ;  --for updates the ID IS mandatory
+   RETURN;
+    END IF;
+    SELECT asl_name INTO v_asl_name
+    FROM data_element_concepts_view
+    WHERE dec_idseq = p_dec_dec_idseq;
+    IF (P_DEC_PREFERRED_NAME IS NOT NULL OR P_DEC_CONTE_IDSEQ IS NOT NULL )AND v_asl_name = 'RELEASED' THEN
+      P_RETURN_CODE := 'API_DEC_401' ;  --Preferred Name or Context Can not be updated
+      RETURN;
+    END IF;
+    IF NOT Sbrext_Common_Routines.ac_exists(P_DEC_DEC_IDSEQ) THEN
+      P_RETURN_CODE := 'API_DEC_005'; --DEC  not ound
+      RETURN;
+    END IF;
+  END IF;
+
+  IF P_ACTION = 'DEL' THEN              --we are logically deleteing a record
+    IF P_DEC_DEC_IDSEQ IS  NULL THEN
+      P_RETURN_CODE := 'API_DEC_400' ;  --for deletes the ID IS mandatory
+   RETURN;
+    ELSE
+      IF NOT Sbrext_Common_Routines.ac_exists(P_DEC_DEC_IDSEQ) THEN
+     P_RETURN_CODE := 'API_DEC_005'; --Data Element Concepts not found
+     RETURN;
+      END IF;
+    END IF;
+    P_DEC_DELETED_IND       := 'Yes';
+    P_DEC_MODIFIED_BY       := P_UA_NAME; --USER;
+    P_DEC_DATE_MODIFIED     := TO_CHAR(SYSDATE);
+    v_dec_rec.dec_idseq     := P_DEC_DEC_IDSEQ;
+    v_dec_rec.deleted_ind   := P_DEC_DELETED_IND;
+    v_dec_rec.modified_by   := P_DEC_MODIFIED_BY;
+    v_dec_rec.date_modified := TO_DATE(P_DEC_DATE_MODIFIED);
+
+    v_dec_ind.dec_idseq            := TRUE;
+    v_dec_ind.preferred_name    := FALSE;
+    v_dec_ind.conte_idseq        := FALSE;
+    v_dec_ind.version            := FALSE;
+    v_dec_ind.preferred_definition := FALSE;
+    v_dec_ind.long_name            := FALSE;
+    v_dec_ind.asl_name            := FALSE;
+    v_dec_ind.cd_idseq            := FALSE;
+    v_dec_ind.latest_version_ind   := FALSE;
+    v_dec_ind.propl_name         := FALSE;
+    v_dec_ind.ocl_name             := FALSE;
+    v_dec_ind.property_qualifier   := FALSE;
+    v_dec_ind.obj_class_qualifier  := FALSE;
+    v_dec_ind.begin_date        := FALSE;
+    v_dec_ind.end_date            := FALSE;
+    v_dec_ind.change_note        := FALSE;
+    v_dec_ind.created_by        := FALSE;
+    v_dec_ind.date_created        := FALSE;
+    v_dec_ind.oc_idseq             := FALSE;
+    v_dec_ind.prop_idseq           := FALSE;
+    v_dec_ind.modified_by        := TRUE;
+    v_dec_ind.date_modified        := TRUE;
+    v_dec_ind.deleted_ind          := TRUE;
+ v_dec_ind.dec_id               := FALSE;  -- 15-Jul-2003, W. Ver Hoef
+ v_dec_ind.origin               := FALSE;
+ v_dec_ind.cdr_name               := FALSE; -- GF30681
+    BEGIN
+      cg$data_element_concepts_view.upd(v_dec_rec,v_dec_ind);
+      RETURN;
+    EXCEPTION WHEN OTHERS THEN
+      P_RETURN_CODE := 'API_DEC_502'; --Error deleting Data Element Concepts
+   RETURN;
+    END;
+
+  END IF;
+
+  IF P_DEC_LATEST_VERSION_IND IS NOT NULL THEN
+    IF P_DEC_LATEST_VERSION_IND NOT IN ('Yes','No') THEN
+      P_RETURN_CODE := 'API_DEC_105'; --Version can only be 'Yes' or 'No'
+      RETURN;
+    END IF;
+  END IF;
+
+  --Check to see that all VARCHAR2 and  VARCHAR2 parameters have correct length
+  IF LENGTH(P_DEC_PREFERRED_NAME) > Sbrext_Column_Lengths.L_DEC_PREFERRED_NAME THEN
+    P_RETURN_CODE := 'API_DEC_111';  --Length of preferred_name exceeds maximum length
+    RETURN;
+  END IF;
+  IF LENGTH(P_DEC_PREFERRED_DEFINITION) > Sbrext_Column_Lengths.L_DEC_PREFERRED_DEFINITION THEN
+    P_RETURN_CODE := 'API_DEC_113';  --Length of Preferred_definition exceeds maximum length
+    RETURN;
+  END IF;
+  IF LENGTH(P_DEC_LONG_NAME) > Sbrext_Column_Lengths.L_DEC_LONG_NAME THEN
+    P_RETURN_CODE := 'API_DEC_114'; --Length of Long_name exceeds maximum length
+    RETURN;
+  END IF;
+  IF LENGTH(P_DEC_ASL_NAME) > Sbrext_Column_Lengths.L_DEC_ASL_NAME  THEN
+    P_RETURN_CODE := 'API_DEC_115'; --Length of asl_name exceeds maximum length
+    RETURN;
+  END IF;
+
+  /*IF LENGTH(P_DEC_OCL_NAME) > Sbrext_Column_Lengths.L_DEC_OCL_NAME THEN
+    P_RETURN_CODE := 'API_DEC_118';  --Length of Object Class exceeds maximum length
+    RETURN;
+  END IF;
+  IF LENGTH(P_DEC_PROPL_NAME) > Sbrext_Column_Lengths.L_DEC_PROPL_NAME THEN
+    P_RETURN_CODE := 'API_DEC_119';  --Length of Property exceeds maximum length
+    RETURN;
+  END IF;*/
+  IF LENGTH(P_DEC_PROPERTY_QUALIFIER) > Sbrext_Column_Lengths.L_DEC_PROPERTY_QUALIFIER THEN
+    P_RETURN_CODE := 'API_DEC_120';  --Length of Property qualifier exceeds maximum length
+    RETURN;
+  END IF;
+  IF LENGTH(P_DEC_OBJ_CLASS_QUALIFIER) > Sbrext_Column_Lengths.L_DEC_OBJ_CLASS_QUALIFIER THEN
+    P_RETURN_CODE := 'API_DEC_121';  --Length of Object Class qualifier exceeds maximum length
+    RETURN;
+  END IF;
+  IF LENGTH(P_DEC_CHANGE_NOTE) > Sbrext_Column_Lengths.L_DEC_CHANGE_NOTE THEN
+    P_RETURN_CODE := 'API_DEC_128'; --Length of change_note exceeds maximum length
+    RETURN;
+  END IF;
+
+  --check to see that charachter strings are valid
+  IF NOT Sbrext_Common_Routines.valid_alphanumeric(P_DEC_PREFERRED_NAME)
+  AND P_DEC_PREFERRED_NAME IS NOT NULL THEN
+    P_RETURN_CODE := 'API_DEC_130'; -- Data Element Concepts Preferred Name has invalid Ccharacters
+    RETURN;
+  END IF;
+  IF NOT Sbrext_Common_Routines.valid_char(P_DEC_PREFERRED_DEFINITION)
+  AND P_DEC_PREFERRED_DEFINITION IS NOT NULL THEN
+    P_RETURN_CODE := 'API_DEC_133'; -- Data Element Concepts Preferred Definition has invalid characters
+    RETURN;
+  END IF;
+  IF NOT Sbrext_Common_Routines.valid_char(P_DEC_LONG_NAME)
+  AND P_DEC_LONG_NAME IS NOT NULL THEN
+    P_RETURN_CODE := 'API_DEC_134'; -- Data Element Concepts Long Name has invalid characters
+    RETURN;
+  END IF;
+
+  --check to see that Context, Workflow Status, Proberty, Object Class, Conceptual Domain already exist in the database
+  IF NOT Sbrext_Common_Routines.context_exists(P_DEC_CONTE_IDSEQ) THEN
+    IF P_DEC_CONTE_IDSEQ IS NOT NULL THEN
+      P_RETURN_CODE := 'API_DEC_200'; --Context not found in the database
+      RETURN;
+ END IF;
+  END IF;
+  IF NOT Sbrext_Common_Routines.ac_exists(P_DEC_CD_IDSEQ) THEN
+    IF P_DEC_CD_IDSEQ IS NOT NULL THEN
+      P_RETURN_CODE := 'API_DEC_201'; --Conceptual Domain not found in the database
+      RETURN;
+ END IF;
+  END IF;
+  IF NOT Sbrext_Common_Routines.workflow_exists(P_DEC_ASL_NAME) THEN
+    IF P_DEC_ASL_NAME IS NOT NULL THEN
+      P_RETURN_CODE := 'API_DEC_202'; --Workflow Status not found in the database
+      RETURN;
+ END IF;
+  END IF;
+  IF P_DEC_PROP_IDSEQ IS NOT NULL AND P_DEC_PROP_IDSEQ != ' ' THEN
+    IF NOT Sbrext_Common_Routines.ac_exists(P_DEC_PROP_IDSEQ) THEN
+      P_RETURN_CODE := 'API_DEC_203'; --Proprty not found in the database
+      RETURN;
+ END IF;
+  END IF;
+  IF P_DEC_OC_IDSEQ IS NOT NULL  AND  P_DEC_OC_IDSEQ != ' ' THEN
+    IF NOT Sbrext_Common_Routines.ac_exists(P_DEC_OC_IDSEQ) THEN
+      P_RETURN_CODE := 'API_DEC_204'; --Object Class not found in the database
+      RETURN;
+ END IF;
+  END IF;
+
+  IF P_DEC_PROPERTY_QUALIFIER IS NOT NULL AND P_DEC_PROPERTY_QUALIFIER != ' ' THEN
+    IF NOT Sbrext_Common_Routines.qual_exists(P_DEC_PROPERTY_QUALIFIER )  THEN
+      P_RETURN_CODE := 'API_DEC_208'; -- Qualifier does not exist
+      RETURN;
+    END IF;
+  END IF;
+
+  IF P_DEC_OBJ_CLASS_QUALIFIER IS NOT NULL AND P_DEC_OBJ_CLASS_QUALIFIER != ' ' THEN
+    IF NOT Sbrext_Common_Routines.qual_exists(P_DEC_OBJ_CLASS_QUALIFIER )  THEN
+      P_RETURN_CODE := 'API_DEC_208'; --Qualifier does not exist
+      RETURN;
+    END IF;
+  END IF;
+
+  --check to see that begin data and end date are valid dates
+  IF(P_DEC_BEGIN_DATE IS NOT NULL) THEN
+    Sbrext_Common_Routines.valid_date(P_RETURN_CODE,P_DEC_BEGIN_DATE,v_begin_date);
+    IF P_RETURN_CODE IS NOT NULL THEN
+     P_RETURN_CODE := 'API_DEC_600'; --begin date is invalid
+     RETURN;
+    END IF;
+  END IF;
+  IF(P_DEC_END_DATE IS NOT NULL) THEN
+    Sbrext_Common_Routines.valid_date(P_RETURN_CODE,P_DEC_END_DATE,v_end_date);
+    IF P_RETURN_CODE IS NOT NULL THEN
+      P_RETURN_CODE := 'API_DEC_601'; --end date is invalid
+      RETURN;
+    END IF;
+  END IF;
+  IF(P_DEC_BEGIN_DATE IS NOT NULL AND P_DEC_END_DATE IS NOT NULL) THEN
+    IF(v_end_date < v_begin_date) THEN
+       P_RETURN_CODE := 'API_DEC_210'; --end date is before begin date
+       RETURN;
+    END IF;
+  --ELSIF(P_DEC_END_DATE IS NOT NULL AND P_DEC_BEGIN_DATE IS NULL) THEN
+   -- P_RETURN_CODE := 'API_DEC_211'; --begin date cannot be null when end date is null
+   -- RETURN;
+  END IF;
+
+  IF (P_ACTION = 'INS' ) THEN
+
+    --check to see that  a Data Element Concepts with the same
+    --Preferred Name, Context and Version does not already exist
+    IF Sbrext_Common_Routines.ac_exists(P_DEC_PREFERRED_NAME,P_DEC_CONTE_IDSEQ ,P_DEC_VERSION,'DE_CONCEPT') THEN
+      P_RETURN_CODE := 'API_DEC_300';-- Data Element Concepts already Exists
+      RETURN;
+    END IF;
+    --Check to see if prior versions alresdy exist
+    IF Sbrext_Common_Routines.ac_version_exists(P_DEC_PREFERRED_NAME,P_DEC_CONTE_IDSEQ ,'DE_CONCEPT') THEN -- we are creating a new version
+      v_new_version := TRUE;
+      v_ac          := Sbrext_Common_Routines.get_version_ac(P_DEC_PREFERRED_NAME,P_DEC_CONTE_IDSEQ,'DE_CONCEPT');
+    END IF;
+
+ -- 16-Jul-2003, W. Ver Hoef - replace parameter p_dec_dec_idseq with v_dec_idseq varible
+    v_dec_idseq         := admincomponent_crud.cmr_guid;
+    P_DEC_DATE_CREATED  := TO_CHAR(SYSDATE);
+    P_DEC_CREATED_BY    := P_UA_NAME; --USER;
+    P_DEC_DATE_MODIFIED := NULL;
+    P_DEC_MODIFIED_BY   := NULL;
+    P_DEC_DELETED_IND   := 'No';
+
+    v_dec_rec.dec_idseq            := v_dec_idseq; -- 16-Jul-2003, W. Ver Hoef - replaced here too
+    v_dec_rec.preferred_name    := P_DEC_PREFERRED_NAME;
+    v_dec_rec.conte_idseq        := P_DEC_CONTE_IDSEQ;
+    v_dec_rec.version            := P_DEC_VERSION;
+    v_dec_rec.preferred_definition := P_DEC_PREFERRED_DEFINITION;
+    v_dec_rec.long_name            := P_DEC_LONG_NAME;
+    v_dec_rec.asl_name            := P_DEC_ASL_NAME ;
+    --v_dec_rec.propl_name           := P_DEC_PROPL_NAME;
+    --v_dec_rec.ocl_name             := P_DEC_OCL_NAME;
+    v_dec_rec.property_qualifier   := P_DEC_PROPERTY_QUALIFIER;
+    v_dec_rec.obj_class_qualifier  := P_DEC_OBJ_CLASS_QUALIFIER;
+    v_dec_rec.cd_idseq            := P_DEC_CD_IDSEQ ;
+    v_dec_rec.latest_version_ind   := P_DEC_LATEST_VERSION_IND;
+    v_dec_rec.begin_date        := TO_DATE(P_DEC_BEGIN_DATE);
+    v_dec_rec.end_date            := TO_DATE(P_DEC_END_DATE);
+    v_dec_rec.change_note        := P_DEC_CHANGE_NOTE ;
+    v_dec_rec.created_by        := P_DEC_CREATED_BY;
+    v_dec_rec.date_created        := TO_DATE(P_DEC_DATE_CREATED);
+    v_dec_rec.modified_by        := P_DEC_MODIFIED_BY;
+    v_dec_rec.date_modified        := TO_DATE(P_DEC_DATE_MODIFIED);
+    v_dec_rec.deleted_ind          := P_DEC_DELETED_IND;
+    v_dec_rec.oc_idseq             := P_DEC_OC_IDSEQ;
+    v_dec_rec.prop_idseq           := P_DEC_PROP_IDSEQ;
+ v_dec_rec.origin               := P_DEC_ORIGIN;  -- 15-Jul-2003, W. Ver Hoef
+ v_dec_rec.cdr_name               := P_DEC_CDR_NAME;  --GF30681
+ SELECT cde_id_seq.NEXTVAL -- When transaction_type := 'VERSION' as below,
+ INTO v_dec_rec.dec_id     -- BIU trigger won't properly assign a value
+ FROM dual;                -- so we have to set it here.
+
+    v_dec_ind.dec_idseq            := TRUE;
+    v_dec_ind.preferred_name    := TRUE;
+    v_dec_ind.conte_idseq        := TRUE;
+    v_dec_ind.version            := TRUE;
+    v_dec_ind.preferred_definition := TRUE;
+    v_dec_ind.long_name            := TRUE;
+    v_dec_ind.asl_name            := TRUE;
+    v_dec_ind.propl_name         := FALSE;
+    v_dec_ind.ocl_name             := FALSE;
+    v_dec_ind.property_qualifier   := TRUE;
+    v_dec_ind.obj_class_qualifier  := TRUE;
+    v_dec_ind.cd_idseq            := TRUE;
+    v_dec_ind.latest_version_ind   := TRUE;
+    v_dec_ind.begin_date        := TRUE;
+    v_dec_ind.end_date            := TRUE;
+    v_dec_ind.change_note        := TRUE;
+    v_dec_ind.created_by        := TRUE;
+    v_dec_ind.date_created        := TRUE;
+    v_dec_ind.modified_by        := TRUE;
+    v_dec_ind.date_modified        := TRUE;
+    v_dec_ind.deleted_ind          := TRUE;
+    v_dec_ind.oc_idseq             := TRUE;
+    v_dec_ind.prop_idseq           := TRUE;
+ v_dec_ind.dec_id               := TRUE;  -- 15-Jul-2003, W. Ver Hoef
+ v_dec_ind.origin               := TRUE;
+ v_dec_ind.cdr_name               := TRUE; --GF30681
+
+    BEGIN
+      --meta_global_pkg.transaction_type := 'VERSION';
+      cg$data_element_concepts_view.ins(v_dec_rec,v_dec_ind);
+   P_DEC_DEC_IDSEQ := v_dec_idseq;  -- 16-Jul-2003, W. Ver Hoef - added assignment
+      meta_global_pkg.transaction_type := NULL;
+    EXCEPTION WHEN OTHERS THEN
+      P_RETURN_CODE := 'API_DEC_500'; --Error inserting Data Element Concepts
+    END;
+
+    --If LATEST_VERSION_IND is'Yes' then update so that all other versions have the indicator set to 'No'
+    IF(P_DEC_LATEST_VERSION_IND = 'Yes') THEN
+      Sbrext_Common_Routines.set_ac_lvi(P_RETURN_CODE,P_DEC_DEC_IDSEQ,'DE_CONCEPT');
+      IF P_RETURN_CODE IS NOT NULL  THEN
+        P_RETURN_CODE := 'API_DEC_503'; -- Error updating latest_Value_ind
+        RETURN;
+      END IF;
+    END IF;
+
+    --create a history record with prior version
+    IF v_new_version THEN
+      BEGIN
+        meta_config_mgmt.CREATE_AC_HISTORIES (v_ac,P_DEC_DEC_IDSEQ,'VERSIONED','DE_CONCEPT');
+      EXCEPTION WHEN OTHERS THEN
+        P_RETURN_CODE := 'API_DEC_504'; --Error creating history
+      END;
+    END IF;
+
+  END IF;
+
+  IF (P_ACTION = 'UPD' ) THEN
+    --Get the version for the P_DEC_DECIDSEQ
+    SELECT version INTO v_version
+    FROM data_element_concepts_view
+    WHERE dec_idseq = P_DEC_DEC_IDSEQ;
+
+    IF v_version <> P_DEC_VERSION THEN
+      P_RETURN_CODE := 'API_DEC_402'; -- Version can NOT be updated. It can only be created
+      RETURN;
+    END IF;
+
+    P_DEC_DATE_MODIFIED := TO_CHAR(SYSDATE);
+    P_DEC_MODIFIED_BY   := P_UA_NAME;--USER;
+    P_DEC_DELETED_IND   := 'No';
+
+    v_dec_rec.date_modified := TO_DATE(P_DEC_DATE_MODIFIED);
+    v_dec_rec.modified_by   := P_DEC_MODIFIED_BY;
+    v_dec_rec.dec_idseq     := P_DEC_DEC_IDSEQ;
+    v_dec_rec.deleted_ind   := 'No';
+
+    v_dec_ind.date_modified := TRUE;
+    v_dec_ind.modified_by   := TRUE;
+    v_dec_ind.deleted_ind   := TRUE;
+    v_dec_ind.dec_idseq     := TRUE;
+
+    v_dec_ind.version       := FALSE;
+    v_dec_ind.created_by := FALSE;
+    v_dec_ind.date_created := FALSE;
+    v_dec_ind.dec_id      := FALSE;  -- 16-Jul-2003, W. Ver Hoef
+
+    IF P_DEC_PREFERRED_NAME IS NULL THEN
+      v_dec_ind.preferred_name := FALSE;
+    ELSE
+      v_dec_rec.preferred_name := P_DEC_PREFERRED_NAME;
+      v_dec_ind.preferred_name := TRUE;
+    END IF;
+
+    IF P_DEC_CONTE_IDSEQ IS NULL THEN
+      v_dec_ind.conte_idseq := FALSE;
+    ELSE
+      v_dec_rec.conte_idseq := P_DEC_CONTE_IDSEQ;
+      v_dec_ind.conte_idseq := TRUE;
+    END IF;
+
+    IF P_DEC_PREFERRED_DEFINITION IS NULL THEN
+      v_dec_ind.preferred_definition := FALSE;
+    ELSE
+      v_dec_rec.preferred_definition := P_DEC_PREFERRED_DEFINITION;
+      v_dec_ind.preferred_definition := TRUE;
+    END IF;
+
+    IF P_DEC_LONG_NAME IS NULL THEN
+      v_dec_ind.long_name := FALSE;
+ ELSIF P_dec_long_name = ' ' THEN -- Condition added on 9/9/03 to allow null updates by Prerna Aggarwal
+      v_dec_rec.long_name := NULL;
+      v_dec_ind.long_name := TRUE;
+    ELSE
+      v_dec_rec.long_name := P_DEC_LONG_NAME;
+      v_dec_ind.long_name := TRUE;
+    END IF;
+
+    IF P_DEC_ASL_NAME IS NULL THEN
+      v_dec_ind.asl_name := FALSE;
+    ELSE
+      v_dec_rec.asl_name := P_DEC_ASL_NAME;
+      v_dec_ind.asl_name := TRUE;
+    END IF;
+
+   /* IF P_DEC_PROPL_NAME IS NULL THEN
+      v_dec_ind.propl_name := FALSE;
+    ELSE
+      v_dec_rec.propl_name := P_DEC_PROPL_NAME;
+      v_dec_ind.propl_name := TRUE;
+    END IF;
+
+    IF P_DEC_OCL_NAME IS NULL THEN
+      v_dec_ind.ocl_name := FALSE;
+    ELSE
+      v_dec_rec.ocl_name := P_DEC_OCL_NAME;
+      v_dec_ind.ocl_name := TRUE;
+    END IF;
+    */
+    IF P_DEC_PROPERTY_QUALIFIER IS NULL THEN
+      v_dec_ind.property_qualifier := FALSE;
+ ELSIF P_DEC_PROPERTY_QUALIFIER = ' ' THEN -- Condition added on 7/30/03 to allow null updates by Prerna Aggarwal
+      v_dec_rec.property_qualifier := NULL;
+      v_dec_ind.property_qualifier := TRUE;
+    ELSE
+      v_dec_rec.property_qualifier := P_DEC_PROPERTY_QUALIFIER;
+      v_dec_ind.property_qualifier := TRUE;
+    END IF;
+
+    IF P_DEC_OBJ_CLASS_QUALIFIER IS NULL THEN
+      v_dec_ind.obj_class_qualifier := FALSE;
+ ELSIF P_DEC_OBJ_CLASS_QUALIFIER = ' ' THEN -- Condition added on 7/30/03 to allow null updates by Prerna Aggarwal
+      v_dec_rec.obj_class_qualifier := NULL;
+      v_dec_ind.obj_class_qualifier := TRUE;
+    ELSE
+      v_dec_rec.obj_class_qualifier := P_DEC_OBJ_CLASS_QUALIFIER;
+      v_dec_ind.obj_class_qualifier := TRUE;
+    END IF;
+
+    IF P_DEC_CD_IDSEQ IS NULL THEN
+      v_dec_ind.cd_idseq  := FALSE;
+    ELSE
+      v_dec_rec.cd_idseq  := P_DEC_CD_IDSEQ;
+      v_dec_ind.cd_idseq  := TRUE;
+    END IF;
+
+    IF P_DEC_LATEST_VERSION_IND IS NULL THEN
+      v_dec_ind.latest_version_ind := FALSE;
+    ELSE
+      v_dec_rec.latest_version_ind := P_DEC_LATEST_VERSION_IND;
+      v_dec_ind.latest_version_ind := TRUE;
+    END IF;
+
+    IF P_DEC_BEGIN_DATE IS NULL THEN
+      v_dec_ind.begin_date := FALSE;
+ ELSIF P_DEC_begin_date = ' ' THEN -- Condition added on 9/9/03 to allow null updates by Prerna Aggarwal
+      v_dec_rec.begin_date := NULL;
+      v_dec_ind.begin_date := TRUE;
+    ELSE
+      v_dec_rec.begin_date := TO_DATE(P_DEC_BEGIN_DATE);
+      v_dec_ind.begin_date := TRUE;
+    END IF;
+
+    IF P_DEC_END_DATE  IS NULL THEN
+      v_dec_ind.end_date := FALSE;
+ ELSIF P_DEC_end_date = ' ' THEN -- Condition added on 9/9/03 to allow null updates by Prerna Aggarwal
+      v_dec_rec.end_date := NULL;
+      v_dec_ind.end_date := TRUE;
+    ELSE
+      v_dec_rec.end_date := TO_DATE(P_DEC_END_DATE);
+      v_dec_ind.end_date := TRUE;
+    END IF;
+
+    IF P_DEC_CHANGE_NOTE   IS NULL THEN
+      v_dec_ind.change_note := FALSE;
+ ELSIF P_DEC_change_note = ' ' THEN -- Condition added on 9/9/03 to allow null updates by Prerna Aggarwal
+      v_dec_rec.change_note := NULL;
+      v_dec_ind.change_note := TRUE;
+    ELSE
+      v_dec_rec.change_note := P_DEC_CHANGE_NOTE  ;
+      v_dec_ind.change_note := TRUE;
+    END IF;
+
+    IF P_DEC_OC_IDSEQ   IS NULL THEN
+      v_dec_ind.oc_idseq := FALSE;
+ ELSIF P_DEC_OC_IDSEQ = ' ' THEN -- Condition added on 7/30/03 to allow null updates by Prerna Aggarwal
+      v_dec_rec.oc_idseq := NULL;
+      v_dec_ind.oc_idseq := TRUE;
+    ELSE
+      v_dec_rec.oc_idseq := P_DEC_OC_IDSEQ  ;
+      v_dec_ind.oc_idseq := TRUE;
+    END IF;
+
+    IF P_DEC_PROP_IDSEQ   IS NULL THEN
+      v_dec_ind.prop_idseq := FALSE;
+ ELSIF P_DEC_PROP_IDSEQ = ' ' THEN -- Condition added on 7/30/03 to allow null updates by Prerna Aggarwal
+      v_dec_rec.prop_idseq := NULL;
+      v_dec_ind.prop_idseq := TRUE;
+    ELSE
+      v_dec_rec.prop_idseq := P_DEC_PROP_IDSEQ  ;
+      v_dec_ind.prop_idseq := TRUE;
+    END IF;
+
+    IF P_DEC_ORIGIN   IS NULL THEN  -- 15-Jul-2003, W. Ver Hoef
+      v_dec_ind.origin := FALSE;
+ ELSIF P_DEC_origin = ' ' THEN -- Condition added on 9/9/03 to allow null updates by Prerna Aggarwal
+      v_dec_rec.origin := NULL;
+      v_dec_ind.origin := TRUE;
+    ELSE
+      v_dec_rec.origin := P_DEC_ORIGIN  ;
+      v_dec_ind.origin := TRUE;
+    END IF;
+
+    BEGIN
+      cg$data_element_concepts_view.upd(v_dec_rec,v_dec_ind);
+    EXCEPTION WHEN OTHERS THEN
+      P_RETURN_CODE := 'API_DEC_501'; --Error updating Data Element Concepts
+    END;
+
+    --If LATEST_VERSION_IND is'Yes' then update so that all other versions have the indicator set to 'No'
+    IF(P_DEC_LATEST_VERSION_IND = 'Yes') THEN
+      Sbrext_Common_Routines.set_ac_lvi(P_RETURN_CODE,P_DEC_DEC_IDSEQ,'DE_CONCEPT');
+      IF P_RETURN_CODE IS NOT NULL  THEN
+        P_RETURN_CODE := 'API_DEC_503'; -- Error updating latest_Value_ind
+        RETURN;
+      END IF;
+    END IF;
+
+  END IF;
+
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    P_RETURN_CODE := 'NO_DATA_FOUND';
+    NULL;
+  WHEN OTHERS THEN
+    P_RETURN_CODE := 'OTHERS';
+    NULL;
+END SET_DEC;
+END DEC_ACTIONS;
+/
+  GRANT EXECUTE ON "SBREXT"."DEC_ACTIONS" TO PUBLIC;
+/ 
+  GRANT EXECUTE ON "SBREXT"."DEC_ACTIONS" TO "CDEBROWSER";
+/ 
+  GRANT DEBUG ON "SBREXT"."DEC_ACTIONS" TO "CDEBROWSER";
+/ 
+  GRANT EXECUTE ON "SBREXT"."DEC_ACTIONS" TO "DATA_LOADER";
+/
+  GRANT DEBUG ON "SBREXT"."DEC_ACTIONS" TO "DATA_LOADER";
+/ 
+  GRANT EXECUTE ON "SBREXT"."DEC_ACTIONS" TO "SBR" WITH GRANT OPTION;
+/ 
+  GRANT DEBUG ON "SBREXT"."DEC_ACTIONS" TO "SBR" WITH GRANT OPTION;
+/ 
+  GRANT EXECUTE ON "SBREXT"."DEC_ACTIONS" TO "APPLICATION_USER";
+/ 
+  GRANT DEBUG ON "SBREXT"."DEC_ACTIONS" TO "APPLICATION_USER";
+/ 
+  GRANT EXECUTE ON "SBREXT"."DEC_ACTIONS" TO "DER_USER";
 /
