@@ -66,7 +66,7 @@ public class TestDEC
 3. DataElementConceptServlet.java
 4. Results.jsp
 5. CreateDEC.jsp
-6. gf30681_update_ac_exists.sql
+6. gf30681_README.txt
 
    * Useful SQLs -
    * 
