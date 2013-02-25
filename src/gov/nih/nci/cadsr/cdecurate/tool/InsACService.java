@@ -741,6 +741,7 @@ public class InsACService implements Serializable {
 		}finally{
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
+			SQLHelper.closeConnection(m_servlet.getConn());		//GF32398 not related to the ticket, but found the leak and fix it
         	}
 		return sReturnCode;
 	}
