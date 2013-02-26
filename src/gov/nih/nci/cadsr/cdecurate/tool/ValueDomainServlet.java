@@ -1092,7 +1092,16 @@ public class ValueDomainServlet extends CurationServlet {
 		// store the long names, definition, and usr name in vd bean if searched
 		if (nameAct.equals("Search"))
 		{
-			pageVD.setVD_LONG_NAME(sLongName);
+			//GF32004------START
+			if(sLongName.indexOf("Integer::") > -1) {
+				sLongName = sLongName.replace("Integer::", "");
+				pageVD.setVD_LONG_NAME(sLongName);
+				
+			}else {
+				pageVD.setVD_LONG_NAME(sLongName);
+			}
+			logger.debug("VD_LONG_NAME at Line 1103 of ValueDomainServlet.java" + pageVD.getVD_LONG_NAME());
+			//GF32004------END
 			pageVD.setVD_PREFERRED_DEFINITION(sDef);
 			pageVD.setVDNAME_CHANGED(true);
 		}

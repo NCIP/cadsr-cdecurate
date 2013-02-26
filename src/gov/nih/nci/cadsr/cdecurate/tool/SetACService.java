@@ -4219,7 +4219,17 @@ public class SetACService implements Serializable
 			if(sName != null)
 			{
 				sName = m_util.removeNewLineChar(sName);   //replace newline with empty string
-				m_VD.setVD_LONG_NAME(sName);
+//				m_VD.setVD_LONG_NAME(sName);
+				//GF32004------START
+				if(sName.indexOf("Integer::") > -1) {
+					sName = sName.replace("Integer::", "");
+					m_VD.setVD_LONG_NAME(sName);
+					
+				}else {
+					m_VD.setVD_LONG_NAME(sName);
+				}
+				logger.debug("VD_LONG_NAME at Line 4231 of SetACService.java" + m_VD.getVD_LONG_NAME());
+				//GF32004------END
 			}
 			//add the preferred type name
 			String selNameType = (String)req.getParameter("rNameConv");
