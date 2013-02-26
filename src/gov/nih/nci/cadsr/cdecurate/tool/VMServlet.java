@@ -365,7 +365,17 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
         sVM = sVM.trim();//trim out the extra spaces
         sVM = util.removeNewLineChar(sVM);
        //vm.setVM_SHORT_MEANING(sVM);
-        vm.setVM_LONG_NAME(sVM);
+//        vm.setVM_LONG_NAME(sVM);
+      //GF32004------START
+		if(sVM.indexOf("Integer::") > -1) {
+			sVM = sVM.replace("Integer::", "");
+			vm.setVM_LONG_NAME(sVM);
+			
+		}else {
+			vm.setVM_LONG_NAME(sVM);
+		}
+		logger.debug("VM_LONG_NAME at Line 377 of VMServlet.java" + vm.getVM_LONG_NAME());
+		//GF32004------END
         vm.setVM_IDSEQ("");
         //vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
       }
@@ -614,7 +624,19 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
         if(sLongName!=null)
         {
         	if (!sLongName.equals(""))  //this helps to keeps to create default alt defintion only when going from user defined vm to concept vm
-        		vm.setVM_LONG_NAME(sLongName);
+        	{
+//        		vm.setVM_LONG_NAME(sLongName);
+        		//GF32004------START
+				if(sLongName.indexOf("Integer::") > -1) {
+					sLongName = sLongName.replace("Integer::", "");
+					vm.setVM_LONG_NAME(sLongName);
+					
+				}else {
+					vm.setVM_LONG_NAME(sLongName);
+				}
+				logger.debug("VM_LONG_NAME at Line 637 of VMServlet.java" + vm.getVM_LONG_NAME());
+				//GF32004------END
+        	}
         }
         //Check if user entered new version
         String sVersion = (String)httpRequest.getParameter("Version");

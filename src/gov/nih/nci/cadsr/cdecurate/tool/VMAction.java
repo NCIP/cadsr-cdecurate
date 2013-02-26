@@ -851,9 +851,19 @@ public class VMAction implements Serializable
 			String curName = vm.getVM_LONG_NAME();
 			if (!curName.equalsIgnoreCase(vmName))
 			{
-				vm.setVM_LONG_NAME(vmName);
+//				vm.setVM_LONG_NAME(vmName);
 				// vm.setVM_SHORT_MEANING(vmName);
-				vm.setVM_LONG_NAME(vmName);
+//				vm.setVM_LONG_NAME(vmName);
+				//GF32004------START
+				if(vmName.indexOf("Integer::") > -1) {
+					vmName = vmName.replace("Integer::", "");
+					vm.setVM_LONG_NAME(vmName);
+					
+				}else {
+					vm.setVM_LONG_NAME(vmName);
+				}
+				logger.debug("VM_LONG_NAME at Line 865 of VMAction.java" + vm.getVM_LONG_NAME());
+				//GF32004------END
 				vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
 			}
 			break;
