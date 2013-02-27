@@ -80,6 +80,17 @@ order by
 date_created
 --, dec_id
 desc
+   * To check missing OC of a dec:
+select d.dec_id, c.name from 
+SBR.DATA_ELEMENT_CONCEPTS d, SBREXT.object_classes_ext o, SBREXT.con_derivation_rules_ext c 
+where o.CONDR_IDSEQ = c.CONDR_IDSEQ and d.OC_IDSEQ = o.OC_IDSEQ
+and c.name is null
+   * To check missing Prop of a dec:
+select d.dec_id, c.name from 
+SBR.DATA_ELEMENT_CONCEPTS d, SBREXT.properties_ext p, SBREXT.con_derivation_rules_ext c 
+where p.CONDR_IDSEQ = c.CONDR_IDSEQ and d.PROP_IDSEQ = p.PROP_IDSEQ
+and c.name is null
+
    * To check overall missing OC/Prop's CDR name of an existing DEC:
 Select name as PROP_CDR_NAME from SBREXT.con_derivation_rules_ext where CONDR_IDSEQ is not null and CONDR_IDSEQ IN(Select DISTINCT CONDR_IDSEQ from 
 SBREXT.properties_ext where PROP_IDSEQ IN(Select DISTINCT PROP_IDSEQ from 
