@@ -92,12 +92,16 @@ where p.CONDR_IDSEQ = c.CONDR_IDSEQ and d.PROP_IDSEQ = p.PROP_IDSEQ
 and c.name is null
 
    * To check overall missing OC/Prop's CDR name of an existing DEC:
+select d.dec_id, c.name, o.oc_id, p.prop_id from 
+SBR.DATA_ELEMENT_CONCEPTS d, SBREXT.object_classes_ext o, SBREXT.properties_ext p, SBREXT.con_derivation_rules_ext c 
+where o.CONDR_IDSEQ = c.CONDR_IDSEQ and d.OC_IDSEQ = o.OC_IDSEQ
+and p.CONDR_IDSEQ = c.CONDR_IDSEQ and d.PROP_IDSEQ = p.PROP_IDSEQ
+
 Select name as PROP_CDR_NAME from SBREXT.con_derivation_rules_ext where CONDR_IDSEQ is not null and CONDR_IDSEQ IN(Select DISTINCT CONDR_IDSEQ from 
 SBREXT.properties_ext where PROP_IDSEQ IN(Select DISTINCT PROP_IDSEQ from 
 SBR.data_element_concepts where DEC_IDSEQ ='D0319D97-DE98-15A9-E040-BB89A7B4755B')
 and CONDR_IDSEQ is NOT NULL
 )
-
 
 Select name as OC_CDR_NAME from SBREXT.con_derivation_rules_ext where CONDR_IDSEQ is not null and CONDR_IDSEQ IN(Select DISTINCT CONDR_IDSEQ from 
 SBREXT.object_classes_ext where OC_IDSEQ IN(Select DISTINCT OC_IDSEQ from 
