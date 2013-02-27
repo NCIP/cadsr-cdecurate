@@ -874,7 +874,18 @@ public class ValueDomainServlet extends CurationServlet {
 			String sIDSEQ = m_Bean.getIDSEQ();
 			if (sComp.equals("RepTerm") || sComp.equals("RepQualifier"))
 			{
-				m_VD.setVD_REP_TERM(sLongName);
+//				m_VD.setVD_REP_TERM(sLongName);
+				//GF32004------START
+				logger.debug("VD_REPTERM_LONG_NAME at Line 879 of ValueDomainServlet.java" + sLongName);
+				if(sLongName.indexOf("Integer::") > -1) {
+					sLongName = sLongName.replace("Integer::", "");
+					m_VD.setVD_REP_TERM(sLongName);
+					
+				}else {
+					m_VD.setVD_REP_TERM(sLongName);
+				}
+				logger.debug("VD_REPTERM_LONG_NAME at Line 887 of ValueDomainServlet.java" + m_VD.getVD_REP_TERM());
+				//GF32004------END
 				m_VD.setVD_REP_IDSEQ(sIDSEQ);
 			}
 			// String sRepTerm = m_VD.getVD_REP_TERM();
@@ -1093,6 +1104,7 @@ public class ValueDomainServlet extends CurationServlet {
 		if (nameAct.equals("Search"))
 		{
 			//GF32004------START
+			logger.debug("VD_LONG_NAME at Line 1107 of ValueDomainServlet.java" + sLongName);
 			if(sLongName.indexOf("Integer::") > -1) {
 				sLongName = sLongName.replace("Integer::", "");
 				pageVD.setVD_LONG_NAME(sLongName);
@@ -1100,7 +1112,7 @@ public class ValueDomainServlet extends CurationServlet {
 			}else {
 				pageVD.setVD_LONG_NAME(sLongName);
 			}
-			logger.debug("VD_LONG_NAME at Line 1103 of ValueDomainServlet.java" + pageVD.getVD_LONG_NAME());
+			logger.debug("VD_LONG_NAME at Line 1115 of ValueDomainServlet.java" + pageVD.getVD_LONG_NAME());
 			//GF32004------END
 			pageVD.setVD_PREFERRED_DEFINITION(sDef);
 			pageVD.setVDNAME_CHANGED(true);
@@ -1781,8 +1793,20 @@ public class ValueDomainServlet extends CurationServlet {
 		String sRepTerm = vd.getVD_REP_TERM();
 		if (sRepTerm == null)
 			sRepTerm = "";
-		if (!sRepTerm.equals(""))
-			VDBeanSR.setVD_REP_TERM(sRepTerm);
+		if (!sRepTerm.equals("")){
+//			VDBeanSR.setVD_REP_TERM(sRepTerm);
+			//GF32004------START
+			logger.debug("VD_REPTERM_LONG_NAME at Line 1799 of ValueDomainServlet.java" + sRepTerm);
+			if(sRepTerm.indexOf("Integer::") > -1) {
+				sRepTerm = sRepTerm.replace("Integer::", "");
+				VDBeanSR.setVD_REP_TERM(sRepTerm);
+				
+			}else {
+				VDBeanSR.setVD_REP_TERM(sRepTerm);
+			}
+			logger.debug("VD_REPTERM_LONG_NAME at Line 1807 of ValueDomainServlet.java" + VDBeanSR.getVD_REP_TERM());
+			//GF32004------END
+		}
 		String sRepCondr = vd.getVD_REP_CONDR_IDSEQ();
 		if (sRepCondr == null)
 			sRepCondr = "";
