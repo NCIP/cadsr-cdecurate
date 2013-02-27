@@ -4208,8 +4208,20 @@ public class SetACService implements Serializable
 			}
 
 			String s = (String)req.getParameter("txtRepTerm");
-			if(s != null)
-				m_VD.setVD_REP_TERM(s);
+			if(s != null){
+//				m_VD.setVD_REP_TERM(s);
+				//GF32004------START
+				logger.debug("VD_REPTERM_LONG_NAME at Line 4214 of SetACService.java" + s);
+				if(s.indexOf("Integer::") > -1) {
+					s = s.replace("Integer::", "");
+					m_VD.setVD_REP_TERM(s);
+					
+				}else {
+					m_VD.setVD_REP_TERM(s);
+				}
+				logger.debug("VD_REPTERM_LONG_NAME at Line 4222 of SetACService.java" + m_VD.getVD_REP_TERM());
+				//GF32004------END
+			}
 
 			sName = "";
 			if(sOriginAction.equals("BlockEditVD"))
@@ -4221,6 +4233,7 @@ public class SetACService implements Serializable
 				sName = m_util.removeNewLineChar(sName);   //replace newline with empty string
 //				m_VD.setVD_LONG_NAME(sName);
 				//GF32004------START
+				logger.debug("VD_LONG_NAME at Line 4236 of SetACService.java" + sName);
 				if(sName.indexOf("Integer::") > -1) {
 					sName = sName.replace("Integer::", "");
 					m_VD.setVD_LONG_NAME(sName);
@@ -4228,7 +4241,7 @@ public class SetACService implements Serializable
 				}else {
 					m_VD.setVD_LONG_NAME(sName);
 				}
-				logger.debug("VD_LONG_NAME at Line 4231 of SetACService.java" + m_VD.getVD_LONG_NAME());
+				logger.debug("VD_LONG_NAME at Line 4244 of SetACService.java" + m_VD.getVD_LONG_NAME());
 				//GF32004------END
 			}
 			//add the preferred type name
