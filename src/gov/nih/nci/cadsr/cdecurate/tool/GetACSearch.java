@@ -5023,6 +5023,7 @@ public class GetACSearch implements Serializable
         else
             acName = VDBean.getVD_PREFERRED_NAME();
         vACName.addElement(acName);
+        logger.debug("Value Domain Long Name is" + VDBean.getVD_LONG_NAME() + "or" + VDBean.getVD_PREFERRED_NAME()); //GF32004
         boolean isSystemName = false;
         String vdName = VDBean.getVD_PREFERRED_NAME();
         // store preferred name type attributes
