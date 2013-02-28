@@ -14,7 +14,7 @@
 		<%@ page import="java.util.*"%>
 		<%@ page import="java.text.*"%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
-		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.*"%>
 				
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/date.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/CreateVD.js"></SCRIPT>
@@ -142,6 +142,7 @@
         sRepTerm += sRepTermPrimary; //add rep term primary
       }
       sRepTerm = serUtil.parsedStringDoubleQuoteJSP(sRepTerm); //call the function to handle doubleQuote
+      sRepTerm = AdministeredItemUtil.handleLongName(sRepTerm);	//GF32004
       //naming to here    
       String sPrefType = m_VD.getAC_PREF_NAME_TYPE();
       if (sPrefType == null) sPrefType = ""; //sys defaults on create page
