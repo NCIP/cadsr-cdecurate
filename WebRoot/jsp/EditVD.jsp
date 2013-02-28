@@ -13,7 +13,7 @@
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/AddNewListOption.js"></SCRIPT>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 		<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
-		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.*"%>
 		<%@ page import="java.util.*"%>
 		<%@ page session="true"%>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/date.js"></SCRIPT>
@@ -215,6 +215,7 @@
 				sRepTerm += sRepTermPrimary; //add rep term primary
 			}
 			sRepTerm = serUtil.parsedStringDoubleQuoteJSP(sRepTerm); //call the function to handle doubleQuote
+			sRepTerm = AdministeredItemUtil.handleLongName(sRepTerm);	//GF32004
 
 			if (sRepCCodeDB == null)
 				sRepCCodeDB = "";
