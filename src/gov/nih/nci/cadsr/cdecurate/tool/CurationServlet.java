@@ -1755,7 +1755,17 @@ public class CurationServlet
             // add evs bean to pv bean
             VM_Bean vm = new VM_Bean();
          //   vm.setVM_SHORT_MEANING(pBean.getPV_SHORT_MEANING());
-            vm.setVM_LONG_NAME(pBean.getPV_SHORT_MEANING());
+          //GF32004------START
+            logger.debug("VM_LONG_NAME at Line 1759 of CurationServlet.java"+pBean.getPV_SHORT_MEANING());
+			if(pBean.getPV_SHORT_MEANING().indexOf("Integer::")>-1) {
+				vm.setVM_LONG_NAME(pBean.getPV_SHORT_MEANING().replace("Integer::", ""));
+				
+			}else {
+				vm.setVM_LONG_NAME(pBean.getPV_SHORT_MEANING());
+			}
+			logger.debug("VM_LONG_NAME at Line 1765 of CurationServlet.java"+vm.getVM_LONG_NAME());
+//            vm.setVM_LONG_NAME(pBean.getPV_SHORT_MEANING());
+			//GF32004------END
            // vm.setVM_DESCRIPTION(pBean.getPV_MEANING_DESCRIPTION());
             vm.setVM_PREFERRED_DEFINITION(pBean.getPV_MEANING_DESCRIPTION());
             vm.setVM_CONDR_IDSEQ(eBean.getCONDR_IDSEQ());

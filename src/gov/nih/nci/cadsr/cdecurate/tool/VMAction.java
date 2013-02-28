@@ -980,7 +980,17 @@ public class VMAction implements Serializable
 		switch (iFrom)
 		{
 		case ConceptForm.FOR_PV_PAGE_CONCEPT:
-			vm.setVM_LONG_NAME(eBean.getLONG_NAME()); // have same name for
+			 //GF32004------START
+            logger.debug("VM_LONG_NAME at Line 984 of VMAction.java"+eBean.getLONG_NAME());
+			if(eBean.getLONG_NAME().indexOf("Integer::")>-1) {
+				vm.setVM_LONG_NAME(eBean.getLONG_NAME().replace("Integer::", ""));
+				
+			}else {
+				vm.setVM_LONG_NAME(eBean.getLONG_NAME());
+			}
+			logger.debug("VM_LONG_NAME at Line 991 of VMAction.java"+vm.getVM_LONG_NAME());
+			//GF32004------END
+//			vm.setVM_LONG_NAME(eBean.getLONG_NAME()); // have same name for
 														// now
 			break;
 		case ConceptForm.FOR_VM_PAGE_CONCEPT:
@@ -1104,9 +1114,20 @@ public class VMAction implements Serializable
 
 		VM_Bean selVM = new VM_Bean().copyVMBean(pv.getPV_VM());
 		// make sure vm's long exists;
-		if (selVM.getVM_LONG_NAME() == null || selVM.getVM_LONG_NAME().equals(""))
+		if (selVM.getVM_LONG_NAME() == null || selVM.getVM_LONG_NAME().equals("")){
+			//GF32004------START
+            logger.debug("VM_LONG_NAME at Line 1119 of VMAction.java"+selVM.getVM_LONG_NAME());
+			if(selVM.getVM_LONG_NAME().indexOf("Integer::")>-1) {
+				selVM.setVM_LONG_NAME(selVM.getVM_LONG_NAME().replace("Integer::", ""));
+				
+			}else {
+				selVM.setVM_LONG_NAME(selVM.getVM_LONG_NAME());
+			}
+			logger.debug("VM_LONG_NAME at Line 1126 of VMAction.java"+selVM.getVM_LONG_NAME());
+			//GF32004------END
+		}
 			// selVM.setVM_LONG_NAME(selVM.getVM_SHORT_MEANING());
-			selVM.setVM_LONG_NAME(selVM.getVM_LONG_NAME());
+//			selVM.setVM_LONG_NAME(selVM.getVM_LONG_NAME());
 		Vector<EVS_Bean> vmCon = selVM.getVM_CONCEPT_LIST();
 		if (vmCon != null && vmCon.size() > 0)
 			makeVMNameFromConcept(selVM, ConceptForm.FOR_VM_PAGE_OPEN);
@@ -1300,7 +1321,17 @@ public class VMAction implements Serializable
 			// vm.setVM_DESCRIPTION(vmD);
 			vm.setVM_PREFERRED_DEFINITION(vmD);
 			vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_NONE);
-			vm.setVM_LONG_NAME(rs.getString("LONG_NAME"));
+			//GF32004------START
+            logger.debug("VM_LONG_NAME at Line 1325 of VMAction.java"+rs.getString("LONG_NAME"));
+			if(rs.getString("LONG_NAME").indexOf("Integer::")>-1) {
+				vm.setVM_LONG_NAME(rs.getString("LONG_NAME").replace("Integer::", ""));
+				
+			}else {
+				vm.setVM_LONG_NAME(rs.getString("LONG_NAME"));
+			}
+			logger.debug("VM_LONG_NAME at Line 1332 of VMAction.java"+vm.getVM_LONG_NAME());
+			//GF32004------END
+//			vm.setVM_LONG_NAME(rs.getString("LONG_NAME"));
 			vm.setVM_IDSEQ(rs.getString("VM_IDSEQ"));
 			vm.setVM_ID(rs.getString("VM_ID"));
 			vm.setVM_CONTE_IDSEQ(rs.getString("conte_idseq"));
@@ -1699,7 +1730,17 @@ public class VMAction implements Serializable
 					// store the vm attributes created by stored procedure in
 					// the bean
 					// vm.setVM_SHORT_MEANING(cstmt.getString(7));
-					vm.setVM_LONG_NAME(cstmt.getString(7));
+					//GF32004------START
+		            logger.debug("VM_LONG_NAME at Line 1734 of VMAction.java"+cstmt.getString(7));
+					if(cstmt.getString(7).indexOf("Integer::")>-1) {
+						vm.setVM_LONG_NAME(cstmt.getString(7).replace("Integer::", ""));
+						
+					}else {
+						vm.setVM_LONG_NAME(cstmt.getString(7));
+					}
+					logger.debug("VM_LONG_NAME at Line 1741 of VMAction.java"+vm.getVM_LONG_NAME());
+					//GF32004------END
+//					vm.setVM_LONG_NAME(cstmt.getString(7));
 					// vm.setVM_DESCRIPTION(cstmt.getString(8));
 					vm.setVM_PREFERRED_DEFINITION(cstmt.getString(8));
 					vm.setVM_CHANGE_NOTE(cstmt.getString(17));

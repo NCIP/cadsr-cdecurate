@@ -2016,7 +2016,17 @@ public class GetACSearch implements Serializable
                     	g = g + 1;
                         VDBean = new VD_Bean();
                         VDBean.setVD_PREFERRED_NAME(rs.getString("preferred_name"));
-                        VDBean.setVD_LONG_NAME(rs.getString("long_name"));
+                      //GF32004------START
+        				logger.debug("VD_LONG_NAME at Line 2020 of GetACSearch.java" + rs.getString("long_name"));
+        				if(rs.getString("long_name").indexOf("Integer::") > -1) {
+        					VDBean.setVD_LONG_NAME(rs.getString("long_name").replace("Integer::", ""));
+        					
+        				}else {
+        					VDBean.setVD_LONG_NAME(rs.getString("long_name"));
+        				}
+        				logger.debug("VD_LONG_NAME at Line 2027 of GetACSearch.java" + VDBean.getVD_LONG_NAME());
+        				//GF32004------END
+//                        VDBean.setVD_LONG_NAME(rs.getString("long_name"));
                         VDBean.setVD_PREFERRED_DEFINITION(rs.getString("preferred_definition"));
                         VDBean.setVD_CONTE_IDSEQ(rs.getString("conte_idseq"));
                         VDBean.setVD_ASL_NAME(rs.getString("asl_name"));
@@ -2045,7 +2055,17 @@ public class GetACSearch implements Serializable
                         VDBean.setVD_CHAR_SET_NAME(rs.getString("char_set_name"));
                         VDBean.setVD_HIGH_VALUE_NUM(rs.getString("high_value_num"));
                         VDBean.setVD_LOW_VALUE_NUM(rs.getString("low_value_num"));
-                        VDBean.setVD_REP_TERM(rs.getString("rep_term"));
+                      //GF32004------START
+        				logger.debug("VD_REPTERM_LONG_NAME at Line 2059 of GetACSearch.java" + rs.getString("rep_term"));
+        				if(rs.getString("rep_term").indexOf("Integer::") > -1) {
+        					VDBean.setVD_REP_TERM(rs.getString("rep_term").replace("Integer::", ""));
+        					
+        				}else {
+        					VDBean.setVD_REP_TERM(rs.getString("rep_term"));
+        				}
+        				logger.debug("VD_REPTERM_LONG_NAME at Line 2066 of GetACSearch.java" + VDBean.getVD_REP_TERM());
+        				//GF32004------END
+//                        VDBean.setVD_REP_TERM(rs.getString("rep_term"));
                         VDBean.setVD_REP_IDSEQ(rs.getString("rep_idseq"));
                         // VDBean.setVD_REP_QUAL(rs.getString("qualifier_name"));
                         VDBean.setVD_REP_CONDR_IDSEQ(rs.getString("rep_condr_idseq"));
