@@ -1094,7 +1094,17 @@ public void doOpenViewPage() throws Exception{
 	  vmBean.setVM_END_DATE(vmVO.getEnd_date().toString());
 	}  
 	vmBean.setVM_PREFERRED_DEFINITION(vmVO.getPrefferred_def());
-	vmBean.setVM_LONG_NAME(vmVO.getLong_name());
+	//GF32004------START
+    logger.debug("VM_LONG_NAME at Line 1098 of VMServlet.java"+vmVO.getLong_name());
+	if(vmVO.getLong_name().indexOf("Integer::")>-1) {
+		vmBean.setVM_LONG_NAME(vmVO.getLong_name().replace("Integer::", ""));
+		
+	}else {
+		vmBean.setVM_LONG_NAME(vmVO.getLong_name());
+	}
+	logger.debug("VM_LONG_NAME at Line 1105 of VMServlet.java"+vmBean.getVM_LONG_NAME());
+	//GF32004------END
+//	vmBean.setVM_LONG_NAME(vmVO.getLong_name());
 	vmBean.setVM_IDSEQ(vmVO.getVm_IDSEQ());
 	Long id = new Long(vmVO.getVm_ID());
 	vmBean.setVM_ID(id.toString());
