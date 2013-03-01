@@ -7,6 +7,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
 import gov.nih.nci.cadsr.persist.exception.DBException;
@@ -366,16 +367,8 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
         sVM = util.removeNewLineChar(sVM);
        //vm.setVM_SHORT_MEANING(sVM);
 //        vm.setVM_LONG_NAME(sVM);
-      //GF32004------START
-		if(sVM.indexOf("Integer::") > -1) {
-			sVM = sVM.replace("Integer::", "");
-			vm.setVM_LONG_NAME(sVM);
-			
-		}else {
-			vm.setVM_LONG_NAME(sVM);
-		}
-		logger.debug("VM_LONG_NAME at Line 377 of VMServlet.java" + vm.getVM_LONG_NAME());
-		//GF32004------END
+		vm.setVM_LONG_NAME(AdministeredItemUtil.handleLongName(sVM)); //GF32004
+		logger.debug("VM_LONG_NAME at Line 371 of VMServlet.java" + vm.getVM_LONG_NAME());
         vm.setVM_IDSEQ("");
         //vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
       }
@@ -626,16 +619,8 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
         	if (!sLongName.equals(""))  //this helps to keeps to create default alt defintion only when going from user defined vm to concept vm
         	{
 //        		vm.setVM_LONG_NAME(sLongName);
-        		//GF32004------START
-				if(sLongName.indexOf("Integer::") > -1) {
-					sLongName = sLongName.replace("Integer::", "");
-					vm.setVM_LONG_NAME(sLongName);
-					
-				}else {
-					vm.setVM_LONG_NAME(sLongName);
-				}
-				logger.debug("VM_LONG_NAME at Line 637 of VMServlet.java" + vm.getVM_LONG_NAME());
-				//GF32004------END
+				vm.setVM_LONG_NAME(AdministeredItemUtil.handleLongName(sLongName)); //GF32004
+				logger.debug("VM_LONG_NAME at Line 623 of VMServlet.java" + vm.getVM_LONG_NAME());
         	}
         }
         //Check if user entered new version
@@ -1094,16 +1079,9 @@ public void doOpenViewPage() throws Exception{
 	  vmBean.setVM_END_DATE(vmVO.getEnd_date().toString());
 	}  
 	vmBean.setVM_PREFERRED_DEFINITION(vmVO.getPrefferred_def());
-	//GF32004------START
-    logger.debug("VM_LONG_NAME at Line 1098 of VMServlet.java"+vmVO.getLong_name());
-	if(vmVO.getLong_name().indexOf("Integer::")>-1) {
-		vmBean.setVM_LONG_NAME(vmVO.getLong_name().replace("Integer::", ""));
-		
-	}else {
-		vmBean.setVM_LONG_NAME(vmVO.getLong_name());
-	}
-	logger.debug("VM_LONG_NAME at Line 1105 of VMServlet.java"+vmBean.getVM_LONG_NAME());
-	//GF32004------END
+    logger.debug("VM_LONG_NAME at Line 1082 of VMServlet.java"+vmVO.getLong_name());
+	vmBean.setVM_LONG_NAME(AdministeredItemUtil.handleLongName(vmVO.getLong_name())); //GF32004
+	logger.debug("VM_LONG_NAME at Line 1084 of VMServlet.java"+vmBean.getVM_LONG_NAME());
 //	vmBean.setVM_LONG_NAME(vmVO.getLong_name());
 	vmBean.setVM_IDSEQ(vmVO.getVm_IDSEQ());
 	Long id = new Long(vmVO.getVm_ID());

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import javax.servlet.ServletContext;
@@ -875,17 +876,9 @@ public class ValueDomainServlet extends CurationServlet {
 			if (sComp.equals("RepTerm") || sComp.equals("RepQualifier"))
 			{
 //				m_VD.setVD_REP_TERM(sLongName);
-				//GF32004------START
 				logger.debug("VD_REPTERM_LONG_NAME at Line 879 of ValueDomainServlet.java" + sLongName);
-				if(sLongName.indexOf("Integer::") > -1) {
-					sLongName = sLongName.replace("Integer::", "");
-					m_VD.setVD_REP_TERM(sLongName);
-					
-				}else {
-					m_VD.setVD_REP_TERM(sLongName);
-				}
-				logger.debug("VD_REPTERM_LONG_NAME at Line 887 of ValueDomainServlet.java" + m_VD.getVD_REP_TERM());
-				//GF32004------END
+				m_VD.setVD_REP_TERM(AdministeredItemUtil.handleLongName(sLongName)); //GF32004
+				logger.debug("VD_REPTERM_LONG_NAME at Line 881 of ValueDomainServlet.java" + m_VD.getVD_REP_TERM());
 				m_VD.setVD_REP_IDSEQ(sIDSEQ);
 			}
 			// String sRepTerm = m_VD.getVD_REP_TERM();
@@ -1103,17 +1096,9 @@ public class ValueDomainServlet extends CurationServlet {
 		// store the long names, definition, and usr name in vd bean if searched
 		if (nameAct.equals("Search"))
 		{
-			//GF32004------START
-			logger.debug("VD_LONG_NAME at Line 1107 of ValueDomainServlet.java" + sLongName);
-			if(sLongName.indexOf("Integer::") > -1) {
-				sLongName = sLongName.replace("Integer::", "");
-				pageVD.setVD_LONG_NAME(sLongName);
-				
-			}else {
-				pageVD.setVD_LONG_NAME(sLongName);
-			}
-			logger.debug("VD_LONG_NAME at Line 1115 of ValueDomainServlet.java" + pageVD.getVD_LONG_NAME());
-			//GF32004------END
+			logger.debug("VD_LONG_NAME at Line 1099 of ValueDomainServlet.java" + sLongName);
+			pageVD.setVD_LONG_NAME(AdministeredItemUtil.handleLongName(sLongName)); //GF32004
+			logger.debug("VD_LONG_NAME at Line 1101 of ValueDomainServlet.java" + pageVD.getVD_LONG_NAME());
 			pageVD.setVD_PREFERRED_DEFINITION(sDef);
 			pageVD.setVDNAME_CHANGED(true);
 		}
@@ -1795,17 +1780,9 @@ public class ValueDomainServlet extends CurationServlet {
 			sRepTerm = "";
 		if (!sRepTerm.equals("")){
 //			VDBeanSR.setVD_REP_TERM(sRepTerm);
-			//GF32004------START
-			logger.debug("VD_REPTERM_LONG_NAME at Line 1799 of ValueDomainServlet.java" + sRepTerm);
-			if(sRepTerm.indexOf("Integer::") > -1) {
-				sRepTerm = sRepTerm.replace("Integer::", "");
-				VDBeanSR.setVD_REP_TERM(sRepTerm);
-				
-			}else {
-				VDBeanSR.setVD_REP_TERM(sRepTerm);
-			}
-			logger.debug("VD_REPTERM_LONG_NAME at Line 1807 of ValueDomainServlet.java" + VDBeanSR.getVD_REP_TERM());
-			//GF32004------END
+			logger.debug("VD_REPTERM_LONG_NAME at Line 1783 of ValueDomainServlet.java" + sRepTerm);
+			VDBeanSR.setVD_REP_TERM(AdministeredItemUtil.handleLongName(sRepTerm)); //GF32004
+			logger.debug("VD_REPTERM_LONG_NAME at Line 1785 of ValueDomainServlet.java" + VDBeanSR.getVD_REP_TERM());
 		}
 		String sRepCondr = vd.getVD_REP_CONDR_IDSEQ();
 		if (sRepCondr == null)
