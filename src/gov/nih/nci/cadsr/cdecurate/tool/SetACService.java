@@ -9,6 +9,7 @@ import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.persist.common.DBConstants;
@@ -3794,16 +3795,8 @@ public class SetACService implements Serializable
 			if(sName != null)
 			{
 				sName = m_util.removeNewLineChar(sName);
-				//GF32004------START
-				if(sName.indexOf("Integer::")>-1) {
-					sName=sName.replace("Integer::", "");
-					m_DEC.setDEC_LONG_NAME(sName);
-					
-				}else {
-					m_DEC.setDEC_LONG_NAME(sName);
-				}
-				//GF32004------END
-				logger.debug("DEC_LONG_NAME at Line 3745 of SetACService.java"+m_DEC.getDEC_LONG_NAME());
+				m_DEC.setDEC_LONG_NAME(AdministeredItemUtil.handleLongName(sName));//GF32004
+				logger.debug("DEC_LONG_NAME at Line 3799 of SetACService.java"+m_DEC.getDEC_LONG_NAME());
 			}
 
 			//set PREFERRED_NAME
@@ -4210,17 +4203,9 @@ public class SetACService implements Serializable
 			String s = (String)req.getParameter("txtRepTerm");
 			if(s != null){
 //				m_VD.setVD_REP_TERM(s);
-				//GF32004------START
-				logger.debug("VD_REPTERM_LONG_NAME at Line 4214 of SetACService.java" + s);
-				if(s.indexOf("Integer::") > -1) {
-					s = s.replace("Integer::", "");
-					m_VD.setVD_REP_TERM(s);
-					
-				}else {
-					m_VD.setVD_REP_TERM(s);
-				}
-				logger.debug("VD_REPTERM_LONG_NAME at Line 4222 of SetACService.java" + m_VD.getVD_REP_TERM());
-				//GF32004------END
+				logger.debug("VD_REPTERM_LONG_NAME at Line 4206 of SetACService.java" + s);
+					m_VD.setVD_REP_TERM(AdministeredItemUtil.handleLongName(s)); //GF32004
+				logger.debug("VD_REPTERM_LONG_NAME at Line 4208 of SetACService.java" + m_VD.getVD_REP_TERM());
 			}
 
 			sName = "";
@@ -4232,17 +4217,9 @@ public class SetACService implements Serializable
 			{
 				sName = m_util.removeNewLineChar(sName);   //replace newline with empty string
 //				m_VD.setVD_LONG_NAME(sName);
-				//GF32004------START
-				logger.debug("VD_LONG_NAME at Line 4236 of SetACService.java" + sName);
-				if(sName.indexOf("Integer::") > -1) {
-					sName = sName.replace("Integer::", "");
-					m_VD.setVD_LONG_NAME(sName);
-					
-				}else {
-					m_VD.setVD_LONG_NAME(sName);
-				}
-				logger.debug("VD_LONG_NAME at Line 4244 of SetACService.java" + m_VD.getVD_LONG_NAME());
-				//GF32004------END
+				logger.debug("VD_LONG_NAME at Line 4220 of SetACService.java" + sName);
+				m_VD.setVD_LONG_NAME(AdministeredItemUtil.handleLongName(sName)); //GF32004
+				logger.debug("VD_LONG_NAME at Line 4222 of SetACService.java" + m_VD.getVD_LONG_NAME());
 			}
 			//add the preferred type name
 			String selNameType = (String)req.getParameter("rNameConv");

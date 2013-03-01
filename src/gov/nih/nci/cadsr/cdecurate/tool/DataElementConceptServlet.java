@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import javax.servlet.ServletContext;
@@ -868,16 +869,8 @@ public class DataElementConceptServlet extends CurationServlet {
 		// store the long names, definition, and usr name in vd bean if searched
 		if (nameAct.equals("Search"))
 		{
-			//GF32004------START
-			if(sLongName.indexOf("Integer::")>-1) {
-				sLongName=sLongName.replace("Integer::", "");
-				pageDEC.setDEC_LONG_NAME(sLongName);
-				
-			}else {
-				pageDEC.setDEC_LONG_NAME(sLongName);
-			}
-			//GF32004------END
-			logger.debug("DEC_LONG_NAME at Line 880 of SetACService.java"+pageDEC.getDEC_LONG_NAME());
+			pageDEC.setDEC_LONG_NAME(AdministeredItemUtil.handleLongName(sLongName));	//GF32004;
+			logger.debug("DEC_LONG_NAME at Line 873 of SetACService.java"+pageDEC.getDEC_LONG_NAME());
 			pageDEC.setDEC_PREFERRED_DEFINITION(sDef);
 		}
 		if (!nameAct.equals("OpenDEC")){

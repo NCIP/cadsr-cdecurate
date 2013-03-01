@@ -8,6 +8,7 @@ import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import java.io.Serializable;
@@ -1797,7 +1798,7 @@ public class GetACSearch implements Serializable
                     	g = g + 1;
                         DECBean = new DEC_Bean();
                         DECBean.setDEC_PREFERRED_NAME(rs.getString("preferred_name"));
-                        DECBean.setDEC_LONG_NAME(rs.getString("long_name"));
+                        DECBean.setDEC_LONG_NAME(AdministeredItemUtil.handleLongName(rs.getString("long_name"))); //GF32004
                         DECBean.setDEC_PREFERRED_DEFINITION(rs.getString("preferred_definition"));
                         DECBean.setDEC_ASL_NAME(rs.getString("asl_name"));
                         DECBean.setDEC_CONTE_IDSEQ(rs.getString("conte_idseq"));
@@ -2016,16 +2017,9 @@ public class GetACSearch implements Serializable
                     	g = g + 1;
                         VDBean = new VD_Bean();
                         VDBean.setVD_PREFERRED_NAME(rs.getString("preferred_name"));
-                      //GF32004------START
         				logger.debug("VD_LONG_NAME at Line 2020 of GetACSearch.java" + rs.getString("long_name"));
-        				if(rs.getString("long_name").indexOf("Integer::") > -1) {
-        					VDBean.setVD_LONG_NAME(rs.getString("long_name").replace("Integer::", ""));
-        					
-        				}else {
-        					VDBean.setVD_LONG_NAME(rs.getString("long_name"));
-        				}
-        				logger.debug("VD_LONG_NAME at Line 2027 of GetACSearch.java" + VDBean.getVD_LONG_NAME());
-        				//GF32004------END
+        				VDBean.setVD_LONG_NAME(AdministeredItemUtil.handleLongName(rs.getString("long_name")));	//GF32004;
+        				logger.debug("VD_LONG_NAME at Line 2022 of GetACSearch.java" + VDBean.getVD_LONG_NAME());
 //                        VDBean.setVD_LONG_NAME(rs.getString("long_name"));
                         VDBean.setVD_PREFERRED_DEFINITION(rs.getString("preferred_definition"));
                         VDBean.setVD_CONTE_IDSEQ(rs.getString("conte_idseq"));
@@ -2055,16 +2049,9 @@ public class GetACSearch implements Serializable
                         VDBean.setVD_CHAR_SET_NAME(rs.getString("char_set_name"));
                         VDBean.setVD_HIGH_VALUE_NUM(rs.getString("high_value_num"));
                         VDBean.setVD_LOW_VALUE_NUM(rs.getString("low_value_num"));
-                      //GF32004------START
-        				logger.debug("VD_REPTERM_LONG_NAME at Line 2059 of GetACSearch.java" + rs.getString("rep_term"));
-        				if(rs.getString("rep_term").indexOf("Integer::") > -1) {
-        					VDBean.setVD_REP_TERM(rs.getString("rep_term").replace("Integer::", ""));
-        					
-        				}else {
-        					VDBean.setVD_REP_TERM(rs.getString("rep_term"));
-        				}
-        				logger.debug("VD_REPTERM_LONG_NAME at Line 2066 of GetACSearch.java" + VDBean.getVD_REP_TERM());
-        				//GF32004------END
+        				logger.debug("VD_REPTERM_LONG_NAME at Line 2052 of GetACSearch.java" + rs.getString("rep_term"));
+        				VDBean.setVD_LONG_NAME(AdministeredItemUtil.handleLongName(rs.getString("rep_term")));	//GF32004;
+        				logger.debug("VD_REPTERM_LONG_NAME at Line 2054 of GetACSearch.java" + VDBean.getVD_REP_TERM());
 //                        VDBean.setVD_REP_TERM(rs.getString("rep_term"));
                         VDBean.setVD_REP_IDSEQ(rs.getString("rep_idseq"));
                         // VDBean.setVD_REP_QUAL(rs.getString("qualifier_name"));
