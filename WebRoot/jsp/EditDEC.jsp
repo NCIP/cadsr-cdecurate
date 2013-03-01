@@ -11,7 +11,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<%@ page import="java.util.*"%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
-		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.*"%>
 		<%@ page session="true"%>
 		<script language="JavaScript" src="js/date.js"></script>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/AddNewListOption.js"></SCRIPT>
@@ -135,8 +135,10 @@
     String sPropQualLong = "";
 
     sObjClass = serUtil.parsedStringDoubleQuoteJSP(sObjClass);    //call the function to handle doubleQuote
+    sObjClass = AdministeredItemUtil.handleLongName(sObjClass);	//GF32004
     sPropClass = serUtil.parsedStringDoubleQuoteJSP(sPropClass);    //call the function to handle doubleQuote
-
+    sPropClass = AdministeredItemUtil.handleLongName(sPropClass);	//GF32004
+    
     boolean nameTypeChange = false;
     String sNewOC = (String)session.getAttribute("newObjectClass");
     if (sNewOC == null) sNewOC = "";
