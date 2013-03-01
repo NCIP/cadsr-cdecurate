@@ -16,7 +16,7 @@
 		<%@ page import="java.util.*"%>
 		<%@ page import="java.text.*"%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
-		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.*"%>
 		
 		<script language="JavaScript" src="js/date.js"></script>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/AddNewListOption.js"></SCRIPT>
@@ -102,7 +102,9 @@ String propCDR = "";
     if(sPCCCodeDB == null) sPCCCodeDB = "";
     if(sPCCCode == null) sPCCCode = "";
     sObjClass = serUtil.parsedStringDoubleQuoteJSP(sObjClass);    //call the function to handle doubleQuote
+    sObjClass = AdministeredItemUtil.handleLongName(sObjClass);	//GF32004
     sPropClass = serUtil.parsedStringDoubleQuoteJSP(sPropClass);    //call the function to handle doubleQuote
+    sPropClass = AdministeredItemUtil.handleLongName(sPropClass);	//GF32004
     
     boolean nameTypeChange = false;
     String sNewOC = (String)session.getAttribute("newObjectClass");
