@@ -852,9 +852,11 @@ public class CustomDownloadServlet extends CurationServlet {
 
 		Row headerRow = sheet.createRow(0);
 		headerRow.setHeightInPoints(12.75f);
+		String temp;
 		for (int i = 0; i < columns.length; i++) {
 			Cell cell = headerRow.createCell(i);
-			cell.setCellValue(columns[i]);
+			temp = columns[i];	//GF30779 check date format
+			cell.setCellValue(temp);
 			// cell.setCellStyle(styles.get("header"));
 		}
 
@@ -922,7 +924,7 @@ public class CustomDownloadServlet extends CurationServlet {
 										
 										
 								}else 
-									data = nestedData[originalColumnIndex];
+									data = nestedData[originalColumnIndex];		//GF30779 check date format
 								cell.setCellValue(data);
 
 								tempBump++;
@@ -951,7 +953,8 @@ public class CustomDownloadServlet extends CurationServlet {
 							}
 						}
 					} else {
-						cell.setCellValue(allRows.get(i)[colIndices[j]]);
+						temp = allRows.get(i)[colIndices[j]];	//GF30779 check date format
+						cell.setCellValue(temp);
 					}
 
 				}
@@ -1001,7 +1004,7 @@ public class CustomDownloadServlet extends CurationServlet {
 	}
 
 	private Sheet fillInBump(Sheet sheet, int originalRow, int rownum, int bump, ArrayList<String[]> allRows, ArrayList<String> allTypes, int[] colIndices) {
-
+		String temp = null;
 		for (int a = rownum; a < rownum+bump; a++) {
 			Row row = sheet.getRow(a);
 
@@ -1014,7 +1017,8 @@ public class CustomDownloadServlet extends CurationServlet {
 					//Do nothing
 				} else {
 					Cell cell = row.createCell(j);
-					cell.setCellValue(allRows.get(originalRow)[colIndices[j]]);
+					temp = allRows.get(originalRow)[colIndices[j]];	//GF30779 check date format
+					cell.setCellValue(temp);
 				}
 
 			}
