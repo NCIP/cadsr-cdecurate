@@ -1,5 +1,7 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,8 +27,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -196,7 +202,13 @@ public class CustomDownloadServlet extends CurationServlet {
 								}
 								typeArrayData.put(columnTypes.get(i), rowArrayData);
 							} else {
-								row[i] = rs.getString(i+1);
+								//GF30779 truncate timestamp
+								if(columnTypes.get(i).equalsIgnoreCase("Date")) {
+									row[i] = AdministeredItemUtil.truncateTime(rs.getString(i+1));
+								} else {
+									row[i] = rs.getString(i+1);
+								}
+								//System.out.println("rs.getString(i+1) = " + rs.getString(i+1));
 							}
 						}
 						//If there were no arrayData added, add null to keep parity with rows.
@@ -826,8 +838,10 @@ public class CustomDownloadServlet extends CurationServlet {
 			for (String cName: allExpandedHeaders){
 				if (cName.endsWith("IDSEQ") || cName.startsWith("CD ") || cName.startsWith("Conceptual Domain"))
 					{ /*skip*/ }
-				else 
+				else {
+					System.out.println("cName = " + cName);
 					defaultHeaders.add(cName);
+				}
 			}
 			columns = defaultHeaders.toArray(new String[defaultHeaders.size()]);	
 	
@@ -849,15 +863,20 @@ public class CustomDownloadServlet extends CurationServlet {
 		Workbook wb =  new HSSFWorkbook();
 
 		Sheet sheet = wb.createSheet(sheetName);
+		Font font = wb.createFont(); //GF30779
+		font.setBoldweight(Font.BOLDWEIGHT_BOLD); //GF30779
+		CellStyle boldCellStyle = wb.createCellStyle(); //GF30779
+		boldCellStyle.setFont(font); //GF30779
+		boldCellStyle.setAlignment(CellStyle.ALIGN_GENERAL); //GF30779
 
 		Row headerRow = sheet.createRow(0);
 		headerRow.setHeightInPoints(12.75f);
 		String temp;
 		for (int i = 0; i < columns.length; i++) {
 			Cell cell = headerRow.createCell(i);
-			temp = columns[i];	//GF30779 check date format
+			temp = columns[i];
 			cell.setCellValue(temp);
-			// cell.setCellStyle(styles.get("header"));
+			cell.setCellStyle(boldCellStyle); //GF30779
 		}
 
 		//freeze the first row
@@ -924,7 +943,11 @@ public class CustomDownloadServlet extends CurationServlet {
 										
 										
 								}else 
-									data = nestedData[originalColumnIndex];		//GF30779 check date format
+									data = nestedData[originalColumnIndex];
+								System.out.println("at line 947 of CustomDownloadServlet.java*****"+ data + currentType);
+								if (currentType.contains("VALID_VALUES")) { //GF30779
+									data = AdministeredItemUtil.truncateTime(data);
+								}
 								cell.setCellValue(data);
 
 								tempBump++;
@@ -953,7 +976,11 @@ public class CustomDownloadServlet extends CurationServlet {
 							}
 						}
 					} else {
-						temp = allRows.get(i)[colIndices[j]];	//GF30779 check date format
+						temp = allRows.get(i)[colIndices[j]];
+						System.out.println("at line 980 of CustomDownloadServlet.java*****"+ temp + currentType);
+						if (currentType.equalsIgnoreCase("Date")) { //GF30779
+							temp = AdministeredItemUtil.truncateTime(temp);
+						}
 						cell.setCellValue(temp);
 					}
 
@@ -971,7 +998,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			e.printStackTrace();
 		}
 
-		sheet.setZoom(3, 4);
+//		sheet.setZoom(3, 4); //GF30779
 
 
 		// Write the output to response stream.
@@ -1017,7 +1044,11 @@ public class CustomDownloadServlet extends CurationServlet {
 					//Do nothing
 				} else {
 					Cell cell = row.createCell(j);
-					temp = allRows.get(originalRow)[colIndices[j]];	//GF30779 check date format
+					temp = allRows.get(originalRow)[colIndices[j]];
+					System.out.println("at line 1048 of CustomDownloadServlet.java*****"+ temp + currentType);
+					if (currentType.equalsIgnoreCase("Date")) { //GF30779
+						temp = AdministeredItemUtil.truncateTime(temp);
+					}
 					cell.setCellValue(temp);
 				}
 
