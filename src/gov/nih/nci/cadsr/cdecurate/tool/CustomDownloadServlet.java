@@ -287,6 +287,7 @@ public class CustomDownloadServlet extends CurationServlet {
 						if (valueDatum[a] != null) {
 							Class c = valueDatum[a].getClass();
 							String s = c.getName();
+							String truncatedTimeStamp = null; //GF30799
 
 							if (c.getName().toUpperCase().contains("STRUCT")) {
 								Struct str = (Struct) valueDatum[a];
@@ -294,11 +295,23 @@ public class CustomDownloadServlet extends CurationServlet {
 								values = new String[valueDatum.length+strValues.length-1]; 
 								slide = -1;
 								for (int b = 0; b < strValues.length; b++){
-									values[b] = strValues[b].toString();
+									truncatedTimeStamp = strValues[b].toString(); //begin GF30779
+									System.out.println("At line 299 of CustomDownloadServlet.java" + truncatedTimeStamp);
+									if (columnType.contains("VALID_VALUE") && truncatedTimeStamp != null && truncatedTimeStamp.contains(":")) {
+										truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
+										System.out.println("At line 302 of CustomDownloadServlet.java" + truncatedTimeStamp);
+									} //end GF30779
+									values[b] = truncatedTimeStamp;
 									slide++;
 								}
 							} else {
-								values[a+slide]= valueDatum[a].toString();
+								truncatedTimeStamp = valueDatum[a].toString(); //begin GF30779
+								System.out.println("At line 309 of CustomDownloadServlet.java" + truncatedTimeStamp);
+								if (columnType.contains("VALID_VALUE") && truncatedTimeStamp != null && truncatedTimeStamp.contains(":")) {
+									truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
+									System.out.println("At line 312 of CustomDownloadServlet.java" + truncatedTimeStamp);
+								} //end GF30779
+								values[a+slide]= truncatedTimeStamp;
 							}
 
 						} else {
@@ -945,7 +958,7 @@ public class CustomDownloadServlet extends CurationServlet {
 								}else 
 									data = nestedData[originalColumnIndex];
 								System.out.println("at line 947 of CustomDownloadServlet.java*****"+ data + currentType);
-								if (currentType.contains("VALID_VALUES")) { //GF30779
+								if (currentType.contains("VALID_VALUE")) { //GF30779
 									data = AdministeredItemUtil.truncateTime(data);
 								}
 								cell.setCellValue(data);
