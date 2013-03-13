@@ -161,7 +161,7 @@ public class TestSpreadsheetDownload {
 		}
 		try {
 			// Please specify the path below
-			fileOutputStream = new FileOutputStream("C:/Test_Excel.xls");
+			fileOutputStream = new FileOutputStream("Test_Excel.xls");
 			wb.write(fileOutputStream);
 
 		} catch (Exception e) {
