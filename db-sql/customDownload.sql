@@ -9,6 +9,39 @@ values('CURATION', 'CUSTOM.COLUMN.EXCLUDED', 'CDE_IDSEQ,DEC_IDSEQ,VD_IDSEQ,Conce
 insert into sbrext.tool_options_view_ext (tool_name, property, Value) 
 values('CURATION', 'CUSTOM_DOWNLOAD_LIMIT', '5000');
 
+--GF32647
+--------------------------------------------------------
+--  DROP for Type VALID_VALUE_LIST_T
+--------------------------------------------------------
+
+drop type "SBREXT"."VALID_VALUE_LIST_T" FORCE;
+
+--------------------------------------------------------
+--  DDL for Type VALID_VALUE_T
+--------------------------------------------------------
+DROP TYPE "SBREXT"."VALID_VALUE_T" FORCE;
+
+CREATE OR REPLACE TYPE "SBREXT"."VALID_VALUE_T" as object(
+    ValidValue varchar2(255),
+    ValueMeaning varchar2(255),
+    MeaningDescription varchar2(2000),
+    MeaningConcepts varchar2(2000),
+    PvBeginDate Date,
+    PvEndDate Date,
+    VmPublicId Number,
+    VmVersion Number(4,2),
+	VmAlternateDefinitions varchar2(2000));
+/
+
+--------------------------------------------------------
+--  DDL for Type VALID_VALUE_LIST_T
+--------------------------------------------------------
+--drop type "SBREXT"."VALID_VALUE_LIST_T" FORCE;
+
+CREATE OR REPLACE TYPE "SBREXT"."VALID_VALUE_LIST_T" AS TABLE OF VALID_VALUE_T;
+/
+
+
 DROP TABLE SBREXT.CUSTOM_DOWNLOAD_TYPES CASCADE CONSTRAINTS;
 
 CREATE TABLE SBREXT.CUSTOM_DOWNLOAD_TYPES
@@ -201,6 +234,12 @@ Insert into SBREXT.CUSTOM_DOWNLOAD_TYPES
    (TYPE_NAME, COLUMN_INDEX, DISPLAY_NAME, DISPLAY_TYPE, DISPLAY_COLUMN_INDEX)
  Values
    ('valid_value_list_t', 8, 'Value Meaning Version', 'Number', 8);
+--GF32647--To add new column "Value Meaning Alternate Definitions" at column CB in Excel sheet---START
+Insert into SBREXT.CUSTOM_DOWNLOAD_TYPES
+   (TYPE_NAME, COLUMN_INDEX, DISPLAY_NAME, DISPLAY_TYPE, DISPLAY_COLUMN_INDEX)
+ Values
+   ('valid_value_list_t', 9, 'Value Meaning Alternate Definitions', 'String', 9);
+--GF32647--END
 Insert into SBREXT.CUSTOM_DOWNLOAD_TYPES
    (TYPE_NAME, COLUMN_INDEX, DISPLAY_NAME, DISPLAY_TYPE, DISPLAY_COLUMN_INDEX)
  Values
@@ -395,13 +434,16 @@ AS
                                  pv.begin_date,
                                  pv.end_date,
                                  vm.vm_id,
-                                 vm.version
+                                 vm.version,
+								 defs.definition --GF32647
                           FROM sbr.permissible_values pv,
                                sbr.vd_pvs vp,
+							   sbr.definitions_view defs,--GF32647
                                value_meanings vm
                           WHERE     vp.vd_idseq = vd.vd_idseq
                                 AND vp.pv_idseq = pv.pv_idseq
                                 AND pv.vm_idseq = vm.vm_idseq
+								AND vm.vm_idseq = defs.ac_idseq(+) --GF32647
                 ) AS valid_value_list_t
           )
              valid_values,
@@ -713,14 +755,17 @@ AS
                                  pv.begin_date,
                                  pv.end_date,
                                  vm.vm_id,
-                                 vm.version
+                                 vm.version,
+                                defs.definition --GF32647
                           FROM sbr.permissible_values pv,
                                sbr.vd_pvs vp,
+                               sbr.definitions_view defs,--GF32647
                                value_meanings vm
                           WHERE     vp.vd_idseq = vd.vd_idseq
                                 AND vp.pv_idseq = pv.pv_idseq
                                 AND pv.vm_idseq = vm.vm_idseq
-                ) AS valid_value_list_t
+                                AND vm.vm_idseq = defs.ac_idseq(+) --GF32647
+                  ) AS valid_value_list_t
           )
              valid_values,
           CAST (MULTISET (SELECT admin_component_with_id_t (csv.cs_id,
