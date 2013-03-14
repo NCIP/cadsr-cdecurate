@@ -228,7 +228,7 @@ public class TestSpreadsheetDownload {
 						String[] orderedTypeColNames = getOrderedTypeNames(
 								typeKey, columnName, type);
 						for (int c = 0; c < orderedTypeColNames.length; c++) {
-							arrayColumnTypes.put(typeColNames[c], typeKey); 
+							arrayColumnTypes.put(typeColNames[c], typeKey); 	//TBD - need to fix this mapping
 							allExpandedColumnHeaders
 									.add(orderedTypeColNames[c]); 
 						}
