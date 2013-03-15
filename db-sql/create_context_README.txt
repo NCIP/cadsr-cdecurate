@@ -29,3 +29,19 @@ There was a script written to do this, could someone test this script on one of 
 Here is the wiki page describing what to do - see the "Semi-Automated" section - you have to be signed into the wiki to see the page.
 
 https://wiki.nci.nih.gov/display/caDSRproj/Create+caDSR+Context
+
+*** APPLYING CHANGES ***
+
+Run with user SBREXT:
+
+SQL> @create_context.sql
+1
+
+PL/SQL procedure successfully completed.
+
+
+Commit complete.
+
+SQL> 
+
+3/15/2013 3.15 PM ET
