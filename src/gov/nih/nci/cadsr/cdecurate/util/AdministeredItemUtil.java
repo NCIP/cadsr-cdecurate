@@ -21,8 +21,12 @@ public class AdministeredItemUtil {
 		return retVal;
 	}
 
-	public static String handleSpecialCharacters(String value) {
+	public static String handleSpecialCharacters(byte[] value) throws Exception {
 		String retVal = "";
+		
+		if(value != null) {
+			retVal = toASCIICode(new String(value));
+		}
 
 		return retVal;
 	}

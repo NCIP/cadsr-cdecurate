@@ -10,16 +10,19 @@ import gov.nih.nci.cadsr.common.TestUtil;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Struct;
 //import oracle.sql.STRUCT;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,6 +33,7 @@ import javax.sql.DataSource;
 //import oracle.sql.STRUCT;
 
 import oracle.sql.Datum;
+import oracle.sql.STRUCT;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -42,6 +46,71 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * @author shegde
+ * @table
+SQL> desc CDE_EXCEL_GENERATOR_VIEW;   
+ Name					   Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CDE_IDSEQ				   NOT NULL CHAR(36)
+ DE Short Name				   NOT NULL VARCHAR2(30)
+ DE Long Name					    VARCHAR2(255)
+ DE Preferred Question Text			    VARCHAR2(4000)
+ DE Preferred Definition		   NOT NULL VARCHAR2(2000)
+ DE Version				   NOT NULL NUMBER(4,2)
+ DE Context Name			   NOT NULL VARCHAR2(30)
+ DE Context Version			   NOT NULL NUMBER(4,2)
+ DE Public ID				   NOT NULL NUMBER
+ DE Workflow Status			   NOT NULL VARCHAR2(20)
+ DE Registration Status 			    VARCHAR2(50)
+ DE Begin Date					    DATE
+ DE Source					    VARCHAR2(240)
+ DEC Public ID				   NOT NULL NUMBER
+ DEC Short Name 			   NOT NULL VARCHAR2(30)
+ DEC Long Name					    VARCHAR2(255)
+ DEC Version				   NOT NULL NUMBER(4,2)
+ DEC Context Name			   NOT NULL VARCHAR2(30)
+ DEC Context Version			   NOT NULL NUMBER(4,2)
+ OC Public ID					    NUMBER
+ OC Long Name					    VARCHAR2(255)
+ OC Short Name					    VARCHAR2(30)
+ OC Context Name				    VARCHAR2(30)
+ OC Version					    NUMBER(4,2)
+ OC_CONCEPTS					    CONCEPTS_LIST_T
+ Property Public ID				    NUMBER
+ Property Long Name				    VARCHAR2(255)
+ Property Short Name				    VARCHAR2(30)
+ Property Context Name				    VARCHAR2(30)
+ Property Version				    NUMBER(4,2)
+ PROP_CONCEPTS					    CONCEPTS_LIST_T
+ VD Public ID				   NOT NULL NUMBER
+ VD Short Name				   NOT NULL VARCHAR2(30)
+ VD Long Name					    VARCHAR2(255)
+ VD Version				   NOT NULL NUMBER(4,2)
+ VD Context Name			   NOT NULL VARCHAR2(30)
+ VD Context Version			   NOT NULL NUMBER(4,2)
+ VD Type					    VARCHAR2(14)
+ VD Datatype				   NOT NULL VARCHAR2(20)
+ VD Min Length					    NUMBER(8)
+ VD Max Length					    NUMBER(8)
+ VD Min value					    VARCHAR2(255)
+ VD Max Value					    VARCHAR2(255)
+ VD Decimal Place				    NUMBER(2)
+ VD Format					    VARCHAR2(20)
+ VD_CONCEPTS					    CONCEPTS_LIST_T
+ Representation Public ID			    NUMBER
+ Representation Long Name			    VARCHAR2(255)
+ Representation Short Name			    VARCHAR2(30)
+ Representation Context Name			    VARCHAR2(30)
+ Representation Version 			    NUMBER(4,2)
+ REP_CONCEPTS					    CONCEPTS_LIST_T
+ VALID_VALUES					    VALID_VALUE_LIST_T
+ CLASSIFICATIONS				    CDEBROWSER_CSI_LIST_T
+ DESIGNATIONS					    DESIGNATIONS_LIST_T
+ REFERENCE_DOCS 				    CDEBROWSER_RD_LIST_T
+ DE_DERIVATION					    DERIVED_DATA_ELEMENT_T
+ CD Public ID				   NOT NULL NUMBER
+ CD Short Name				   NOT NULL VARCHAR2(30)
+ CD Version				   NOT NULL NUMBER(4,2)
+ CD Context Name			   NOT NULL VARCHAR2(30)
  * 
  */
 public class TestSpreadsheetDownload {
@@ -59,14 +128,155 @@ public class TestSpreadsheetDownload {
 	ArrayList<HashMap<String, List<String[]>>> arrayData = new ArrayList<HashMap<String, List<String[]>>>();
 
 	//=======================================================================
-	
 	public static void main(String[] args) {
+		String type = "CDE";
+		PreparedStatement stmt = null;
+		ResultSet rset = null;
+		String value = null;
+		Array array1 = null;	ResultSet nestedRs1;	oracle.sql.STRUCT s1 = null;
+		Array array2 = null;	ResultSet nestedRs2;	oracle.sql.STRUCT s2 = null;
+		
+		try {
+			connectDB(args[0], args[1]);
+	        logger.debug("connected");
+
+	        //e.g. select OC_CONCEPTS from CDE_EXCEL_GENERATOR_VIEW --type is CONCEPTS_LIST_T
+			String qry = "SELECT OC_CONCEPTS, VALID_VALUES FROM " + type
+					+ "_EXCEL_GENERATOR_VIEW"
+					+ " where rownum < 11"
+					;
+			stmt = m_conn.prepareStatement(qry);
+			// _EXCEL_GENERATOR_VIEW.OC_CONCEPTS:
+			/*
+			SQL> desc CONCEPTS_LIST_T;          
+			 CONCEPTS_LIST_T TABLE OF CONCEPT_DETAIL_T
+			 Name					   Null?    Type
+			 ----------------------------------------- -------- ----------------------------
+			 PREFERRED_NAME 				    VARCHAR2(30)
+			 LONG_NAME					    VARCHAR2(255)
+			 CON_ID 					    NUMBER
+			 DEFINITION_SOURCE				    VARCHAR2(2000)
+			 ORIGIN 					    VARCHAR2(240)
+			 EVS_SOURCE					    VARCHAR2(255)
+			 PRIMARY_FLAG_IND				    VARCHAR2(3)
+			 DISPLAY_ORDER					    NUMBER
+			
+			SQL> 
+			SQL> desc VALID_VALUE_LIST_T;
+			 VALID_VALUE_LIST_T TABLE OF VALID_VALUE_T
+			 Name					   Null?    Type
+			 ----------------------------------------- -------- ----------------------------
+			 VALIDVALUE					    VARCHAR2(255)
+			 VALUEMEANING					    VARCHAR2(255)
+			 MEANINGDESCRIPTION				    VARCHAR2(2000)
+			 MEANINGCONCEPTS				    VARCHAR2(2000)
+			 PVBEGINDATE					    DATE
+			 PVENDDATE					    DATE
+			 VMPUBLICID					    NUMBER
+			 VMVERSION					    NUMBER(4,2)
+			 VMALTERNATEDEFINITIONS 			    VARCHAR2(2000)
+			
+			SQL> 
+			*/
+			rset = stmt.executeQuery();
+			int rowcount = 0;
+			while (rset.next()) {
+				System.out.println("************************************** start ROW " + ++rowcount + " **************************************");
+				array1 = rset.getArray(1);
+				nestedRs1 = array1.getResultSet();
+				array2 = rset.getArray(2);
+				nestedRs2 = array2.getResultSet();
+///*
+				while (nestedRs1.next())
+				{ 
+					System.out.println("************************************** start CONCEPT_DETAIL_T " + rowcount + " **************************************");
+					//System.out.println("Current value[0] = [" + nestedRs.getObject(1) + "]");
+					//System.out.println("Current value[1] = [" + nestedRs.getObject(2) + "]");
+					try {
+						s1 = (oracle.sql.STRUCT) nestedRs1.getObject(2);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				  
+				  if (s1 != null) 
+				  { 
+				    String sqlname = s1.getSQLTypeName(); 
+					Datum[] attrs = s1.getOracleAttributes();
+			
+				    if (sqlname.equals ("SBREXT.CONCEPT_DETAIL_T"))
+				    { 
+					      System.out.println ("PREFERRED_NAME=" + AdministeredItemUtil.handleSpecialCharacters((attrs[0].getBytes())));
+					      System.out.println ("LONG_NAME=" + AdministeredItemUtil.handleSpecialCharacters((attrs[1].getBytes())));
+					      System.out.println ("CON_ID=" + attrs[2].intValue());
+				    }
+				    else 
+				      throw new Exception ("Invalid type name: "+sqlname);
+				  }
+					System.out.println("************************************** end CONCEPT_DETAIL_T " + rowcount + " **************************************");
+				}
+//*/
+
+/*
+				while (nestedRs2.next())
+				{
+					System.out.println("************************************** start VALID_VALUE_T " + rowcount + " **************************************");
+					//System.out.println("Current value[0] = [" + nestedRs.getObject(1) + "]");
+					//System.out.println("Current value[1] = [" + nestedRs.getObject(2) + "]");
+					try {
+						s2 = (oracle.sql.STRUCT) nestedRs2.getObject(2);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				  
+				  if (s2 != null) 
+				  { 
+				    String sqlname = s2.getSQLTypeName(); 
+					Datum[] attrs = s2.getOracleAttributes();
+
+				    if (sqlname.equals ("SBREXT.VALID_VALUE_T"))
+				    {
+					      System.out.println ("VALIDVALUE=" + AdministeredItemUtil.handleSpecialCharacters(attrs[0].getBytes()));
+					      System.out.println ("PVBEGINDATE=" + attrs[4].dateValue());
+					      System.out.println ("VMPUBLICID=" + attrs[6].intValue());
+				    }
+				    else 
+				      throw new Exception ("Invalid type name: "+sqlname);
+				  }				  
+					System.out.println("************************************** end VALID_VALUE_T " + rowcount + " **************************************");
+				}
+*/
+				
+				System.out.println("************************************** end ROW " + rowcount + " **************************************");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally { 
+			try {
+				rset.close ();
+				stmt.close (); 
+				m_conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void connectDB(String username, String password) {
 		try {
 			//DO NOT HARD CODE the user/password and check in SVN/Git please!
-			setConn(TestUtil.getConnection(args[0], args[1]));
+			setConn(TestUtil.getConnection(username, password));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void main1(String[] args) {
+		connectDB(args[0], args[1]);
 		TestSpreadsheetDownload download = new TestSpreadsheetDownload();
 		download.setColHeadersAndTypes("CDE");
 		ArrayList<String[]> downloadRows = download.getRecords(false, false);
@@ -78,7 +288,7 @@ public class TestSpreadsheetDownload {
 	public void get_m_conn() {
 		// get the connection
 		if (m_conn == null) {
-			m_conn = connectDB();
+			m_conn = connectDB1();
 			setConn(m_conn);
 		}
 	}
@@ -89,7 +299,7 @@ public class TestSpreadsheetDownload {
 	 * @param ub_
 	 * @return Connection
 	 */
-	public Connection connectDB() {
+	public Connection connectDB1() {
 		Connection SBRDb_conn = null;
 		try {
 			try {
@@ -572,26 +782,26 @@ public class TestSpreadsheetDownload {
 				while (nestedRs.next()) {
 					try {
 						//=== just for debugging
-						//					if(rs.getObject(1) instanceof java.sql.Struct) {
-						oracle.sql.STRUCT type = (oracle.sql.STRUCT) rs
-								.getObject(1);
-						System.out.println("Number of attributes "
-								+ type.getAttributes().length);
-						System.out
-								.println("col1 is " + type.getAttributes()[0]);
-						System.out
-								.println("col2 is " + type.getAttributes()[1]);
-						System.out
-								.println("col3 is " + type.getAttributes()[2]);
-						//					}
+//						if(rs.getObject(1) instanceof oracle.sql.STRUCT) {
+//						oracle.sql.STRUCT type = (oracle.sql.STRUCT) nestedRs
+//								.getObject(2);
+//						System.out.println("Number of attributes "
+//								+ type.getAttributes().length);
+//						System.out
+//								.println("col1 is " + type.getAttributes()[0]);
+//						System.out
+//								.println("col2 is " + type.getAttributes()[1]);
+//						System.out
+//								.println("col3 is " + type.getAttributes()[2]);
+//						}
 						//=== just for debugging
 					} catch (Exception e) {
 						// TODO: handle exception
 						e.printStackTrace();
 					}
-					Struct valueStruct = (Struct) nestedRs.getObject(2);
-//					STRUCT valueStruct = (STRUCT) nestedRs.getObject(1);
-					Object[] valueDatum = valueStruct.getAttributes();
+					//Struct valueStruct = (Struct) nestedRs.getObject(2);
+					STRUCT valueStruct = (STRUCT) nestedRs.getObject(2);
+					Datum[] valueDatum = valueStruct.getOracleAttributes();
 					System.out.println("TYPE types = [" + Arrays.asList(valueDatum) + "]");
 					String[] values = new String[valueDatum.length];
 					int slide = 0;
@@ -602,12 +812,11 @@ public class TestSpreadsheetDownload {
 							String truncatedTimeStamp = null; // GF30799
 
 							if (c.getName().toUpperCase().contains("STRUCT")) {
-								Struct str = (Struct) valueDatum[a];	//this points ???
-//								STRUCT str = (STRUCT) valueDatum[a];	//this points ???
+//								Struct str = (Struct) valueDatum[a];	//this points ???
+								STRUCT str = (STRUCT) valueDatum[a];	//this points ???
 								Object[] strValues = str.getAttributes();
 //								logger.info("TYPE = [" + Arrays.asList(strValues) + "]");
 								System.out.println("TYPE values = [" + Arrays.asList(strValues) + "]");
-								
 								values = new String[valueDatum.length
 										+ strValues.length - 1];
 								slide = -1;
