@@ -34,7 +34,15 @@ https://wiki.nci.nih.gov/display/caDSRproj/Create+caDSR+Context
 
 Run with user SBREXT:
 
-SQL> @create_context.sql
+SQL> @create_context-1.sql
+1
+
+PL/SQL procedure successfully completed.
+
+
+Commit complete.
+
+SQL> @create_context-2.sql        
 1
 
 PL/SQL procedure successfully completed.
@@ -44,4 +52,3 @@ Commit complete.
 
 SQL> 
 
-3/15/2013 3.15 PM ET
