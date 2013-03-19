@@ -17,6 +17,8 @@ import java.sql.*;
 
 import oracle.jdbc.driver.*;
 
+import oracle.jdbc.OracleTypes;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 
