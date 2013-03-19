@@ -52,3 +52,17 @@ Commit complete.
 
 SQL> 
 
+SQL> select SCL_NAME, DESCRIPTION from security_contexts_lov_view where SCL_NAME in ('AECC_SC', 'USC/NCCC_SC');
+
+SCL_NAME
+------------------------------
+DESCRIPTION
+--------------------------------------------------------------------------------
+AECC_SC
+Security Context for AECC
+
+USC/NCCC_SC
+Security Context for USC/NCCC
+
+
+SQL> 
