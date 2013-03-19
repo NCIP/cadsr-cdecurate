@@ -304,7 +304,7 @@ public class CustomDownloadServlet extends CurationServlet {
 //									truncatedTimeStamp = strValues[b].toString(); //begin GF30779
 //									logger.debug("At line 299 of CustomDownloadServlet.java" + truncatedTimeStamp);
 										 if (className.toUpperCase().contains("NUMBER")) { //GF30779======START
-											truncatedTimeStamp = Integer.toString(valueDatum[a].intValue()); 
+//											 truncatedTimeStamp = Integer.toString(valueDatum[a].intValue());	//caused java.sql.SQLException: Conversion to integer failed
 										}else if (className.toUpperCase().contains("DATE")) {
 											truncatedTimeStamp = valueDatum[a].dateValue().toString();
 											truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
