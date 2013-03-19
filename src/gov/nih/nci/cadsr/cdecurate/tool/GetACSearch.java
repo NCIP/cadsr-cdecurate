@@ -31,7 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import oracle.jdbc.driver.OracleTypes;
+//import oracle.jdbc.driver.OracleTypes;
+import oracle.jdbc.OracleTypes;		//GF30779
 
 import org.apache.log4j.Logger;
 
