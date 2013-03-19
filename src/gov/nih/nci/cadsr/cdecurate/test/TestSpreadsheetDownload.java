@@ -128,7 +128,7 @@ public class TestSpreadsheetDownload {
 	ArrayList<HashMap<String, List<String[]>>> arrayData = new ArrayList<HashMap<String, List<String[]>>>();
 
 	//=======================================================================
-	public static void main(String[] args) {
+	public static void main1(String[] args) {
 		String type = "CDE";
 		PreparedStatement stmt = null;
 		ResultSet rset = null;
@@ -275,7 +275,7 @@ public class TestSpreadsheetDownload {
 		}
 	}
 
-	public static void main1(String[] args) {
+	public static void main(String[] args) {
 		connectDB(args[0], args[1]);
 		TestSpreadsheetDownload download = new TestSpreadsheetDownload();
 		download.setColHeadersAndTypes("CDE");
@@ -731,141 +731,96 @@ public class TestSpreadsheetDownload {
 	}
 
 	//=======================================================================
-	
-	private List<String[]> getRowArrayData(ResultSet rs, String columnType,
-			int index) throws Exception {
+	//*** REPLACE THIS METHOD with the real on in CustomDownloadServlet!!! ***
+	private List<String[]> getRowArrayData(ResultSet rs, String columnType, int index) throws Exception{
 		List<String[]> rowArrayData = new ArrayList<String[]>();
 		Array array = null;
-		// Special case: first row has info on derivation, others on data
-		// elements
+		//Special case: first row has info on derivation, others on data elements
 		if (columnType.indexOf("DERIVED") > 0) {
-			Object derivedObject = rs.getObject(index + 1);
+			Object derivedObject = rs.getObject(index+1);
 			Struct struct = (Struct) derivedObject;
-//			STRUCT struct = (STRUCT) derivedObject;
 			Object[] valueStruct = struct.getAttributes();
-			// Fifth entry is the array with DE's
+			//Fifth entry is the array with DE's 
 			array = (Array) valueStruct[5];
 
-			if (array != null) {
+			if (array != null){
 				String[] derivationInfo = new String[5];
 				for (int z = 0; z < 5; z++)
-					derivationInfo[z] = (valueStruct[z] != null) ? valueStruct[z]
-							.toString() : "";
+					derivationInfo[z] =(valueStruct[z] != null)? valueStruct[z].toString(): "";
 
-				rowArrayData.add(derivationInfo);
+					rowArrayData.add(derivationInfo);
 
-				ResultSet nestedRs = array.getResultSet();
+					ResultSet nestedRs = array.getResultSet(); 
 
-				while (nestedRs.next()) {
-					Struct deStruct = (Struct) nestedRs.getObject(2);
-//					STRUCT deStruct = (STRUCT) nestedRs.getObject(2);
-					Object[] valueDatum = deStruct.getAttributes();
-//					Datum[] valueDatum = ((oracle.sql.STRUCT)nestedRs).getOracleAttributes();
-					
-					String[] values = new String[valueDatum.length];
+					while (nestedRs.next()) {
+						Struct deStruct = (Struct) nestedRs.getObject(2);
+						Object[] valueDatum = deStruct.getAttributes();
+						String[] values = new String[valueDatum.length];
 
-					for (int a = 0; a < valueDatum.length; a++) {
-						if (valueDatum[a] != null) {
-							Class c = valueDatum[a].getClass();
-							String s = c.getName();
-							values[a] = valueDatum[a].toString();
+						for (int a = 0; a < valueDatum.length; a++) {
+							if (valueDatum[a] != null) {
+								Class c = valueDatum[a].getClass();
+								String s = c.getName();
+								values[a]= valueDatum[a].toString();	
+							} 
 						}
+						rowArrayData.add(values);
 					}
-					rowArrayData.add(values);
-				}
 			}
 		} else {
-			array = rs.getArray(index + 1);
+			array = rs.getArray(index+1);
 			if (array != null) {
-				ResultSet nestedRs = array.getResultSet();
+				ResultSet nestedRs = array.getResultSet(); 
 
 				while (nestedRs.next()) {
-					try {
-						//=== just for debugging
-//						if(rs.getObject(1) instanceof oracle.sql.STRUCT) {
-//						oracle.sql.STRUCT type = (oracle.sql.STRUCT) nestedRs
-//								.getObject(2);
-//						System.out.println("Number of attributes "
-//								+ type.getAttributes().length);
-//						System.out
-//								.println("col1 is " + type.getAttributes()[0]);
-//						System.out
-//								.println("col2 is " + type.getAttributes()[1]);
-//						System.out
-//								.println("col3 is " + type.getAttributes()[2]);
-//						}
-						//=== just for debugging
-					} catch (Exception e) {
-						// TODO: handle exception
-						e.printStackTrace();
-					}
-					//Struct valueStruct = (Struct) nestedRs.getObject(2);
-					STRUCT valueStruct = (STRUCT) nestedRs.getObject(2);
-					Datum[] valueDatum = valueStruct.getOracleAttributes();
-					System.out.println("TYPE types = [" + Arrays.asList(valueDatum) + "]");
+					STRUCT valueStruct = (STRUCT) nestedRs.getObject(2); //GF30779
+					Datum[] valueDatum = valueStruct.getOracleAttributes(); //GF30779
 					String[] values = new String[valueDatum.length];
 					int slide = 0;
 					for (int a = 0; a < valueDatum.length; a++) {
 						if (valueDatum[a] != null) {
 							Class c = valueDatum[a].getClass();
 							String s = c.getName();
-							String truncatedTimeStamp = null; // GF30799
+							String truncatedTimeStamp = null; //GF30799
 
 							if (c.getName().toUpperCase().contains("STRUCT")) {
-//								Struct str = (Struct) valueDatum[a];	//this points ???
-								STRUCT str = (STRUCT) valueDatum[a];	//this points ???
-								Object[] strValues = str.getAttributes();
-//								logger.info("TYPE = [" + Arrays.asList(strValues) + "]");
-								System.out.println("TYPE values = [" + Arrays.asList(strValues) + "]");
-								values = new String[valueDatum.length
-										+ strValues.length - 1];
+								STRUCT str = (STRUCT) valueDatum[a]; //GF30779
+								Datum[] strValues = str.getOracleAttributes(); //GF30779
+								values = new String[valueDatum.length+strValues.length-1]; 
 								slide = -1;
-								for (int b = 0; b < strValues.length; b++) {
-									truncatedTimeStamp = strValues[b]
-											.toString(); // begin GF30779
-									logger.debug("At line 559 of TestSpreadsheetDownload.java"
-											+ truncatedTimeStamp);
-									truncatedTimeStamp = AdministeredItemUtil
-											.toASCIICode(truncatedTimeStamp); 
-									logger.debug("At line 563 of TestSpreadsheetDownload.java"
-											+ truncatedTimeStamp
-											+ s
-											+ valueDatum[a] + strValues[b]);
-									if (columnType.contains("VALID_VALUE")
-											&& truncatedTimeStamp != null
-											&& truncatedTimeStamp.contains(":")) {
-										truncatedTimeStamp = AdministeredItemUtil
-												.truncateTime(truncatedTimeStamp);
-										logger.debug("At line 572 of TestSpreadsheetDownload.java"
-												+ truncatedTimeStamp);
-									} // end GF30779
+								for (int b = 0; b < strValues.length; b++){
+									if (strValues[b] != null) {
+										Class structClass = strValues[b].getClass();
+										String className = structClass.getName();
+										 if (className.toUpperCase().contains("NUMBER")) { //GF30779======START
+//											 truncatedTimeStamp = Integer.toString(valueDatum[a].intValue());	//caused java.sql.SQLException: Conversion to integer failed 	
+										 }else if (className.toUpperCase().contains("DATE")) {
+											truncatedTimeStamp = valueDatum[a].dateValue().toString();
+											truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
+										} else  {
+											truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(valueDatum[a].getBytes()); 
+										}//GF30779=============END
+									logger.debug("At line 315 of CustomDownloadServlet.java" + truncatedTimeStamp + s + valueDatum[a] + strValues[b]);
 									values[b] = truncatedTimeStamp;
 									slide++;
 								}
+								}
 							} else {
-								truncatedTimeStamp = valueDatum[a].toString(); 
-								logger.debug("At line 580 of TestSpreadsheetDownload.java"
-										+ truncatedTimeStamp);
-								truncatedTimeStamp = AdministeredItemUtil
-										.toASCIICode(truncatedTimeStamp);
-								logger.debug("At line 584 of TestSpreadsheetDownload.java"
-										+ truncatedTimeStamp
-										+ s
-										+ valueDatum[a]);
-								if (columnType.contains("VALID_VALUE")
-										&& truncatedTimeStamp != null
-										&& truncatedTimeStamp.contains(":")) {
-									truncatedTimeStamp = AdministeredItemUtil
-											.truncateTime(truncatedTimeStamp);
-									logger.debug("At line 593 of TestSpreadsheetDownload.java"
-											+ truncatedTimeStamp);
-								} // end GF30779
-								values[a + slide] = truncatedTimeStamp;
+								if (c.getName().toUpperCase().contains("NUMBER")) { //GF30779===START
+									truncatedTimeStamp = Integer.toString(valueDatum[a].intValue()); 
+								}else if (c.getName().toUpperCase().contains("DATE")) {
+									truncatedTimeStamp = valueDatum[a].dateValue().toString();
+									truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
+								} else{
+									truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(valueDatum[a].getBytes());
+								}//GF30779=============END
+								logger.debug("At line 334 of CustomDownloadServlet.java" + truncatedTimeStamp + s);
+								values[a+slide]= truncatedTimeStamp;
 							}
 
 						} else {
-							values[a] = "";
-						}
+							values[a]= "";
+						}	
 					}
 					rowArrayData.add(values);
 				}
@@ -873,7 +828,6 @@ public class TestSpreadsheetDownload {
 		}
 		return rowArrayData;
 	}
-
 	//=======================================================================
 	
 	private List<String> getSQLStatements(boolean full, boolean restrict) {
