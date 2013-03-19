@@ -41,11 +41,7 @@ CREATE OR REPLACE TYPE "SBREXT"."VALID_VALUE_T" as object(
 CREATE OR REPLACE TYPE "SBREXT"."VALID_VALUE_LIST_T" AS TABLE OF VALID_VALUE_T;
 /
 
---GRANT EXECUTE, DEBUG ON SBREXT.VALID_VALUE_LIST_T TO CDECURATE;
 
---GRANT EXECUTE, DEBUG ON SBREXT.VALID_VALUE_LIST_T TO DER_USER;
-
---GRANT EXECUTE, DEBUG ON SBREXT.VALID_VALUE_LIST_T TO SBR WITH GRANT OPTION;
 
 DROP TABLE SBREXT.CUSTOM_DOWNLOAD_TYPES CASCADE CONSTRAINTS;
 
@@ -57,7 +53,7 @@ CREATE TABLE SBREXT.CUSTOM_DOWNLOAD_TYPES
   DISPLAY_TYPE      VARCHAR2(255 BYTE),
   DISPLAY_COLUMN_INDEX  NUMBER
 );
-
+/
 GRANT DELETE, INSERT, SELECT, UPDATE ON SBREXT.CUSTOM_DOWNLOAD_TYPES TO DER_USER;
 
 --
@@ -255,7 +251,7 @@ Insert into SBREXT.CUSTOM_DOWNLOAD_TYPES
    ('valid_value_list_t', 1, 'Valid Values', 'String', 1);
 
 /* Formatted on 5/11/2011 4:39:16 PM (QP5 v5.115.810.9015) */
-CREATE OR REPLACE FORCE VIEW SBREXT.cde_excel_generator_view (
+CREATE OR REPLACE FORCE VIEW SBREXT.CDE_EXCEL_GENERATOR_VIEW (
    cde_idseq,
    "DE Short Name",
    "DE Long Name",
@@ -539,6 +535,7 @@ AS
          AND prop.conte_idseq = prop_conte.conte_idseq(+)
          AND vd.rep_idseq = rep.rep_idseq(+)
          AND rep.conte_idseq = rep_conte.conte_idseq(+);
+/
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON SBREXT.CDE_EXCEL_GENERATOR_VIEW TO CDECURATE;
 
@@ -657,7 +654,7 @@ AS
          AND oc.conte_idseq = oc_conte.conte_idseq(+)
          AND dec.prop_idseq = prop.prop_idseq(+)
          AND prop.conte_idseq = prop_conte.conte_idseq(+);
-
+/
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON SBREXT.DEC_EXCEL_GENERATOR_VIEW TO CDECURATE;
 
@@ -816,7 +813,7 @@ AS
          AND cd.conte_idseq = cd_conte.conte_idseq
          AND vd.rep_idseq = rep.rep_idseq(+)
          AND rep.conte_idseq = rep_conte.conte_idseq(+);
-
+/
 
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON SBREXT.VD_EXCEL_GENERATOR_VIEW TO CDECURATE;
@@ -824,5 +821,258 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON SBREXT.VD_EXCEL_GENERATOR_VIEW TO CDECUR
 GRANT DELETE, INSERT, SELECT, UPDATE ON SBREXT.VD_EXCEL_GENERATOR_VIEW TO DER_USER;
 
 GRANT DELETE, INSERT, REFERENCES, SELECT, UPDATE, ON COMMIT REFRESH, QUERY REWRITE, DEBUG, FLASHBACK ON SBREXT.VD_EXCEL_GENERATOR_VIEW TO SBR WITH GRANT OPTION;
+
+--------------------------------------------------------
+--  DDL for View DE_EXCEL_GENERATOR_VIEW
+--------------------------------------------------------
+
+  CREATE OR REPLACE  FORCE VIEW "SBREXT"."DE_EXCEL_GENERATOR_VIEW" ("DE_IDSEQ", "CDE_ID", "LONG_NAME", "PREFERRED_NAME", "DOC_TEXT", "PREFERRED_DEFINITION", "VERSION", "ORIGIN", "BEGIN_DATE", "DE_CONTE_NAME", "DE_CONTE_VERSION", "DEC_ID", "DEC_PREFERRED_NAME", "DEC_VERSION", "DEC_CONTE_NAME", "DEC_CONTE_VERSION", "VD_ID", "VD_PREFERRED_NAME", "VD_VERSION", "VD_CONTE_NAME", "VD_CONTE_VERSION", "VD_TYPE", "DTL_NAME", "MAX_LENGTH_NUM", "MIN_LENGTH_NUM", "HIGH_VALUE_NUM", "LOW_VALUE_NUM", "DECIMAL_PLACE", "FORML_NAME", "VD_LONG_NAME", "CD_ID", "CD_PREFERRED_NAME", "CD_VERSION", "CD_CONTE_NAME", "OC_ID", "OC_PREFERRED_NAME", "OC_LONG_NAME", "OC_VERSION", "OC_CONTE_NAME", "PROP_ID", "PROP_PREFERRED_NAME", "PROP_LONG_NAME", "PROP_VERSION", "PROP_CONTE_NAME", "DEC_LONG_NAME", "DE_WK_FLOW_STATUS", "REGISTRATION_STATUS", "VALID_VALUES", "REFERENCE_DOCS", "CLASSIFICATIONS", "DESIGNATIONS", "DE_DERIVATION", "VD_CONCEPTS", "OC_CONCEPTS", "PROP_CONCEPTS", "REP_ID", "REP_PREFERRED_NAME", "REP_LONG_NAME", "REP_VERSION", "REP_CONTE_NAME", "REP_CONCEPTS") AS 
+  select    de.de_idseq
+	 	 ,de.cde_id
+         ,de.long_name
+         ,de.preferred_name
+		 ,rd.doc_text
+		 ,de.preferred_definition
+		 ,de.version
+		 ,de.origin
+		 ,de.begin_date
+		 ,de_conte.name de_conte_name
+		 ,de_conte.version de_conte_version
+		 ,dec.dec_id
+		 ,dec.preferred_name dec_preferred_name
+		 ,dec.version dec_version
+		 ,dec_conte.name dec_conte_name
+		 ,dec_conte.version dec_conte_version
+		 ,vd.vd_id
+		 ,vd.preferred_name vd_preferred_name
+		 ,vd.version vd_version
+		 ,vd_conte.name vd_conte_name
+		 ,vd_conte.version vd_conte_version
+		 ,DECODE (vd.vd_type_flag,'E','Enumerated','N','Non Enumerated','Unknown') vd_type
+		 ,vd.dtl_name
+		 ,vd.max_length_num
+		 ,vd.min_length_num
+		 ,vd.high_value_num
+		 ,vd.low_value_num
+		 ,vd.DECIMAL_PLACE
+		 ,vd.FORML_NAME
+		 ,vd.LONG_NAME vd_long_name
+		 ,cd.cd_id
+		 ,cd.preferred_name cd_preferred_name
+		 ,cd.version cd_version
+		 ,cd_conte.name cd_conte_name
+		 ,oc.oc_id
+		 ,oc.preferred_name oc_preferred_name
+		 ,oc.long_name oc_long_name
+		 ,oc.version oc_version
+		 ,oc_conte.name oc_conte_name
+		 ,prop.prop_id
+		 ,prop.preferred_name prop_preferred_name
+		 ,prop.long_name prop_long_name
+		 ,prop.version prop_version
+		 ,prop_conte.name prop_conte_name
+		 ,dec.LONG_NAME dec_long_name
+		 ,de.ASL_NAME de_wk_flow_status
+		 ,acr.registration_status
+		 ,CAST(MULTISET(
+	     	               SELECT pv.value
+			      ,vm.long_name short_meaning
+			      ,vm.preferred_definition
+			      ,sbrext_common_routines.get_concepts(vm.condr_idseq) MeaningConcepts
+			      ,pv.begin_date
+			      ,pv.end_date
+			      ,vm.vm_id
+			      ,vm.version
+				  ,defs.definition --GF32647
+			FROM  sbr.permissible_values pv, sbr.vd_pvs vp, value_meanings vm, sbr.definitions_view defs --GF32647
+			WHERE vp.vd_idseq = vd.vd_idseq
+			AND   vp.pv_idseq = pv.pv_idseq
+			AND   pv.vm_idseq = vm.vm_idseq
+			AND   vm.vm_idseq = defs.ac_idseq(+) --GF32647
+	   		) AS valid_value_list_t) valid_values
+               ,CAST(MULTISET(
+                               SELECT rd.name
+				      ,org.name
+				      ,rd.DCTL_NAME
+				      ,rd.doc_text
+				      ,rd.URL
+				      ,rd.lae_name
+				      ,rd.display_order
+				FROM  sbr.reference_documents rd, sbr.organizations org
+				WHERE de.de_idseq = rd.ac_idseq (+)
+				AND   rd.ORG_IDSEQ = org.ORG_IDSEQ (+)
+				) AS cdebrowser_rd_list_t) reference_docs
+		,CAST(MULTISET(
+                 		SELECT admin_component_with_id_t(csv.cs_id
+							   	,csv.cs_context_name
+						         	,csv.cs_context_version
+							 	,csv.preferred_name
+							 	,csv.version)
+							 	,csv.csi_name
+							 	,csv.csitl_name
+							 	,csv.csi_id
+							 	,csv.csi_version
+				FROM  sbrext.cdebrowser_cs_view csv
+				WHERE de.de_idseq = csv.ac_idseq
+				) AS cdebrowser_csi_list_t) classifications
+                ,CAST(MULTISET(
+                                     SELECT des_conte.NAME
+				      ,des_conte.VERSION
+					  ,des.NAME
+					  ,des.DETL_NAME
+					  ,des.LAE_NAME
+				FROM  sbr.designations des,sbr.contexts des_conte
+				WHERE de.de_idseq = des.AC_IDSEQ (+)
+				AND   des.conte_idseq = des_conte.conte_idseq (+)
+				) AS DESIGNATIONS_LIST_T) designations
+		,derived_data_element_t (ccd.crtl_name
+				                 ,ccd.description
+					             ,ccd.methods
+					             ,ccd.rule
+					             ,ccd.concat_char
+					             ,"DataElementsList") DE_DERIVATION
+                ,CAST(MULTISET(
+                      SELECT con.preferred_name
+		       ,con.long_name
+		       ,con.con_id
+		       ,con.definition_source
+		       ,con. origin
+                       ,con.evs_Source
+                       ,com.primary_flag_ind
+                       ,com.display_order
+		      FROM  component_concepts_ext com,concepts_ext con
+				WHERE vd.condr_idseq = com.condr_IDSEQ (+)
+				AND   com.con_idseq = con.con_idseq (+)
+				order by display_order desc) AS Concepts_list_t) vd_concepts
+        ,CAST(MULTISET(
+                SELECT con.preferred_name
+		       ,con.long_name
+		       ,con.con_id
+		       ,con.definition_source
+		       ,con. origin
+                       ,con.evs_Source
+                       ,com.primary_flag_ind
+                       ,com.display_order
+		      FROM  component_concepts_ext com,concepts_ext con
+				WHERE oc.condr_idseq = com.condr_IDSEQ (+)
+				AND   com.con_idseq = con.con_idseq (+)
+				order by display_order desc) AS Concepts_list_t) oc_concepts
+        ,CAST(MULTISET(
+                SELECT con.preferred_name
+		       ,con.long_name
+		       ,con.con_id
+		       ,con.definition_source
+		       ,con. origin
+                       ,con.evs_Source
+                       ,com.primary_flag_ind
+                       ,com.display_order
+		      FROM  component_concepts_ext com,concepts_ext con
+				WHERE prop.condr_idseq = com.condr_IDSEQ (+)
+				AND   com.con_idseq = con.con_idseq (+)
+				order by display_order desc) AS Concepts_list_t) prop_concepts
+		 ,rep.rep_id
+		 ,rep.preferred_name rep_preferred_name
+		 ,rep.long_name rep_long_name
+		 ,rep.version rep_version
+		 ,rep_conte.name rep_conte_name
+        ,CAST(MULTISET(
+                SELECT con.preferred_name
+		       ,con.long_name
+		       ,con.con_id
+		       ,con.definition_source
+		       ,con. origin
+                       ,con.evs_Source
+                       ,com.primary_flag_ind
+                       ,com.display_order
+		      FROM  component_concepts_ext com,concepts_ext con
+				WHERE rep.condr_idseq = com.condr_IDSEQ (+)
+				AND   com.con_idseq = con.con_idseq (+)
+				order by display_order desc) AS Concepts_list_t) rep_concepts
+from	 sbr.data_elements de
+  		,sbr.data_element_concepts dec
+		,sbr.contexts de_conte
+		,sbr.value_domains vd
+		,sbr.contexts vd_conte
+		,sbr.contexts dec_conte
+		,sbr.ac_registrations acr
+		,cdebrowser_complex_de_view ccd
+                ,conceptual_domains cd
+                ,contexts cd_conte
+                ,object_classes_Ext oc
+                ,contexts oc_conte
+                ,properties_ext prop
+                ,representations_ext rep
+                ,contexts prop_conte
+                ,contexts rep_conte
+               ,(select ac_idseq,doc_text
+                  from reference_documents
+                  where dctl_name = 'Preferred Question Text') rd
+  where  de.dec_idseq = dec.dec_idseq
+  and	 de.conte_idseq = de_conte.conte_idseq
+  and	 de.vd_idseq = vd.vd_idseq
+  and    vd.conte_idseq = vd_conte.conte_idseq
+  and	 dec.conte_idseq = dec_conte.conte_idseq
+  and	 de.de_idseq = rd.ac_idseq (+)
+  and    de.de_idseq = acr.ac_idseq (+)
+  and    de.de_idseq = ccd.p_de_idseq (+)
+  and    vd.cd_idseq = cd.cd_idseq
+  and    cd.conte_idseq = cd_conte.conte_idseq
+  and    dec.oc_idseq = oc.oc_idseq(+)
+  and    oc.conte_idseq = oc_conte.conte_idseq(+)
+  and    dec.prop_idseq = prop.prop_idseq(+)
+  and    prop.conte_idseq = prop_conte.conte_idseq(+)
+  and    vd.rep_idseq = rep.rep_idseq(+)
+  and    rep.conte_idseq = rep_conte.conte_idseq(+);
+ /
+  GRANT DELETE ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "CDEBROWSER";
+ 
+  GRANT INSERT ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "CDEBROWSER";
+ 
+  GRANT SELECT ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "CDEBROWSER";
+ 
+  GRANT UPDATE ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "CDEBROWSER";
+ 
+  GRANT REFERENCES ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "CDEBROWSER";
+ 
+  GRANT ON COMMIT REFRESH ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "CDEBROWSER";
+ 
+  GRANT QUERY REWRITE ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "CDEBROWSER";
+ 
+  GRANT DEBUG ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "CDEBROWSER";
+ 
+  GRANT FLASHBACK ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "CDEBROWSER";
+ 
+  GRANT MERGE VIEW ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "CDEBROWSER";
+ 
+  GRANT DELETE ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "SBR" WITH GRANT OPTION;
+ 
+  GRANT INSERT ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "SBR" WITH GRANT OPTION;
+ 
+  GRANT SELECT ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "SBR" WITH GRANT OPTION;
+ 
+  GRANT UPDATE ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "SBR" WITH GRANT OPTION;
+ 
+  GRANT REFERENCES ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "SBR" WITH GRANT OPTION;
+ 
+  GRANT ON COMMIT REFRESH ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "SBR" WITH GRANT OPTION;
+ 
+  GRANT QUERY REWRITE ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "SBR" WITH GRANT OPTION;
+ 
+  GRANT DEBUG ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "SBR" WITH GRANT OPTION;
+ 
+  GRANT FLASHBACK ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "SBR" WITH GRANT OPTION;
+ 
+  GRANT MERGE VIEW ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "SBR" WITH GRANT OPTION;
+ 
+  GRANT DELETE ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "DER_USER";
+ 
+  GRANT INSERT ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "DER_USER";
+ 
+  GRANT SELECT ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "DER_USER";
+ 
+  GRANT UPDATE ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "DER_USER";
+ 
+  GRANT MERGE VIEW ON "SBREXT"."DE_EXCEL_GENERATOR_VIEW" TO "DER_USER";
+
 
 COMMIT;
