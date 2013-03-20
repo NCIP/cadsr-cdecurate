@@ -304,15 +304,15 @@ public class CustomDownloadServlet extends CurationServlet {
 //									truncatedTimeStamp = strValues[b].toString(); //begin GF30779
 //									logger.debug("At line 299 of CustomDownloadServlet.java" + truncatedTimeStamp);
 										 if (className.toUpperCase().contains("NUMBER")) { //GF30779======START
-//											 truncatedTimeStamp = Integer.toString(valueDatum[a].intValue());	//caused java.sql.SQLException: Conversion to integer failed
+											 truncatedTimeStamp = Integer.toString(strValues[b].intValue());	//caused java.sql.SQLException: Conversion to integer failed
 										}else if (className.toUpperCase().contains("DATE")) {
-											truncatedTimeStamp = valueDatum[a].dateValue().toString();
+											truncatedTimeStamp = strValues[b].dateValue().toString();
 											truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
 										} else  {
-											truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(valueDatum[a].getBytes()); 
+											truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(strValues[b].getBytes()); 
 										}//GF30779=============END
 //									truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(strValues[b].getBytes()); // GF30779
-									logger.debug("At line 315 of CustomDownloadServlet.java" + truncatedTimeStamp + s + valueDatum[a] + strValues[b]);
+									logger.debug("At line 315 of CustomDownloadServlet.java" + truncatedTimeStamp + "***" + s + "***" + valueDatum[a]+ "***" + strValues[b]);
 //									if (columnType.contains("VALID_VALUE") && truncatedTimeStamp != null && truncatedTimeStamp.contains(":")) {
 //										truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
 //										logger.debug("At line 304 of CustomDownloadServlet.java" + truncatedTimeStamp);
