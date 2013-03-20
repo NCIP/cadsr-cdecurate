@@ -6,11 +6,6 @@
 
 Run with user SBREXT:
 
-SQL> desc "SBREXT"."CDE_EXCEL_GENERATOR_VIEW";
-ERROR:
-ORA-24372: invalid object for describe
-
-
 SQL> @customDownload.sql
 insert into sbrext.tool_options_view_ext (tool_name, property, value)
 *
@@ -42,6 +37,12 @@ Table dropped.
 
 Table created.
 
+CREATE TABLE SBREXT.CUSTOM_DOWNLOAD_TYPES
+                    *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
 
 Grant succeeded.
 
@@ -187,13 +188,19 @@ Grant succeeded.
 View created.
 
 
-Grant succeeded.
+View created.
 
 
 Grant succeeded.
 
 
 Grant succeeded.
+
+
+Grant succeeded.
+
+
+View created.
 
 
 View created.
@@ -209,6 +216,171 @@ Grant succeeded.
 
 
 View created.
+
+
+View created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+View created.
+
+
+View created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+View created.
+
+
+View created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
 
 
 Grant succeeded.
@@ -221,6 +393,62 @@ Grant succeeded.
 
 
 Commit complete.
+
+SQL> desc VD_EXCEL_GENERATOR_VIEW;
+ Name					   Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ VD_IDSEQ				   NOT NULL CHAR(36)
+ VD Public ID				   NOT NULL NUMBER
+ VD Short Name				   NOT NULL VARCHAR2(30)
+ VD Long Name					    VARCHAR2(255)
+ VD Version				   NOT NULL NUMBER(4,2)
+ VD Context Name			   NOT NULL VARCHAR2(30)
+ VD Context Version			   NOT NULL NUMBER(4,2)
+ VD Type					    VARCHAR2(14)
+ VD Datatype				   NOT NULL VARCHAR2(20)
+ VD Min Length					    NUMBER(8)
+ VD Max Length					    NUMBER(8)
+ VD Min value					    VARCHAR2(255)
+ VD Max Value					    VARCHAR2(255)
+ VD Decimal Place				    NUMBER(2)
+ VD Format					    VARCHAR2(20)
+ VD_CONCEPTS					    CONCEPTS_LIST_T
+ Representation Public ID			    NUMBER
+ Representation Long Name			    VARCHAR2(255)
+ Representation Short Name			    VARCHAR2(30)
+ Representation Context Name			    VARCHAR2(30)
+ Representation Version 			    NUMBER(4,2)
+ REP_CONCEPTS					    CONCEPTS_LIST_T
+ VALID_VALUES					    VALID_VALUE_LIST_T
+ CLASSIFICATIONS				    CDEBROWSER_CSI_LIST_T
+ DESIGNATIONS					    DESIGNATIONS_LIST_T
+ CD Public ID				   NOT NULL NUMBER
+ CD Short Name				   NOT NULL VARCHAR2(30)
+ CD Version				   NOT NULL NUMBER(4,2)
+ CD Context Name			   NOT NULL VARCHAR2(30)
+
+SQL> desc DE_XML_GENERATOR_VIEW;
+ Name					   Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DE_IDSEQ				   NOT NULL CHAR(36)
+ PUBLICID				   NOT NULL NUMBER
+ LONGNAME					    VARCHAR2(255)
+ PREFERREDNAME				   NOT NULL VARCHAR2(30)
+ PREFERREDDEFINITION			   NOT NULL VARCHAR2(2000)
+ VERSION				   NOT NULL NUMBER(4,2)
+ WORKFLOWSTATUS 			   NOT NULL VARCHAR2(20)
+ CONTEXTNAME				   NOT NULL VARCHAR2(30)
+ CONTEXTVERSION 			   NOT NULL NUMBER(4,2)
+ ORIGIN 					    VARCHAR2(240)
+ REGISTRATIONSTATUS				    VARCHAR2(50)
+ DATAELEMENTCONCEPT				    CDEBROWSER_DEC_T
+ VALUEDOMAIN					    CDEBROWSER_VD_T
+ REFERENCEDOCUMENTSLIST 			    CDEBROWSER_RD_LIST_T
+ CLASSIFICATIONSLIST				    CDEBROWSER_CSI_LIST_T
+ ALTERNATENAMELIST				    CDEBROWSER_ALTNAME_LIST_T
+ DATAELEMENTDERIVATION				    DERIVED_DATA_ELEMENT_T
+
+SQL>  
 
 SQL> desc "SBREXT"."CDE_EXCEL_GENERATOR_VIEW";
  Name					   Null?    Type
