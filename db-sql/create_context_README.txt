@@ -52,7 +52,17 @@ Commit complete.
 
 SQL> 
 
-SQL> select SCL_NAME, DESCRIPTION from security_contexts_lov_view where SCL_NAME in ('AECC_SC', 'USC/NCCC_SC');
+SQL> @create_context-3.sql
+1
+
+PL/SQL procedure successfully completed.
+
+
+Commit complete.
+
+SQL> 
+
+SQL> select SCL_NAME, DESCRIPTION from security_contexts_lov_view where SCL_NAME in ('AECC_SC', 'USC/NCCC_SC', 'LCC_SC');
 
 SCL_NAME
 ------------------------------
@@ -61,8 +71,12 @@ DESCRIPTION
 AECC_SC
 Security Context for AECC
 
+LCC_SC
+Security Context for LCC
+
 USC/NCCC_SC
 Security Context for USC/NCCC
 
 
-SQL> 
+SQL>
+ 
