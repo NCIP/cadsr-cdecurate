@@ -792,29 +792,43 @@ public class TestSpreadsheetDownload {
 									if (strValues[b] != null) {
 										Class structClass = strValues[b].getClass();
 										String className = structClass.getName();
+//									truncatedTimeStamp = strValues[b].toString(); //begin GF30779
+//									logger.debug("At line 299 of CustomDownloadServlet.java" + truncatedTimeStamp);
 										 if (className.toUpperCase().contains("NUMBER")) { //GF30779======START
-//											 truncatedTimeStamp = Integer.toString(valueDatum[a].intValue());	//caused java.sql.SQLException: Conversion to integer failed 	
-										 }else if (className.toUpperCase().contains("DATE")) {
-											truncatedTimeStamp = valueDatum[a].dateValue().toString();
+											 truncatedTimeStamp = new String(strValues[b].getBytes());	//caused java.sql.SQLException: Conversion to integer failed
+										}else if (className.toUpperCase().contains("DATE")) {
+											truncatedTimeStamp = strValues[b].dateValue().toString();
 											truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
 										} else  {
-											truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(valueDatum[a].getBytes()); 
+											truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(strValues[b].getBytes()); 
 										}//GF30779=============END
-									logger.debug("At line 315 of CustomDownloadServlet.java" + truncatedTimeStamp + s + valueDatum[a] + strValues[b]);
+//									truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(strValues[b].getBytes()); // GF30779
+									logger.debug("At line 315 of CustomDownloadServlet.java" + truncatedTimeStamp + "***" + s + "***" + valueDatum[a]+ "***" + strValues[b]);
+//									if (columnType.contains("VALID_VALUE") && truncatedTimeStamp != null && truncatedTimeStamp.contains(":")) {
+//										truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
+//										logger.debug("At line 304 of CustomDownloadServlet.java" + truncatedTimeStamp);
+//									} //end GF30779
 									values[b] = truncatedTimeStamp;
 									slide++;
 								}
 								}
 							} else {
 								if (c.getName().toUpperCase().contains("NUMBER")) { //GF30779===START
-									truncatedTimeStamp = Integer.toString(valueDatum[a].intValue()); 
+									truncatedTimeStamp = new String(valueDatum[a].getBytes()); 
 								}else if (c.getName().toUpperCase().contains("DATE")) {
 									truncatedTimeStamp = valueDatum[a].dateValue().toString();
 									truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
 								} else{
 									truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(valueDatum[a].getBytes());
 								}//GF30779=============END
+//								truncatedTimeStamp = valueDatum[a].toString(); //begin GF30779
 								logger.debug("At line 334 of CustomDownloadServlet.java" + truncatedTimeStamp + s);
+//								truncatedTimeStamp = AdministeredItemUtil.toASCIICode(truncatedTimeStamp); // GF30779
+//								logger.debug("At line 313 of CustomDownloadServlet.java" + truncatedTimeStamp + s + valueDatum[a]);
+//								if (columnType.contains("VALID_VALUE") && truncatedTimeStamp != null && truncatedTimeStamp.contains(":")) {
+//									truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
+//									logger.debug("At line 316 of CustomDownloadServlet.java" + truncatedTimeStamp);
+//								} //end GF30779
 								values[a+slide]= truncatedTimeStamp;
 							}
 
