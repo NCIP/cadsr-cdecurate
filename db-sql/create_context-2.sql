@@ -4,7 +4,7 @@ declare
 --declare the variables
 
 v_context_name varchar2(30) := 'USC/NCCC';
-v_description varchar2(2000):= 'USC/Norris Comprehensive Cancer Center LCC - Lombardi Cancer Center';
+v_description varchar2(2000):= 'USC/Norris Comprehensive Cancer Center';
 v_conte_count NUMBER;
 v_sc_count NUMBER;
 v_sc_conte_count NUMBER;
