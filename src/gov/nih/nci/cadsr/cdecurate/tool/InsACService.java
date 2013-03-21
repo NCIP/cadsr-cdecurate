@@ -2194,8 +2194,8 @@ public class InsACService implements Serializable {
 					sReturnID = rs.getString("dec_id");
 					sCdrReturn = rs.getString("CDR_NAME");
 					sCdrReturn = sCdrReturn.substring(1, sCdrReturn.length());
-					retVal = "\\t Existing dec public id " + sReturnID
-					+ " already exists in the data base.\\n";
+					retVal = "\\t Existing DEC Public ID " + sReturnID
+					+ " already exists in the database.\\n";
 					m_classReq.setAttribute("retcode", "Exception");
 					this.storeStatusMsg("\\t Exception : Unable to create Data Element Concept. " + retVal);
 					
