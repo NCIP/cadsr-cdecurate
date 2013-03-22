@@ -128,10 +128,7 @@
 		</copy>
 
 		<copy todir="${dist.dir}/jboss">
-			<fileset file="${lib.dir}/ojdbc14.jar" />
-		    <!--
-		   	<fileset file="${dist.dir}/jboss/ojdbc6_g.jar"/>
-			-->
+		   	<fileset file="${dist.dir}/jboss/ojdbc6.jar"/>
 		</copy>
 
 		<fixcrlf srcdir="${dist.dir}" eol="lf" includes="**/*.sh, **/*.xml, **/*.properties" />
@@ -242,10 +239,7 @@
 		</copy>
 		
 		<copy todir="${JBOSS.SERVER.DIR}/lib">
-		   	<fileset file="${dist.dir}/jboss/ojdbc14.jar"/>
-		    <!--
-		   	<fileset file="${dist.dir}/jboss/ojdbc6_g.jar"/>
-		   	-->
+		   	<fileset file="${dist.dir}/jboss/ojdbc6.jar"/>
 		</copy>
 			
 		<copy todir="${JBOSS.SERVER.DIR}/conf">
