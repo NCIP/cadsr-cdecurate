@@ -128,7 +128,7 @@
 		</copy>
 
 		<copy todir="${dist.dir}/jboss">
-		   	<fileset file="${dist.dir}/jboss/ojdbc6.jar"/>
+		   	<fileset file="${basedir}/lib/ojdbc6.jar"/>
 		</copy>
 
 		<fixcrlf srcdir="${dist.dir}" eol="lf" includes="**/*.sh, **/*.xml, **/*.properties" />
