@@ -18,7 +18,7 @@
     String sOriginAction = (String)session.getAttribute("originAction");
     if (sOriginAction == null) sOriginAction = "";
     boolean isValid = false;
-    //boolean isValidFlag = true;
+    boolean isValidFlag = true;
     String sStat2 = "";
     Vector vValidate = new Vector();
     vValidate = (Vector)request.getAttribute("vValidate");
@@ -33,13 +33,13 @@
       || sStat2.equals("Warning: a Data Element ") || sStat2.equals("Warning: DEC's with comb")) {
           isValid = true; // this just keeps the status quo
       }
-      /*else
+      else
       {
-        isValidFlag = false; // we have true failure here     
-      }*/
+        isValidFlag = false; //mandatory field should not be allowed to submit    
+      }
     }
-    //isValid = isValidFlag;
-//System.out.println("isValid: " + isValid);
+    isValid = isValidFlag;	//mandatory field should not be allowed to submit
+	//System.out.println("isValid: " + isValid);
     String sDECAction = (String)session.getAttribute("DECAction");
     session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");  //remove the status messge if any
 %>
