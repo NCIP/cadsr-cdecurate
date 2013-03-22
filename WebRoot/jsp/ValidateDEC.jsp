@@ -35,10 +35,10 @@
       }
       else
       {
-        isValidFlag = false; //mandatory field should not be allowed to submit    
+        isValidFlag = false; //GF32649 mandatory field should not be allowed to submit    
       }
     }
-    isValid = isValidFlag;	//mandatory field should not be allowed to submit
+    isValid = isValidFlag;	//GF32649 mandatory field should not be allowed to submit
 	//System.out.println("isValid: " + isValid);
     String sDECAction = (String)session.getAttribute("DECAction");
     session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");  //remove the status messge if any
