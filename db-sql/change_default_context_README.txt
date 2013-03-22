@@ -1,10 +1,13 @@
 *** APPLYING CHANGES ***
 
-Run with user SBR:
+Run with user SBREXT:
 
 SQL> @change_default_context.sql
 
 1 row updated.
+
+
+Commit complete.
 
 SQL> 
 
