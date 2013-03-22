@@ -114,6 +114,8 @@ public class GetACService implements Serializable
                     getContextList(vID, v);
                     DataManager.setAttribute(session, "vContext", v);
                     DataManager.setAttribute(session, "vContext_ID", vID);
+                    logger.debug("At line 117 of GetACService.java**"+Arrays.asList(v)+"**"+Arrays.asList(vID));
+                  
                 }
 //Later***                
 /*                if (session.getAttribute("vWriteContextDE") == null)
@@ -316,6 +318,7 @@ public class GetACService implements Serializable
             getWriteContextList(vID, v, sUser, "DE_CONCEPT");
             DataManager.setAttribute(session, "vWriteContextDEC", v);
             DataManager.setAttribute(session, "vWriteContextDEC_ID", vID);
+            logger.debug("At line 321 of GetACService.java**"+Arrays.asList(v)+"**"+Arrays.asList(vID));
             v = new Vector<String>();
             vID = new Vector<String>();
             getWriteContextList(vID, v, sUser, "VALUEDOMAIN");
@@ -992,6 +995,7 @@ public class GetACService implements Serializable
                         // sName = sName.substring(0, 80);
                         vList3.addElement(sName);
                         vList4.addElement(rs.getString(4));
+                        logger.debug("At line 998 of GetACService.java**"+rs.getString(1)+"**"+rs.getString(2)+"**"+rs.getString(3)+"**"+rs.getString(4));
                     }
                 }
                 else if ((vList1 != null) && (vList2 != null) && (vList3 != null))
@@ -1006,6 +1010,7 @@ public class GetACService implements Serializable
                         // if(sName.length() > 80)
                         // sName = sName.substring(0, 80);
                         vList3.addElement(sName);
+                        logger.debug("At line 1013 of GetACService.java**"+rs.getString(1)+"**"+rs.getString(2)+"**"+rs.getString(3));
                     }
                 }
                 else if ((vList1 != null) && (vList2 != null))
@@ -1024,6 +1029,7 @@ public class GetACService implements Serializable
                         // else
                         // sName = "";
                         vList2.addElement(sName);
+                        logger.debug("At line 1032 of GetACService.java**"+rs.getString(1)+"**"+rs.getString(2));
                     }
                 }
                 else
@@ -1034,6 +1040,7 @@ public class GetACService implements Serializable
                         if (sName == null)
                             sName = "";
                         vList1.addElement(sName);
+                        logger.debug("At line 1043 of GetACService.java"+rs.getString(1));
                     }
                 }
             }
