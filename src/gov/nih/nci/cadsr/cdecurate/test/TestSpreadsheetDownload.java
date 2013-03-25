@@ -46,6 +46,62 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * @author shegde
+ * @useful sqls -
+ * --checking specific columns
+ * select "DE Preferred Definition","VD Short Name" ,"VD Long Name" from cde_excel_generator_view where cde_idseq = 'E0F50D35-0EBD-1078-E034-0003BA12F5E7';
+ * --spreadsheet columns sqls
+--AI to AN in Excel sheet (Exist in customDownload.sql at line 362)
+SELECT con.preferred_name,
+                                 con.long_name,
+                                 con.con_id,
+                                 con.definition_source,
+                                 con.origin,
+                                 con.evs_source,
+                                 com.primary_flag_ind,
+                                 com.display_order
+                          FROM component_concepts_ext com, properties_ext prop,concepts_ext con
+                          WHERE prop.condr_idseq = com.condr_idseq(+)
+                                AND com.con_idseq = con.con_idseq(+)
+                          ORDER BY display_order DESC;
+
+--BT to CB in Excel sheet (Exist in customDownload.sql at line 403)
+SELECT pv.VALUE, 
+       vm.long_name short_meaning, 
+       vm.preferred_definition, 
+       sbrext_common_routines.get_concepts(vm.condr_idseq) meaningconcepts,
+       pv.begin_date,
+       pv.end_date,
+       vm.vm_id,
+       vm.version,
+       defs.definition --GF32647
+      FROM sbr.permissible_values pv,
+           sbr.vd_pvs vp,
+           sbr.definitions_view defs,--GF32647
+           value_meanings vm,
+           sbr.value_domains vd,
+           representations_ext rep,
+           sbr.contexts vd_conte,
+           sbr.data_elements de,
+           conceptual_domains cd
+      WHERE  vp.vd_idseq = vd.vd_idseq
+             AND vp.pv_idseq = pv.pv_idseq
+             AND pv.vm_idseq = vm.vm_idseq
+             AND vm.vm_idseq = defs.ac_idseq(+) --GF32647
+             AND de.vd_idseq = 'EAA9208F-77F2-5AA0-E034-0003BA3F9857'
+             AND vd.conte_idseq = vd_conte.conte_idseq
+             AND vd.cd_idseq = cd.cd_idseq
+             AND vd.rep_idseq = rep.rep_idseq(+);
+
+--CK to CO in Excel sheet  (Exist in customDownload.sql at line 466)
+SELECT des_conte.name,
+                                 des_conte.version,
+                                 des.name,
+                                 des.detl_name,
+                                 des.lae_name
+                          FROM sbr.designations des, sbr.data_elements de,sbr.contexts des_conte
+                          WHERE de.de_idseq = des.ac_idseq(+)
+                                AND des.conte_idseq = des_conte.conte_idseq(+);
+ *
  * @table
 SQL> desc CDE_EXCEL_GENERATOR_VIEW;   
  Name					   Null?    Type
