@@ -10,7 +10,6 @@ import gov.nih.nci.cadsr.common.TestUtil;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,19 +17,13 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Struct;
-//import oracle.sql.STRUCT;
-import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
-
-//import oracle.sql.STRUCT;
 
 import oracle.sql.Datum;
 import oracle.sql.STRUCT;
