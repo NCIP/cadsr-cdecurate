@@ -1,3 +1,5 @@
+--Please run with user SBREXT
+
 @create_context-1.sql
 
 @create_context-2.sql
