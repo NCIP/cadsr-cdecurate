@@ -34,7 +34,16 @@ https://wiki.nci.nih.gov/display/caDSRproj/Create+caDSR+Context
 
 Run with user SBREXT:
 
-SQL> @create_context-1.sql
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Mar 26 09:58:16 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL> @create_context.sql
 1
 
 PL/SQL procedure successfully completed.
@@ -42,7 +51,6 @@ PL/SQL procedure successfully completed.
 
 Commit complete.
 
-SQL> @create_context-2.sql        
 1
 
 PL/SQL procedure successfully completed.
@@ -50,9 +58,6 @@ PL/SQL procedure successfully completed.
 
 Commit complete.
 
-SQL> 
-
-SQL> @create_context-3.sql
 1
 
 PL/SQL procedure successfully completed.
@@ -60,9 +65,6 @@ PL/SQL procedure successfully completed.
 
 Commit complete.
 
-SQL> 
-
-SQL> select SCL_NAME, DESCRIPTION from security_contexts_lov_view where SCL_NAME in ('AECC_SC', 'USC/NCCC_SC', 'LCC_SC');
 
 SCL_NAME
 ------------------------------
@@ -78,5 +80,6 @@ USC/NCCC_SC
 Security Context for USC/NCCC
 
 
-SQL>
+SQL> 
+
  
