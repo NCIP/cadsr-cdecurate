@@ -437,7 +437,7 @@ public class CurationServlet
                         //DataManager.clearSessionAttributes(session);
                        // sessionData = new Session_Data();
                     	 String cancelLogin = (String)m_classReq.getParameter("cancelLogin");
-                    	 if (cancelLogin.equals("No")){
+                    	 if (cancelLogin == null || cancelLogin.equals("No")){	//GF30779 fix NPE which is not part of the fix
                            login(m_classReq,m_classRes,session);
                          }
                     	 String userName = (String)session.getAttribute("Username");
