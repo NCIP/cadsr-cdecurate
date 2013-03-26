@@ -3763,11 +3763,11 @@ public class SetACService implements Serializable
 			sID = (String)req.getParameter("decIDSEQ");
 			if(sID != null)
 				m_DEC.setDEC_DEC_IDSEQ(sID);
-			logger.debug("DECIDSEQ at Line 3712 of SetACService.java"+sID);
+			logger.debug("DECIDSEQ at Line 3766 of SetACService.java"+sID);
 			sID = (String)req.getParameter("CDE_IDTxt");
 			if(sID != null)
 				m_DEC.setDEC_DEC_ID(sID);
-			logger.debug("DECIDSEQ at Line 3716 of SetACService.java"+sID);
+			logger.debug("DECIDSEQ at Line 3770 of SetACService.java"+sID);
 			if(sOriginAction.equals("BlockEditDEC"))
 				sID = "";
 			else
@@ -3782,11 +3782,13 @@ public class SetACService implements Serializable
 			String s = (String)req.getParameter("txtObjClass");
 			if(s != null)
 				m_DEC.setDEC_OCL_NAME(s);
-
+			logger.debug("At Line 3785 of SetACService.java***"+m_DEC.getDEC_OCL_NAME());
+			
 			s = (String)req.getParameter("txtPropClass");
 			if(s != null)
 				m_DEC.setDEC_PROPL_NAME(s);
-
+			logger.debug("At Line 3790 of SetACService.java***"+m_DEC.getDEC_PROPL_NAME());
+			
 			sName = "";
 			if(sOriginAction.equals("BlockEditDEC"))
 				sName = "";
@@ -3796,7 +3798,7 @@ public class SetACService implements Serializable
 			{
 				sName = m_util.removeNewLineChar(sName);
 				m_DEC.setDEC_LONG_NAME(AdministeredItemUtil.handleLongName(sName));//GF32004
-				logger.debug("DEC_LONG_NAME at Line 3799 of SetACService.java"+m_DEC.getDEC_LONG_NAME());
+				logger.debug("DEC_LONG_NAME at Line 3801 of SetACService.java"+m_DEC.getDEC_LONG_NAME());
 			}
 
 			//set PREFERRED_NAME
@@ -3808,7 +3810,7 @@ public class SetACService implements Serializable
 			{
 				sName = m_util.removeNewLineChar(sName);
 				m_DEC.setDEC_PREFERRED_NAME(sName);
-				logger.debug("PreferredName at Line 3756 of SetACService.java"+sName);
+				logger.debug("PreferredName at Line 3813 of SetACService.java"+sName);
 			}
 
 			//set DEC_PREFERRED_DEFINITION
@@ -3817,7 +3819,7 @@ public class SetACService implements Serializable
 			{
 				sName = m_util.removeNewLineChar(sName);
 				m_DEC.setDEC_PREFERRED_DEFINITION(sName);
-				logger.debug("DEC_PREFERRED_DEFINITION at Line 3765 of SetACService.java"+sName);
+				logger.debug("DEC_PREFERRED_DEFINITION at Line 3822 of SetACService.java"+sName);
 			}
 
 			sID = (String)req.getParameter("selConceptualDomain");

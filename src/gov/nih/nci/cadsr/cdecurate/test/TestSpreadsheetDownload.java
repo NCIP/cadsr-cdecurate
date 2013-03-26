@@ -40,6 +40,31 @@ import org.apache.poi.ss.usermodel.Workbook;
 /**
  * @author shegde
  * @useful sqls -
+ * --getting a DE with all columns populated
+select 
+ "DE Long Name",
+ "DE Public ID",
+ OC_CONCEPTS,
+ PROP_CONCEPTS,
+ VD_CONCEPTS,
+ REP_CONCEPTS,
+ VALID_VALUES,
+ CLASSIFICATIONS,
+ DESIGNATIONS,
+ REFERENCE_DOCS,
+ DE_DERIVATION
+from CDE_EXCEL_GENERATOR_VIEW
+WHERE
+ OC_CONCEPTS  IS NOT EMPTY and
+ PROP_CONCEPTS  IS NOT EMPTY and
+ VD_CONCEPTS  IS NOT EMPTY and
+ REP_CONCEPTS  IS NOT EMPTY and
+ VALID_VALUES  IS NOT EMPTY and
+ CLASSIFICATIONS  IS NOT EMPTY and
+ DESIGNATIONS  IS NOT EMPTY and
+ REFERENCE_DOCS   IS NOT EMPTY and
+ DE_DERIVATION  IS NOT NULL
+-- desc DERIVED_DATA_ELEMENT_T
  * --checking specific columns
  * select "DE Preferred Definition","VD Short Name" ,"VD Long Name" from cde_excel_generator_view where cde_idseq = 'E0F50D35-0EBD-1078-E034-0003BA12F5E7';
  * --spreadsheet columns sqls
