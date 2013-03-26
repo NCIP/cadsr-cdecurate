@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h2>Upgrading from ojdbc14.jar to ojdbc6.jar</h2>
+
+<h3>Overview</h3>
+Conventionally, ojdbc14.jar is used as a thin driver to connect to Oracle. But Oracle recommends ojdbc6.jar instead if the JVM platform
+is Java 6 (c.f. http://www.oracle.com/technetwork/database/enterprise-edition/jdbc-faq-090281.html#02_02), specifically:
+<p>
+"...ojdbc6.jar
+All the classes to support basic functionality for the Thin and OCI drivers when using JDK 1.6 (JSE 6). Additional jar files are required when you use some features...."
+<p>
+
+The upgrade related to the Curation Tool (thereafter simply known as CDECURATE) is necessary to fix "???" issue (c.f. https://forums.oracle.com/forums/thread.jspa?threadID=518411) in a column which is of STRUCT data type.
+
+<h3>Approach</h3>
+Generally the upgrade does not require any code change, if standard Java SQL is used (i.e. java.sql.*). However, we didn't manage to fix the issue in our environment without resorting
+to Oracle specific implementations of the JDBC classes.
+<p>
+Those packages that we used to fix "???" issue were:
+
+import oracle.sql.Datum;
+import oracle.sql.STRUCT;
+
+These packages have a corresponding packages in standard packages (java.sql.*) but we didn't have enough time/resource to look into the root cause of why they didn't work in our environment.
+It is recommended that in the future upgrade of the JDBC driver, more research/test should be carried out so that the application could use the standard Java SQL packages, instead of using 
+the Oracle packages/classes.
+<p>
+A sample test class is available <a href="https://ncisvn.nci.nih.gov/WebSVN/filedetails.php?repname=cdecurate&path=%2Ftrunk%2Fsrc%2Fgov%2Fnih%2Fnci%2Fcadsr%2Fcdecurate%2Ftest%2FTestSpreadsheetDownload.java">here</a>, which allow us to confirm/demonstrate the issue quickly.
+<p>
+The real codes used by CDECURATE is in CustomDownloadServlet.java. Our deployed application server was JBoss 5.1.0 GA when this readme text was prepared.
+
+</body>
+</html>
