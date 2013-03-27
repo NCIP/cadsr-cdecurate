@@ -202,22 +202,25 @@ public class TestSpreadsheetDownload {
 	ArrayList<HashMap<String, List<String[]>>> arrayData = new ArrayList<HashMap<String, List<String[]>>>();
 
 	//=======================================================================
-	public static void main1(String[] args) {
+	public static void main(String[] args) {
 		String type = "CDE";
 		PreparedStatement stmt = null;
 		ResultSet rset = null;
 		String value = null;
 		Array array1 = null;	ResultSet nestedRs1;	oracle.sql.STRUCT s1 = null;
 		Array array2 = null;	ResultSet nestedRs2;	oracle.sql.STRUCT s2 = null;
+		Object array3 = null;	ResultSet nestedRs3;	oracle.sql.STRUCT s3 = null;
 		
 		try {
 			connectDB(args[0], args[1]);
 	        logger.debug("connected");
 
 	        //e.g. select OC_CONCEPTS from CDE_EXCEL_GENERATOR_VIEW --type is CONCEPTS_LIST_T
-			String qry = "SELECT OC_CONCEPTS, VALID_VALUES FROM " + type
+			String qry = "SELECT OC_CONCEPTS, VALID_VALUES, DE_DERIVATION FROM " + type
 					+ "_EXCEL_GENERATOR_VIEW"
-					+ " where rownum < 11"
+					+ " where "
+//					+ "rownum < 11"
+					+ "\"DE Public ID\" = 3124888"
 					;
 			stmt = m_conn.prepareStatement(qry);
 			// _EXCEL_GENERATOR_VIEW.OC_CONCEPTS:
@@ -251,6 +254,32 @@ public class TestSpreadsheetDownload {
 			 VMALTERNATEDEFINITIONS 			    VARCHAR2(2000)
 			
 			SQL> 
+			SQL> desc DERIVED_DATA_ELEMENT_T;
+			 Name					   Null?    Type
+			 ----------------------------------------- -------- ----------------------------
+			 DerivationType 				    VARCHAR2(30)
+			 DerivationTypeDescription			    VARCHAR2(200)
+			 Methods					    VARCHAR2(4000)
+			 Rule						    VARCHAR2(4000)
+			 ConcatenationCharacter 			    VARCHAR2(1)
+			 ComponentDataElementsList			    DATA_ELEMENT_DERIVATION_LIST
+									    _T
+			
+			SQL> 
+			SQL> desc DATA_ELEMENT_DERIVATION_LIST_T;
+			 DATA_ELEMENT_DERIVATION_LIST_T TABLE OF DATA_ELEMENT_DERIVATION_T
+			 Name					   Null?    Type
+			 ----------------------------------------- -------- ----------------------------
+			 PublicId					    NUMBER
+			 LongName					    VARCHAR2(255)
+			 PreferredName					    VARCHAR2(30)
+			 PreferredDefinition				    VARCHAR2(2000)
+			 Version					    NUMBER(4,2)
+			 WorkflowStatus 				    VARCHAR2(20)
+			 ContextName					    VARCHAR2(30)
+			 DisplayOrder					    NUMBER
+			
+			SQL> 
 			*/
 			rset = stmt.executeQuery();
 			int rowcount = 0;
@@ -260,6 +289,9 @@ public class TestSpreadsheetDownload {
 				nestedRs1 = array1.getResultSet();
 				array2 = rset.getArray(2);
 				nestedRs2 = array2.getResultSet();
+				array3 = /*rset.getArray(3); //cause oracle.sql.STRUCT cannot be cast to oracle.sql.ARRAY */ rset.getObject(3);
+//				nestedRs3 = array3.getResultSet();
+				
 ///*
 				while (nestedRs1.next())
 				{ 
@@ -291,7 +323,7 @@ public class TestSpreadsheetDownload {
 				}
 //*/
 
-/*
+///*
 				while (nestedRs2.next())
 				{
 					System.out.println("************************************** start VALID_VALUE_T " + rowcount + " **************************************");
@@ -321,8 +353,38 @@ public class TestSpreadsheetDownload {
 				  }				  
 					System.out.println("************************************** end VALID_VALUE_T " + rowcount + " **************************************");
 				}
+	
+/*
+				while (nestedRs3.next())
+				{
+					System.out.println("************************************** start VALID_VALUE_T " + rowcount + " **************************************");
+					//System.out.println("Current value[0] = [" + nestedRs.getObject(1) + "]");
+					//System.out.println("Current value[1] = [" + nestedRs.getObject(2) + "]");
+					try {
+						s3 = (oracle.sql.STRUCT) nestedRs3.getObject(2);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				  
+				  if (s2 != null) 
+				  { 
+				    String sqlname = s2.getSQLTypeName(); 
+					Datum[] attrs = s2.getOracleAttributes();
+
+				    if (sqlname.equals ("SBREXT.DERIVED_DATA_ELEMENT_T"))
+				    {
+					      System.out.println ("LongName=" + AdministeredItemUtil.handleSpecialCharacters(attrs[1].getBytes()));
+					      System.out.println ("Rule=" + AdministeredItemUtil.handleSpecialCharacters(attrs[3].getBytes()));
+//					      System.out.println ("ComponentDataElementsList=" + ???);	//TBD grand child table found !!! :(
+				    }
+				    else 
+				      throw new Exception ("Invalid type name: "+sqlname);
+				  }
+					System.out.println("************************************** end VALID_VALUE_T " + rowcount + " **************************************");
+				}
 */
-				
 				System.out.println("************************************** end ROW " + rowcount + " **************************************");
 			}
 		} catch (Exception e) {
@@ -349,7 +411,7 @@ public class TestSpreadsheetDownload {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main1(String[] args) {
 		connectDB(args[0], args[1]);
 		TestSpreadsheetDownload download = new TestSpreadsheetDownload();
 		download.setColHeadersAndTypes("CDE");
