@@ -82,7 +82,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			returnJSONFromSession("Layout");
 			break;
 		case dlExcelColumns:
-			ArrayList<String[]> downloadRows = getRecords(false, false);
+			ArrayList<String[]> downloadRows = getRecords(false, false);	//GF30779 multiple rows, if any
 			createDownloadColumns(downloadRows);
 			break;
 		case dlXMLColumns:
@@ -353,6 +353,12 @@ public class CustomDownloadServlet extends CurationServlet {
 		return rowArrayData;
 	}
 
+	/**
+	 * Getting SQL for multiple DEs (rows), if any.
+	 * @param full
+	 * @param restrict
+	 * @return
+	 */
 	private List<String> getSQLStatements(boolean full, boolean restrict) {
 		List<String> sqlStmts  = new ArrayList<String>();
 		ArrayList<String> downloadIDs = (ArrayList<String>)m_classReq.getSession().getAttribute("downloadIDs");
