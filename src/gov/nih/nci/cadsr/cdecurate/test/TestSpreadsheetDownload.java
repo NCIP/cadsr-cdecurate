@@ -209,7 +209,8 @@ public class TestSpreadsheetDownload {
 		String value = null;
 		Array array1 = null;	ResultSet nestedRs1;	oracle.sql.STRUCT s1 = null;
 		Array array2 = null;	ResultSet nestedRs2;	oracle.sql.STRUCT s2 = null;
-		Object array3 = null;	ResultSet nestedRs3;	oracle.sql.STRUCT s3 = null;
+		STRUCT array3 = null;	/*ResultSet nestedRs3;*/	oracle.sql.STRUCT s3 = null;
+		Array array3_1 = null;	ResultSet nestedRs3_1;	oracle.sql.STRUCT s3_1 = null;
 		
 		try {
 			connectDB(args[0], args[1]);
@@ -220,7 +221,9 @@ public class TestSpreadsheetDownload {
 					+ "_EXCEL_GENERATOR_VIEW"
 					+ " where "
 //					+ "rownum < 11"
-					+ "\"DE Public ID\" = 3124888"
+//					+ "\"DE Public ID\" = 3124888"	//test case for ORA-01403: no data found" 
+//					+ "\"DE Public ID\" = 2341940"	//get by entering *derived* in DE search based on Name and Def
+					+ "\"DE Public ID\" = 3634859"	//DERIVATION METHOD test, should be "TEST METHOD 1"
 					;
 			stmt = m_conn.prepareStatement(qry);
 			// _EXCEL_GENERATOR_VIEW.OC_CONCEPTS:
@@ -289,8 +292,7 @@ public class TestSpreadsheetDownload {
 				nestedRs1 = array1.getResultSet();
 				array2 = rset.getArray(2);
 				nestedRs2 = array2.getResultSet();
-				array3 = /*rset.getArray(3); //cause oracle.sql.STRUCT cannot be cast to oracle.sql.ARRAY */ rset.getObject(3);
-//				nestedRs3 = array3.getResultSet();
+				array3 = /*rset.getArray(3); //cause oracle.sql.STRUCT cannot be cast to oracle.sql.ARRAY */  ((oracle.sql.STRUCT)rset.getObject(3));
 				
 ///*
 				while (nestedRs1.next())
@@ -317,7 +319,7 @@ public class TestSpreadsheetDownload {
 					      System.out.println ("CON_ID=" + attrs[2].intValue());
 				    }
 				    else 
-				      throw new Exception ("Invalid type name: "+sqlname);
+				      throw new Exception ("Invalid type name: "+sqlname + " in parent");
 				  }
 					System.out.println("************************************** end CONCEPT_DETAIL_T " + rowcount + " **************************************");
 				}
@@ -330,10 +332,10 @@ public class TestSpreadsheetDownload {
 					//System.out.println("Current value[0] = [" + nestedRs.getObject(1) + "]");
 					//System.out.println("Current value[1] = [" + nestedRs.getObject(2) + "]");
 					try {
-						s2 = (oracle.sql.STRUCT) nestedRs2.getObject(2);
+						s2 = (oracle.sql.STRUCT) nestedRs2.getObject(2);	//cause "java.sql.SQLException: ORA-01403: no data found" for empty VALID_VALUE_LIST_T
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//e.printStackTrace();
+						System.out.println("Error while retriving VALID_VALUE_T, error was = [" + e.getMessage() + "]");
 					}
 
 				  
@@ -349,43 +351,92 @@ public class TestSpreadsheetDownload {
 					      System.out.println ("VMPUBLICID=" + attrs[6].intValue());
 				    }
 				    else 
-				      throw new Exception ("Invalid type name: "+sqlname);
+				      throw new Exception ("Invalid type name: "+sqlname + " in parent");
 				  }				  
 					System.out.println("************************************** end VALID_VALUE_T " + rowcount + " **************************************");
 				}
 	
-/*
-				while (nestedRs3.next())
-				{
-					System.out.println("************************************** start VALID_VALUE_T " + rowcount + " **************************************");
-					//System.out.println("Current value[0] = [" + nestedRs.getObject(1) + "]");
-					//System.out.println("Current value[1] = [" + nestedRs.getObject(2) + "]");
-					try {
-						s3 = (oracle.sql.STRUCT) nestedRs3.getObject(2);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-				  
-				  if (s2 != null) 
-				  { 
-				    String sqlname = s2.getSQLTypeName(); 
-					Datum[] attrs = s2.getOracleAttributes();
+//				while (nestedRs3.next())
+			  if (array3 != null) 
+			  {
+					System.out.println("************************************** start DERIVED_DATA_ELEMENT_T " + rowcount + " **************************************");
+					//TEST SQL:
+					/*
+					SELECT DE_DERIVATION FROM CDE_EXCEL_GENERATOR_VIEW where "DE Public ID" = 2341940;
+					*/
+					String sqlname = array3.getSQLTypeName();
 
 				    if (sqlname.equals ("SBREXT.DERIVED_DATA_ELEMENT_T"))
 				    {
-					      System.out.println ("LongName=" + AdministeredItemUtil.handleSpecialCharacters(attrs[1].getBytes()));
-					      System.out.println ("Rule=" + AdministeredItemUtil.handleSpecialCharacters(attrs[3].getBytes()));
-//					      System.out.println ("ComponentDataElementsList=" + ???);	//TBD grand child table found !!! :(
+						Datum[] valueDatum = array3.getOracleAttributes();
+						String[] values = new String[valueDatum.length];
+						for (int a = 0; a < valueDatum.length; a++) {
+							if (valueDatum[a] != null) {
+								Class c = valueDatum[a].getClass();
+								if(c.getName().equals("oracle.sql.CHAR")) {
+									values[a]= new String(valueDatum[a].getBytes());	//valueDatum[a].toString();	//should not do toString(), it will cause "???" in the value!
+									System.out.println("Current colum type = [" + c.getName() + "]");
+//									System.out.println("Current colum name = [" + c.getCanonicalName() + "]");	//TBD not sure how to get the column name
+									System.out.println("Current value[" + a + "] = [" + values[a] + "]");
+									System.out.println("--- end of column ---");
+								} else {
+									System.out.println ("what are you my child=" + valueDatum[a]);
+									if(c.getName().equals("oracle.sql.ARRAY")) {
+										int childCount = 0;
+										array3_1 = ((oracle.sql.ARRAY)valueDatum[a]);
+										nestedRs3_1 = array3_1.getResultSet();
+										while (nestedRs3_1.next())
+										{ 
+											System.out.println("************************************** start DATA_ELEMENT_DERIVATION_LIST_T " + rowcount + " **************************************");
+											//System.out.println("Current value[0] = [" + nestedRs.getObject(1) + "]");
+											//System.out.println("Current value[1] = [" + nestedRs.getObject(2) + "]");
+											try {
+												s3_1 = (oracle.sql.STRUCT) nestedRs3_1.getObject(2);
+											} catch (Exception e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+										  
+										  if (s3_1 != null) 
+										  { 
+										    String sqlname3_1 = s3_1.getSQLTypeName(); 
+											Datum[] attrs = s3_1.getOracleAttributes();
+									
+										    if (sqlname3_1.equals ("SBREXT.DATA_ELEMENT_DERIVATION_T"))
+										    { 
+										    	childCount++;
+											  System.out.println ("PublicId=" + attrs[0].intValue());
+											  System.out.println ("LongName=" + AdministeredItemUtil.handleSpecialCharacters((attrs[1].getBytes())));
+											  System.out.println ("PreferredName=" + AdministeredItemUtil.handleSpecialCharacters((attrs[2].getBytes())));
+											  System.out.println ("PreferredDefinition=" + AdministeredItemUtil.handleSpecialCharacters((attrs[3].getBytes())));
+											  System.out.println ("Version=" + attrs[4].intValue());
+											  System.out.println ("WorkflowStatus=" + AdministeredItemUtil.handleSpecialCharacters((attrs[5].getBytes())));
+											  System.out.println ("ContextName=" + AdministeredItemUtil.handleSpecialCharacters((attrs[6].getBytes())));
+											  System.out.println ("DisplayOrder=" + attrs[7].intValue());
+												System.out.println("************************************** child " + childCount + " of DATA_ELEMENT_DERIVATION_LIST_T " + rowcount + " **************************************");
+										    }
+										    else 
+										      throw new Exception ("Invalid type name: "+sqlname + " in child");
+										  }
+										System.out.println("************************************** end DATA_ELEMENT_DERIVATION_LIST_T " + rowcount + " **************************************");
+										}
+									} else {
+										System.out.println ("what are you my child=" + valueDatum[a]);
+									}
+								}
+							} else {
+								System.out.println("Current value[" + a + "] is NULL or empty.");
+								System.out.println("--- end of column ---");
+							}
+						}
 				    }
 				    else 
-				      throw new Exception ("Invalid type name: "+sqlname);
-				  }
-					System.out.println("************************************** end VALID_VALUE_T " + rowcount + " **************************************");
-				}
-*/
+				      throw new Exception ("Invalid type name: "+sqlname + " in parent");
+
+				    System.out.println("************************************** end DERIVED_DATA_ELEMENT_T " + rowcount + " **************************************");
+//				}
 				System.out.println("************************************** end ROW " + rowcount + " **************************************");
+			}
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -574,7 +625,7 @@ public class TestSpreadsheetDownload {
 						String[] orderedTypeColNames = getOrderedTypeNames(
 								typeKey, columnName, type);
 						for (int c = 0; c < orderedTypeColNames.length; c++) {
-							arrayColumnTypes.put(typeColNames[c], typeKey); 	//TBD - need to fix this mapping
+							arrayColumnTypes.put(typeColNames[c], typeKey);
 							allExpandedColumnHeaders
 									.add(orderedTypeColNames[c]); 
 						}
