@@ -8,18 +8,20 @@ CON_ID=2202289
 ************************************** end CONCEPT_DETAIL_T 1 **************************************
 ************************************** start DERIVED_DATA_ELEMENT_T 1 **************************************
 Current colum type = [oracle.sql.CHAR]
-Current colum name = [oracle.sql.CHAR]
 Current value[0] = [CONCATENATION]
+--- end of column ---
 Current colum type = [oracle.sql.CHAR]
-Current colum name = [oracle.sql.CHAR]
 Current value[1] = [Character string joined together with a colon separator.]
+--- end of column ---
+Current value[2] is NULL or empty.
+--- end of column ---
 Current colum type = [oracle.sql.CHAR]
-Current colum name = [oracle.sql.CHAR]
 Current value[3] = [The concatentation of all necessary components of Street/Thoroughfare Address Line 1.]
+--- end of column ---
 Current colum type = [oracle.sql.CHAR]
-Current colum name = [oracle.sql.CHAR]
 Current value[4] = [+]
-what are you my child=oracle.sql.ARRAY@1fbbd7b2
+--- end of column ---
+what are you my child=oracle.sql.ARRAY@dfa6d18
 ************************************** start DATA_ELEMENT_DERIVATION_LIST_T 1 **************************************
 PublicId=2341957
 LongName=Address Secondary Unit Indicator/Designator Number
@@ -110,6 +112,7 @@ DisplayOrder=1
 ************************************** end DATA_ELEMENT_DERIVATION_LIST_T 1 **************************************
 ************************************** end DERIVED_DATA_ELEMENT_T 1 **************************************
 ************************************** end ROW 1 **************************************
+
 
 Sample SQL results (run with Oracle SQLDeveloper 3.2.10 and executed on 3/28/2013 against Oracle 10g DSRDEV with ojdbc6.jar):
 
