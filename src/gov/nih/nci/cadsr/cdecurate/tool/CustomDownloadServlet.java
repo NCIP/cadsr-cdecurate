@@ -247,32 +247,54 @@ public class CustomDownloadServlet extends CurationServlet {
 		//Special case: first row has info on derivation, others on data elements
 		if (columnType.indexOf("DERIVED") > 0) {
 			Object derivedObject = rs.getObject(index+1);
-			Struct struct = (Struct) derivedObject;
-			Object[] valueStruct = struct.getAttributes();
+			STRUCT struct = (STRUCT) derivedObject;
+			Datum[] valueStruct = struct.getOracleAttributes();
 			//Fifth entry is the array with DE's 
 			array = (Array) valueStruct[5];
 
 			if (array != null){
 				String[] derivationInfo = new String[5];
-				for (int z = 0; z < 5; z++)
-					derivationInfo[z] =(valueStruct[z] != null)? valueStruct[z].toString(): "";
-
+				for (int z = 0; z < 5; z++){
+					if (valueStruct[z] != null) {
+						Class c = valueStruct[z].getClass();
+						String s = c.getName();
+						if (c.getName().toUpperCase().contains("NUMBER")) { 
+							derivationInfo[z] = Integer.toString(valueStruct[z].intValue()); 
+						}else if (c.getName().toUpperCase().contains("DATE")) {
+							derivationInfo[z] = valueStruct[z].dateValue().toString();
+							derivationInfo[z] = AdministeredItemUtil.truncateTime(derivationInfo[z]);
+						} else{
+							derivationInfo[z] = AdministeredItemUtil.handleSpecialCharacters(valueStruct[z].getBytes());
+						}
+//					derivationInfo[z] =(valueStruct[z] != null)? valueStruct[z].toString(): "";
+					}
+				}
+					logger.debug("At line 272 of CustomDownloadServlet.java" +"****" + Arrays.asList(derivationInfo));
 					rowArrayData.add(derivationInfo);
 
 					ResultSet nestedRs = array.getResultSet(); 
 
 					while (nestedRs.next()) {
-						Struct deStruct = (Struct) nestedRs.getObject(2);
-						Object[] valueDatum = deStruct.getAttributes();
+						STRUCT deStruct = (STRUCT) nestedRs.getObject(2);
+						Datum[] valueDatum = deStruct.getOracleAttributes();
 						String[] values = new String[valueDatum.length];
 
 						for (int a = 0; a < valueDatum.length; a++) {
 							if (valueDatum[a] != null) {
 								Class c = valueDatum[a].getClass();
 								String s = c.getName();
-								values[a]= valueDatum[a].toString();	
+								if (c.getName().toUpperCase().contains("NUMBER")) { 
+									values[a] = Integer.toString(valueDatum[a].intValue()); 
+								}else if (c.getName().toUpperCase().contains("DATE")) {
+									values[a] = valueDatum[a].dateValue().toString();
+									values[a] = AdministeredItemUtil.truncateTime(values[a]);
+								} else{
+									values[a] = AdministeredItemUtil.handleSpecialCharacters(valueDatum[a].getBytes());
+								}
+//								values[a]= valueDatum[a].toString();	
 							} 
 						}
+						logger.debug("At line 297 of CustomDownloadServlet.java" +"****" + Arrays.asList(values));
 						rowArrayData.add(values);
 					}
 			}
