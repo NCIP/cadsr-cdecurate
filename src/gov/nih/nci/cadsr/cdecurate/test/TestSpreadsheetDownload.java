@@ -18,6 +18,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Struct;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -202,7 +203,7 @@ public class TestSpreadsheetDownload {
 	ArrayList<HashMap<String, List<String[]>>> arrayData = new ArrayList<HashMap<String, List<String[]>>>();
 
 	//=======================================================================
-	public static void main(String[] args) {
+	public static void main1(String[] args) {
 		String type = "CDE";
 		PreparedStatement stmt = null;
 		ResultSet rset = null;
@@ -462,7 +463,7 @@ public class TestSpreadsheetDownload {
 		}
 	}
 
-	public static void main1(String[] args) {
+	public static void main(String[] args) {
 		connectDB(args[0], args[1]);
 		TestSpreadsheetDownload download = new TestSpreadsheetDownload();
 		download.setColHeadersAndTypes("CDE");
@@ -925,32 +926,54 @@ public class TestSpreadsheetDownload {
 		//Special case: first row has info on derivation, others on data elements
 		if (columnType.indexOf("DERIVED") > 0) {
 			Object derivedObject = rs.getObject(index+1);
-			Struct struct = (Struct) derivedObject;
-			Object[] valueStruct = struct.getAttributes();
+			STRUCT struct = (STRUCT) derivedObject;
+			Datum[] valueStruct = struct.getOracleAttributes();
 			//Fifth entry is the array with DE's 
 			array = (Array) valueStruct[5];
 
 			if (array != null){
 				String[] derivationInfo = new String[5];
-				for (int z = 0; z < 5; z++)
-					derivationInfo[z] =(valueStruct[z] != null)? valueStruct[z].toString(): "";
-
+				for (int z = 0; z < 5; z++){
+					if (valueStruct[z] != null) {
+						Class c = valueStruct[z].getClass();
+						String s = c.getName();
+						if (c.getName().toUpperCase().contains("NUMBER")) { 
+							derivationInfo[z] = Integer.toString(valueStruct[z].intValue()); 
+						}else if (c.getName().toUpperCase().contains("DATE")) {
+							derivationInfo[z] = valueStruct[z].dateValue().toString();
+							derivationInfo[z] = AdministeredItemUtil.truncateTime(derivationInfo[z]);
+						} else{
+							derivationInfo[z] = AdministeredItemUtil.handleSpecialCharacters(valueStruct[z].getBytes());
+						}
+//					derivationInfo[z] =(valueStruct[z] != null)? valueStruct[z].toString(): "";
+					}
+				}
+					logger.debug("At line 272 of CustomDownloadServlet.java" +"****" + Arrays.asList(derivationInfo));
 					rowArrayData.add(derivationInfo);
 
 					ResultSet nestedRs = array.getResultSet(); 
 
 					while (nestedRs.next()) {
-						Struct deStruct = (Struct) nestedRs.getObject(2);
-						Object[] valueDatum = deStruct.getAttributes();
+						STRUCT deStruct = (STRUCT) nestedRs.getObject(2);
+						Datum[] valueDatum = deStruct.getOracleAttributes();
 						String[] values = new String[valueDatum.length];
 
 						for (int a = 0; a < valueDatum.length; a++) {
 							if (valueDatum[a] != null) {
 								Class c = valueDatum[a].getClass();
 								String s = c.getName();
-								values[a]= valueDatum[a].toString();	
+								if (c.getName().toUpperCase().contains("NUMBER")) { 
+									values[a] = Integer.toString(valueDatum[a].intValue()); 
+								}else if (c.getName().toUpperCase().contains("DATE")) {
+									values[a] = valueDatum[a].dateValue().toString();
+									values[a] = AdministeredItemUtil.truncateTime(values[a]);
+								} else{
+									values[a] = AdministeredItemUtil.handleSpecialCharacters(valueDatum[a].getBytes());
+								}
+//								values[a]= valueDatum[a].toString();	
 							} 
 						}
+						logger.debug("At line 297 of CustomDownloadServlet.java" +"****" + Arrays.asList(values));
 						rowArrayData.add(values);
 					}
 			}
@@ -973,6 +996,7 @@ public class TestSpreadsheetDownload {
 							if (c.getName().toUpperCase().contains("STRUCT")) {
 								STRUCT str = (STRUCT) valueDatum[a]; //GF30779
 								Datum[] strValues = str.getOracleAttributes(); //GF30779
+								logger.debug("At line 298 of CustomDownloadServlet.java" +"***" + Arrays.asList(strValues)+ "****" + Arrays.asList(str.getAttributes()));
 								values = new String[valueDatum.length+strValues.length-1]; 
 								slide = -1;
 								for (int b = 0; b < strValues.length; b++){
@@ -982,7 +1006,7 @@ public class TestSpreadsheetDownload {
 //									truncatedTimeStamp = strValues[b].toString(); //begin GF30779
 //									logger.debug("At line 299 of CustomDownloadServlet.java" + truncatedTimeStamp);
 										 if (className.toUpperCase().contains("NUMBER")) { //GF30779======START
-											 truncatedTimeStamp = new String(strValues[b].getBytes());	//caused java.sql.SQLException: Conversion to integer failed
+											 truncatedTimeStamp = Integer.toString(strValues[b].intValue());	//caused java.sql.SQLException: Conversion to integer failed
 										}else if (className.toUpperCase().contains("DATE")) {
 											truncatedTimeStamp = strValues[b].dateValue().toString();
 											truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
@@ -990,7 +1014,7 @@ public class TestSpreadsheetDownload {
 											truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(strValues[b].getBytes()); 
 										}//GF30779=============END
 //									truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(strValues[b].getBytes()); // GF30779
-									logger.debug("At line 315 of CustomDownloadServlet.java" + truncatedTimeStamp + "***" + s + "***" + valueDatum[a]+ "***" + strValues[b]);
+									logger.debug("At line 316 of CustomDownloadServlet.java" + "***" + truncatedTimeStamp + "***" + className + "***" + valueDatum[a]+ "***" + strValues[b]);
 //									if (columnType.contains("VALID_VALUE") && truncatedTimeStamp != null && truncatedTimeStamp.contains(":")) {
 //										truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
 //										logger.debug("At line 304 of CustomDownloadServlet.java" + truncatedTimeStamp);
@@ -1001,7 +1025,7 @@ public class TestSpreadsheetDownload {
 								}
 							} else {
 								if (c.getName().toUpperCase().contains("NUMBER")) { //GF30779===START
-									truncatedTimeStamp = new String(valueDatum[a].getBytes()); 
+									truncatedTimeStamp = Integer.toString(valueDatum[a].intValue()); 
 								}else if (c.getName().toUpperCase().contains("DATE")) {
 									truncatedTimeStamp = valueDatum[a].dateValue().toString();
 									truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
@@ -1009,7 +1033,7 @@ public class TestSpreadsheetDownload {
 									truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(valueDatum[a].getBytes());
 								}//GF30779=============END
 //								truncatedTimeStamp = valueDatum[a].toString(); //begin GF30779
-								logger.debug("At line 334 of CustomDownloadServlet.java" + truncatedTimeStamp + s);
+								logger.debug("At line 335 of CustomDownloadServlet.java" +"****" + truncatedTimeStamp +"*****" + s);
 //								truncatedTimeStamp = AdministeredItemUtil.toASCIICode(truncatedTimeStamp); // GF30779
 //								logger.debug("At line 313 of CustomDownloadServlet.java" + truncatedTimeStamp + s + valueDatum[a]);
 //								if (columnType.contains("VALID_VALUE") && truncatedTimeStamp != null && truncatedTimeStamp.contains(":")) {
@@ -1034,7 +1058,22 @@ public class TestSpreadsheetDownload {
 	private List<String> getSQLStatements(boolean full, boolean restrict) {
 		List<String> sqlStmts = new ArrayList<String>();
 		ArrayList<String> downloadIDs = new ArrayList<String>();
-		downloadIDs.add("C67194F6-BFC9-53D6-E034-0003BA12F5E7");// IDSEQ of DE with Long name is DNA Index Value and Public ID is 64516
+		//useful SQL
+		/*
+		SELECT 
+		CDE_IDSEQ,
+		--OC_CONCEPTS, VALID_VALUES,
+		DE_DERIVATION 
+		FROM CDE_EXCEL_GENERATOR_VIEW
+		where
+		--CDE_IDSEQ = 'C67194F6-BFC9-53D6-E034-0003BA12F5E7'
+		"DE Public ID" = 2341940
+		*/
+//		downloadIDs.add("C67194F6-BFC9-53D6-E034-0003BA12F5E7"); // CDE_IDSEQ of DE with Long name is DNA Index Value and Public ID is 64516
+		downloadIDs.add("FCF89106-22D3-2D93-E034-0003BA3F9857"); // CDE_IDSEQ of DE with Long name is DNA Index Value and Public ID is 2341940
+//		+ "\"DE Public ID\" = 3124888"	//test case for ORA-01403: no data found" 
+//		+ "\"DE Public ID\" = 2341940"	//get by entering *derived* in DE search based on Name and Def
+		
 		String type = "CDE";
 
 		String sqlStmt = null;
