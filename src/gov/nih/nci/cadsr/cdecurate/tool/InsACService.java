@@ -5298,7 +5298,7 @@ public class InsACService implements Serializable {
 						sDef = sDef.substring(0, nvpInd);
 					cstmt.setString(6, sName);
 					cstmt.setString(7, sDef);
-					// cstmt.setString(7, evsBean.getCONTE_IDSEQ()); caBIG by
+					// cstmt.setString(7, evsBean.getCONTE_IDSEQ()); NCI by
 					// default
 					cstmt.setString(9, "1.0");
 					cstmt.setString(10, "RELEASED");
@@ -6415,7 +6415,7 @@ public class InsACService implements Serializable {
 			}
 			//if nothing found, create new oc or prop or rep term
 			if (resultList == null || resultList.size() < 1) {
-				statusBean.setStatusMessage("**  Creating a new "+type + " in caBIG");
+				statusBean.setStatusMessage("**  Creating a new "+type + " in NCI");
 				statusBean.setCondrExists(false);
 				statusBean.setEvsBeanExists(false);
 				logger.info("At Line 6222 of InsACService.java");
@@ -6433,25 +6433,25 @@ public class InsACService implements Serializable {
 				String versionM = null;
 
 				ArrayList<ResultVO> foundBeanList = new ArrayList();
-				//select all which are owned by the default(caBIG) Context
+				//select all which are owned by the default(NCI) Context
 				for (int i = 0; i < resultList.size(); i++) {
 					ResultVO vo = resultList.get(i);
 					if (vo.getContext() != null) {
-						if (vo.getContext().equals(defaultContext.get("name"))) {	//TBD - JT if it is caBIG context, add it, but based on the user's latest requirement, check should be based on other context as well!
+						if (vo.getContext().equals(defaultContext.get("name"))) {	//TBD - JT if it is NCI context, add it, but based on the user's latest requirement, check should be based on other context as well!
 							foundBeanList.add(vo);
 						}
 					}
 				}
-				//If none are found owned by the default(caBIG) Context
+				//If none are found owned by the default(NCI) Context
 				if (foundBeanList == null || foundBeanList.size() < 1) {
 					for (int i = 0; i < resultList.size(); i++) {
 						ResultVO vo = resultList.get(i);
-						//select the one in different context, create new (oc or prop or rep term) in default(caBIG) context
+						//select the one in different context, create new (oc or prop or rep term) in default(NCI) context
 						if (vo.getContext() != null) {
 							statusBean.setStatusMessage("**  Matched "+type+" with "
 							+ vo.getLong_name() + " (" + vo.getPublicId()
 							+ "v" + vo.getVersion() + ") in " + vo.getContext()
-							+ " context; will create a new "+type+" in caBIG.");
+							+ " context; will create a new "+type+" in NCI.");
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
 							statusBean.setEvsBeanExists(false);
@@ -6460,10 +6460,10 @@ public class InsACService implements Serializable {
 							
 						}
 					}
-					//if none are found in different context and condr exists, create new (oc or prop or rep term) in caBIG
+					//if none are found in different context and condr exists, create new (oc or prop or rep term) in NCI
 					ResultVO vo = resultList.get(0);
 					if (vo.getCondr_IDSEQ() != null) {
-							statusBean.setStatusMessage("**  Creating a new "+type + " in caBIG");
+							statusBean.setStatusMessage("**  Creating a new "+type + " in NCI");
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
 							statusBean.setEvsBeanExists(false);
@@ -6471,7 +6471,7 @@ public class InsACService implements Serializable {
 							return statusBean;
 						}
 
-				}//go thru all the records owned by the default(caBIG) Context
+				}//go thru all the records owned by the default(NCI) Context
 	    		else if (foundBeanList != null && foundBeanList.size() > 0) {
 	    			//select the one with a Workflow Status RELEASED
 					for (int i = 0; i < foundBeanList.size(); i++) {
@@ -6487,7 +6487,7 @@ public class InsACService implements Serializable {
 					}
 					//use the released existing one if exists
 					if ((idseq != null) && !(idseq.equals(""))) {
-						statusBean.setStatusMessage("**  Using existing "+type+" "+longName+" ("+publicID+"v"+version+") from caBIG");
+						statusBean.setStatusMessage("**  Using existing "+type+" "+longName+" ("+publicID+"v"+version+") from NCI");
 						statusBean.setCondrExists(true);
 						statusBean.setCondrIDSEQ(condrIDSEQ);
 						statusBean.setEvsBeanExists(true);
@@ -6511,7 +6511,7 @@ public class InsACService implements Serializable {
 						}
 						//use the recommended existing data
 						if ((idseqM != null) && !(idseqM.equals(""))) {
-							statusBean.setStatusMessage("**  Recommending to use "+type+" "+longNameM+" ("+publicIDM+"v"+versionM+") from caBIG");
+							statusBean.setStatusMessage("**  Recommending to use "+type+" "+longNameM+" ("+publicIDM+"v"+versionM+") from NCI");
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(condrIDSEQM);
 							statusBean.setEvsBeanExists(true);
@@ -6520,7 +6520,7 @@ public class InsACService implements Serializable {
 						} else {
 							//If none are found, select any other Workflow Status and create a New Version of it.
 							ResultVO vo = foundBeanList.get(0);
-							statusBean.setStatusMessage("**  Creating new Version of "+type+" "+vo.getLong_name()+" ("+vo.getPublicId()+"v"+vo.getVersion()+") in caBIG");
+							statusBean.setStatusMessage("**  Creating new Version of "+type+" "+vo.getLong_name()+" ("+vo.getPublicId()+"v"+vo.getVersion()+") in NCI");
 							statusBean.setNewVersion(true);
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
@@ -6535,7 +6535,7 @@ public class InsACService implements Serializable {
 			
 			
 		} else {//if all the concepts does not exist
-			statusBean.setStatusMessage("**  Creating a new "+type + " in caBIG");
+			statusBean.setStatusMessage("**  Creating a new "+type + " in NCI");
 		}
          
         return statusBean;
