@@ -223,7 +223,7 @@ public class TestSpreadsheetDownload {
 //					+ "rownum < 11"
 //					+ "\"DE Public ID\" = 3124888"	//test case for ORA-01403: no data found" 
 //					+ "\"DE Public ID\" = 2341940"	//get by entering *derived* in DE search based on Name and Def
-					+ "\"DE Public ID\" = 3634859"	//DERIVATION METHOD test, should be "TEST METHOD 1"
+					+ "\"DE Public ID\" = 2341940"	//DERIVATION METHOD test, created by Denise
 					;
 			stmt = m_conn.prepareStatement(qry);
 			// _EXCEL_GENERATOR_VIEW.OC_CONCEPTS:
