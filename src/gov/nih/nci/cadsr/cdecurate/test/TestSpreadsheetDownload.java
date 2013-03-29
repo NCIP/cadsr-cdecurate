@@ -1060,19 +1060,27 @@ public class TestSpreadsheetDownload {
 		ArrayList<String> downloadIDs = new ArrayList<String>();
 		//useful SQL
 		/*
-		SELECT 
-		CDE_IDSEQ,
-		--OC_CONCEPTS, VALID_VALUES,
-		DE_DERIVATION 
-		FROM CDE_EXCEL_GENERATOR_VIEW
-		where
-		--CDE_IDSEQ = 'C67194F6-BFC9-53D6-E034-0003BA12F5E7'
-		"DE Public ID" = 2341940
+SELECT 
+CDE_IDSEQ
+--*
+--OC_CONCEPTS, VALID_VALUES,
+--DE_DERIVATION 
+FROM CDE_EXCEL_GENERATOR_VIEW
+where
+--CDE_IDSEQ = 'C67194F6-BFC9-53D6-E034-0003BA12F5E7'
+"DE Public ID" = 
+--2341940 -- OK :)
+--64550 --two dowmload IDs!!!??? not sure how to test this in test class but this is causing error too
+--3232325 ORA-01403: no data found :(
+--3232338 blank row!!!
+3124888
 		*/
-//		downloadIDs.add("C67194F6-BFC9-53D6-E034-0003BA12F5E7"); // CDE_IDSEQ of DE with Long name is DNA Index Value and Public ID is 64516
-		downloadIDs.add("FCF89106-22D3-2D93-E034-0003BA3F9857"); // CDE_IDSEQ of DE with Long name is DNA Index Value and Public ID is 2341940
-//		+ "\"DE Public ID\" = 3124888"	//test case for ORA-01403: no data found" 
-//		+ "\"DE Public ID\" = 2341940"	//get by entering *derived* in DE search based on Name and Def
+		downloadIDs.add("C67194F6-BFC9-53D6-E034-0003BA12F5E7"); // CDE_IDSEQ of DE with Long name is DNA Index Value and Public ID is 64516 - seems ok
+//		downloadIDs.add("FCF89106-22D3-2D93-E034-0003BA3F9857"); // Public ID is 2341940 - seems OK
+//		downloadIDs.add("A1EB3697-8ECD-E94B-E040-BB89AD436A29"); // Public ID is 3232325 - cause java.sql.SQLException: ORA-01403: no data found
+//		downloadIDs.add("A1EB3697-8F89-E94B-E040-BB89AD436A29"); // Public ID is 3232338 - cause blank/empty row (not supposed to be empty!!!)
+//		downloadIDs.add("8C7A38F6-8D66-4D33-E040-BB89AD435FB9"); // Public ID is 3124888 - all columns should be populated but blank row was found (zero row)
+
 		
 		String type = "CDE";
 
