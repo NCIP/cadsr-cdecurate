@@ -280,6 +280,7 @@ public class EVSSearch implements Serializable {
 				if (m_OC == null)
 					m_OC = new EVS_Bean();
 				m_DEC.setDEC_OCL_NAME_PRIMARY(m_OC.getLONG_NAME());
+				logger.debug("setDEC_OCL_NAME_PRIMARY 3 set to [" + m_DEC.getDEC_OCL_NAME_PRIMARY() + "]");
 				m_DEC.setDEC_OC_CONCEPT_CODE(m_OC.getCONCEPT_IDENTIFIER());
 				m_DEC.setDEC_OC_EVS_CUI_ORIGEN(m_OC.getEVS_DATABASE());
 				for (int i = 1; i < vOCConcepts.size(); i++) {
