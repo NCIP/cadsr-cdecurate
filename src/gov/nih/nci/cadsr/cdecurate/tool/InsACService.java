@@ -6415,7 +6415,7 @@ public class InsACService implements Serializable {
 			}
 			//if nothing found, create new oc or prop or rep term
 			if (resultList == null || resultList.size() < 1) {
-				statusBean.setStatusMessage("**  Creating a new "+type + " in NCI");
+				statusBean.setStatusMessage("**  Creating a new "+type + " in NCI");	//GF32649
 				statusBean.setCondrExists(false);
 				statusBean.setEvsBeanExists(false);
 				logger.info("At Line 6222 of InsACService.java");
@@ -6437,7 +6437,7 @@ public class InsACService implements Serializable {
 				for (int i = 0; i < resultList.size(); i++) {
 					ResultVO vo = resultList.get(i);
 					if (vo.getContext() != null) {
-						if (vo.getContext().equals(defaultContext.get("name"))) {	//TBD - JT if it is NCI context, add it, but based on the user's latest requirement, check should be based on other context as well!
+						if (vo.getContext().equals(defaultContext.get("name"))) {	//if it is NCI context, add it, but based on the user's latest requirement, check should be based on other context as well!
 							foundBeanList.add(vo);
 						}
 					}
@@ -6451,7 +6451,7 @@ public class InsACService implements Serializable {
 							statusBean.setStatusMessage("**  Matched "+type+" with "
 							+ vo.getLong_name() + " (" + vo.getPublicId()
 							+ "v" + vo.getVersion() + ") in " + vo.getContext()
-							+ " context; will create a new "+type+" in NCI.");
+							+ " context; will create a new "+type+" in NCI.");	//GF32649
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
 							statusBean.setEvsBeanExists(false);
@@ -6463,7 +6463,7 @@ public class InsACService implements Serializable {
 					//if none are found in different context and condr exists, create new (oc or prop or rep term) in NCI
 					ResultVO vo = resultList.get(0);
 					if (vo.getCondr_IDSEQ() != null) {
-							statusBean.setStatusMessage("**  Creating a new "+type + " in NCI");
+							statusBean.setStatusMessage("**  Creating a new "+type + " in NCI");	//GF32649
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
 							statusBean.setEvsBeanExists(false);
@@ -6487,7 +6487,7 @@ public class InsACService implements Serializable {
 					}
 					//use the released existing one if exists
 					if ((idseq != null) && !(idseq.equals(""))) {
-						statusBean.setStatusMessage("**  Using existing "+type+" "+longName+" ("+publicID+"v"+version+") from NCI");
+						statusBean.setStatusMessage("**  Using existing "+type+" "+longName+" ("+publicID+"v"+version+") from NCI");	//GF32649
 						statusBean.setCondrExists(true);
 						statusBean.setCondrIDSEQ(condrIDSEQ);
 						statusBean.setEvsBeanExists(true);
@@ -6511,7 +6511,7 @@ public class InsACService implements Serializable {
 						}
 						//use the recommended existing data
 						if ((idseqM != null) && !(idseqM.equals(""))) {
-							statusBean.setStatusMessage("**  Recommending to use "+type+" "+longNameM+" ("+publicIDM+"v"+versionM+") from NCI");
+							statusBean.setStatusMessage("**  Recommending to use "+type+" "+longNameM+" ("+publicIDM+"v"+versionM+") from NCI");	//GF32649
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(condrIDSEQM);
 							statusBean.setEvsBeanExists(true);
@@ -6520,7 +6520,7 @@ public class InsACService implements Serializable {
 						} else {
 							//If none are found, select any other Workflow Status and create a New Version of it.
 							ResultVO vo = foundBeanList.get(0);
-							statusBean.setStatusMessage("**  Creating new Version of "+type+" "+vo.getLong_name()+" ("+vo.getPublicId()+"v"+vo.getVersion()+") in NCI");
+							statusBean.setStatusMessage("**  Creating new Version of "+type+" "+vo.getLong_name()+" ("+vo.getPublicId()+"v"+vo.getVersion()+") in NCI");	//GF32649
 							statusBean.setNewVersion(true);
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
@@ -6535,7 +6535,7 @@ public class InsACService implements Serializable {
 			
 			
 		} else {//if all the concepts does not exist
-			statusBean.setStatusMessage("**  Creating a new "+type + " in NCI");
+			statusBean.setStatusMessage("**  Creating a new "+type + " in NCI");	//GF32649
 		}
          
         return statusBean;
