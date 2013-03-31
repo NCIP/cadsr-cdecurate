@@ -4,7 +4,6 @@
 	<classpathentry kind="lib" path="lib/jasper-runtime.jar"/>
 	<classpathentry kind="lib" path="lib/jboss-system.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.13.jar"/>
-	<classpathentry kind="lib" path="lib/ojdbc14.jar"/>
 	<classpathentry kind="lib" path="lib/servlet.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/acegi-security-1.0.4.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/antlr-2.7.6.jar"/>
@@ -50,6 +49,8 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevs-client-framework.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevs-core.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/LexEVSSecurity.jar"/>
+	<classpathentry kind="lib" path="lib/ojdbc6.jar"/>
+	<classpathentry kind="lib" path="testlib/log4jdbc4-1.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="testlib/junit/selenium-server-standalone-2.25.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>

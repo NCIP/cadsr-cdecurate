@@ -81,6 +81,8 @@
 			<classpath refid="libpath" />
 			<exclude name="**/AllTests.java" />
 			<exclude name="**/CDECurateWebTest.java" />
+			<exclude name="**/OracleLoggingConnectionPooledDataSource.java" />
+			<exclude name="**/PooledLoggingConnection.java" />
 		</javac>
 		<copy todir="${classes.dir}">
 			<fileset dir="conf">
