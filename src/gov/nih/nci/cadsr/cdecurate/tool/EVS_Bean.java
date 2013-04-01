@@ -905,6 +905,7 @@ public class EVS_Bean implements Serializable
       this.setASL_NAME(aslName);
       semType = util.removeNewLineChar(semType);
       this.setEVS_SEMANTIC(semType);
+      logger.debug("At line 908 of EVS_Bean.java "+this.CONCEPT_NAME+"**"+this.LONG_NAME+"**"+this.CONCEPT_IDENTIFIER+"**"+this.CONTEXT_NAME);
     }
     catch(Exception e)
     {

@@ -4049,6 +4049,7 @@ public class GetACSearch implements Serializable
                     sCUIString = m_util.removeNewLineChar(sCUIString);
                     OCBean.setCONCEPT_IDENTIFIER(sCUIString);
                     vList.addElement(OCBean);
+                    logger.debug("At line 4052 of GetACSearch.java "+OCBean.getCONCEPT_NAME()+"**"+OCBean.getLONG_NAME()+"**"+OCBean.getCONTEXT_NAME()+"**"+OCBean.getCONCEPT_IDENTIFIER());
                 }
                 
                 HttpSession session = m_classReq.getSession();
@@ -4190,10 +4191,11 @@ public class GetACSearch implements Serializable
                             }
                         }
                     }
+                    logger.debug("At line 4194 of GetACSearch.java "+conBean.getCONCEPT_NAME()+"**"+conBean.getLONG_NAME()+"**"+conBean.getCONTEXT_NAME()+"**"+conBean.getCONCEPT_IDENTIFIER());
                     if (isExist == false)
                         vList.addElement(conBean);
                 }
-                
+            
                 if (g == recordsDisplayed){
                 	int totalRecords = getResultSetSize(rs);
                 	DataManager.setAttribute(session, "totalRecords", Integer.toString(totalRecords));
