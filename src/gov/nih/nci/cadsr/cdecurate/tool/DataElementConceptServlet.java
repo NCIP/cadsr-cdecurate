@@ -2017,7 +2017,6 @@ public class DataElementConceptServlet extends CurationServlet {
 					vObjectClass.setElementAt(m_OC, 0);
 					DataManager.setAttribute(session, "vObjectClass", vObjectClass);
 					m_DEC.setDEC_OCL_NAME_PRIMARY("");
-					logger.debug("setDEC_OCL_NAME_PRIMARY 1 set to empty");
 					m_DEC.setDEC_OC_CONCEPT_CODE("");
 					m_DEC.setDEC_OC_EVS_CUI_ORIGEN("");
 					m_DEC.setDEC_OCL_IDSEQ("");
@@ -2178,17 +2177,15 @@ public class DataElementConceptServlet extends CurationServlet {
 		// add oc primary attributes to the dec bean
 		EVS_Bean pBean =(EVS_Bean)vObjectClass.get(0); 
 		String nvpValue = "";
-		if (checkNVP(pBean))	//GF32649 JT what is this check for?
+		if (checkNVP(pBean))	//JT what is this check for?
 			nvpValue="::"+pBean.getNVP_CONCEPT_VALUE();
-		if (pBean.getLONG_NAME() != null) {
-			decBean.setDEC_OCL_NAME_PRIMARY(pBean.getLONG_NAME()+nvpValue);	//GF32649 this is empty, thus in the JSP it is empty
-			logger.debug("setDEC_OCL_NAME_PRIMARY 2 set to [" + decBean.getDEC_OCL_NAME_PRIMARY() + "]");
-		}
+		if (pBean.getLONG_NAME() != null)
+			decBean.setDEC_OCL_NAME_PRIMARY(pBean.getLONG_NAME()+nvpValue);
 		decBean.setDEC_OC_CONCEPT_CODE(pBean.getCONCEPT_IDENTIFIER());
 		decBean.setDEC_OC_EVS_CUI_ORIGEN(pBean.getEVS_DATABASE());
 		//if (pBean.getIDSEQ() != null && pBean.getIDSEQ().length() > 0)
 		//	  decBean.setDEC_OCL_IDSEQ(pBean.getIDSEQ());
-		logger.debug("At line 2174 of DECServlet.java"+decBean.getDEC_OCL_NAME_PRIMARY()+"**"+decBean.getDEC_OC_CONCEPT_CODE()+"**"+decBean.getDEC_OC_EVS_CUI_ORIGEN());
+		logger.debug("At line 2174 of DECServlet.java"+decBean.getDEC_OCL_NAME_PRIMARY()+"**"+decBean.getDEC_OC_CONCEPT_CODE()+"**"+decBean.getDEC_OC_EVS_CUI_ORIGEN()+"**"+pBean.getCONTEXT_NAME());
 		DataManager.setAttribute(session, "m_OC", pBean);
 
 		// update qualifier vectors
@@ -2239,7 +2236,7 @@ public class DataElementConceptServlet extends CurationServlet {
 		decBean.setDEC_PROP_EVS_CUI_ORIGEN(pBean.getEVS_DATABASE());
 		//decBean.setDEC_PROPL_IDSEQ(pBean.getIDSEQ());
 		DataManager.setAttribute(session, "m_PC", pBean);
-		logger.debug("At line 2225 of DECServlet.java"+decBean.getDEC_PROPL_NAME_PRIMARY()+"**"+decBean.getDEC_PROP_CONCEPT_CODE()+"**"+decBean.getDEC_PROP_EVS_CUI_ORIGEN());
+		logger.debug("At line 2225 of DECServlet.java"+decBean.getDEC_PROPL_NAME_PRIMARY()+"**"+decBean.getDEC_PROP_CONCEPT_CODE()+"**"+decBean.getDEC_PROP_EVS_CUI_ORIGEN()+"**"+pBean.getCONTEXT_NAME());
 
 		// update qualifier vectors
 		decBean.setDEC_PROP_QUALIFIER_NAMES(null);
