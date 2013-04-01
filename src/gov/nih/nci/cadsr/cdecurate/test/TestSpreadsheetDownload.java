@@ -581,7 +581,7 @@ public class TestSpreadsheetDownload {
 		}
 
 		try {
-			String qry = "SELECT * FROM " + type
+			String qry = "SELECT * FROM sbrext." + type
 					+ "_EXCEL_GENERATOR_VIEW where 1=2";
 			ps = getConn().prepareStatement(qry);
 //			Object[] inputValues = new Object[columnNames.length];
@@ -1076,6 +1076,8 @@ where
 3124888
 		*/
 		downloadIDs.add("C67194F6-BFC9-53D6-E034-0003BA12F5E7"); // CDE_IDSEQ of DE with Long name is DNA Index Value and Public ID is 64516 - seems ok
+		downloadIDs.add("CFCBA97B-D243-5D7B-E034-0003BA12F5E7"); // Public ID is 2179601
+		downloadIDs.add("CFCBA97B-D27B-5D7B-E034-0003BA12F5E7"); // Public ID is 2179615
 //		downloadIDs.add("FCF89106-22D3-2D93-E034-0003BA3F9857"); // Public ID is 2341940 - seems OK
 //		downloadIDs.add("A1EB3697-8ECD-E94B-E040-BB89AD436A29"); // Public ID is 3232325 - cause java.sql.SQLException: ORA-01403: no data found
 //		downloadIDs.add("A1EB3697-8F89-E94B-E040-BB89AD436A29"); // Public ID is 3232338 - cause blank/empty row (not supposed to be empty!!!)
@@ -1088,7 +1090,7 @@ where
 		if (!full) {
 			StringBuffer[] whereBuffers = getWhereBuffers(downloadIDs);
 			for (StringBuffer wBuffer : whereBuffers) {
-				sqlStmt = "SELECT * FROM " + type + "_EXCEL_GENERATOR_VIEW "
+				sqlStmt = "SELECT * FROM sbrext." + type + "_EXCEL_GENERATOR_VIEW "
 						+ "WHERE " + type + "_IDSEQ IN " + " ( "
 						+ wBuffer.toString() + " )  ";
 				if (restrict) {
@@ -1100,7 +1102,7 @@ where
 				}
 			}
 		} else {
-			sqlStmt = "SELECT * FROM " + type + "_EXCEL_GENERATOR_VIEW";
+			sqlStmt = "SELECT * FROM sbrext." + type + "_EXCEL_GENERATOR_VIEW";
 			if (restrict)
 				sqlStmt += " where ROWNUM <= " + GRID_MAX_DISPLAY;
 
@@ -1162,7 +1164,7 @@ where
 
 		String sheetName = "Custom Download";
 		int sheetNum = 1;
-		String fillIn = "true";
+		String fillIn = "false";// set true to fill in all values.
 		String[] columns = null;
 		
 			ArrayList<String> defaultHeaders = new ArrayList<String>();
