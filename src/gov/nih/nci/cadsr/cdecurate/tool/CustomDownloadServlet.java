@@ -422,7 +422,8 @@ public class CustomDownloadServlet extends CurationServlet {
 		StringBuffer whereBuffer = null;
 		List<StringBuffer> whereBuffers = null;
 
-		if (downloadIds.size() <= 1000 ){ //make sure that there are no more than 1000 ids in each 'IN' clause
+		//GF30779 TBD why would downloadIds be NULL???
+		if (downloadIds != null && downloadIds.size() <= 1000 ){ //make sure that there are no more than 1000 ids in each 'IN' clause
 			whereBuffer = new StringBuffer();
 			for (String id:downloadIds) {
 				whereBuffer.append("'" + id + "',");
