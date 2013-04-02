@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import oracle.net.aso.e;
+
 public class DataElementConceptServlet extends CurationServlet {
 
 	public DataElementConceptServlet() {		
@@ -609,7 +611,13 @@ public class DataElementConceptServlet extends CurationServlet {
 			{
 				GetACService getAC = new GetACService(m_classReq, m_classRes, this);
 				Vector vCon = getAC.getAC_Concepts(sCondr, null, true);
-				logger.debug("At line 612 of DEcServlet.java"+Arrays.asList(vCon));
+				for (int i=0; i<vCon.size();i++){
+					EVS_Bean eBean =(EVS_Bean)vCon.get(i);
+					logger.debug("At line 616 of DECServlet.java "+eBean.getLONG_NAME());
+					logger.debug("At line 617 of DECServlet.java "+eBean.getEVS_ORIGIN());
+					logger.debug("At line 618 of DECServlet.java "+eBean.getEVS_DATABASE());
+					logger.debug("At line 619 of DECServlet.java "+eBean.getCONCEPT_IDENTIFIER());
+				}
 				if (vCon != null && vCon.size() > 0)
 				{
 					for (int j = 0; j < vCon.size(); j++)
@@ -882,7 +890,7 @@ public class DataElementConceptServlet extends CurationServlet {
 		if (nameAct.equals("Search"))
 		{
 			pageDEC.setDEC_LONG_NAME(AdministeredItemUtil.handleLongName(sLongName));	//GF32004;
-			logger.debug("DEC_LONG_NAME at Line 873 of SetACService.java"+pageDEC.getDEC_LONG_NAME());
+			logger.debug("DEC_LONG_NAME at Line 873 of DECServlet.java"+pageDEC.getDEC_LONG_NAME());
 			pageDEC.setDEC_PREFERRED_DEFINITION(sDef);
 		}
 		if (!nameAct.equals("OpenDEC")){
@@ -1090,11 +1098,18 @@ public class DataElementConceptServlet extends CurationServlet {
 
 			if ( sComp.equals("ObjectClass") || sComp.equals("ObjectQualifier")){
 				vObjectClass = (Vector) session.getAttribute("vObjectClass");
+				for (int i=0; i<vObjectClass.size();i++){
+					EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
+					logger.debug("At line 1097 of DECServlet.java "+eBean.getLONG_NAME());
+				}
 				if (vObjectClass != null && vObjectClass.size()>0){ 
 
 
 					vObjectClass = this.getMatchingThesarusconcept(vObjectClass, "Object Class");	//get the matching concept from EVS based on the caDSR's CDR (object class)
-					logger.debug("At line 1097 of DECServlet.java "+Arrays.asList(vObjectClass));
+					for (int i=0; i<vObjectClass.size();i++){
+						EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
+						logger.debug("At line 1105 of DECServlet.java "+eBean.getLONG_NAME());
+					}
 					m_DEC = this.updateOCAttribues(vObjectClass, m_DEC);	//populate caDSR's DEC bean based on VO (from EVS results)
 
 					this.checkChosenConcepts(session,codes, defs, vObjectClass, "OC");	//make sure user's chosen/edited definition is not different from the EVS definition???
@@ -1118,7 +1133,10 @@ public class DataElementConceptServlet extends CurationServlet {
 					}
 				}
 				DataManager.setAttribute(session, "vObjectClass", vObjectClass);	//save EVS VO in session
-				logger.debug("At line 1121 of DECServlet.java"+Arrays.asList(vObjectClass));
+				for (int i=0; i<vObjectClass.size();i++){
+					EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
+					logger.debug("At line 1138 of DECServlet.java "+eBean.getLONG_NAME());
+				}
 			}
 			if (sComp.equals("Property") || sComp.equals("PropertyClass") || sComp.equals("PropertyQualifier")){
 				vProperty = (Vector) session.getAttribute("vProperty");
@@ -1266,6 +1284,7 @@ public class DataElementConceptServlet extends CurationServlet {
 			eBean.setCON_AC_SUBMIT_ACTION("INS");
 			eBean.setCONTE_IDSEQ(decBean.getDEC_CONTE_IDSEQ());
 			String eDB = eBean.getEVS_DATABASE();
+			logger.debug("At line 1278 of DECServlet.java "+eDB);
 			if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
 			{
 				logger.debug("At line 1271 of DECServlet.java");
@@ -1287,7 +1306,10 @@ public class DataElementConceptServlet extends CurationServlet {
 				vObjectClass.setElementAt(eBean, 0);
 			else
 				vObjectClass.addElement(eBean);
-			logger.debug("At line 1290 of DECServlet.java**"+Arrays.asList(vObjectClass));
+			for (int i=0; i<vObjectClass.size();i++){
+				EVS_Bean Bean =(EVS_Bean)vObjectClass.get(i);
+				logger.debug("At line 1302 of DECServlet.java "+Bean.getLONG_NAME());
+			}
 			DataManager.setAttribute(session, "vObjectClass", vObjectClass);
 			DataManager.setAttribute(session, "newObjectClass", "true");
 			// DataManager.setAttribute(session, "selObjQRow", sSelRow);
