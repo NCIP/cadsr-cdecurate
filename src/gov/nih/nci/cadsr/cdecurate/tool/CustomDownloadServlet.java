@@ -343,10 +343,10 @@ public class CustomDownloadServlet extends CurationServlet {
 											}//GF30779=============END
 //											truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(strValues[b].getBytes()); // GF30779
 											logger.debug("At line 316 of CustomDownloadServlet.java" + "***" + truncatedTimeStamp + "***" + className + "***" + valueDatum[a]+ "***" + strValues[b]);
-											if (columnType.contains("VALID_VALUE") && truncatedTimeStamp != null && truncatedTimeStamp.contains(":")) {
-												truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
-												logger.debug("At line 304 of CustomDownloadServlet.java" + truncatedTimeStamp);
-											} //end GF30779
+//											if (columnType.contains("VALID_VALUE") && truncatedTimeStamp != null && truncatedTimeStamp.contains(":")) {
+//												truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
+//												logger.debug("At line 304 of CustomDownloadServlet.java" + truncatedTimeStamp);
+//											} //end GF30779
 											values[b] = truncatedTimeStamp;
 											slide++;
 										}
@@ -360,7 +360,7 @@ public class CustomDownloadServlet extends CurationServlet {
 									} else{
 										truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(valueDatum[a].getBytes());
 									}//GF30779=============END
-									truncatedTimeStamp = valueDatum[a].toString(); //begin GF30779
+//									truncatedTimeStamp = valueDatum[a].toString(); //begin GF30779
 									logger.debug("At line 335 of CustomDownloadServlet.java" +"****" + truncatedTimeStamp +"*****" + s);
 //									truncatedTimeStamp = AdministeredItemUtil.toASCIICode(truncatedTimeStamp); // GF30779
 //									logger.debug("At line 313 of CustomDownloadServlet.java" + truncatedTimeStamp + s + valueDatum[a]);
