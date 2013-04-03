@@ -16,7 +16,7 @@ delete from SBR.CLASSIFICATION_SCHEMES where CONTE_IDSEQ = (select CONTE_IDSEQ f
 --additional tier specific delete (4/3/2013)
 delete SBR.VD_PVS WHERE CONTE_IDSEQ = (SELECT CONTE_IDSEQ FROM SBR.CONTEXTS WHERE name = 'HITSP')
 
-delete from CONTEXTS where CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'HITSP');
+delete from SBR.CONTEXTS where CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'HITSP');
 
 --Prove that it is gone :)
 select CONTE_IDSEQ, DESCRIPTION, pal_name, ll_name from SBR.CONTEXTS where NAME = 'HITSP';
