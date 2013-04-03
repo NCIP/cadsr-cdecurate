@@ -13,8 +13,11 @@ delete from SBR.CS_CSI where CS_IDSEQ = (select CS_IDSEQ from SBR.CLASSIFICATION
 
 delete from SBR.CLASSIFICATION_SCHEMES where CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'HITSP');
 
---additional tier specific delete (4/3/2013)
+--additional QA tier specific delete (4/3/2013)
 delete SBR.VD_PVS WHERE CONTE_IDSEQ = (SELECT CONTE_IDSEQ FROM SBR.CONTEXTS WHERE name = 'HITSP')
+
+--additional STAGE tier specific delete (4/3/2013)
+delete from SBR.DEFINITIONS WHERE CONTE_IDSEQ = (SELECT CONTE_IDSEQ FROM SBR.CONTEXTS WHERE name = 'HITSP')
 
 delete from SBR.CONTEXTS where CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'HITSP');
 
