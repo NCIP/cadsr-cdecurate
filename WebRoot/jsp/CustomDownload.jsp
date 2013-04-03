@@ -20,7 +20,7 @@
 	    </style>
   </head>
   
-  <body class=" claro " onLoad="toggleView();">
+  <body class=" claro "> <!-- GF30779 PERF remove onLoad toggleView -->
           <!-- Header -->
             <curate:header displayUser = "false"/>
         <!-- Main Area -->
@@ -38,7 +38,8 @@
 <!-- GF31701
 		  <button type="button" onClick="submitSelectedColumnNames('XML');">Download XML</button>
 -->
-	      <button type="button" onClick="toggleView();">Refresh Preview</button>
+		<!-- GF30779 PERF comment out button -->
+	      <!-- <button type="button" onClick="toggleView();">Refresh Preview</button> -->
 	      	<input type="checkbox" name="fillIn" value="true"/> Check to fill in all values.
       </form>
       <% ArrayList<String> rows = (ArrayList<String>) session.getAttribute("downloadIDs"); %>
@@ -81,8 +82,9 @@
           </form>
       </div>
       
-      <font size="4">Preview of data from selected columns.</font><% if (rows.size() > 10) {%>  <font size="4"> Limited to first 10 records</font><%} %>
-      <div id="customDownloadContainer" style="width: 90%; height: 50%; display: block"></div> 
+      <!-- GF30779 PERF -->
+     <%--  <font size="4">Preview of data from selected columns.</font><% if (rows.size() > 10) {%>  <font size="4"> Limited to first 10 records</font><%} %>
+      <div id="customDownloadContainer" style="width: 90%; height: 50%; display: block"></div> --%> 
       
         <script type="text/javascript">
             var djConfig = {
@@ -202,11 +204,12 @@
             	}
             }
             
-            function toggleView() {
+          //GF30779 PERF
+          /*   function toggleView() {
             
                     selectInGrid();
                 
-            }
+            } 
 
             function selectInGrid() {
             	dndPlugin.cleanCellSelection();
@@ -223,7 +226,7 @@
             	cdGrid.setStructure(cdlLayout);
             	cdGrid.update();
 	            
-            }
+            } */
             
             function getCol(colName) {
 				if (cdGrid != null && dndPlugin != null) {
@@ -406,9 +409,10 @@
             dojo.require("dojox.grid.enhanced.plugins.NestedSorting");//This is a must as DnD depends on NestedSorting feature
             
             // our data store:
-            completeData = new dojo.data.ItemFileReadStore({
+           //GF30779 PERF
+           /*  completeData = new dojo.data.ItemFileReadStore({
             url:"NCICurationServlet?reqType=jsonRequest"
-            });
+            }); */
             
 			var cdlLayout = getLayout('true');
             
@@ -455,7 +459,8 @@
             
             
             // create a new grid:
-            cdGrid = new dojox.grid.EnhancedGrid({
+            //GF30779 PERF
+           /*  cdGrid = new dojox.grid.EnhancedGrid({
             query: {},
             store: completeData,
             clientSort: true,
@@ -472,7 +477,7 @@
             // Call startup, in order to render the grid:
             cdGrid.startup();
             
-            dojo.connect(cdGrid, "onHeaderCellClick", selectColumn);
+            dojo.connect(cdGrid, "onHeaderCellClick", selectColumn); */
            
             
         </script>	
