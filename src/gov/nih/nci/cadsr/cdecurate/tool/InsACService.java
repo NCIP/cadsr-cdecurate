@@ -6437,7 +6437,7 @@ public class InsACService implements Serializable {
 				for (int i = 0; i < resultList.size(); i++) {
 					ResultVO vo = resultList.get(i);
 					if (vo.getContext() != null) {
-						if (vo.getContext().equals(defaultContext.get("name"))) {	//if it is NCI context, add it, but based on the user's latest requirement, check should be based on other context as well!
+						if (vo.getContext().equals(defaultContext.get("name"))) {	//GF32649 if it is NCI context, add it, but based on the user's latest requirement, check should be based on other context as well!
 							foundBeanList.add(vo);
 						}
 					}
