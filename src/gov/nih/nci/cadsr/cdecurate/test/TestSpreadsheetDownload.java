@@ -68,6 +68,9 @@ WHERE
 -- desc DERIVED_DATA_ELEMENT_T
  * --checking specific columns
  * select "DE Preferred Definition","VD Short Name" ,"VD Long Name" from cde_excel_generator_view where cde_idseq = 'E0F50D35-0EBD-1078-E034-0003BA12F5E7';
+-- VD
+select * from VD_EXCEL_GENERATOR_VIEW where ;
+ * 
  * --spreadsheet columns sqls
 --AI to AN in Excel sheet (Exist in customDownload.sql at line 362)
 SELECT con.preferred_name,
@@ -187,6 +190,40 @@ SQL> desc CDE_EXCEL_GENERATOR_VIEW;
  CD Version				   NOT NULL NUMBER(4,2)
  CD Context Name			   NOT NULL VARCHAR2(30)
  * 
+SQL> desc VD_EXCEL_GENERATOR_VIEW;  
+ Name					   Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ VD_IDSEQ				   NOT NULL CHAR(36)
+ VD Public ID				   NOT NULL NUMBER
+ VD Short Name				   NOT NULL VARCHAR2(30)
+ VD Long Name					    VARCHAR2(255)
+ VD Version				   NOT NULL NUMBER(4,2)
+ VD Context Name			   NOT NULL VARCHAR2(30)
+ VD Context Version			   NOT NULL NUMBER(4,2)
+ VD Type					    VARCHAR2(14)
+ VD Datatype				   NOT NULL VARCHAR2(20)
+ VD Min Length					    NUMBER(8)
+ VD Max Length					    NUMBER(8)
+ VD Min value					    VARCHAR2(255)
+ VD Max Value					    VARCHAR2(255)
+ VD Decimal Place				    NUMBER(2)
+ VD Format					    VARCHAR2(20)
+ VD_CONCEPTS					    CONCEPTS_LIST_T
+ Representation Public ID			    NUMBER
+ Representation Long Name			    VARCHAR2(255)
+ Representation Short Name			    VARCHAR2(30)
+ Representation Context Name			    VARCHAR2(30)
+ Representation Version 			    NUMBER(4,2)
+ REP_CONCEPTS					    CONCEPTS_LIST_T
+ VALID_VALUES					    VALID_VALUE_LIST_T
+ CLASSIFICATIONS				    CDEBROWSER_CSI_LIST_T
+ DESIGNATIONS					    DESIGNATIONS_LIST_T
+ CD Public ID				   NOT NULL NUMBER
+ CD Short Name				   NOT NULL VARCHAR2(30)
+ CD Version				   NOT NULL NUMBER(4,2)
+ CD Context Name			   NOT NULL VARCHAR2(30)
+
+SQL> 
  */
 public class TestSpreadsheetDownload {
 	public static final Logger logger = Logger
@@ -203,8 +240,12 @@ public class TestSpreadsheetDownload {
 	ArrayList<HashMap<String, List<String[]>>> arrayData = new ArrayList<HashMap<String, List<String[]>>>();
 
 	//=======================================================================
-	public static void main1(String[] args) {
-		String type = "CDE";
+	public static void main(String[] args) {
+//		testDE(args);
+		testVD(args);
+	}
+
+	private static void testVD(String[] args) {
 		PreparedStatement stmt = null;
 		ResultSet rset = null;
 		String value = null;
@@ -218,8 +259,254 @@ public class TestSpreadsheetDownload {
 	        logger.debug("connected");
 
 	        //e.g. select OC_CONCEPTS from CDE_EXCEL_GENERATOR_VIEW --type is CONCEPTS_LIST_T
-			String qry = "SELECT OC_CONCEPTS, VALID_VALUES, DE_DERIVATION FROM " + type
-					+ "_EXCEL_GENERATOR_VIEW"
+			String qry = "SELECT VD_CONCEPTS, REP_CONCEPTS, VALID_VALUES, CLASSIFICATIONS, DESIGNATIONS FROM VD_EXCEL_GENERATOR_VIEW"
+					+ " where "
+//					+ "rownum < 11"
+					+ "\"VD Public ID\" = 2990741"
+					;
+			stmt = m_conn.prepareStatement(qry);
+			// _EXCEL_GENERATOR_VIEW.OC_CONCEPTS:
+			/*
+			SQL> desc CONCEPTS_LIST_T;          
+			 CONCEPTS_LIST_T TABLE OF CONCEPT_DETAIL_T
+			 Name					   Null?    Type
+			 ----------------------------------------- -------- ----------------------------
+			 PREFERRED_NAME 				    VARCHAR2(30)
+			 LONG_NAME					    VARCHAR2(255)
+			 CON_ID 					    NUMBER
+			 DEFINITION_SOURCE				    VARCHAR2(2000)
+			 ORIGIN 					    VARCHAR2(240)
+			 EVS_SOURCE					    VARCHAR2(255)
+			 PRIMARY_FLAG_IND				    VARCHAR2(3)
+			 DISPLAY_ORDER					    NUMBER
+			
+			SQL> 
+			SQL> desc VALID_VALUE_LIST_T;
+			 VALID_VALUE_LIST_T TABLE OF VALID_VALUE_T
+			 Name					   Null?    Type
+			 ----------------------------------------- -------- ----------------------------
+			 VALIDVALUE					    VARCHAR2(255)
+			 VALUEMEANING					    VARCHAR2(255)
+			 MEANINGDESCRIPTION				    VARCHAR2(2000)
+			 MEANINGCONCEPTS				    VARCHAR2(2000)
+			 PVBEGINDATE					    DATE
+			 PVENDDATE					    DATE
+			 VMPUBLICID					    NUMBER
+			 VMVERSION					    NUMBER(4,2)
+			 VMALTERNATEDEFINITIONS 			    VARCHAR2(2000)
+			
+			SQL> 
+			SQL> desc DERIVED_DATA_ELEMENT_T;
+			 Name					   Null?    Type
+			 ----------------------------------------- -------- ----------------------------
+			 DerivationType 				    VARCHAR2(30)
+			 DerivationTypeDescription			    VARCHAR2(200)
+			 Methods					    VARCHAR2(4000)
+			 Rule						    VARCHAR2(4000)
+			 ConcatenationCharacter 			    VARCHAR2(1)
+			 ComponentDataElementsList			    DATA_ELEMENT_DERIVATION_LIST
+									    _T
+			
+			SQL> 
+			SQL> desc DATA_ELEMENT_DERIVATION_LIST_T;
+			 DATA_ELEMENT_DERIVATION_LIST_T TABLE OF DATA_ELEMENT_DERIVATION_T
+			 Name					   Null?    Type
+			 ----------------------------------------- -------- ----------------------------
+			 PublicId					    NUMBER
+			 LongName					    VARCHAR2(255)
+			 PreferredName					    VARCHAR2(30)
+			 PreferredDefinition				    VARCHAR2(2000)
+			 Version					    NUMBER(4,2)
+			 WorkflowStatus 				    VARCHAR2(20)
+			 ContextName					    VARCHAR2(30)
+			 DisplayOrder					    NUMBER
+			
+			SQL> 
+			*/
+			rset = stmt.executeQuery();
+			int rowcount = 0;
+			while (rset.next()) {
+				System.out.println("************************************** start ROW " + ++rowcount + " **************************************");
+				array1 = rset.getArray(1);
+				nestedRs1 = array1.getResultSet();
+				array2 = rset.getArray(2);
+				nestedRs2 = array2.getResultSet();
+				array3 = /*rset.getArray(3); //cause oracle.sql.STRUCT cannot be cast to oracle.sql.ARRAY */  ((oracle.sql.STRUCT)rset.getObject(3));
+				
+///*
+				while (nestedRs1.next())
+				{ 
+					System.out.println("************************************** start CONCEPT_DETAIL_T " + rowcount + " **************************************");
+					//System.out.println("Current value[0] = [" + nestedRs.getObject(1) + "]");
+					//System.out.println("Current value[1] = [" + nestedRs.getObject(2) + "]");
+					try {
+						s1 = (oracle.sql.STRUCT) nestedRs1.getObject(2);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				  
+				  if (s1 != null) 
+				  { 
+				    String sqlname = s1.getSQLTypeName(); 
+					Datum[] attrs = s1.getOracleAttributes();
+			
+				    if (sqlname.equals ("SBREXT.CONCEPT_DETAIL_T"))
+				    { 
+					      System.out.println ("PREFERRED_NAME=" + AdministeredItemUtil.handleSpecialCharacters((attrs[0].getBytes())));
+					      System.out.println ("LONG_NAME=" + AdministeredItemUtil.handleSpecialCharacters((attrs[1].getBytes())));
+					      System.out.println ("CON_ID=" + attrs[2].intValue());
+				    }
+				    else 
+				      throw new Exception ("Invalid type name: "+sqlname + " in parent");
+				  }
+					System.out.println("************************************** end CONCEPT_DETAIL_T " + rowcount + " **************************************");
+				}
+//*/
+
+///*
+				while (nestedRs2.next())
+				{
+					System.out.println("************************************** start VALID_VALUE_T " + rowcount + " **************************************");
+					//System.out.println("Current value[0] = [" + nestedRs.getObject(1) + "]");
+					//System.out.println("Current value[1] = [" + nestedRs.getObject(2) + "]");
+					try {
+						s2 = (oracle.sql.STRUCT) nestedRs2.getObject(2);	//cause "java.sql.SQLException: ORA-01403: no data found" for empty VALID_VALUE_LIST_T
+					} catch (Exception e) {
+						//e.printStackTrace();
+						System.out.println("Error while retriving VALID_VALUE_T, error was = [" + e.getMessage() + "]");
+					}
+
+				  
+				  if (s2 != null) 
+				  { 
+				    String sqlname = s2.getSQLTypeName(); 
+					Datum[] attrs = s2.getOracleAttributes();
+
+				    if (sqlname.equals ("SBREXT.VALID_VALUE_T"))
+				    {
+					      System.out.println ("VALIDVALUE=" + AdministeredItemUtil.handleSpecialCharacters(attrs[0].getBytes()));
+					      System.out.println ("PVBEGINDATE=" + attrs[4].dateValue());
+					      System.out.println ("VMPUBLICID=" + attrs[6].intValue());
+				    }
+				    else 
+				      throw new Exception ("Invalid type name: "+sqlname + " in parent");
+				  }				  
+					System.out.println("************************************** end VALID_VALUE_T " + rowcount + " **************************************");
+				}
+	
+//				while (nestedRs3.next())
+			  if (array3 != null) 
+			  {
+					System.out.println("************************************** start DERIVED_DATA_ELEMENT_T " + rowcount + " **************************************");
+					//TEST SQL:
+					/*
+					SELECT DE_DERIVATION FROM CDE_EXCEL_GENERATOR_VIEW where "DE Public ID" = 2341940;
+					*/
+					String sqlname = array3.getSQLTypeName();
+
+				    if (sqlname.equals ("SBREXT.DERIVED_DATA_ELEMENT_T"))
+				    {
+						Datum[] valueDatum = array3.getOracleAttributes();
+						String[] values = new String[valueDatum.length];
+						for (int a = 0; a < valueDatum.length; a++) {
+							if (valueDatum[a] != null) {
+								Class c = valueDatum[a].getClass();
+								if(c.getName().equals("oracle.sql.CHAR")) {
+									values[a]= new String(valueDatum[a].getBytes());	//valueDatum[a].toString();	//should not do toString(), it will cause "???" in the value!
+									System.out.println("Current colum type = [" + c.getName() + "]");
+//									System.out.println("Current colum name = [" + c.getCanonicalName() + "]");	//TBD not sure how to get the column name
+									System.out.println("Current value[" + a + "] = [" + values[a] + "]");
+									System.out.println("--- end of column ---");
+								} else {
+									System.out.println ("what are you my child=" + valueDatum[a]);
+									if(c.getName().equals("oracle.sql.ARRAY")) {
+										int childCount = 0;
+										array3_1 = ((oracle.sql.ARRAY)valueDatum[a]);
+										nestedRs3_1 = array3_1.getResultSet();
+										while (nestedRs3_1.next())
+										{ 
+											System.out.println("************************************** start DATA_ELEMENT_DERIVATION_LIST_T " + rowcount + " **************************************");
+											//System.out.println("Current value[0] = [" + nestedRs.getObject(1) + "]");
+											//System.out.println("Current value[1] = [" + nestedRs.getObject(2) + "]");
+											try {
+												s3_1 = (oracle.sql.STRUCT) nestedRs3_1.getObject(2);
+											} catch (Exception e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+										  
+										  if (s3_1 != null) 
+										  { 
+										    String sqlname3_1 = s3_1.getSQLTypeName(); 
+											Datum[] attrs = s3_1.getOracleAttributes();
+									
+										    if (sqlname3_1.equals ("SBREXT.DATA_ELEMENT_DERIVATION_T"))
+										    { 
+										    	childCount++;
+											  System.out.println ("PublicId=" + attrs[0].intValue());
+											  System.out.println ("LongName=" + AdministeredItemUtil.handleSpecialCharacters((attrs[1].getBytes())));
+											  System.out.println ("PreferredName=" + AdministeredItemUtil.handleSpecialCharacters((attrs[2].getBytes())));
+											  System.out.println ("PreferredDefinition=" + AdministeredItemUtil.handleSpecialCharacters((attrs[3].getBytes())));
+											  System.out.println ("Version=" + attrs[4].intValue());
+											  System.out.println ("WorkflowStatus=" + AdministeredItemUtil.handleSpecialCharacters((attrs[5].getBytes())));
+											  System.out.println ("ContextName=" + AdministeredItemUtil.handleSpecialCharacters((attrs[6].getBytes())));
+											  System.out.println ("DisplayOrder=" + attrs[7].intValue());
+												System.out.println("************************************** child " + childCount + " of DATA_ELEMENT_DERIVATION_LIST_T " + rowcount + " **************************************");
+										    }
+										    else 
+										      throw new Exception ("Invalid type name: "+sqlname + " in child");
+										  }
+										System.out.println("************************************** end DATA_ELEMENT_DERIVATION_LIST_T " + rowcount + " **************************************");
+										}
+									} else {
+										System.out.println ("what are you my child=" + valueDatum[a]);
+									}
+								}
+							} else {
+								System.out.println("Current value[" + a + "] is NULL or empty.");
+								System.out.println("--- end of column ---");
+							}
+						}
+				    }
+				    else 
+				      throw new Exception ("Invalid type name: "+sqlname + " in parent");
+
+				    System.out.println("************************************** end DERIVED_DATA_ELEMENT_T " + rowcount + " **************************************");
+//				}
+				System.out.println("************************************** end ROW " + rowcount + " **************************************");
+			}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally { 
+			try {
+				rset.close ();
+				stmt.close (); 
+				m_conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private static void testDE(String[] args) {
+		PreparedStatement stmt = null;
+		ResultSet rset = null;
+		String value = null;
+		Array array1 = null;	ResultSet nestedRs1;	oracle.sql.STRUCT s1 = null;
+		Array array2 = null;	ResultSet nestedRs2;	oracle.sql.STRUCT s2 = null;
+		STRUCT array3 = null;	/*ResultSet nestedRs3;*/	oracle.sql.STRUCT s3 = null;
+		Array array3_1 = null;	ResultSet nestedRs3_1;	oracle.sql.STRUCT s3_1 = null;
+		
+		try {
+			connectDB(args[0], args[1]);
+	        logger.debug("connected");
+
+	        //e.g. select OC_CONCEPTS from CDE_EXCEL_GENERATOR_VIEW --type is CONCEPTS_LIST_T
+			String qry = "SELECT OC_CONCEPTS, VALID_VALUES, DE_DERIVATION FROM CDE_EXCEL_GENERATOR_VIEW"
 					+ " where "
 //					+ "rownum < 11"
 //					+ "\"DE Public ID\" = 3124888"	//test case for ORA-01403: no data found" 
@@ -453,7 +740,7 @@ public class TestSpreadsheetDownload {
 			}
 		}
 	}
-	
+
 	public static void connectDB(String username, String password) {
 		try {
 			//DO NOT HARD CODE the user/password and check in SVN/Git please!
@@ -463,7 +750,7 @@ public class TestSpreadsheetDownload {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main1(String[] args) {
 		connectDB(args[0], args[1]);
 		TestSpreadsheetDownload download = new TestSpreadsheetDownload();
 		download.setColHeadersAndTypes("CDE");
