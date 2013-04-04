@@ -8,6 +8,8 @@ select * from SBR.REFERENCE_DOCUMENTS where AC_IDSEQ in (select AC_IDSEQ from AD
 
 select * from SBR.DATA_ELEMENTS where CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'HITSP');
 
+select * from SBR.SC_CONTEXTS where CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'HITSP');
+
 --Prove that it exist first :<
 select CONTE_IDSEQ, DESCRIPTION, pal_name, ll_name from SBR.CONTEXTS where CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'HITSP');
 
@@ -38,6 +40,9 @@ delete from SBR.DATA_ELEMENTS where CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.C
 
 --additional STAGE tier specific delete (4/3/2013)
 delete from SBR.VALUE_DOMAINS where CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'HITSP');
+
+--additional STAGE tier specific delete (4/4/2013)
+delete from SBR.SC_CONTEXTS where CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'HITSP');
 
 delete from SBR.CONTEXTS where CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'HITSP');
 
