@@ -27,6 +27,9 @@ delete from SBR.CLASSIFICATION_SCHEMES where CONTE_IDSEQ = (select CONTE_IDSEQ f
 --additional QA tier specific delete (4/3/2013)
 delete SBR.VD_PVS WHERE CONTE_IDSEQ = (SELECT CONTE_IDSEQ FROM SBR.CONTEXTS WHERE name = 'HITSP');
 
+--additional STAGE tier specific delete (4/4/2013)
+delete from SBR.REFERENCE_DOCUMENTS where AC_IDSEQ in (select AC_IDSEQ from ADMINISTERED_COMPONENTS where CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'HITSP'));
+
 --additional STAGE tier specific delete (4/3/2013)
 delete from SBR.VALUE_DOMAINS where CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'HITSP');
 
