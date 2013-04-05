@@ -9101,7 +9101,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'CABIG';
+  where upper(name) = 'NCI';	--GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -9231,7 +9231,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'CABIG';
+  where upper(name) = 'NCI';	--GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -9403,7 +9403,7 @@ BEGIN
    begin
     select conte_idseq into p_Con_Conte_idseq
     from contexts
-    where upper(name) = 'CABIG';
+    where upper(name) = 'NCI';	--GF32649
    exception when no_data_found then
      P_RETURN_CODE := 'API_CON_106';  --CONTEXT_NAME cannot be null here
   RETURN;
@@ -10287,7 +10287,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'CABIG';
+  where upper(name) = 'NCI';	--GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -20272,7 +20272,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'CABIG';
+  where upper(name) = 'NCI';	--GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -20407,7 +20407,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'CABIG';
+  where upper(name) = 'NCI';	--GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -20582,7 +20582,7 @@ BEGIN
    begin
     select conte_idseq into p_Con_Conte_idseq
     from contexts
-    where upper(name) = 'CABIG';
+    where upper(name) = 'NCI';	--GF32649
    exception when no_data_found then
      P_RETURN_CODE := 'API_CON_106';  --CONTEXT_NAME cannot be null here
   RETURN;
@@ -21475,7 +21475,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'CABIG';
+  where upper(name) = 'NCI';	--GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
