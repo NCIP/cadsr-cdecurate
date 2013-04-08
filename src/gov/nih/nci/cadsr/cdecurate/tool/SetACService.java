@@ -647,9 +647,10 @@ public class SetACService implements Serializable
 					strInValid = strInValid + checkNameDiffForReleased(oName, s, oStatus);
 				}
 			}
-//			if(m_DEC != null) {
-//				s = m_DEC.getDEC_PREFERRED_NAME();	//GF32004 added this line for short name because previously long name value is set to short name (as per line 631)
-//			}
+			if(m_DEC != null) {
+				s = m_DEC.getDEC_PREFERRED_NAME();	//added this line for short name because previously long name value is set to short name (as per line 632)
+				logger.debug("at line 652 of SetACService.java Short name is " + s);
+			}
 			UtilService.setValPageVector(vValidate, "Short Name", s, bMandatory, 30, strInValid, sOriginAction);  
 
 			//pref name type
