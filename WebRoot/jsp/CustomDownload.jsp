@@ -19,8 +19,9 @@
 	        margin: 0; }
 	    </style>
 	<!-- begin of ng init -->
-  	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+  	<!--
   	<script src="jsp/app.js"></script>
+  	-->
 	<!-- end of ng init -->
   </head>
   
