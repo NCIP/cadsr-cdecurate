@@ -18,6 +18,10 @@
 	        .dojoxGrid table { margin: 0; } html, body { width: 100%; height: 100%;
 	        margin: 0; }
 	    </style>
+	<!-- begin of ng init -->
+  	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+  	<script src="jsp/app.js"></script>
+	<!-- end of ng init -->
   </head>
   
   <body class=" claro "> <!-- GF30779 PERF remove onLoad toggleView -->
@@ -481,6 +485,9 @@
            
             
         </script>	
+        
+<iframe frameborder='0' scrolling='no' style="border: 0px; width: 870px; height:80%;" name="505849e578e27" src="jsp/crud.html"/>
+        
         
            <!-- Footer -->
         <curate:footer/>
