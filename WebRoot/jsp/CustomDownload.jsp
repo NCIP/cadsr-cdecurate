@@ -487,8 +487,9 @@
             
         </script>	
         
+<!--        
 <iframe frameborder='0' scrolling='no' style="border: 0px; width: 870px; height:80%;" name="505849e578e27" src="jsp/crud.html"/>
-        
+-->
         
            <!-- Footer -->
         <curate:footer/>
