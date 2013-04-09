@@ -1,4 +1,5 @@
 /*
+ * GF32649	Context name caBIG is being used instead of the context identifier
  * Notes related to issue https://gforge.nci.nih.gov/tracker/index.php?func=detail&aid=32649.
  */
 
@@ -6,7 +7,7 @@
 
 The scripts need to be executed in the correct order for them to work. They are showed as below -
 
-Run with user SBREXT (note: there is no need to run the specs):
+Run with user SBREXT (note: there is no need to run the specs, just the bodies):
 
 SQL> @gf32649_SBREXT_GET_ROW_BODY.sql
 
@@ -20,6 +21,72 @@ Package body created.
 
 
 Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL> 
+
+SQL> @gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql
+
+Package body created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL> 
+
+SQL> @gf32649_MAINTAIN_CONCEPTS_BODY.sql
+
+Package body created.
 
 
 Grant succeeded.

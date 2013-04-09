@@ -20,7 +20,7 @@ begin
 
 select conte_idseq into v_Conte_idseq
 from contexts
-where upper(name) = 'CABIG';
+where upper(name) = 'CABIG';	--GF32649 changed CABIG to NCI
 
 select count(*) into v_count
 from concepts_Ext

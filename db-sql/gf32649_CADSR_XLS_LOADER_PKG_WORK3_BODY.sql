@@ -3906,8 +3906,8 @@ FOR s_rec IN sde LOOP --start sde loop
     v_con_existed_ind := false;
     --check to see if context for Concept exists
     v_errors := 0;
-    v_con_conte_idseq := get_conte_idseq(nvl(c_rec.con_conte_name,'caBIG'),
-                                        nvl(c_rec.con_conte_version,1.0));
+    v_con_conte_idseq := get_conte_idseq(nvl(c_rec.con_conte_name,'NCI'),
+                                        nvl(c_rec.con_conte_version,1.0));	--GF32649 changed caBIG to NCI
     IF v_con_conte_idseq is null then
       XML_LOAD_ERR_HANDLE(c_rec.id, 'Context, ' ||  c_rec.con_conte_name ||
 	    ', for Concept, ' || c_rec.CON_PREFERRED_NAME ||  ', Not found');
