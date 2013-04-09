@@ -658,6 +658,7 @@ public class SetACService implements Serializable
 			this.setValidatePrefNameType(s, isUserEnter, vValidate, sOriginAction);
 
 			s = m_DEC.getDEC_PREFERRED_DEFINITION();
+			logger.debug("At line 661 of SetACService.java PREFERRED_DEFINITION is " + s);
 			if (s == null) s = "";
 			strInValid = "";
 			UtilService.setValPageVector(vValidate, "Definition", s, bMandatory, 2000, strInValid, sOriginAction);
@@ -670,11 +671,13 @@ public class SetACService implements Serializable
 				{
 					oldDef = oldDEC.getDEC_PREFERRED_DEFINITION();
 				}
+				logger.debug("At line 674 of SetACService.java " + oldDEC.getDEC_PREFERRED_DEFINITION()+"**"+oldDef);
 			}
 			
 			//Check Definition against (constructed) chosen definition, add to Alt Def if not same, add Warning in vValidate vector.
 			System.out.println("req [" + req + "] req.getSession() [" + req.getSession() + "] noldDef [" + oldDef + "] ");
 			String chosenDef = constructChosenDefinition(req.getSession(), "DEC", oldDef);
+			logger.debug("At line 680 of SetACService.java "+chosenDef);
 			if (chosenDef != null && !chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
 				String warningMessage = "Valid \n Note: Your chosen definition is being replaced by standard definition.  Your chosen definition is being added as an alternate definition if it does not exist already.";
@@ -687,7 +690,7 @@ public class SetACService implements Serializable
 				altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());
 				
 				m_DEC.setAlternates(altSession);
-				
+				logger.info("At line 693 of SetACService.java");				
 			}
 			//validation for both edit and DEc
 			s = m_DEC.getDEC_CD_NAME();
