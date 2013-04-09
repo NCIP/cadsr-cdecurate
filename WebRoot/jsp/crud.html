@@ -139,9 +139,6 @@
 <!--
             <td>{{item.id}}</td>
  -->
-            <td>{{item.name}}</td>
-            <td>{{item.description}}</td>
-            <td>{{item.createdDate | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
             <td>
                 <a ng-click="copyItem(item)">Copy</a>
                 &nbsp;|&nbsp;
@@ -149,6 +146,9 @@
                 &nbsp;|&nbsp;
                 <a ng-click="deleteItem(item)">Delete</a>
             </td>
+            <td>{{item.name}}</td>
+            <td>{{item.description}}</td>
+            <td>{{item.createdDate | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
         </tr>
 <!--
 	<tr>
