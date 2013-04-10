@@ -1,3 +1,98 @@
+Sample output of testVD (executed on 4/10/2013 against Oracle 10g DSRDEV with ojdbc6.jar):
+
+************************************** start ROW 1 **************************************
+************************************** start CONCEPT_DETAIL_T 1 **************************************
+PREFERRED_NAME=C25162
+LONG_NAME=Code
+CON_ID=2203865
+************************************** end CONCEPT_DETAIL_T 1 **************************************
+************************************** start VALID_VALUE_T 1 **************************************
+VALIDVALUE=Unknown
+PVBEGINDATE=2002-02-11
+VMPUBLICID=2575365
+************************************** end VALID_VALUE_T 1 **************************************
+************************************** start VALID_VALUE_T 1 **************************************
+VALIDVALUE=Unknown
+PVBEGINDATE=2002-02-11
+VMPUBLICID=2575365
+************************************** end VALID_VALUE_T 1 **************************************
+************************************** start VALID_VALUE_T 1 **************************************
+VALIDVALUE=Unknown
+PVBEGINDATE=2002-02-11
+VMPUBLICID=2575365
+************************************** end VALID_VALUE_T 1 **************************************
+************************************** start VALID_VALUE_T 1 **************************************
+VALIDVALUE=Unknown
+PVBEGINDATE=2002-02-11
+VMPUBLICID=2575365
+************************************** end VALID_VALUE_T 1 **************************************
+************************************** start VALID_VALUE_T 1 **************************************
+VALIDVALUE=Unknown
+PVBEGINDATE=2002-02-11
+VMPUBLICID=2575365
+************************************** end VALID_VALUE_T 1 **************************************
+************************************** start VALID_VALUE_T 1 **************************************
+VALIDVALUE=Unknown
+PVBEGINDATE=2002-02-11
+VMPUBLICID=2575365
+************************************** end VALID_VALUE_T 1 **************************************
+************************************** start VALID_VALUE_T 1 **************************************
+VALIDVALUE=Unknown
+PVBEGINDATE=2002-02-11
+VMPUBLICID=2575365
+************************************** end VALID_VALUE_T 1 **************************************
+************************************** start VALID_VALUE_T 1 **************************************
+VALIDVALUE=Male
+PVBEGINDATE=2003-12-31
+VMPUBLICID=2567171
+************************************** end VALID_VALUE_T 1 **************************************
+************************************** start VALID_VALUE_T 1 **************************************
+VALIDVALUE=Female
+PVBEGINDATE=2003-12-31
+VMPUBLICID=2567172
+************************************** end VALID_VALUE_T 1 **************************************
+************************************** start VALID_VALUE_T 1 **************************************
+VALIDVALUE=Not Reported
+PVBEGINDATE=2010-01-21
+VMPUBLICID=2964573
+************************************** end VALID_VALUE_T 1 **************************************
+************************************** start CDEBROWSER_CSI_T 1 **************************************
+what are you my child=oracle.sql.STRUCT@1cbfe9d
+what are you my child=oracle.sql.STRUCT@1cbfe9d
+Current colum type = [oracle.sql.CHAR]
+Current value[1] = [edu.duke.cabig.c3pr.domain]
+--- end of column ---
+Current colum type = [oracle.sql.CHAR]
+Current value[2] = [UML_PACKAGE_NAME]
+--- end of column ---
+Current colum type = [oracle.sql.NUMBER]
+Current value[3] = [2812978]
+--- end of column ---
+Current colum type = [oracle.sql.NUMBER]
+Current value[4] = [1]
+--- end of column ---
+************************************** end CDEBROWSER_CSI_T 1 **************************************
+************************************** end ROW 1 **************************************
+************************************** start CDEBROWSER_CSI_T 1 **************************************
+what are you my child=oracle.sql.STRUCT@1b8f864
+what are you my child=oracle.sql.STRUCT@1b8f864
+Current colum type = [oracle.sql.CHAR]
+Current value[1] = [ValueDomains]
+--- end of column ---
+Current colum type = [oracle.sql.CHAR]
+Current value[2] = [UML_PACKAGE_NAME]
+--- end of column ---
+Current colum type = [oracle.sql.NUMBER]
+Current value[3] = [2812842]
+--- end of column ---
+Current colum type = [oracle.sql.NUMBER]
+Current value[4] = [1]
+--- end of column ---
+************************************** end CDEBROWSER_CSI_T 1 **************************************
+************************************** end ROW 1 **************************************
+
+
+
 Sample output (executed on 3/28/2013 against Oracle 10g DSRDEV with ojdbc6.jar):
 
 ************************************** start ROW 1 **************************************
