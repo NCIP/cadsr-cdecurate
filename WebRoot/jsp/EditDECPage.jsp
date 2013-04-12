@@ -35,7 +35,7 @@ history.forward();
 			</tr>
 			<tr>
 				<td width="100%" valign="top">
-					<%@ include file="EditDEC.jsp"%>
+					<@ include file="EditDEC.jsp">
 				</td>
 			</tr>
 		</table>

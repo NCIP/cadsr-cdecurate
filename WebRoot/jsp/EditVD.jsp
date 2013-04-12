@@ -881,13 +881,13 @@ function openEVSConceptsWindow(){
 															<td colspan="3">
 																&nbsp;&nbsp;
 																<a href="javascript:disabled();">
-																	<label id="RepQualID" for="selRepQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('RepQualifier', 'true');"<%}else{%>onclick="javascript:openEVSConceptsWindow();"<% }%></label>
+																	<label id="RepQualID" for="selRepQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('RepQualifier', 'true');"<%}else{%>onclick="javascript:openEVSConceptsWindow();"<% }%>/>
 																</a>
 															</td>
 															<td colspan="3">
 																&nbsp;&nbsp;
 																<%if (!isView){%><a href="javascript:disabled();"><%}else{ if(repTermUrl != null){%><a href="javascript:disabled();"><%}}%>
-																	<label id="RepTermID" for="selRepTerm" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('RepTerm', 'true');"<%}else{ if(repTermUrl != null){%>onclick="window.open('<%=repTermUrl%>','','');"<%}}%></label>
+																	<label id="RepTermID" for="selRepTerm" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('RepTerm', 'true');"<%}else{ if(repTermUrl != null){%>onclick="window.open('<%=repTermUrl%>','','');"<%}}%>/>
 																<%if (!isView){%></a><%}else{ if(repTermUrl != null){%></a><%}}%>
 															</td>
 														</tr>
