@@ -1743,8 +1743,10 @@ function ShowSelectedRowss(){
 										for (int i = 0; vStatusDEC.size() > i; i++) {
 									String sStatusName = (String) vStatusDEC.elementAt(i);
 							%>
+							
+							<!--if(sStatusName.equals("RELEASED")){ -->
 							<option value="<%=sStatusName%>"
-								<!--if(sStatusName.equals("RELEASED")){ -->
+
 								<%if((vStatus != null) && (vStatus.contains(sStatusName))){%>
 								selected <%}%>>
 								<%=sStatusName%>

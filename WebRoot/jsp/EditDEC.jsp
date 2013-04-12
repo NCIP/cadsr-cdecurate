@@ -682,13 +682,13 @@
 											<td colspan="3">
 												&nbsp;&nbsp;
 												<a href="javascript:disabled();">
-													<label id="ObjQualID" for="selObjectQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('ObjectQualifier', 'true')"<%}else{%>onclick="javascript:openEVSConceptsWindow('ObjectQualifier');"<% }%></label>
+													<label id="ObjQualID" for="selObjectQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('ObjectQualifier', 'true')"<%}else{%>onclick="javascript:openEVSConceptsWindow('ObjectQualifier');"<% }%>/>
 												</a>
 											</td>
 											<td colspan="3">
 												&nbsp;&nbsp;
 												<%if (!isView){%><a href="javascript:disabled();"><%}else{ if(objectClassUrl != null){%><a href="javascript:disabled();"><%}}%>
-													<label id="ObjClassID" for="selObjectClass" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('ObjectClass', 'true')"<%}else{ if(objectClassUrl != null){%>onclick="window.open('<%=objectClassUrl%>','','')"<%}}%></label>
+													<label id="ObjClassID" for="selObjectClass" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('ObjectClass', 'true')"<%}else{ if(objectClassUrl != null){%>onclick="window.open('<%=objectClassUrl%>','','')"<%}}%>/>
 												<%if (!isView){%></a><%}else{ if(objectClassUrl != null){%></a><%}}%>
 											</td>
 										</tr>
@@ -830,13 +830,13 @@
 											<td colspan="3">
 												&nbsp;&nbsp;
 												<a href="javascript:disabled();">
-													<label id="PropQualID" for="selPropertyQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('PropertyQualifier', 'true')"<%}else{%>onclick="javascript:openEVSConceptsWindow('PropertyQualifier');"<% }%></label>
+													<label id="PropQualID" for="selPropertyQualifier" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('PropertyQualifier', 'true')"<%}else{%>onclick="javascript:openEVSConceptsWindow('PropertyQualifier');"<% }%>/>
 												</a>
 											</td>
 											<td colspan="3">
 												&nbsp;&nbsp;
 												<%if (!isView){%><a href="javascript:disabled();"><%}else{ if(propClassUrl != null){%><a href="javascript:disabled();"><%}}%>
-													<label id="PropClassID" for="selPropertyClass" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('PropertyClass', 'true')"<%}else{ if(propClassUrl != null){%>onclick="window.open('<%=propClassUrl%>','','')"><%}}%></label>
+													<label id="PropClassID" for="selPropertyClass" title="" <%if (!isView){%>onclick="javascript:SearchBuildingBlocks('PropertyClass', 'true')"<%}else{ if(propClassUrl != null){%>onclick="window.open('<%=propClassUrl%>','','')"><%}}%>/>
 												<%if (!isView){%></a><%}else{ if(propClassUrl != null){%></a><%}}%>
 											</td>
 										</tr>
