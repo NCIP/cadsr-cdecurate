@@ -16,6 +16,7 @@
 		<script>
 history.forward();
 </script>
+		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.Session_Data"%>
 	</head>
 
 	<body bgcolor="#FFFFFF" text="#000000">
