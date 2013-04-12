@@ -35,11 +35,11 @@
         </xsl:for-each>
     </xsl:template>
 
-    <!--xsl:template name="invoke_template_by_name">
+    <xsl:template name="invoke_template_by_name">
         <xsl:param name="templateName"></xsl:param>
         <xsl:param name="name"></xsl:param> 
         <xsl:param name="width"></xsl:param>
-    </xsl:template-->
+    </xsl:template>
 
     <!-- recursive process for alias -->
     <xsl:template name="alias_template">
