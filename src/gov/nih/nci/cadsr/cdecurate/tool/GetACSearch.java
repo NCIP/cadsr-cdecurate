@@ -2073,12 +2073,12 @@ public class GetACSearch implements Serializable
                         if (s != null)
                             s = m_util.getCurationDate(s);
                         VDBean.setVD_DATE_CREATED(s);
-                        s = rs.getString("date_modified");
+                        s = rs.getString("date_modified");	//GF32036
                         if (s != null)
-                            s = m_util.getCurationDate(s);
+                            s = m_util.getCurationDate(s);	//GF32036
                         VDBean.setVD_DATE_MODIFIED(s);
                         VDBean.setVD_CREATED_BY(rs.getString("created_by"));
-                        VDBean.setVD_MODIFIED_BY(rs.getString("modified_by"));
+                        VDBean.setVD_MODIFIED_BY(rs.getString("modified_by"));	//GF32036
                         VDBean.setVD_REP_ASL_NAME(rs.getString("rep_asl_name"));
                         VDBean.setAC_CONCEPT_NAME(rs.getString("con_name"));
                         VDBean.setALTERNATE_NAME(rs.getString("alt_name"));
