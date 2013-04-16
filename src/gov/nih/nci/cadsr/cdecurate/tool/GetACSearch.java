@@ -4146,10 +4146,13 @@ public class GetACSearch implements Serializable
                     conBean.setIDSEQ(rs.getString("con_idseq"));
                     conBean.setEVS_DEF_SOURCE(rs.getString("definition_source"));
                     String sVocab = rs.getString("origin");
+                    logger.debug("At line 4149 of GetACSearch.java**"+sVocab+"**"+menuAction);
                     //NCI Metathesaurus troubleshooting
                     if (menuAction.equals("searchForCreate")) {
+                    	logger.info("At line 4152 of GetACSearch.java @@@@@@");
                         conBean.setEVS_DATABASE("caDSR");	//called when sVocab is "NCI Thesaurus" and "MGED"
                     } else {
+                    	logger.info("At line 4155 of GetACSearch.java $$$$$$");
                         // make the vocab as evs origin from cadsr for main page concept class search
                         conBean.setEVS_DATABASE(sVocab);	//never called for some reason!???
                     }
