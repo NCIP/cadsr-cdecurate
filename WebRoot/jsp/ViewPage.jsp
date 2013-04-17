@@ -50,7 +50,8 @@
 	<%}%>
 	<div class="xyz">
 	  <table class="footerBanner1" cellspacing="0" cellpadding="0">
-	     <tr><td align="right" style="padding: 2px 4px 2px 2px;"><a href="../../cdecurate/View?publicId=<%=id%>&version=<%=ver%>" onclick = "return false;"><font color="#FFFFFF">Page Shortcut</font></a></tr>
+	     <!-- tr><td align="right" style="padding: 2px 4px 2px 2px;"><a href="../../cdecurate/View?publicId=<%=id%>&version=<%=ver%>" onclick = "return false;"><font color="#FFFFFF">Page Test Shortcut</font></a></tr -->
+		<tr><td align="right" style="padding: 2px 4px 2px 2px;"><a href="../../cdecurate/NCICurationServlet?reqType=view&publicId=<%=id%>&version=<%=ver%>" onclick = "return false;"><font color="#FFFFFF">Page Shortcut without "ViewServlet"</font></a></tr>
 	  </table>
 	</div>
 	<% String bodyPage = (String)request.getAttribute("IncludeViewPage") ;
