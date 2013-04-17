@@ -76,7 +76,8 @@ public class ValueMeaningAction extends ActionSupport {
 		return SUCCESS;
 	}
 
-	public String editedConceptTableEditVm() throws Exception {
+	public String editedVm() throws Exception {
 		return SUCCESS;
 	}
+
 }
