@@ -345,12 +345,12 @@
 			<br>
 			<table border="0">
 				<tr align="left">
+					
 					<td><s:url id="selectedVmResultUrl" action="selectedVmResult" />
 						<sj:a id="selectedVmEVSAnchor" indicator="indicator2"
 							href="%{selectedVmResultUrl}" targets="selectedVmResultDiv"
 							listenTopics="selectedVmResultDiv" button="true"
-							buttonIcon="ui-icon-gear">Link Concept</sj:a>
-						<%--<input type="button" name="editSelectedBtn"
+							buttonIcon="ui-icon-gear">Link Concept</sj:a> <%--<input type="button" name="editSelectedBtn"
 						value="Use Selection" onClick="ShowSelection();" disabled>
 						&nbsp;&nbsp;--%> <input type="button" name="btnSubConcepts"
 						value="Get Subconcepts"

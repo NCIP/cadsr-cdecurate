@@ -6,27 +6,27 @@
 	<s:url id="pvFromConceptsOption" action="createPvListFromConcepts" />
 	<s:url id="pvAlert" value="permissibleValueListFromParentAlert.jsp" />
 
-	<sj:a href="%{createNewPvUrl}" button="true"
-		buttonIcon="ui-icon-newwin" targets="pvEditDiv"
-		onclick="showDiv('pvEditDiv')">Create New</sj:a>
+	<sj:a id="createNewPvUrl" href="%{createNewPvUrl}" button="true"
+		targets="pvEditDiv" onclick="showDiv('pvEditDiv');">Create New</sj:a>
 	<sj:dialog id="subConceptsDialog" autoOpen="false" modal="false"
 		title="permissible value dialogs" openTopics="openRemoteDialog"
 		position="center" height="600" width="1000" />
 	<sj:dialog id="alertDialog" autoOpen="false" modal="true" title="alert"
 		openTopics="openRemoteDialog" position="center" height="200"
 		width="400" closeTopics="closeDialog" />
-	<sj:a openDialog="alertDialog"
+
+	<sj:a id="pvAlertUrl" openDialog="alertDialog"
 		openDialogTitle="Create a List from Parent Concept" href="%{pvAlert}"
-		button="true" buttonIcon="ui-icon-newwin"
-		onclick="$('#parentList').hide()">
+		button="true" onclick="$('#parentList').hide()">
     	Create a List from Parent Concept
    			</sj:a>
-	<sj:a openDialog="pvFromConceptsDialog"
+	<sj:a id="pvFromConceptsUrl" openDialog="pvFromConceptsDialog"
 		openDialogTitle="Create New Permissible Values from Concepts"
 		href="%{pvFromConceptsOption}" button="true"
-		buttonIcon="ui-icon-newwin" onclick="$('#parentList').hide()">
+		onclick="$('#parentList').hide()">
     	Create a List from Concepts
   	</sj:a>
+
 	<sj:div id="pvEditDiv">
 	</sj:div>
 	<sj:dialog id="newPvDialog" autoOpen="false" modal="true"
@@ -44,9 +44,46 @@
 		autoOpen="false" modal="true" height="600" width="1000"
 		closeTopics="closeDialog">
 	</sj:dialog>
-
+	<s:url var="vmUrl" action="vmDetails" />
 	<s:url var="pvEditUrl" value="editPermissibleValue.jsp" />
+	<s:url var="editVmUrl" action="editVm" />
 	<script type="text/javascript">
+		$(document).ready(
+				function() {
+					$.subscribe('loadButtons', function(event, data) {
+						//alert('loadButtons'); 
+						$("#existingPvTable").jqGrid('navButtonAdd',
+								"#existingPvTable_pager", {
+									caption : "",
+									title : "Delete PV",
+									buttonicon : "ui-icon-closethick",
+									onClickButton : function() {
+										alert("button pressed");
+									}
+								});
+
+					});
+
+				});
+		function formatVmLink(cellvalue, options, rowObject) {
+			//return "<a href='#' onClick='javascript:openDialog("+cellvalue+")'>"+cellvalue+"</a>";
+			var viewLink = "<a href='#' onClick='javascript:openVmDialog(&#34;"
+					+ cellvalue + "&#34;)'>View</a>";
+			var editLink = "<a href='#' onClick='javascript:openEditVmDialog(&#34;"
+					+ cellvalue + "&#34;)'>Edit</a>";
+			return cellvalue + "<br><br>" + viewLink + "&nbsp;&nbsp;"
+					+ editLink;
+		}
+		function openVmDialog(vm) {
+			var valueMeaningDetailUrl = '<s:property value="vmUrl"/>';
+			$("#valueMeaningDetail").load(valueMeaningDetailUrl).dialog("open");
+		}
+
+		function openEditVmDialog(vm) {
+			var url = '<s:property value="editVmUrl"/>';
+			$("#valueMeaningDetail").load(url).dialog("open");
+		}
+
 		function openNewPvDialog(pv) {
 			var newPvUrl = '<s:property value="createNewPvUrl"/>';
 			//$("#newPvDialog").load(newPvUrl).dialog("open");
@@ -128,14 +165,14 @@
 		<sjg:grid id="existingPvTable" caption="Existing Permissible Values"
 			dataType="json" href="%{pvTableUrl}" gridModel="pvModel" pager="true"
 			autoencode="false" navigator="true" navigatorEdit="false"
-			navigatorAdd="false" navigatorSearch="false" multiselect="true"
-			navigatorDeleteOptions="{height:280, reloadAfterSubmit:true}"
+			navigatorDelete="false" navigatorAdd="false" navigatorSearch="false"
+			multiselect="true" onGridCompleteTopics="loadButtons" loadonce="true"
 			navigatorExtraButtons="{
     		edit : { 
 	    		title : 'Edit PV', 
 	    		icon: 'ui-icon-pencil', 
 	    		onclick: function(){ openPvEditDialog() }
-    		}
+    		},
     	}">
 			<sjg:gridColumn name="value" title="PV" sortable="true" width="100" />
 			<%-- 
@@ -147,7 +184,7 @@
 				width="100" />
 			<sjg:gridColumn name="valueMeaning.concepts"
 				title="PV Meaning Concept Codes" sortable="true" align="left"
-				width="180" formatter="formatConcept" />
+				width="200" formatter="formatConcept" />
 			<sjg:gridColumn name="valueMeaning.manualDefinition"
 				title="PV Meaning Description" sortable="true" align="left"
 				width="220" />

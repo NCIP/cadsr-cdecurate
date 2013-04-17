@@ -2,6 +2,11 @@
 <%@ taglib prefix="sj" uri="/struts-jquery-tags"%>
 <%@ taglib prefix="sjg" uri="/struts-jquery-grid-tags"%>
 <s:div cssClass="result ui-widget-content ui-corner-all">
+	<div
+		class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
+		<span id="ui-dialog-title-alertDialog" class="ui-dialog-title">Edit Existing Permissible Value</span>
+	</div>
+	<br>
 	<s:form id="editPvForm" action="permissibleValueAction" target="_blank">
 		<s:textfield id="value" name="value" label="Value" required="true"
 			value="Bone" />
@@ -20,21 +25,18 @@
 			title="vm alert diaglog" openTopics="openRemoteDialog"
 			position="center" height="300" width="300"
 			closeTopics="closeVmAlertDialog" />
-
 		<s:url var="vmFormAlertUrl"
 			value="valueMeaningFormAssociationAlert.jsp" />
+		<br>
 		<table>
 			<tr>
 				<td>Value Meaning:</td>
-				<td><s:textfield id="replaceVmSearchString"
-						name="VM Search String" label="replaceVmSearchString"
-						theme="simple" width="200" />
-				</td>
+
 				<td><sj:div id="changeVmOptions">
 						<sj:a openDialog="vmAlertDialog"
 							openDialogTitle="Replace Value Meaning" href="%{vmFormAlertUrl}"
 							button="true">
-							Replace VM
+							Change VM
 						</sj:a>
 						<%--
 							<sj:a openDialog="changeVmOptionDialog"
@@ -42,29 +44,34 @@
 								button="true" buttonIcon="ui-icon-newwin">
     	Replace By Searching EVS Concept
    			</sj:a> --%>
-					</sj:div></td>
+					</sj:div>
+				</td>
 			</tr>
 		</table>
-		<sj:div id="vmDiv" cssClass="result ui-widget-content ui-corner-all">
-			<s:form id="changeVmForm" action="ValueMeaningAction" target="_blank">
-				<s:textfield name="longName" label="VM Long Name" value="Bone"
-					disabled="true" />
-				<s:textfield name="publicIdVersion" label="Public Id & Version"
-					value="2567236v1.0" disabled="true" />
-				<s:textarea name="description" label="Description/Definition"
-					value="Connective tissue that forms the skeletal components of the body"
-					disabled="true" rows="4" cols="50">
-				</s:textarea>
-				<s:include value="conceptsGrid.jsp">
-					<s:param name="withParent">no</s:param>
-					<s:param name="gridModel">conceptModel</s:param>
-					<s:param name="gridId">origVmConceptTable</s:param>
-					<s:param name="gridCaption">VM Concepts</s:param>
-					<s:param name="readOnly">yes</s:param>
-				</s:include>
-			</s:form>
-		</sj:div>
-		<s:url id="editPvUrl" action="editPv" />
+		<br>
+		<sj:div id="vmDiv">
+			<sj:div id="currentVmDiv"
+				cssClass="result ui-widget-content ui-corner-all">
+				<s:form id="changeVmForm" action="ValueMeaningAction"
+					target="_blank">
+					<s:textfield name="longName" label="VM Long Name" value="Bone"
+						disabled="true" />
+					<s:textfield name="publicIdVersion" label="Public Id & Version"
+						value="2567236v1.0" disabled="true" />
+					<s:textarea name="description" label="Description/Definition"
+						value="Connective tissue that forms the skeletal components of the body"
+						disabled="true" rows="4" cols="50">
+					</s:textarea>
+					<s:include value="conceptsGrid.jsp">
+						<s:param name="withParent">no</s:param>
+						<s:param name="gridModel">conceptModel</s:param>
+						<s:param name="gridId">origVmConceptTable</s:param>
+						<s:param name="gridCaption">VM Concepts</s:param>
+						<s:param name="readOnly">yes</s:param>
+					</s:include>
+				</s:form>
+			</sj:div>
+			<s:url id="editPvUrl" action="editPv" />
 		<sj:a id="editPvButton" href="%{editPvUrl}" targets="existingPVs"
 			listenTopics="existingPVs" button="true" buttonIcon="ui-icon-gear"
 			onClickTopics="closeDialog">Save the PV</sj:a>
@@ -72,6 +79,8 @@
 			button="true" buttonIcon="ui-icon-gear">
     	Cancel
     </sj:a>
+		</sj:div>
+		
 	</s:form>
 	<img id="indicator" src="images/indicator.gif" alt="Loading..."
 		style="display: none" />
