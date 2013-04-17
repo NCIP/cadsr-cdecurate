@@ -4,7 +4,7 @@
 
 <sj:div id="parentConceptGrid"
 	cssClass="result ui-widget-content ui-corner-all">
-	<s:include value="conceptsGrid.jsp">
+	<s:include value="conceptsGrid2.jsp">
 		<s:param name="withParent">yes</s:param>
 		<s:param name="gridModel">parentConceptModel</s:param>
 		<s:param name="gridId">parentConceptTableDiv</s:param>

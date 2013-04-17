@@ -21,13 +21,52 @@
 	<s:set name="cellEdit">false</s:set>
 </s:else>
 <s:url var="conceptTableUrl" action="conceptJson" />
+<script type="text/javascript">
+    /*
+	$(document).ready(function() {
+		$.subscribe('loadButtons', function(event, data) {
+			$("#gridId").jqGrid('navButtonAdd', "#existingPvTable_pager", {
+				caption : "",
+				title : "Delete All Concepts",
+				buttonicon : "ui-icon-closethick",
+				onClickButton : function() {
+					alert("button pressed");
+				}
+			});
+
+		});
+
+	}); */
+
+	function formatRemoveLink(cellvalue, options, rowObject) {
+		//return "<a href='#' onClick='javascript:openDialog("+cellvalue+")'>"+cellvalue+"</a>";
+		var removeLink = "<a href='#' onClick='javascript:deletePvDialog(&#34;"
+				+ cellvalue
+				+ "&#34;)'><img src='images/delete_white.gif' alt='delete PV'/></a>";
+		return removeLink;
+	}
+</script>
 <sjg:grid id="%{#gridId}" dataType="json" href="%{conceptTableUrl}"
 	gridModel="%{#gridModel}" scroll="true" pager="true" shrinkToFit="true"
 	pager="true" caption="%{#gridCaption}" navigator="%{#showNagivator}"
 	navigatorEdit="false" navigatorAdd="false" navigatorSearch="false"
-	multiselect="%{#showNagivator}"
-	navigatorDeleteOptions="{height:280, reloadAfterSubmit:true}"
-	cellEdit="%{#cellEdit}" cellurl="#">
+	navigatorDelete="false" multiselect="false" cellEdit="%{#cellEdit}"
+	cellurl="#"
+	navigatorExtraButtons="{
+			seperator: { 
+                        title : 'seperator'  
+                }, 
+			deleteAll : { 
+	    		title : 'Delete All Concepts',
+	    		icon: 'ui-icon-closethick',
+	    		caption: 'Delete All Concepts', 
+	    		onclick: function(){ selectTheVm() }
+    		}
+    		}">
+	<s:if test="%{#readOnly != 'yes'}">
+		<sjg:gridColumn name="" title="" cssClass="link"
+			formatter="formatRemoveLink" width="30" sortable="false" />
+	</s:if>
 	<sjg:gridColumn name="name" title="Concept Name" sortable="true"
 		align="center" />
 	<sjg:gridColumn name="evsId" title="Concept ID" sortable="true"

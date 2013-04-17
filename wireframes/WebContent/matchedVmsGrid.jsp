@@ -102,9 +102,9 @@
                         title : 'seperator'  
                 }, 
     		newVMFromConcept : { 
-	    		title : 'Create New VM from the Selected VM',
+	    		title : 'Create New VM from existing',
 	    		icon: 'ui-icon-plus',
-	    		caption: 'New VM from the VM', 
+	    		caption: 'New VM from existing', 
 	    		onclick: function(){ createNewVMFromVm() }
     		}
     	}">

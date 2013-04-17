@@ -12,13 +12,14 @@
 	<br>
 	<sj:div id="vmInfoDiv">
 		<s:form id="editVmForm" action="ValueMeaningAction" target="_blank">
+			<s:textfield name="publicId" label="Public Id" value=""/>
 			<s:textfield name="longName" label="VM Long Name" value="Bone" />
 			<s:textfield name="version" label="Version" value="1.0" />
 			<s:textarea name="description" label="Description/Definition"
 				value="One of a pair of viscera occupying the pulmonary cavities of the thorax, the organs of respiration in which aeration of the blood takes place. As a rule, the right lung is slightly larger than the left and is divided into three lobes (an upper, a middle, and a lower or basal), while the left has but two lobes (an upper and a lower or basal). Each lung is irregularly conical in shape, presenting a blunt upper extremity (the apex), a concave base following the curve of the diaphragm, an outer convex surface (costal surface), an inner or mediastinal surface (mediastinal surface), a thin and sharp anterior border, and a thick and rounded posterior border. SYN pulmo. "
 				rows="4" cols="80">
 			</s:textarea>
-			<s:url id="searchConceptForVm2Url" value="searchConceptForVm2.jsp" />
+			<s:url id="searchConceptForVm2Url" value="searchConceptForVm.jsp" />
 			<sj:dialog id="searchConceptForVm2" autoOpen="false" modal="false"
 				title="vm options diaglog" openTopics="openRemoteDialog"
 				position="center" height="600" width="1200"
@@ -32,7 +33,7 @@
 						openDialogTitle="Search EVS Concept"
 						href="%{searchConceptForVm2Url}" button="true"
 						buttonIcon="ui-icon-newwin">
-    	Search New Concept
+    	Search Concept
    			</sj:a></td>
 			</tr>
 			<tr>

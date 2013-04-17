@@ -27,8 +27,6 @@
     	Create a List from Concepts
   	</sj:a>
 
-	<sj:div id="pvEditDiv">
-	</sj:div>
 	<sj:dialog id="newPvDialog" autoOpen="false" modal="true"
 		title="Create New Permissible Value" openTopics="openRemoteDialog"
 		position="center" height="600" width="1000" closeTopics="closeDialog" />
@@ -38,7 +36,7 @@
 
 	<sj:dialog id="valueMeaningDetail" title="Value Meaning"
 		autoOpen="false" modal="true" height="900" width="1000"
-		closeTopics="closeDialog">
+		position="['center', 'top']" closeTopics="closeDialog">
 	</sj:dialog>
 	<sj:dialog id="pvEditDialog" title="Edit Permissible Value"
 		autoOpen="false" modal="true" height="600" width="1000"
@@ -51,11 +49,10 @@
 		$(document).ready(
 				function() {
 					$.subscribe('loadButtons', function(event, data) {
-						//alert('loadButtons'); 
 						$("#existingPvTable").jqGrid('navButtonAdd',
 								"#existingPvTable_pager", {
 									caption : "",
-									title : "Delete PV",
+									title : "Delete All PVs",
 									buttonicon : "ui-icon-closethick",
 									onClickButton : function() {
 										alert("button pressed");
@@ -65,15 +62,28 @@
 					});
 
 				});
+
 		function formatVmLink(cellvalue, options, rowObject) {
 			//return "<a href='#' onClick='javascript:openDialog("+cellvalue+")'>"+cellvalue+"</a>";
 			var viewLink = "<a href='#' onClick='javascript:openVmDialog(&#34;"
-					+ cellvalue + "&#34;)'>View</a>";
+					+ cellvalue + "&#34;)'><font color='blue'>View</font></a>";
 			var editLink = "<a href='#' onClick='javascript:openEditVmDialog(&#34;"
-					+ cellvalue + "&#34;)'>Edit</a>";
+					+ cellvalue + "&#34;)'><font color='blue'>Edit</font></a>";
 			return cellvalue + "<br><br>" + viewLink + "&nbsp;&nbsp;"
 					+ editLink;
 		}
+
+		function formatActionLink(cellvalue, options, rowObject) {
+			//return "<a href='#' onClick='javascript:openDialog("+cellvalue+")'>"+cellvalue+"</a>";
+			var editLink = "<a href='#' onClick='javascript:openPvEditDialog(&#34;"
+					+ cellvalue
+					+ "&#34;)'><img src='images/edit.gif' alt='edit PV'/></a>";
+			var removeLink = "<a href='#' onClick='javascript:deletePvDialog(&#34;"
+					+ cellvalue
+					+ "&#34;)'><img src='images/delete_white.gif' alt='delete PV'/></a>";
+			return editLink + "&nbsp;&nbsp;&nbsp;" + removeLink;
+		}
+
 		function openVmDialog(vm) {
 			var valueMeaningDetailUrl = '<s:property value="vmUrl"/>';
 			$("#valueMeaningDetail").load(valueMeaningDetailUrl).dialog("open");
@@ -90,104 +100,48 @@
 			$("#onePv").load(newPvUrl);
 		}
 		function openPvEditDialog(pv) {
-			var id = jQuery('#existingPvTable')
-					.jqGrid('getGridParam', 'selrow');
-			if (id) {
-				var pv = jQuery('#existingPvTable').jqGrid('getRowData', id);
-				//alert(pv.value);
-			}
 			var pvEditUrl = '<s:property value="pvEditUrl"/>';
-			//$("#pvEditDialog").load(pvEditUrl).dialog("open");
-			$("#pvEditDiv").load(pvEditUrl);
-
+			$("#pvEditDialog").load(pvEditUrl).dialog("open");
 		}
 
-		/*
-		 function formatVm(cellvalue, options, rowObject) {
-		 var vm = rowObject.valueMeaning;
-		 var cols = rowObject.valueMeaning.displayColumns;
-		 var conceptStr = "";
-		 for ( var i = 0; i < vm.concepts.length; i++) {
-		 conceptStr = getConceptDisplayString(vm.concepts[i]) + "<br>";
-		 }
-
-		 var data = [ vm.longName, vm.publicIdVersion, vm.manualDefinition,
-		 conceptStr ];
-		 var html = "<table class='gridtableNoBorder'>";
-		 for ( var i = 0; i < cols.length - 1; i++) {
-		 html += "<tr><th colspan='2'><b>" + cols[i] + "</b></th></tr>";
-		 html += "<tr><th>&nbsp;&nbsp;&nbsp;</th><th>" + data[i]
-		 + "<br><br></th></tr>"
-		 }
-		 html += "<tr><th colspan='2'><b>" + cols[i] + "</b></th></tr>";
-		 html += "<tr><th>&nbsp;&nbsp;&nbsp;</th><th>" + data[i]
-		 + "</th></tr></table>"
-		 return html;
-		 }
-
-		 function getConceptDisplayString(concept) {
-		 var data = [ concept.name, concept.evsId, concept.vocabulary,
-		 concept.type ];
-		 var html = "";
-		 for ( var i = 0; i < data.length - 1; i++) {
-		 html += data[i] + "&nbsp;&nbsp;&nbsp;";
-		 }
-		 html += data[i];
-		 return html;
-		 }
-
-		 function getConceptDisplayString0(concept) {
-		 var data = [ concept.name, concept.evsId, concept.vocabulary,
-		 concept.type ];
-		 var html = "<table class='gridtableNoBorder' width='100%'><tr>";
-		 for ( var i = 0; i < data.length; i++) {
-		 html += "<th>" + data[i] + "</th>";
-		 }
-		 html += "</tr></table>";
-		 return html;
-		 }
-		 */
 		function formatConcept(cellValue, options, rowObject) {
 			var concepts = rowObject.valueMeaning.concepts;
 			var html = "";
-			for ( var i = 0; i < concepts.length - 1; i++) {
-				html = concepts[i].evsId + ":";
+			if (concepts.length > 0) {
+				for ( var i = 0; i < concepts.length - 1; i++) {
+					html = concepts[i].evsId + ":";
+				}
+				html = concepts[i].evsId;
 			}
-			html = concepts[i].evsId;
 			return html;
 		}
 	</script>
 
+	<sj:div id="pvEditDiv">
+	</sj:div>
 	<s:url var="pvTableUrl" action="pvJson" />
 	<s:url var="vmUrl" action="vmJson" />
 	<sj:div id="existingPVs"
 		cssClass="result ui-widget-content ui-corner-all">
 		<sjg:grid id="existingPvTable" caption="Existing Permissible Values"
-			dataType="json" href="%{pvTableUrl}" gridModel="pvModel" pager="true"
-			autoencode="false" navigator="true" navigatorEdit="false"
-			navigatorDelete="false" navigatorAdd="false" navigatorSearch="false"
-			multiselect="true" onGridCompleteTopics="loadButtons" loadonce="true"
-			navigatorExtraButtons="{
-    		edit : { 
-	    		title : 'Edit PV', 
-	    		icon: 'ui-icon-pencil', 
-	    		onclick: function(){ openPvEditDialog() }
-    		},
-    	}">
+			dataType="json" href="%{pvTableUrl}" gridModel="pvModel"
+			toppager="true" pager="true" autoencode="false" navigator="true"
+			navigatorEdit="false" rowList="10,15,20" rowNum="1000"
+			viewrecords="true" navigatorDelete="false" navigatorAdd="false"
+			navigatorSearch="false" multiselect="flase" shrinkToFit="true"
+			onGridCompleteTopics="loadButtons">
+			<sjg:gridColumn name="" title="Actions" width="50" cssClass="link"
+				formatter="formatActionLink" sortable="false" />
 			<sjg:gridColumn name="value" title="PV" sortable="true" width="100" />
-			<%-- 
-			<sjg:gridColumn name="valueMeaning" title="Value Meaning"
-				sortable="false"  width="350" formatter="formatVm" />
-			--%>
 			<sjg:gridColumn name="valueMeaning.longName" sortable="true"
 				title="PV Meaning" cssClass="link" formatter="formatVmLink"
-				width="100" />
+				width="120" />
 			<sjg:gridColumn name="valueMeaning.concepts"
 				title="PV Meaning Concept Codes" sortable="true" align="left"
-				width="200" formatter="formatConcept" />
+				width="210" formatter="formatConcept" />
 			<sjg:gridColumn name="valueMeaning.manualDefinition"
 				title="PV Meaning Description" sortable="true" align="left"
-				width="220" />
+				width="250" />
 			<sjg:gridColumn name="beginDate" title="PV Begin Date"
 				sortable="true" width="120" />
 			<sjg:gridColumn name="endDate" title="PV End Date" sortable="true"
@@ -197,4 +151,5 @@
 			<sjg:gridColumn name="origin" title="PV Origin" sortable="true" />
 		</sjg:grid>
 	</sj:div>
+
 </sj:div>

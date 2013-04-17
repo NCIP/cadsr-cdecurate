@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ taglib prefix="s" uri="/struts-tags"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -83,37 +82,10 @@
 </head>
 <body>
 	<div id="col3_content" class="clearfix">
-		<sj:div id="newPVs">
-			<sj:a openDialog="validateDialog" openDialogTitle="Validate" href="#"
-				button="true" buttonIcon="ui-icon-newwin">
-    	Validate
-    		</sj:a>
-			<sj:a openDialog="clearDialog" openDialogTitle="Clear" href="#"
-				button="true" buttonIcon="ui-icon-newwin">
-    	Clear
-   			</sj:a>
-			<sj:a openDialog="altNameDialog" openDialogTitle="Alt Names/Defs"
-				href="%{pvOption3}" button="true" buttonIcon="ui-icon-newwin">
-    	Alt Names/Defs
-  			</sj:a>
-			<sj:a openDialog="refDocDialog"
-				oopenDialogTitle="Reference Documents" href="#" button="true"
-				buttonIcon="ui-icon-newwin">
-    	Reference Documents
-  			</sj:a>
-
-		</sj:div>
-		<br>
-		<sj:div>
-			<strong>Value Domain - Anatomic Site Location Text Name
-				[2188327v1.0]<br> Note: Value Domain is used in a form. <a href="#">View
-				Usage </a></strong>
-		</sj:div>
-		<br>
 		<s:url var="vdFormUrl" action="vdInfo" />
 		<s:url var="pvDetailsUrl" value="permissibleValueDetails.jsp" />
-		<sj:tabbedpanel id="vdTabs" cssClass="list">
-			<sj:tab id="tab1" href="%{vdFormUrl}" label="Value Domain Details" />
+		<sj:tabbedpanel id="vdTabsPanel">
+	<%--		<sj:tab id="tab1" href="%{vdFormUrl}" label="Value Domain Details" /> --%>
 			<sj:tab id="tab2" href="%{pvDetailsUrl}" label="Permissible Values" />
 		</sj:tabbedpanel>
 	</div>

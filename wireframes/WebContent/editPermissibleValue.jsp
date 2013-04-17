@@ -2,11 +2,6 @@
 <%@ taglib prefix="sj" uri="/struts-jquery-tags"%>
 <%@ taglib prefix="sjg" uri="/struts-jquery-grid-tags"%>
 <s:div cssClass="result ui-widget-content ui-corner-all">
-	<div
-		class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
-		<span id="ui-dialog-title-alertDialog" class="ui-dialog-title">Edit Existing Permissible Value</span>
-	</div>
-	<br>
 	<s:form id="editPvForm" action="permissibleValueAction" target="_blank">
 		<s:textfield id="value" name="value" label="Value" required="true"
 			value="Bone" />
@@ -49,6 +44,8 @@
 			</tr>
 		</table>
 		<br>
+			<div id="selectedVmResultDiv">
+			</div>
 		<sj:div id="vmDiv">
 			<sj:div id="currentVmDiv"
 				cssClass="result ui-widget-content ui-corner-all">

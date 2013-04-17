@@ -7,7 +7,7 @@
 	<div
 		class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
 		<span id="ui-dialog-title-alertDialog" class="ui-dialog-title">Create
-			a New VM from the Selected VM</span>
+			a New VM from Existing</span>
 	</div>
 	<br>
 	<sj:div id="vmInfoDiv">
@@ -21,7 +21,7 @@
 			<s:url id="searchConceptForVm2Url" value="searchConceptForVm2.jsp" />
 			<sj:dialog id="searchConceptForVm2" autoOpen="false" modal="false"
 				title="vm options diaglog" openTopics="openRemoteDialog"
-				position="center" height="600" width="1200"
+				position="['right', 'top']" height="600" width="1200"
 				closeTopics="closeSearchConceptDialog" />
 		</s:form>
 		<br>
