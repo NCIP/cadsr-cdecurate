@@ -35,15 +35,7 @@
     <load-on-startup>1</load-on-startup>
 
   </servlet>
-  <servlet>
-    <servlet-name>
-      ViewServlet
-    </servlet-name>
-    <servlet-class>
-      gov.nih.nci.cadsr.cdecurate.tool.ViewServlet
-    </servlet-class>
-  </servlet>
-
+  
   <servlet-mapping>
      <servlet-name>
          NCICurationServlet
@@ -53,6 +45,16 @@
      </url-pattern>
   </servlet-mapping>
   
+  <!--remove unnecessary servlet on April 16, 2013 
+  <servlet>
+    <servlet-name>
+      ViewServlet
+    </servlet-name>
+    <servlet-class>
+      gov.nih.nci.cadsr.cdecurate.tool.ViewServlet
+    </servlet-class>
+  </servlet>
+  
   <servlet-mapping>
      <servlet-name>
          ViewServlet
@@ -61,7 +63,8 @@
          /View
      </url-pattern>
   </servlet-mapping>
-
+  -->
+  
   <session-config>
     <session-timeout>45</session-timeout>
   </session-config>
