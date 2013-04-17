@@ -1,0 +1,48 @@
+.wrapColumnText {
+	white-space: normal !important;
+	height: auto;
+	vertical-align: text-top;
+}
+
+.ui-jqgrid tr.jqgrow td {
+	white-space: normal !important;
+	height: auto;
+	vertical-align: text-top;
+	padding-top: 0px;
+}
+
+
+.ui-jqgrid .ui-jqgrid-htable th {
+	height: auto;
+	overflow: hidden;
+	padding-right: 4px;
+	padding-top: 2px;
+	position: relative;
+	vertical-align: text-top;
+	white-space: normal !important;
+}
+
+
+.gridtableNoBorder {
+	font-family: arial, helvetica, verdana, sans-serif;
+	border-width: 0px;
+	border-style: none;
+	border-collapse: collapse;
+	text-align: left;
+}
+
+.gridtableNoBorder th {
+	font-weight: normal;
+	vertical-align: text-top;
+}
+
+.ui-button .ui-icon.cadsr-delete-icon {
+    background-image: url(images/delete.gif);
+    width: 20px;
+    height: 20px; 
+}
+
+.gridLink {
+	color:blue;
+	text-decoration:underline;
+}

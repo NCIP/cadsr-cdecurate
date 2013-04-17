@@ -1,0 +1,49 @@
+
+	
+  table
+  {
+     border-collapse: collapse;
+  }
+
+  table.sidebarBGColor
+  {
+     background-color: #E2CAA2;
+  }
+
+
+
+  td.sidebarBGColor
+  {
+     background-color: #E2CAA2;
+  }
+
+  td.dashed-black
+  {
+     border: 1px dashed #2F2F4F;
+     border-spacing: 10px;
+     padding: 5px 5px 5px 0;
+  }
+
+  tr
+  {
+     padding: 5px 0 0 5px;
+  }
+
+  tr.rowColor
+  {
+     background-color : #ECE9D8
+  }
+  
+	tr.firstRow
+  {
+     padding: 10px 0 0 5px;
+  }
+
+  tr.lastRow
+  {
+     padding: 0 0 10px 5px;
+  }
+
+  
+
+  
