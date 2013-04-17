@@ -35,3 +35,9 @@
 	font-weight: normal;
 	vertical-align: text-top;
 }
+
+.ui-button .ui-icon.cadsr-delete-icon {
+    background-image: url(images/delete.gif);
+    width: 20px;
+    height: 20px; 
+}

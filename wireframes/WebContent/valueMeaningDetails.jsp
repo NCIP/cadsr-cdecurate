@@ -9,7 +9,7 @@
     </sj:a>
 	<sj:a id="altNameDefVmAnchor" href="#" targets="readVmDiv"
 		button="true" buttonIcon="ui-icon-gear">
-    	Alt Names/DefsS
+    	Alt Names/Defs
     </sj:a>
 	<sj:div cssClass="result ui-widget-content ui-corner-all">
 		<sj:accordion id="vmExtraDiv" autoHeight="false" collapsible="true">

@@ -48,7 +48,7 @@
 	    		onclick: function(){ createNewVMFromConcept() }
     		}
     	}">
-		<sjg:gridColumn name="name" title="Concept Name" sortable="true" />
+		<sjg:gridColumn name="name" title="Concept Name" sortable="true" width="100" />
 		<sjg:gridColumn name="publicId" title="Public ID" sortable="true" />
 		<sjg:gridColumn name="evsId" title="EVS Identifier" sortable="true" />
 		<sjg:gridColumn name="definition" title="Definition" sortable="true" />

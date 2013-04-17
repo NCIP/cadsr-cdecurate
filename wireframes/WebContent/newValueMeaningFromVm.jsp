@@ -4,9 +4,12 @@
 
 <sj:div id="newVmFromVmDiv"
 	cssClass="result ui-widget-content ui-corner-all">
-	<sj:div align="center">
-		<strong>Create New VM from the Selected VM</strong>
-	</sj:div>
+	<div
+		class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
+		<span id="ui-dialog-title-alertDialog" class="ui-dialog-title">Create
+			a New VM from the Selected VM</span>
+	</div>
+	<br>
 	<sj:div id="vmInfoDiv">
 		<s:form id="editVmForm" action="ValueMeaningAction" target="_blank">
 			<s:textfield name="longName" label="VM Long Name" value="Lung" />
@@ -18,7 +21,7 @@
 			<s:url id="searchConceptForVm2Url" value="searchConceptForVm2.jsp" />
 			<sj:dialog id="searchConceptForVm2" autoOpen="false" modal="false"
 				title="vm options diaglog" openTopics="openRemoteDialog"
-				position="right" height="600" width="1100"
+				position="center" height="600" width="1200"
 				closeTopics="closeSearchConceptDialog" />
 		</s:form>
 		<br>
@@ -30,7 +33,8 @@
 						href="%{searchConceptForVm2Url}" button="true"
 						buttonIcon="ui-icon-newwin">
     	Search New Concept
-   			</sj:a></td>
+   			</sj:a>
+				</td>
 			</tr>
 			<tr>
 				<td></td>
@@ -42,19 +46,20 @@
 							<s:param name="gridCaption">VM Concepts</s:param>
 							<s:param name="readOnly">no</s:param>
 						</s:include>
-					</sj:div><br>
-				</td>
+					</sj:div><br></td>
 			</tr>
 			<tr>
 				<s:url id="secondMatchingVmsUrl" value="secondMatchedVmsGrid.jsp" />
 				<sj:dialog id="secondMatchingVmDialog"
 					href="%{secondMatchingVmsUrl}" title="Matching VMs"
-					autoOpen="false" modal="true" height="400" width="1000" modal="false"
-					closeTopics="closeSecondVmMatchDialog" position="right">
+					autoOpen="false" modal="true" height="600" width="1200"
+					modal="false" closeTopics="closeSecondVmMatchDialog"
+					position="center">
 				</sj:dialog>
-				<td colspan="2" align="right"><sj:a
+				<td colspan="2" align="right">
+					<sj:a
 						openDialog="secondMatchingVmDialog" button="true"
-						buttonIcon="ui-icon-newwin">Save the VM</sj:a> <%--
+						buttonIcon="ui-icon-newwin">Create</sj:a>  <%--
 		<s:url id="selectedVmResultUrl" action="selectedVmResult" />
 		<sj:a id="useSelectedVm" indicator="indicator2"
 			href="%{selectedVmResultUrl}" targets="selectedVmResultDiv"
@@ -63,9 +68,30 @@
 					<sj:a id="cancelNewVmFromConcept" onclick="hideDiv('vmDiv')"
 						button="true" buttonIcon="ui-icon-gear">
     	Cancel
-    </sj:a></td>
+    </sj:a>
+				</td>
 			</tr>
 		</table>
 	</sj:div>
 
 </sj:div>
+<s:url id="secondMatchingVmsUrl" value="secondMatchedVmsGrid.jsp" />
+<sj:dialog id="secondMatchingVmDialog" href="%{secondMatchingVmsUrl}"
+	title="Matching VMs" autoOpen="false" modal="true" height="600"
+	width="1200" closeTopics="closeSecondVmMatchDialog" position="center">
+</sj:dialog>
+<img id="indicator" src="images/indicator.gif" alt="Loading..."
+	style="display: none" />
+<s:url id="addPvUrl" action="addPv" />
+<sj:a openDialog="secondMatchingVmDialog" button="true"
+	buttonIcon="ui-icon-newwin">Save the PV</sj:a>
+<sj:a id="cancelAddPvButton" onclick="hideDiv('pvEditDiv')"
+	button="true" buttonIcon="ui-icon-gear">
+    	Cancel
+    </sj:a>
+<%--
+	<sj:submit button="true" validate="true" value="Save the PV"
+		indicator="indicator" align="right" parentTheme="simple"
+		results="selectedVmResultDiv" href="%{pvTableUrl}"
+		onCompleteTopics="closeDialog" />
+		 --%>

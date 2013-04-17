@@ -22,21 +22,14 @@
 <!--[if lt IE 9]>    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>    
 <![endif]-->
 <script type="text/javascript" src="js/showcase.js"></script>
-<s:url var="vmUrl" action="vmDetails" />
+
 <s:url var="pvUrl" value="editPermissibleValue.jsp" />
 <s:url var="subConceptUrl" value="selectSubConceptsFromParent.jsp" />
 <script type="text/javascript">
-	function formatVmLink(cellvalue, options, rowObject) {
-		//return "<a href='#' onClick='javascript:openDialog("+cellvalue+")'>"+cellvalue+"</a>";
-		return "<a href='#' onClick='javascript:openVmDialog(&#34;" + cellvalue
-				+ "&#34;)'>" + cellvalue + " </a>";
+	function customizeGridNavIcons() {
+		$('.ui-icon-trash').removeClass('ui-icon-trash').addClass(
+				'ui-icon-minusthick');
 	}
-
-	function openVmDialog(vm) {
-		var valueMeaningDetailUrl = '<s:property value="vmUrl"/>';
-		$("#valueMeaningDetail").load(valueMeaningDetailUrl).dialog("open");
-	}
-
 	function formatEditPvLink(cellvalue, options, rowObject) {
 		//return "<a href='#' onClick='javascript:openDialog("+cellvalue+")'>"+cellvalue+"</a>";
 		return "<a href='#' onClick='javascript:openPvDialog(&#34;" + cellvalue
@@ -113,7 +106,8 @@
 		<br>
 		<sj:div>
 			<strong>Value Domain - Anatomic Site Location Text Name
-				[2188327v1.0]</strong>
+				[2188327v1.0]<br> Note: Value Domain is used in a form. <a href="#">View
+				Usage </a></strong>
 		</sj:div>
 		<br>
 		<s:url var="vdFormUrl" action="vdInfo" />

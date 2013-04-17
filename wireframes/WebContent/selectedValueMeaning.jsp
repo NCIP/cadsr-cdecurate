@@ -2,9 +2,12 @@
 <%@ taglib prefix="sj" uri="/struts-jquery-tags"%>
 <%@ taglib prefix="sjg" uri="/struts-jquery-grid-tags"%>
 <sj:div cssClass="result ui-widget-content ui-corner-all">
-	<sj:div align="center">
-		<strong>Selected VM</strong>
-	</sj:div>
+	<div
+		class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
+		<span id="ui-dialog-title-alertDialog" class="ui-dialog-title">Selected
+			VM</span>
+	</div>
+	<br>
 	<sj:div>
 		<s:form id="selectedVmForm" action="ValueMeaningAction"
 			target="_blank">
@@ -40,4 +43,13 @@
 		</s:form>
 	</sj:div>
 </sj:div>
+<img id="indicator" src="images/indicator.gif" alt="Loading..."
+	style="display: none" />
+<s:url id="addPvUrl" action="addPv" />
+<sj:a id="addPvButton" href="%{addPvUrl}" targets="existingPVs"
+	onclick="hideDiv('pvEditDiv')" button="true" buttonIcon="ui-icon-gear">Save the PV</sj:a>
 
+<sj:a id="cancelAddPvButton" onclick="hideDiv('pvEditDiv')"
+	button="true" buttonIcon="ui-icon-gear">
+    	Cancel
+    </sj:a>

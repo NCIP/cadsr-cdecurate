@@ -1,38 +1,47 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="sj" uri="/struts-jquery-tags"%>
 <%@ taglib prefix="sjg" uri="/struts-jquery-grid-tags"%>
-
 <s:div cssClass="result ui-widget-content ui-corner-all">
-	<s:form id="newPvForm" action="permissibleValueAction" target="_blank">
-		<s:textfield id="value" name="value" label="Value" required="true" />
-		<s:url id="jsonOrigins" action="originJson" />
-		<sj:select id="newPvOrigin" name="origin" label="Value Origin"
-			href="%{jsonOrigins}" list="origins" autocomplete="true"
-			loadMinimumCount="2" selectBoxIcon="true"
-			onChangeTopics="autocompleteChange" onFocusTopics="autocompleteFocus"
-			onSelectTopics="autocompleteSelect" size="180" />
-		<%--
-		<sj:datepicker id="beginDate" name="beginDate" label="Begin Date"
-			required="true" />
-		<sj:datepicker id="endDate" name="endDate" label="End Date" />
-		 --%>
-	</s:form>
+	<div
+		class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
+		<span id="ui-dialog-title-alertDialog" class="ui-dialog-title">Create
+			a New Permissible Value</span>
+	</div>
 	<br>
+	<sj:div>
+		<s:form id="newPvForm" action="permissibleValueAction" target="_blank">
+			<s:textfield id="value" name="value" label="Value" required="true" />
+			<s:url id="jsonOrigins" action="originJson" />
+			<sj:select id="newPvOrigin" name="origin" label="Value Origin"
+				href="%{jsonOrigins}" list="origins" autocomplete="true"
+				loadMinimumCount="2" selectBoxIcon="true"
+				onChangeTopics="autocompleteChange"
+				onFocusTopics="autocompleteFocus"
+				onSelectTopics="autocompleteSelect" size="180" />
+			<sj:datepicker id="beginDate" name="beginDate" label="Begin Date"
+				required="true" value="12/27/2012" />
+			<sj:datepicker id="endDate" name="endDate" label="End Date" />
+		</s:form>
+		<br>
+	</sj:div>
 	<%--<s:url id="searchConceptsUrl" action="searchConcepts" /> --%>
 	<s:url id="searchConceptsUrl" value="searchConceptForVm.jsp" />
 	<sj:dialog id="searchConceptDialog" autoOpen="false" modal="false"
-		openTopics="openRemoteDialog" position="center" height="500"
-		width="1100" closeTopics="closeSearchConceptDialog" />
-	<tr>
-		<td>Value Meaning*</td>
-		<%--
+		openTopics="openRemoteDialog" position="center" height="600"
+		width="1200" closeTopics="closeSearchConceptDialog" />
+	<table>
+		<tr>
+			<td>Value Meaning*</td>
+			<td>
+				<%--
 	<s:textfield id="vmSearchString" name="VM Search String"
-		label="Value Meaning" width="200" required="true" /> --%>
-		<sj:a openDialog="searchConceptDialog"
-			openDialogTitle="Search Concepts" href="%{searchConceptsUrl}"
-			button="true">Search Concept
-	</sj:a>
-		<%--
+		label="Value Meaning" width="200" required="true" /> --%> <sj:a
+					openDialog="searchConceptDialog" openDialogTitle="Search Concepts"
+					href="%{searchConceptsUrl}" button="true">Search Concept
+	</sj:a></td>
+		</tr>
+	</table>
+	<%--
 	<table>
 		<tr>
 			<td>Value Meaning*:</td>
@@ -50,7 +59,7 @@
 
     	Search EVS Concept
    			</sj:a>--%>
-		<%--
+	<%--
 					<s:url var="newVmUrl" action="createNewVm" />
 					<sj:a id="newVmAnchor" indicator="indicator" href="%{newVmUrl}"
 						targets="selectedVmResultDiv" listenTopics="selectedVmResultDiv"
@@ -60,8 +69,12 @@
 	</td>
 	</tr>
 	</table>--%>
-		<div id="selectedVmResultDiv"><br>
-			<%--
+	<sj:div id="vmDiv">
+
+	</sj:div>
+	<div id="selectedVmResultDiv">
+		<br>
+		<%--
 		<s:form id="selectVmForm" action="ValueMeaningAction" target="_blank">
 			<s:textfield name="longName" label="VM Long Name" disabled="true" />
 			<s:textfield name="publicIdVersion" label="Public Id & Version"
@@ -92,19 +105,9 @@
 			</tr>
 		</s:form>
 		--%>
-		</div>
+	</div>
 
-		<img id="indicator" src="images/indicator.gif" alt="Loading..."
-			style="display: none" />
-		<s:url id="addPvUrl" action="addPv" />
-		<sj:a id="addPvButton" href="%{addPvUrl}" targets="existingPVs"
-			onclick="hideDiv('pvEditDiv')" button="true"
-			buttonIcon="ui-icon-gear">Save the PV</sj:a>
-		<sj:a id="cancelAddPvButton" onclick="hideDiv('pvEditDiv')"
-			button="true" buttonIcon="ui-icon-gear">
-    	Cancel
-    </sj:a>
-		<%--
+	<%--
 	<sj:submit button="true" validate="true" value="Save the PV"
 		indicator="indicator" align="right" parentTheme="simple"
 		results="selectedVmResultDiv" href="%{pvTableUrl}"

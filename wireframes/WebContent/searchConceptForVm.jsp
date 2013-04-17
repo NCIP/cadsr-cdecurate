@@ -345,10 +345,15 @@
 			<br>
 			<table border="0">
 				<tr align="left">
-					<td><s:url id="matchingVmsUrl" value="matchedVmsGrid.jsp" />
-						<sj:a id="matchVmAnchor" targets="selectedVmResultDiv"
-							href="%{matchingVmsUrl}" indicator="indicator2" button="true"
-							buttonIcon="ui-icon-gear" onClickTopics="closeSearchConceptDialog">Use Selection</sj:a> <%--<input type="button" name="editSelectedBtn"
+					<sj:dialog id="matchedConceptVmDialog" title="Matched VMs"
+						autoOpen="false" modal="false" height="600" width="1200"
+						closeTopics="closeMatchedConceptVmDialog" position="center">
+					</sj:dialog>
+					<td><s:url
+							id="matchingVmsUrl" value="matchedVmsGrid.jsp" /> <sj:a
+							id="matchVmAnchor" openDialog="matchedConceptVmDialog"
+							href="%{matchingVmsUrl}" indicator="indicator2" button="true">Use Selection</sj:a>
+						<%--<input type="button" name="editSelectedBtn"
 						value="Use Selection" onClick="ShowSelection();" disabled>
 						&nbsp;&nbsp;--%> <input type="button" name="btnSubConcepts"
 						value="Get Subconcepts"
@@ -358,9 +363,10 @@
 						disabled onclick="javascript:getSuperConcepts();">
 						&nbsp;&nbsp; <input type="button" name="btnSubmitToEVS"
 						value="Suggest to EVS" onclick="javascript:NewTermSuggested();">
-						&nbsp;&nbsp; <img name="Message" src="images/SearchMessage.gif"
-						width="180px" height="25" alt="WaitMessage"
-						style="visibility:hidden;" align="top">
+						&nbsp;&nbsp; <s:url id="createNewVmUrl" value="newValueMeaning.jsp" />
+						<sj:a id="newVmAnchor" targets="selectedVmResultDiv"
+							href="%{createNewVmUrl}" indicator="indicator2" button="true"
+							onClickTopics="closeSearchConceptDialog">Close Window</sj:a> 
 					</td>
 				</tr>
 			</table>
