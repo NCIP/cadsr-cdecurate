@@ -347,7 +347,7 @@
 				<tr align="left">
 					<sj:dialog id="matchedConceptVmDialog" title="Matched VMs"
 						autoOpen="false" modal="false" height="600" width="1200"
-						closeTopics="closeMatchedConceptVmDialog" position="center">
+						closeTopics="closeMatchedConceptVmDialog" position="['right', 'bottom']">
 					</sj:dialog>
 					<td><s:url
 							id="matchingVmsUrl" value="matchedVmsGrid.jsp" /> <sj:a

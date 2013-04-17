@@ -41,3 +41,8 @@
     width: 20px;
     height: 20px; 
 }
+
+.gridLink {
+	color:blue;
+	text-decoration:underline;
+}

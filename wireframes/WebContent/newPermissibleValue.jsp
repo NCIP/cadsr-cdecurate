@@ -2,12 +2,6 @@
 <%@ taglib prefix="sj" uri="/struts-jquery-tags"%>
 <%@ taglib prefix="sjg" uri="/struts-jquery-grid-tags"%>
 <s:div cssClass="result ui-widget-content ui-corner-all">
-	<div
-		class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
-		<span id="ui-dialog-title-alertDialog" class="ui-dialog-title">Create
-			a New Permissible Value</span>
-	</div>
-	<br>
 	<sj:div>
 		<s:form id="newPvForm" action="permissibleValueAction" target="_blank">
 			<s:textfield id="value" name="value" label="Value" required="true" />
@@ -19,7 +13,7 @@
 				onFocusTopics="autocompleteFocus"
 				onSelectTopics="autocompleteSelect" size="180" />
 			<sj:datepicker id="beginDate" name="beginDate" label="Begin Date"
-				required="true" value="12/27/2012" />
+				required="true" value="01/11/2013" />
 			<sj:datepicker id="endDate" name="endDate" label="End Date" />
 		</s:form>
 		<br>
@@ -27,7 +21,7 @@
 	<%--<s:url id="searchConceptsUrl" action="searchConcepts" /> --%>
 	<s:url id="searchConceptsUrl" value="searchConceptForVm.jsp" />
 	<sj:dialog id="searchConceptDialog" autoOpen="false" modal="false"
-		openTopics="openRemoteDialog" position="center" height="600"
+		openTopics="openRemoteDialog" position="['right', 'top']" height="600"
 		width="1200" closeTopics="closeSearchConceptDialog" />
 	<table>
 		<tr>
@@ -37,7 +31,7 @@
 	<s:textfield id="vmSearchString" name="VM Search String"
 		label="Value Meaning" width="200" required="true" /> --%> <sj:a
 					openDialog="searchConceptDialog" openDialogTitle="Search Concepts"
-					href="%{searchConceptsUrl}" button="true">Search Concept
+					href="%{searchConceptsUrl}" button="true" >Search Concept
 	</sj:a></td>
 		</tr>
 	</table>

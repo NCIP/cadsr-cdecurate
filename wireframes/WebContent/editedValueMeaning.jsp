@@ -23,7 +23,7 @@
 				openDialogTitle="Search EVS Concept"
 				href="%{searchEVSConceptEditVmUrl}" button="true"
 				buttonIcon="ui-icon-newwin">
-    	Search New Concept
+    	Search Concept
    			</sj:a></td>
 	</tr>
 	<tr>
