@@ -8,12 +8,16 @@
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%@ taglib prefix="sj" uri="/struts-jquery-tags"%>
 <%@ taglib prefix="sb" uri="/struts-bootstrap-tags"%>
-<%--<sj:head jqueryui="true" jquerytheme="showcase" customBasepath="themes"/> --%>
-<sj:head jqueryui="true" jquerytheme="smoothness" />
-<%--<sj:head jqueryui="true" jquerytheme="cupertino" /> --%>
-<sj:head jqueryui="true" jquerytheme="redmond" />
+<sj:head jqueryui="true" jquerytheme="custom" customBasepath="themes"
+	loadAtOnce="true" />
+<%--<sj:head jqueryui="true" jquerytheme="smoothness" />
+<sj:head jqueryui="true" jquerytheme="cupertino" /> 
+<sj:head jqueryui="true" jquerytheme="redmond" loadAtOnce="true" />--%>
 <title>Value Domain Wireframes</title>
+
 <link href="styles/layout.css" rel="stylesheet" type="text/css" />
+<link href="styles/custom.css" rel="stylesheet" type="text/css" />
+<link href="styles/FullDesignArial.css" rel="stylesheet" type="text/css" />
 <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
 <!--[if lt IE 9]>    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>    
 <![endif]-->
@@ -69,11 +73,19 @@
 		var subConceptUrl = '<s:property value="subConceptUrl"/>';
 		$("#subConceptsDialog").load(subConceptUrl).dialog("open");
 	}
-	
-	function cancelVmAlertButton(){
-      $('#vmAlertDialog').dialog('close');
-     };
-	
+
+	function cancelVmAlertButton() {
+		$('#vmAlertDialog').dialog('close');
+	};
+
+	function hideDiv(divId) {
+		$("#" + divId).hide();
+	}
+
+	function showDiv(divId) {
+		$("#" + divId).show();
+	}
+</script>
 </script>
 </head>
 <body>
@@ -96,8 +108,12 @@
 				buttonIcon="ui-icon-newwin">
     	Reference Documents
   			</sj:a>
-			<br>
-			<p>Value Domain - Anatomic Site Location Text Name [2188327v1.0]</p>
+
+		</sj:div>
+		<br>
+		<sj:div>
+			<strong>Value Domain - Anatomic Site Location Text Name
+				[2188327v1.0]</strong>
 		</sj:div>
 		<br>
 		<s:url var="vdFormUrl" action="vdInfo" />
