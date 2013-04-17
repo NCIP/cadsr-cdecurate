@@ -39,6 +39,10 @@
 			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
 			<result name="success">editedPermissibleValueTable.jsp</result>
 		</action>
+		<action name="editPvWithEditedVm" method="editPvWithEditedVm"
+			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
+			<result name="success">editedPermissibleValueTableWithEditedVm.jsp</result>
+		</action>
 		<action name="createPvListFromParent" method="createListFromParent"
 			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
 			<result name="success">permissibleValueListFromParent.jsp</result>
@@ -95,9 +99,9 @@
 			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningAction">
 			<result name="success">selectedValueMeaningEditPv.jsp</result>
 		</action>
-		<action name="editedConceptTableEditVm" method="editedConceptTableEditVm"
+		<action name="editedVm" method="editedVm"
 			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningAction">
-			<result name="success">editedConceptTable.jsp</result>
+			<result name="success">editedValueMeaning.jsp</result>
 		</action>
 		<action name="createNewVm" method="createNewVm"
 			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningAction">
