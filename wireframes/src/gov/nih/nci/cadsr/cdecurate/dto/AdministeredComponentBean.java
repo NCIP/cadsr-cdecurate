@@ -8,6 +8,7 @@ public class AdministeredComponentBean {
 	private String version;
 	private String workflowStatus;
 	private String publicIdVersion;
+	private String alternateNames;
 
 	public AdministeredComponentBean() {
 	}
@@ -61,4 +62,13 @@ public class AdministeredComponentBean {
 		publicIdVersion = getPublicId() + "v" + getVersion();
 		return publicIdVersion;
 	}
+
+	public String getAlternateNames() {
+		return alternateNames;
+	}
+
+	public void setAlternateNames(String alternateNames) {
+		this.alternateNames = alternateNames;
+	}
+
 }

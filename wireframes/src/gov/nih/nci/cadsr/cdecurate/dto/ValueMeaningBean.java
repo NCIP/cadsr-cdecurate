@@ -10,6 +10,7 @@ public class ValueMeaningBean extends AdministeredComponentBean {
 	private List<ConceptBean> concepts = new ArrayList<ConceptBean>();
 	private List<ConceptualDomainBean> conceptualDomains = new ArrayList<ConceptualDomainBean>();
 	private String conceptCodes = "";
+	private String reason;
 
 	private String[] displayColumns = new String[] { "VM Long Name:",
 			"VM Public ID Version: ", "VM Description/Definition:",
@@ -82,5 +83,13 @@ public class ValueMeaningBean extends AdministeredComponentBean {
 
 	public void setConceptCodes(String conceptCodes) {
 		this.conceptCodes = conceptCodes;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 }
