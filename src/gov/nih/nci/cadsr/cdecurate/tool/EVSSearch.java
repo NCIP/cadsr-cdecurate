@@ -1867,6 +1867,7 @@ public class EVSSearch implements Serializable {
 						lstResults = this.doConceptQuery(	//GF29786
 								vocabBean.getVocabAccess(), termStr, dtsVocab,
 								sSearchIn, vocabType, namePropIn, sSearchAC);
+					logger.debug("at line 1870 of EVSSearch.java" + lstResults +"dtsvocab is "+ dtsVocab);
 					//get the desc object from the list
 					if (lstResults != null) {
 						Hashtable hType = m_eUser.getMetaCodeType();
@@ -1978,7 +1979,7 @@ public class EVSSearch implements Serializable {
 				}
 		        logger.debug("sMetaName = [" + sMetaName + "] isMetaSearch = [" + isMetaSearch + "]");
 				//do the meta thesaurus search if meta name exists and if meta search is true
-				if (sMetaName != null && !sMetaName.equals("") && isMetaSearch)	{	//GF32446 - "Semantic Type" empty issue due to sMetaName is empty
+				if (sMetaName != null && !sMetaName.equals("") && isMetaSearch && sMetaName.equalsIgnoreCase(dtsVocab))	{	//GF32446 - "Semantic Type" empty issue due to sMetaName is empty
 			        logger.debug("doMetaSearch calling with termStr = [" + termStr + "] sSearchIn = [" + sSearchIn + "] sMetaSource = [" + sMetaSource + "] iMetaLimit = [" + iMetaLimit + "] sMetaName = [" + sMetaName + "]");
 					vConList = this.doMetaSearch(vConList, termStr, sSearchIn,
 							sMetaSource, iMetaLimit, sMetaName);
