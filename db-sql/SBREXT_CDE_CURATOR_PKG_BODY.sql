@@ -2676,7 +2676,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
             v_where :=
                    v_where
                 || '
- AND TRUNC(AMIW.date_modified) >= TO_DATE('''	--GF32036 changed vd. to AMIW.
+ AND TRUNC(vd.date_modified) >= TO_DATE('''	--GF32036 changed vd. to AMIW.
                 || p_modified_starting_date
                 || ''',''MM/DD/YYYY'')';
         END IF;
@@ -2684,18 +2684,18 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
             v_where :=
                    v_where
                 || '
- AND TRUNC(AMIW.date_modified) <= TO_DATE('''	--GF32036 changed vd. to AMIW.
+ AND TRUNC(vd.date_modified) <= TO_DATE('''	--GF32036 changed vd. to AMIW.
                 || p_modified_ending_date
                 || ''',''MM/DD/YYYY'')';
         END IF;
         -- 02-Mar-2004, W. Ver Hoef added if-then stmts for by's
         IF p_created_by IS NOT NULL THEN
             v_where := v_where || '
- AND AMIW.created_by = ''' || v_created_by || '''';   --GF32036 changed vd. to AMIW. -- 10-Mar-2004, W. Ver Hoef changed like to =
+ AND vd.created_by = ''' || v_created_by || '''';   --GF32036 changed vd. to AMIW. -- 10-Mar-2004, W. Ver Hoef changed like to =
         END IF;
         IF p_modified_by IS NOT NULL THEN
             v_where := v_where || '
- AND AMIW.modified_by = ''' || v_modified_by || '''';   --GF32036 changed vd. to AMIW. -- 10-Mar-2004, W. Ver Hoef changed like to =
+ AND vd.modified_by = ''' || v_modified_by || '''';   --GF32036 changed vd. to AMIW. -- 10-Mar-2004, W. Ver Hoef changed like to =
         END IF;
         /*
           -- 03-Mar-2004, W. Ver Hoef added if-then stmt for permissible value
