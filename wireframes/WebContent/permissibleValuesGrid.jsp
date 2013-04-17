@@ -13,11 +13,19 @@
 <s:set name="withParent">${param.withParent}</s:set>
 <s:set name="gridModel">${param.gridModel}</s:set>
 <s:set name="gridId">${param.gridId}</s:set>
+<s:set name="readOnly">${param.readOnly}</s:set>
+<s:if test="%{#readOnly == 'yes'}">
+	<s:set name="showNavigator">false</s:set>
+</s:if>
+<s:else>
+	<s:set name="showNavigator">true</s:set>
+</s:else>
 <sjg:grid id="%{#gridId}" caption="Existing Permissible Values"
-	dataType="json" href="%{pvTableUrl}" gridModel="%{#gridModel}" scroll="false"
-	pager="true">
-	<sjg:gridColumn name="action" title="" formatter="formatEditPvLink"
-		cssClass="link" sortable="false" align="center" />
+	dataType="json" href="%{pvTableUrl}" gridModel="%{#gridModel}"
+	scroll="false" pager="true" navigator="%{#showNavigator}"
+	navigatorEdit="false" navigatorAdd="false" navigatorSearch="false"
+	multiselect="%{#showNavigator}"
+	navigatorDeleteOptions="{height:280, reloadAfterSubmit:true}">
 	<%--doesn't work <s:if test="%{#parameters.withParent[0]=='yes'}"> --%>
 	<s:if test="%{#withParent == 'yes'}">
 		<sjg:gridColumn name="parentConcept" title="Parent Concept"
@@ -34,5 +42,8 @@
 		align="center" />
 	<sjg:gridColumn name="endDate" title="End Date" sortable="true"
 		align="center" />
+	<sjg:gridColumn name="action" title="" formatter="formatEditPvLink"
+		cssClass="link" sortable="false" align="center" />
+
 </sjg:grid>
 <br>

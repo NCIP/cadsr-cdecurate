@@ -349,7 +349,7 @@
 						<sj:a id="selectedVmEVSAnchor" indicator="indicator2"
 							href="%{selectedVmResultUrl}" targets="selectedVmResultDiv"
 							listenTopics="selectedVmResultDiv" button="true"
-							buttonIcon="ui-icon-gear" onCompleteTopics="closeThisDialog">Use Selection</sj:a>
+							buttonIcon="ui-icon-gear">Link Concept</sj:a>
 						<%--<input type="button" name="editSelectedBtn"
 						value="Use Selection" onClick="ShowSelection();" disabled>
 						&nbsp;&nbsp;--%> <input type="button" name="btnSubConcepts"
@@ -358,8 +358,6 @@
 						onmouseout="closeall()" disabled> &nbsp;&nbsp; <input
 						type="button" name="btnSuperConcepts" value="Get Superconcepts"
 						disabled onclick="javascript:getSuperConcepts();">
-						&nbsp;&nbsp; <input type="button" name="closeBtn"
-						value="Close Window" onClick="javascript:window.close();">
 						&nbsp;&nbsp; <input type="button" name="btnSubmitToEVS"
 						value="Suggest to EVS" onclick="javascript:NewTermSuggested();">
 						&nbsp;&nbsp; <img name="Message" src="images/SearchMessage.gif"

@@ -7,6 +7,10 @@
 		button="true" buttonIcon="ui-icon-gear">
     	Edit this VM
     </sj:a>
+	<sj:a id="altNameDefVmAnchor" href="#" targets="readVmDiv"
+		button="true" buttonIcon="ui-icon-gear">
+    	Alt Names/DefsS
+    </sj:a>
 	<sj:div cssClass="result ui-widget-content ui-corner-all">
 		<sj:accordion id="vmExtraDiv" autoHeight="false" collapsible="true">
 			<sj:accordionItem title="Attributes and Concepts">
@@ -19,16 +23,23 @@
 						value="Connective tissue that forms the skeletal components of the body"
 						disabled="true" rows="2" cols="50">
 					</s:textarea>
-
-
-
-
+					<s:include value="conceptsGrid.jsp">
+						<s:param name="withParent">no</s:param>
+						<s:param name="gridModel">conceptModel</s:param>
+						<s:param name="gridId">readVmConceptTable</s:param>
+						<s:param name="gridCaption">VM Concepts</s:param>
+						<s:param name="readOnly">yes</s:param>
+					</s:include>
 				</s:form>
 				<br>
 			</sj:accordionItem>
 			<s:url id="conceptualDomainVmUrl" action="conceptualDomainsVm" />
 			<sj:accordionItem title="Conceptual Domains (22 Found)">
 				<sj:div href="%{conceptualDomainVmUrl}">
+				</sj:div>
+			</sj:accordionItem>
+			<sj:accordionItem title="Alt Names/Definitions">
+				<sj:div>
 				</sj:div>
 			</sj:accordionItem>
 			<sj:accordionItem title="Where Used">

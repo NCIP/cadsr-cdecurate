@@ -139,7 +139,7 @@
 				</tr>
 				<tr>
 					<td>&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="keyword"
-						size="22" style="width: 160" value="Bone Tissue"
+						size="22" style="width: 160" value="Leg"
 						onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
 					</td>
 				</tr>
@@ -345,22 +345,16 @@
 			<br>
 			<table border="0">
 				<tr align="left">
-					<td><s:url id="editedConceptTableEditVmUrl" action="editedConceptTableEditVm" />
-						<sj:a id="selectedVmEVSAnchorEditVm" indicator="indicator2"
-							href="%{editedConceptTableEditVmUrl}" targets="editVmConceptTableDiv"
-							listenTopics="editVmConceptTableDiv" button="true"
-							buttonIcon="ui-icon-gear" onCompleteTopics="closeThisDialog">Use Selection</sj:a>
-						<%--<input type="button" name="editSelectedBtn"
-						value="Use Selection" onClick="ShowSelection();" disabled>
-						&nbsp;&nbsp;--%> <input type="button" name="btnSubConcepts"
-						value="Get Subconcepts"
+					<td><s:url id="editedVmUrl" action="editedVm" /> <sj:a
+							id="selectedVmEVSAnchorEditVm" indicator="indicator2"
+							href="%{editedVmUrl}" targets="vmInfoDiv" button="true"
+							buttonIcon="ui-icon-gear">Link Concept</sj:a> <input
+						type="button" name="btnSubConcepts" value="Get Subconcepts"
 						onmouseover="controlsubmenu2(event,'divAssACMenu',null,null,null)"
 						onmouseout="closeall()" disabled> &nbsp;&nbsp; <input
 						type="button" name="btnSuperConcepts" value="Get Superconcepts"
 						disabled onclick="javascript:getSuperConcepts();">
-						&nbsp;&nbsp; <input type="button" name="closeBtn"
-						value="Close Window" onClick="javascript:window.close();">
-						&nbsp;&nbsp; <input type="button" name="btnSubmitToEVS"
+						&nbsp;&nbsp;<input type="button" name="btnSubmitToEVS"
 						value="Suggest to EVS" onclick="javascript:NewTermSuggested();">
 						&nbsp;&nbsp; <img name="Message" src="images/SearchMessage.gif"
 						width="180px" height="25" alt="WaitMessage"
@@ -373,13 +367,11 @@
 
 				<tr>
 					<td><font size="4"> <b> Search Results for Value
-								Meaning - Bone Tissue </b> </font>
-					</td>
+								Meaning - leg </b> </font></td>
 				</tr>
 
 				<tr>
-					<td><font size="2"> &nbsp; 6 Records Found </font>
-					</td>
+					<td><font size="2"> &nbsp; 3 Records Found </font></td>
 				</tr>
 			</table>
 			<table width="100%" border="1" valign="top">
@@ -435,16 +427,15 @@
 					<td width="5px" valign="top"><input type="checkbox" name="CK0"
 						onClick="javascript:EnableButtons(checked,this);"></td>
 
-					<td width="150px" valign="top">Bone Tissue <br></td>
+					<td width="150px" valign="top">Leg <br></td>
 
 
-					<td valign="top">2751654</td>
+					<td valign="top">2516717</td>
 
-					<td valign="top">C13076</td>
+					<td valign="top">C32974</td>
 
-					<td valign="top">The mineralized osseous tissue that gives
-						rigidity to the bones and forms its honeycomb-like
-						three-dimensional internal structure.</td>
+					<td valign="top">Commonly used to refer to the whole lower
+						limb but technically only the part between the knee and ankle.</td>
 
 					<td valign="top">NCI</td>
 
@@ -464,18 +455,15 @@
 					<td width="5px" valign="top"><input type="checkbox" name="CK1"
 						onClick="javascript:EnableButtons(checked,this);"></td>
 					<td width="150px" valign="top"><a
-						href="javascript:showConceptInTree('CK1');"> Bone Tissue </a> <br>
-
-					</td>
+						href="javascript:showConceptInTree('CK1');"> Leg </a> <br></td>
 
 
 					<td valign="top"></td>
 
-					<td valign="top">C13076</td>
+					<td valign="top">C32974</td>
 
-					<td valign="top">The mineralized osseous tissue that gives
-						rigidity to the bones and forms its honeycomb-like
-						three-dimensional internal structure.</td>
+					<td valign="top">One of the two lower extremities in humans
+						used for locomotion and support.</td>
 
 					<td valign="top">NCI</td>
 
@@ -495,18 +483,15 @@
 					<td width="5px" valign="top"><input type="checkbox" name="CK2"
 						onClick="javascript:EnableButtons(checked,this);"></td>
 					<td width="150px" valign="top"><a
-						href="javascript:showConceptInTree('CK2');"> Bone Tissue </a> <br>
-
-					</td>
+						href="javascript:showConceptInTree('CK2');"> Leg </a> <br></td>
 
 
 					<td valign="top"></td>
 
-					<td valign="top">C13076</td>
+					<td valign="top">C32974</td>
 
-					<td valign="top">The mineralized osseous tissue that gives
-						rigidity to the bones and forms its honeycomb-like
-						three-dimensional internal structure. (NCI)</td>
+					<td valign="top">One of the two lower extremities in humans
+						used for locomotion and support. (NCI)</td>
 
 					<td valign="top">CDISC</td>
 
@@ -524,104 +509,6 @@
 
 
 			</table>
-			<div style="display:none">
-				<input type="hidden" name="AttChecked" value="5"> <input
-					type="hidden" name="searchComp" value=""> <input
-					type="hidden" name="openToTree" value=""> <input
-					type="hidden" name="selectedParentConceptCode" value=""> <input
-					type="hidden" name="selectedParentConceptName" value=""> <input
-					type="hidden" name="selectedParentConceptDB" value=""> <input
-					type="hidden" name="selectedParentConceptMetaSource" value="">
-				<input type="hidden" name="OCCCode" value=""> <input
-					type="hidden" name="OCCCodeDB" value=""> <input
-					type="hidden" name="OCCCodeName" value=""> <input
-					type="hidden" name="numSelected" value=""> <input
-					type="hidden" name="actSelected" value="Search"> <input
-					type="hidden" name="numAttSelected" value=""> <input
-					type="hidden" name="blockSortType" value="nothing"> <input
-					type="hidden" name="UISearchType" value="term"> <input
-					type="hidden" name="selRowID" value=""> <input
-					type="hidden" name="editPVInd" value=""> <select size="1"
-					name="hiddenPVValue" style="visibility:hidden;"></select> <select
-					size="1" name="hiddenPVMean" style="visibility:hidden;"></select> <select
-					size="1" name="hiddenResults" style="visibility:hidden;width:145px">
-
-					<option value="Bone Tissue">Bone Tissue</option>
-
-					<option value="2751654">2751654</option>
-
-					<option value="C13076">C13076</option>
-
-					<option
-						value="The mineralized osseous tissue that gives rigidity to the bones and forms its honeycomb-like three-dimensional internal structure.">
-						The mineralized osseous tissue that gives rigidity to the bones
-						and forms its honeycomb-like three-dimensional internal structure.
-					</option>
-
-					<option value="NCI">NCI</option>
-
-					<option value="RELEASED">RELEASED</option>
-
-					<option value="null">null</option>
-
-					<option value="caBIG">caBIG</option>
-
-					<option value="caDSR">caDSR</option>
-
-					<option value="Concept Class">Concept Class</option>
-
-					<option value="Bone Tissue">Bone Tissue</option>
-
-					<option value="null">null</option>
-
-					<option value="C13076">C13076</option>
-
-					<option
-						value="The mineralized osseous tissue that gives rigidity to the bones and forms its honeycomb-like three-dimensional internal structure.">
-						The mineralized osseous tissue that gives rigidity to the bones
-						and forms its honeycomb-like three-dimensional internal structure.
-					</option>
-
-					<option value="NCI">NCI</option>
-
-					<option value="Active">Active</option>
-
-					<option value=""></option>
-
-					<option value="null">null</option>
-
-					<option value="NCI Thesaurus">NCI Thesaurus</option>
-
-					<option value="null">null</option>
-
-					<option value="Bone Tissue">Bone Tissue</option>
-
-					<option value="null">null</option>
-
-					<option value="C13076">C13076</option>
-
-					<option
-						value="The mineralized osseous tissue that gives rigidity to the bones and forms its honeycomb-like three-dimensional internal structure. (NCI)">
-						The mineralized osseous tissue that gives rigidity to the bones
-						and forms its honeycomb-like three-dimensional internal structure.
-						(NCI)</option>
-
-					<option value="CDISC">CDISC</option>
-
-					<option value="Active">Active</option>
-
-					<option value=""></option>
-
-					<option value="null">null</option>
-
-					<option value="NCI Thesaurus">NCI Thesaurus</option>
-
-					<option value="null">null</option>
-
-				</select> <select size="1" name="hiddenSelectedRow"
-					style="visibility:hidden;">
-				</select>
-			</div>
 		</form>
 	</div>
 </div>

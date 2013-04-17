@@ -9,7 +9,7 @@
 			value="2581613v1.0" disabled="true" />
 		<s:textarea name="description" label="Description/Definition"
 			value="The tissue occupying the spaces of bone. It consists of blood vessel sinuses and a network of hematopoietic cells which give rise to the red cells, white cells, and megakaryocytes. "
-			disabled="true" rows="2" cols="50">
+			disabled="true" rows="4" cols="50">
 		</s:textarea>
 		<tr>
 			<td>Concepts:</td>

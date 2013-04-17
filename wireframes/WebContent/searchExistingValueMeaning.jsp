@@ -28,7 +28,8 @@
 						<select name="listSearchFor" size="1" style="width: 172px"
 						onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="ValueMeaning" selected>Value Meaning</option>
-					</select></td>
+					</select>
+					</td>
 				</tr>
 
 				<!--not for crf questions    -->
@@ -39,7 +40,8 @@
 				<tr>
 					<th valign="top" align=right>2)</th>
 					<th valign="bottom">
-						<div align="left">Search In:</div></th>
+						<div align="left">Search In:</div>
+					</th>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
@@ -66,7 +68,8 @@
 
 							<option value="concept">Concept Name/EVS Identifier</option>
 
-					</select></td>
+					</select>
+					</td>
 				</tr>
 
 				<!-- Names, definition, long name document text and historic short cde name search in -->
@@ -82,10 +85,10 @@
 					<td height="7" colspan=2 valign="top">
 				</tr>
 				<tr>
-					<th><div valign="top" align=right>3)</div>
-					</th>
+					<th><div valign="top" align=right>3)</div></th>
 					<th valign="bottom">
-						<div align="left">Enter Search Term:</div></th>
+						<div align="left">Enter Search Term:</div>
+					</th>
 				</tr>
 
 				<!-- same input box for crf name and other keyword searches -->
@@ -100,7 +103,8 @@
 					<td>
 						<div align="left"
 							title="The wildcard character, *, expands the search to find a non-exact match.">
-							use * as wildcard</div></td>
+							use * as wildcard</div>
+					</td>
 				</tr>
 
 				<!-- end not crf question -->
@@ -108,14 +112,14 @@
 					<td height="7" colspan=2 valign="top">
 				</tr>
 				<tr>
-					<th><div valign="top" align=right>4)</div>
-					</th>
+					<th><div valign="top" align=right>4)</div></th>
 					<th valign="bottom">
 						<div align="left">
 							Filter By:
 							<!-- Place the adv/simple filter hyperlink only if it is for AC of these only -->
 
-						</div></th>
+						</div>
+					</th>
 				</tr>
 				<br>
 				<!--not for crf questions    -->
@@ -130,7 +134,8 @@
 
 				<tr>
 					<td>&nbsp;</td>
-					<td style="height: 20" valign=bottom><b> Version </b></td>
+					<td style="height: 20" valign=bottom><b> Version </b>
+					</td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
@@ -158,7 +163,8 @@
 				<tr>
 					<td>&nbsp;</td>
 					<td style="height: 20" valign=bottom><b> Conceptual Domain
-					</b></td>
+					</b>
+					</td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
@@ -874,7 +880,8 @@
 								value="A8BCE4AE-035C-22EC-E034-0003BA12F5E7">
 								YES_NO_RESPONSES - SPOREs</option>
 
-					</select></td>
+					</select>
+					</td>
 				</tr>
 
 				<!-- workflow status filter for all ACs except csi, pv, vm -->
@@ -921,7 +928,8 @@
 
 							<option value="RETIRED WITHDRAWN">RETIRED WITHDRAWN</option>
 
-					</select></td>
+					</select>
+					</td>
 				</tr>
 
 				<!-- Registration status filter-->
@@ -929,7 +937,8 @@
 				<tr>
 					<td>&nbsp;</td>
 					<td style="height: 20" valign=bottom><b> Registration
-							Status </b></td>
+							Status </b>
+					</td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
@@ -956,7 +965,8 @@
 
 							<option value="Suspended">Suspended</option>
 
-					</select></td>
+					</select>
+					</td>
 				</tr>
 
 				<!-- Registration status filter-->
@@ -1001,7 +1011,8 @@
 								<option value="All Attributes">All Attributes</option>
 
 							</select>
-						</div></td>
+						</div>
+					</td>
 				</tr>
 				<tr>
 					<td height="35" valign="bottom" colspan="2">
@@ -1013,7 +1024,8 @@
 								<option value="1000" selected>1000</option>
 								<option value="0">All</option>
 							</select>
-						</div></td>
+						</div>
+					</td>
 				</tr>
 				<tr>
 					<td height="35" valign="bottom" colspan=2>
@@ -1021,7 +1033,8 @@
 							<input type="button" name="startSearchBtn" value="Start Search"
 								onClick="doSearchDE();"
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-						</div></td>
+						</div>
+					</td>
 				</tr>
 			</table>
 			<select size="1" name="hidListAttr"
@@ -1067,14 +1080,10 @@
 							indicator="indicator2" href="%{selectedVmResultUrl}"
 							targets="selectedVmResultDiv" listenTopics="selectedVmResultDiv"
 							button="true" buttonIcon="ui-icon-gear"
-							onCompleteTopics="closeThisDialog">Use Selection</sj:a> <!-- searchForCreate -->
+							onCompleteTopics="closeThisDialog">Link Concept</sj:a> <!-- searchForCreate -->
 						<%--<input type="button"
 						name="editSelectedBtn" value="Use Selection"
 						onClick="closeVmSearch();"> --%> &nbsp; <!-- makes close button only if page opened from createDE or VD pages   -->
-						<input type="button" name="closeBtn" value="Close Window"
-						onClick="closeVmSearch();"> &nbsp; <img name="Message"
-						src="images/SearchMessage.gif" width="180px" height="25px"
-						alt="WaitMessage" style="visibility:hidden;">
 					</td>
 				</tr>
 			</table>
@@ -1084,10 +1093,12 @@
 				</tr>
 				<tr>
 					<td><font size="4"> <b> Search Results for Value
-								Meaning : lung </b> </font></td>
+								Meaning : lung </b> </font>
+					</td>
 				</tr>
 				<tr>
-					<td><font size="2"> &nbsp; 2 Records Found </font></td>
+					<td><font size="2"> &nbsp; 2 Records Found </font>
+					</td>
 				</tr>
 				<tr>
 					<td height="7">
@@ -1108,31 +1119,38 @@
 					<th method="get"><a href="javascript:SetSortType('longName')"
 						onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 
-							Long Name </a></th>
+							Long Name </a>
+					</th>
 
 					<th method="get"><a href="javascript:SetSortType('minID')"
 						onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
-							Public_ID </a></th>
+							Public_ID </a>
+					</th>
 
 					<th method="get"><a href="javascript:SetSortType('version')"
 						onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
-							Version </a></th>
+							Version </a>
+					</th>
 
 					<th method="get"><a href="javascript:SetSortType('Status')"
 						onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
-							Workflow Status </a></th>
+							Workflow Status </a>
+					</th>
 
 					<th method="get"><a href="javascript:SetSortType('umls')"
 						onHelp="showHelp('html/../Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
-							EVS Identifier </a></th>
+							EVS Identifier </a>
+					</th>
 
 					<th method="get"><a href="javascript:SetSortType('ConDomain')"
 						onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
-							Conceptual Domain </a></th>
+							Conceptual Domain </a>
+					</th>
 
 					<th method="get"><a href="javascript:SetSortType('def')"
 						onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
-							Definition </a></th>
+							Definition </a>
+					</th>
 
 				</tr>
 
@@ -1153,9 +1171,9 @@
 					<td>C12468</td>
 
 					<td>Adverse Event Results... <a
-						href="javascript:openConDomainWindow('Lung')"><br>
-						<b>More_>></b>
-					</a></td>
+						href="javascript:openConDomainWindow('Lung')"><br> <b>More_>></b>
+					</a>
+					</td>
 
 					<td>One of a pair of viscera occupying the pulmonary cavities
 						of the thorax, the organs of respiration in which aeration of the
@@ -1189,9 +1207,9 @@
 					<td>C12468</td>
 
 					<td>Adverse Event Results... <a
-						href="javascript:openConDomainWindow('Lung')"><br>
-						<b>More_>></b>
-					</a></td>
+						href="javascript:openConDomainWindow('Lung')"><br> <b>More_>></b>
+					</a>
+					</td>
 
 					<td>One of a pair of viscera occupying the pulmonary cavities
 						of the thorax, the organs of respiration in which aeration of the
@@ -1314,7 +1332,8 @@
 							href="javascript:getAssocDEs();"
 							onmouseover="changecolor('assDE',oncolor)"
 							onmouseout="changecolor('assDE',offcolor);closeall()"> Data
-								Elements </a></td>
+								Elements </a>
+						</td>
 					</tr>
 
 					<tr>
@@ -1322,7 +1341,8 @@
 							href="javascript:getAssocVDs();"
 							onmouseover="changecolor('assVD',oncolor)"
 							onmouseout="changecolor('assVD',offcolor);closeall()"> Value
-								Domains </a></td>
+								Domains </a>
+						</td>
 					</tr>
 				</table>
 			</div>

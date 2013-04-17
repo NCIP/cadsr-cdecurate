@@ -13,4 +13,5 @@
 	<s:param name="gridModel">pvModelFromParent</s:param>
 	<s:param name="withParent">yes</s:param>
 	<s:param name="gridId">pvModelWithParentDiv</s:param>
+	<s:param name="readOnly">no</s:param>
 </s:include>
