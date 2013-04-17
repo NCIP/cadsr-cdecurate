@@ -50,6 +50,7 @@
 			<s:param name="gridModel">pvModel</s:param>
 			<s:param name="withParent">no</s:param>
 			<s:param name="gridId">pvModelDiv</s:param>
+			<s:param name="readOnly">no</s:param>
 		</s:include>
 	</sj:div>
 </sj:div>

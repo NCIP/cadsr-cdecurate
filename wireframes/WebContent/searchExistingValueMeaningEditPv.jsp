@@ -1067,14 +1067,7 @@
 							indicator="indicator2" href="%{selectedVmResultUrlEditPv}"
 							targets="vmDiv" listenTopics="vmDiv"
 							button="true" buttonIcon="ui-icon-gear"
-							onCompleteTopics="closeThisDialog">Use Selection</sj:a> <!-- searchForCreate -->
-						<%--<input type="button"
-						name="editSelectedBtn" value="Use Selection"
-						onClick="closeVmSearch();"> --%> &nbsp; <!-- makes close button only if page opened from createDE or VD pages   -->
-						<input type="button" name="closeBtn" value="Close Window"
-						onClick="closeVmSearch();"> &nbsp; <img name="Message"
-						src="images/SearchMessage.gif" width="180px" height="25px"
-						alt="WaitMessage" style="visibility:hidden;">
+							onCompleteTopics="closeThisDialog">Link Concept</sj:a> <!-- searchForCreate -->
 					</td>
 				</tr>
 			</table>

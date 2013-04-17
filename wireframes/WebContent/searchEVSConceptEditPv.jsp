@@ -334,17 +334,13 @@
 							href="%{selectedVmResultUrlEditPv}"
 							targets="vmDiv"
 							listenTopics="vmDiv" button="true"
-							buttonIcon="ui-icon-gear" onCompleteTopics="closeThisDialog">Use Selection</sj:a>
-						<%--<input type="button" name="editSelectedBtn"
-						value="Use Selection" onClick="ShowSelection();" disabled>
-						&nbsp;&nbsp;--%> <input type="button" name="btnSubConcepts"
+							buttonIcon="ui-icon-gear">Link Concept</sj:a>
+						<input type="button" name="btnSubConcepts"
 						value="Get Subconcepts"
 						onmouseover="controlsubmenu2(event,'divAssACMenu',null,null,null)"
 						onmouseout="closeall()" disabled> &nbsp;&nbsp; <input
 						type="button" name="btnSuperConcepts" value="Get Superconcepts"
 						disabled onclick="javascript:getSuperConcepts();">
-						&nbsp;&nbsp; <input type="button" name="closeBtn"
-						value="Close Window" onClick="javascript:window.close();">
 						&nbsp;&nbsp; <input type="button" name="btnSubmitToEVS"
 						value="Suggest to EVS" onclick="javascript:NewTermSuggested();">
 						&nbsp;&nbsp; <img name="Message" src="images/SearchMessage.gif"

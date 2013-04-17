@@ -2,7 +2,8 @@
 <%@ taglib prefix="sj" uri="/struts-jquery-tags"%>
 <%@ taglib prefix="sjg" uri="/struts-jquery-grid-tags"%>
 <sj:div id="editVmDiv">
-	<sj:div cssClass="result ui-widget-content ui-corner-all">
+	<sj:div id="vmInfoDiv"
+		cssClass="result ui-widget-content ui-corner-all">
 		<s:form id="editVmForm" action="ValueMeaningAction" target="_blank">
 			<s:textfield name="longName" label="VM Long Name" value="Bone" />
 			<s:textfield name="publicId" label="Public Id" value="2567236"
@@ -13,9 +14,9 @@
 				rows="2" cols="50">
 			</s:textarea>
 			<s:url id="searchEVSConceptEditVmUrl" action="searchEVSConceptEditVm" />
-			<sj:dialog id="searchEVSDialogEditVm" autoOpen="false" modal="true"
+			<sj:dialog id="searchEVSDialogEditVm" autoOpen="false" modal="false"
 				title="vm options diaglog" openTopics="openRemoteDialog"
-				position="right" height="600" width="1000"
+				position="right" height="600" width="900"
 				closeTopics="closeThisDialog" />
 			<tr>
 				<td>Concepts:</td>
@@ -40,6 +41,14 @@
 					</sj:div>
 				</td>
 			</tr>
+			<tr>
+				<td>Alt Names/Defs</td>
+				<td><sj:a openDialog="searchEVSDialogEditVm"
+						openDialogTitle="Alternate Names/Definitions" href="#" button="true"
+						buttonIcon="ui-icon-newwin">
+    	Edit
+   			</sj:a></td>
+			</tr>
 			<%--
 			<tr>
 				<td></td>
@@ -52,8 +61,10 @@
 	</sj:div>
 
 	<br>
-	<sj:a id="editVmButton" href="#" listenTopics="existingPVs"
-		button="true" buttonIcon="ui-icon-gear" onClickTopics="closeDialog">Save the VM</sj:a>
+	<s:url id="editVmPvTableUrl" action="editPvWithEditedVm" />
+	<sj:a id="editVmButton" href="%{editVmPvTableUrl}"
+		targets="existingPVs" button="true" buttonIcon="ui-icon-gear"
+		onClickTopics="closeDialog">Save the VM</sj:a>
 	<%--
 	<sj:submit formIds="editVmForm" targets="result" button="true"
 		validate="true" value="Update the VM" indicator="indicator"

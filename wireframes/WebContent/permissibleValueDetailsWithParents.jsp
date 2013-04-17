@@ -23,5 +23,6 @@
 		<s:param name="gridModel">emptyModel</s:param>
 		<s:param name="withParent">yes</s:param>
 		<s:param name="gridId">emptyModelDiv</s:param>
+		<s:param name="readOnly">yes</s:param>
 	</s:include>
 </sj:div>

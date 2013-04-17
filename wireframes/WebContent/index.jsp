@@ -69,6 +69,11 @@
 		var subConceptUrl = '<s:property value="subConceptUrl"/>';
 		$("#subConceptsDialog").load(subConceptUrl).dialog("open");
 	}
+	
+	function cancelVmAlertButton(){
+      $('#vmAlertDialog').dialog('close');
+     };
+	
 </script>
 </head>
 <body>

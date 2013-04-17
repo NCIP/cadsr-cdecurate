@@ -5,10 +5,13 @@
 
 <table border="0">
 	<tr align="left">
-		<td><s:url id="subconceptTableUrl"
+		<td>
+		<s:url id="subconceptTableUrl"
 				value="subConceptsFromParent.jsp" /> <sj:a id="getSubconcept"
 				href="%{subconceptTableUrl}" targets="subconceptTable" button="true"
-				buttonIcon="ui-icon-gear">Get Subconcepts</sj:a> <input
+				buttonIcon="ui-icon-gear">Get Subconcepts</sj:a>
+				
+		<input
 			type="button" name="btnSuperConcepts" value="Get Superconcepts">
 			&nbsp;&nbsp;</td>
 	</tr>

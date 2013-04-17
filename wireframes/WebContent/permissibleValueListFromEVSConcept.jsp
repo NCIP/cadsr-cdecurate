@@ -348,7 +348,7 @@
 					<td><s:url id="pvTableUrl" action="addPv" /> <sj:a
 							id="addPvButton" href="%{pvTableUrl}" targets="existingPVs"
 							listenTopics="existingPVs" button="true"
-							buttonIcon="ui-icon-gear" onCompleteTopics="closeDialog">Use Selection</sj:a>
+							buttonIcon="ui-icon-gear" onCompleteTopics="closeDialog">Link Concept</sj:a>
 						<%--<input type="button" name="editSelectedBtn"
 						value="Use Selection" onClick="ShowSelection();" disabled>
 						&nbsp;&nbsp;--%> <input type="button" name="btnSubConcepts"

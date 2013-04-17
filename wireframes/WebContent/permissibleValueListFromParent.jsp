@@ -199,7 +199,7 @@
 					<td><s:url id="parentGridUrl" action="parentConceptListGrid" /> <sj:a
 							id="parentTableButton" href="%{parentGridUrl}" targets="parentTable"
 							listenTopics="parentTable" button="true"
-							buttonIcon="ui-icon-gear">Use Selection</sj:a>
+							buttonIcon="ui-icon-gear">Link Concept</sj:a>
 						<input type="button" name="btnSubConcepts" value="Get Subconcepts"
 						onmouseover="controlsubmenu2(event,'divAssACMenu',null,null,null)"
 						onmouseout="closeall()" disabled> &nbsp;&nbsp; <input

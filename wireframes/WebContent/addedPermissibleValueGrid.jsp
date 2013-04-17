@@ -13,6 +13,7 @@
 	<s:param name="gridModel">addedPvModel</s:param>
 	<s:param name="withParent">no</s:param>
 	<s:param name="gridId">pvTable</s:param>
+	<s:param name="readOnly">no</s:param>
 </s:include>
 
 
