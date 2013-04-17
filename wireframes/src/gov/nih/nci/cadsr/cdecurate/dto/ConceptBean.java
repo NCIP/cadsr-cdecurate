@@ -4,7 +4,7 @@ public class ConceptBean {
 	private String name;
 	private String publicId;
 	private String evsId;
-	private String defintion;
+	private String definition;
 	private String definitionSource;
 	private String workflowStatus;
 	private String semanticType;
@@ -22,7 +22,7 @@ public class ConceptBean {
 			String type, String vocabulary) {
 		this.name = name;
 		this.evsId = evsId;
-		this.defintion = defintion;
+		this.definition = defintion;
 		this.type = type;
 		this.vocabulary = vocabulary;
 	}
@@ -31,7 +31,7 @@ public class ConceptBean {
 			String type, String vocabulary, int order) {
 		this.name = name;
 		this.evsId = evsId;
-		this.defintion = defintion;
+		this.definition = defintion;
 		this.type = type;
 		this.vocabulary = vocabulary;
 		this.order = order;
@@ -45,7 +45,7 @@ public class ConceptBean {
 		this.name = name;
 		this.publicId = publicId;
 		this.evsId = evsId;
-		this.defintion = defintion;
+		this.definition = defintion;
 		this.definitionSource = definitionSource;
 		this.workflowStatus = workflowStatus;
 		this.semanticType = semanticType;
@@ -78,12 +78,12 @@ public class ConceptBean {
 		this.evsId = evsId;
 	}
 
-	public String getDefintion() {
-		return defintion;
+	public String getDefinition() {
+		return definition;
 	}
 
-	public void setDefintion(String defintion) {
-		this.defintion = defintion;
+	public void setDefinition(String definition) {
+		this.definition = definition;
 	}
 
 	public String getDefinitionSource() {

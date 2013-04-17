@@ -56,8 +56,8 @@ public class PermissibleValueDAO {
 
 		ValueMeaningBean vm4 = new ValueMeaningBean(
 				"Lung",
-				"2873883",
-				"1.0",
+				"",
+				"",
 				"One of a pair of viscera occupying the pulmonary cavities of the thorax, the organs of respiration in which aeration of the blood takes place. As a rule, the right lung is slightly larger than the left and is divided into three lobes (an upper, a middle, and a lower or basal), while the left has but two lobes (an upper and a lower or basal). Each lung is irregularly conical in shape, presenting a blunt upper extremity (the apex), a concave base following the curve of the diaphragm, an outer convex surface (costal surface), an inner or mediastinal surface (mediastinal surface), a thin and sharp anterior border, and a thick and rounded posterior border. SYN pulmo. ");
 
 		List<ConceptBean> vm4Concepts = new ArrayList<ConceptBean>();

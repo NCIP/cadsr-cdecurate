@@ -55,8 +55,9 @@ public class ConceptDAO {
 				"C12468",
 				"One of a pair of viscera occupying the pulmonary cavities of the thorax, the organs of respiration in which aeration of the blood takes place. As a rule, the right lung is slightly larger than the left and is divided into three lobes (an upper, a middle, and a lower or basal), while the left has but two lobes (an upper and a lower or basal). Each lung is irregularly conical in shape, presenting a blunt upper extremity (the apex), a concave base following the curve of the diaphragm, an outer convex surface (costal surface), an inner or mediastinal surface (mediastinal surface), a thin and sharp anterior border, and a thick and rounded posterior border. ",
 				"NCI", "RELEASED", "", "caBIG", "caDSR", "Concept Class");
-
-		boneConcept = new ConceptBean(
+        caDSRLungConcept.setType("Primary");
+		
+        boneConcept = new ConceptBean(
 				"Bone",
 				"C12366",
 				"Connective tissue that forms the skeletal components of the body.",
@@ -112,7 +113,6 @@ public class ConceptDAO {
 
 		searchedConceptModel = new ArrayList<ConceptBean>();
 		searchedConceptModel.add(caDSRLungConcept);
-		searchedConceptModel.add(evsLungConcept);
 
 		rightLungConceptModel = new ArrayList<ConceptBean>();
 		rightLungConceptModel.add(rightConcept);
