@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<constant name="struts.devMode" value="true" />
+	<package name="action" extends="struts-default,json-default"
+		namespace="/">
+		<action name="pvJson"
+			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueJsonTableAction">
+			<result type="json" />
+		</action>
+		<action name="originJson"
+			class="gov.nih.nci.cadsr.cdecurate.action.OriginJsonTableAction">
+			<result type="json" />
+		</action>
+		<action name="vmJson"
+			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningJsonTableAction">
+			<result type="json" />
+		</action>
+		<action name="conceptJson"
+			class="gov.nih.nci.cadsr.cdecurate.action.ConceptJsonTableAction">
+			<result type="json" />
+		</action>
+		<action name="vdInfo"
+			class="gov.nih.nci.cadsr.cdecurate.action.ValueDomainAction">
+			<result>valueDomainInfo.jsp</result>
+		</action>
+		<action name="createNewPv" method="createNew"
+			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
+			<result name="success">newPermissibleValue.jsp</result>
+		</action>
+		<action name="addPv" method="addPv"
+			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
+			<result name="success">addedPermissibleValueGrid.jsp</result>
+		</action>
+		<action name="editPv" method="editPv"
+			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
+			<result name="success">editedPermissibleValueTable.jsp</result>
+		</action>
+		<action name="editPvWithEditedVm" method="editPvWithEditedVm"
+			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
+			<result name="success">editedPermissibleValueTableWithEditedVm.jsp</result>
+		</action>
+		<action name="createPvListFromParent" method="createListFromParent"
+			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
+			<result name="success">permissibleValueListFromParent.jsp</result>
+		</action>
+		<action name="createPvListFromConcepts" method="createListFromConcepts"
+			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
+			<result name="success">permissibleValueListFromEVSConcept.jsp</result>
+		</action>
+		<action name="pvDetailsWithParent" method="pvDetailsWithParent"
+			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
+			<result name="success">permissibleValueDetailsWithParents.jsp</result>
+		</action>
+		<action name="parentConceptListGrid" method="parentConceptListGrid"
+			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
+			<result name="success">permissibleValueParentsGrid.jsp</result>
+		</action>
+		<action name="addPvFromParent" method="addPvFromParent"
+			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
+			<result name="success">addedPermissibleValueGridFromParent.jsp</result>
+		</action>
+		<action name="vmDetails" method="vmDetails"
+			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningAction">
+			<result name="success">valueMeaningDetails.jsp</result>
+		</action>
+		<action name="editVm" method="editVm"
+			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningAction">
+			<result name="success">editValueMeaning.jsp</result>
+		</action>
+		<action name="searchExistingVm" method="searchExistingVm"
+			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningAction">
+			<result name="success">searchExistingValueMeaning.jsp</result>
+		</action>
+		<action name="searchEVSConcept" method="searchEVSConcept"
+			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningAction">
+			<result name="success">searchEVSConcept.jsp</result>
+		</action>
+		<action name="searchExistingVmEditPv" method="searchExistingVmEditPv"
+			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningAction">
+			<result name="success">searchExistingValueMeaningEditPv.jsp</result>
+		</action>
+		<action name="searchEVSConceptEditPv" method="searchEVSConceptEditPv"
+			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningAction">
+			<result name="success">searchEVSConceptEditPv.jsp</result>
+		</action>
+		<action name="searchEVSConceptEditVm" method="searchEVSConceptEditVm"
+			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningAction">
+			<result name="success">searchEVSConceptEditVm.jsp</result>
+		</action>
+		<action name="selectedVmResult" method="selectedVmResult"
+			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningAction">
+			<result name="success">selectedValueMeaning.jsp</result>
+		</action>
+		<action name="selectedVmResultEditPv" method="selectedVmResultEditPv"
+			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningAction">
+			<result name="success">selectedValueMeaningEditPv.jsp</result>
+		</action>
+		<action name="editedVm" method="editedVm"
+			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningAction">
+			<result name="success">editedValueMeaning.jsp</result>
+		</action>
+		<action name="createNewVm" method="createNewVm"
+			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningAction">
+			<result name="success">newValueMeaning.jsp</result>
+		</action>
+		<action name="conceptualDomainsVm" method="conceptualDomainsVm"
+			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningAction">
+			<result name="success">conceptualDomainsForValueMeaning.jsp</result>
+		</action>
+		<action name="conceptEdit"
+			class="gov.nih.nci.cadsr.cdecurate.action.ConceptEditAction">
+		</action>
+	</package>
+</struts>
