@@ -27,14 +27,20 @@ public class ConceptJsonTableAction extends ActionSupport {
 
 	private List<ConceptBean> parentConceptModel;
 
+	private List<ConceptBean> searchedConceptModel;
+
+	private List<ConceptBean> rightLungConceptModel;
+
 	public String execute() {
 		ConceptDAO dao = new ConceptDAO();
-		this.conceptModel=dao.getConceptModel();
-		this.emptyModel=dao.getEmptyModel();
-		this.editPvConceptModel=dao.getEditPvConceptModel();
-		this.editVmConceptModel=dao.getEditVmConceptModel();
-		this.addedPvConceptModel=dao.getAddedPvConceptModel();
-		this.parentConceptModel=dao.getParentConceptModel();
+		this.conceptModel = dao.getConceptModel();
+		this.emptyModel = dao.getEmptyModel();
+		this.editPvConceptModel = dao.getEditPvConceptModel();
+		this.editVmConceptModel = dao.getEditVmConceptModel();
+		this.addedPvConceptModel = dao.getAddedPvConceptModel();
+		this.parentConceptModel = dao.getParentConceptModel();
+		this.searchedConceptModel = dao.getSearchedConceptModel();
+		this.rightLungConceptModel = dao.getRightLungConceptModel();
 		return SUCCESS;
 	}
 
@@ -60,6 +66,14 @@ public class ConceptJsonTableAction extends ActionSupport {
 
 	public List<ConceptBean> getParentConceptModel() {
 		return parentConceptModel;
+	}
+
+	public List<ConceptBean> getSearchedConceptModel() {
+		return searchedConceptModel;
+	}
+
+	public List<ConceptBean> getRightLungConceptModel() {
+		return rightLungConceptModel;
 	}
 
 }

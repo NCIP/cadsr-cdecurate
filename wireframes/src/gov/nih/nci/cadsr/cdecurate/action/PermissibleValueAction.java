@@ -39,7 +39,7 @@ public class PermissibleValueAction extends ActionSupport {
 	public String addPv() throws Exception {
 		return SUCCESS;
 	}
-	
+
 	public String addPvFromParent() throws Exception {
 		return SUCCESS;
 	}
@@ -53,6 +53,14 @@ public class PermissibleValueAction extends ActionSupport {
 	}
 
 	public String parentConceptListGrid() throws Exception {
+		return SUCCESS;
+	}
+
+	public String editPvWithEditedVm() throws Exception {
+		return SUCCESS;
+	}
+	
+	public String searchConcepts() throws Exception {
 		return SUCCESS;
 	}
 }

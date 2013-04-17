@@ -1,55 +1,34 @@
 package gov.nih.nci.cadsr.cdecurate.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ValueMeaningBean {
-	private String longName;
-	private String publicId;
-	private String version;
-	private String workflowStatus;
+public class ValueMeaningBean extends AdministeredComponentBean {
 	private String manualDefinition;
 	private String systemDefinition;
 	private String changeNote;
-	private List<ConceptBean> concepts;
+	private List<ConceptBean> concepts = new ArrayList<ConceptBean>();
+	private List<ConceptualDomainBean> conceptualDomains = new ArrayList<ConceptualDomainBean>();
+	private String conceptCodes = "";
+
+	private String[] displayColumns = new String[] { "VM Long Name:",
+			"VM Public ID Version: ", "VM Description/Definition:",
+			"VM Concepts:" };
+
+	public ValueMeaningBean(String longName, String publicId, String version,
+			String workflowStatus, String conceptCodes, String manualDefinition) {
+		super(longName, publicId, version, workflowStatus);
+		this.conceptCodes = conceptCodes;
+		this.manualDefinition = manualDefinition;
+		// TODO Auto-generated constructor stub
+	}
 
 	public ValueMeaningBean(String longName, String publicId, String version,
 			String manualDefinition) {
-		this.longName = longName;
-		this.publicId = publicId;
-		this.version = version;
+		this.setLongName(longName);
+		this.setPublicId(publicId);
+		this.setVersion(version);
 		this.manualDefinition = manualDefinition;
-	}
-
-	public String getLongName() {
-		return longName;
-	}
-
-	public void setLongName(String longName) {
-		this.longName = longName;
-	}
-
-	public String getPublicId() {
-		return publicId;
-	}
-
-	public void setPublicId(String publicId) {
-		this.publicId = publicId;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	public String getWorkflowStatus() {
-		return workflowStatus;
-	}
-
-	public void setWorkflowStatus(String workflowStatus) {
-		this.workflowStatus = workflowStatus;
 	}
 
 	public String getManualDefinition() {
@@ -84,4 +63,24 @@ public class ValueMeaningBean {
 		this.concepts = concepts;
 	}
 
+	public List<ConceptualDomainBean> getConceptualDomains() {
+		return conceptualDomains;
+	}
+
+	public void setConceptualDomains(
+			List<ConceptualDomainBean> conceptualDomains) {
+		this.conceptualDomains = conceptualDomains;
+	}
+
+	public String[] getDisplayColumns() {
+		return displayColumns;
+	}
+
+	public String getConceptCodes() {
+		return conceptCodes;
+	}
+
+	public void setConceptCodes(String conceptCodes) {
+		this.conceptCodes = conceptCodes;
+	}
 }

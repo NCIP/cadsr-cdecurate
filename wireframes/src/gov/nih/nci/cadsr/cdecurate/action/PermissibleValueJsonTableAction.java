@@ -14,6 +14,7 @@ public class PermissibleValueJsonTableAction extends ActionSupport {
 	private List<PermissibleValueBean> addedPvModel;
 	private List<PermissibleValueBean> editedPvModel;
 	private List<PermissibleValueBean> pvModelFromParent;
+	private List<PermissibleValueBean> editedPvModelWithEditedVm;
 
 	public String execute() {
 		PermissibleValueDAO dao = new PermissibleValueDAO();
@@ -22,6 +23,7 @@ public class PermissibleValueJsonTableAction extends ActionSupport {
 		this.addedPvModel = dao.getAddedPvModel();
 		this.editedPvModel = dao.getEditedPvModel();
 		this.pvModelFromParent = dao.getPvModelFromParent();
+		this.editedPvModelWithEditedVm = dao.getEditedPvModelWithEditedVm();
 		return SUCCESS;
 	}
 
@@ -43,5 +45,9 @@ public class PermissibleValueJsonTableAction extends ActionSupport {
 
 	public List<PermissibleValueBean> getPvModelFromParent() {
 		return pvModelFromParent;
+	}
+
+	public List<PermissibleValueBean> getEditedPvModelWithEditedVm() {
+		return editedPvModelWithEditedVm;
 	}
 }
