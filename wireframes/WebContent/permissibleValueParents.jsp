@@ -6,7 +6,7 @@
 	cssClass="result ui-widget-content ui-corner-all">
 	<sj:dialog id="pvListFromParentDialog" autoOpen="false" modal="false"
 		title="permissible value dialogs" openTopics="openRemoteDialog"
-		position="right" height="600" width="1000"/>
+		position="right" height="600" width="1000" />
 	<s:url id="createPvFromParentUrl" action="createPvListFromParent" />
 
 	<sj:a id="searchParentButton" openDialog="pvListFromParentDialog"
@@ -17,6 +17,7 @@
 </sj:a>
 	<br>
 	<br>
-	<sj:div id="parentTable">
+	<sj:div id="parentTable"
+		cssClass="result ui-widget-content ui-corner-all">
 	</sj:div>
 </sj:div>

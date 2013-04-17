@@ -19,27 +19,30 @@
 		<sj:dialog id="vmAlertDialog" autoOpen="false" modal="true"
 			title="vm alert diaglog" openTopics="openRemoteDialog"
 			position="center" height="300" width="300"
-			closeTopics="closeVmAlertDialog"/>
+			closeTopics="closeVmAlertDialog" />
 
 		<s:url var="vmFormAlertUrl"
 			value="valueMeaningFormAssociationAlert.jsp" />
 		<table>
 			<tr>
 				<td>Value Meaning:</td>
+				<td><s:textfield id="replaceVmSearchString"
+						name="VM Search String" label="replaceVmSearchString"
+						theme="simple" width="200" />
+				</td>
 				<td><sj:div id="changeVmOptions">
 						<sj:a openDialog="vmAlertDialog"
 							openDialogTitle="Replace Value Meaning" href="%{vmFormAlertUrl}"
-							button="true" buttonIcon="ui-icon-newwin">							
-    	Replace By Searching Existing VM/Concepts
-    		</sj:a>
+							button="true">
+							Replace VM
+						</sj:a>
 						<%--
 							<sj:a openDialog="changeVmOptionDialog"
 								openDialogTitle="Search EVS Concept" href="%{changeVmOptions2}"
 								button="true" buttonIcon="ui-icon-newwin">
     	Replace By Searching EVS Concept
    			</sj:a> --%>
-					</sj:div>
-				</td>
+					</sj:div></td>
 			</tr>
 		</table>
 		<sj:div id="vmDiv" cssClass="result ui-widget-content ui-corner-all">
@@ -65,7 +68,10 @@
 		<sj:a id="editPvButton" href="%{editPvUrl}" targets="existingPVs"
 			listenTopics="existingPVs" button="true" buttonIcon="ui-icon-gear"
 			onClickTopics="closeDialog">Save the PV</sj:a>
-
+		<sj:a id="cancelEditPvButton" onclick="hideDiv('pvEditDiv')"
+			button="true" buttonIcon="ui-icon-gear">
+    	Cancel
+    </sj:a>
 	</s:form>
 	<img id="indicator" src="images/indicator.gif" alt="Loading..."
 		style="display: none" />
