@@ -41,7 +41,8 @@
 		</action>
 		<action name="editPvWithEditedVm" method="editPvWithEditedVm"
 			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
-			<result name="success">editedPermissibleValueTableWithEditedVm.jsp</result>
+			<result name="success">editedPermissibleValueTableWithEditedVm.jsp
+			</result>
 		</action>
 		<action name="createPvListFromParent" method="createListFromParent"
 			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
@@ -62,6 +63,10 @@
 		<action name="addPvFromParent" method="addPvFromParent"
 			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
 			<result name="success">addedPermissibleValueGridFromParent.jsp</result>
+		</action>
+		<action name="searchConcepts" method="searchConcepts"
+			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
+			<result name="success">matchedConceptsGrid.jsp</result>
 		</action>
 		<action name="vmDetails" method="vmDetails"
 			class="gov.nih.nci.cadsr.cdecurate.action.ValueMeaningAction">
