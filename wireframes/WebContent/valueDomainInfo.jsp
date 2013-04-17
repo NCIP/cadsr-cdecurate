@@ -134,13 +134,13 @@
 												<td colspan="3">&nbsp;&nbsp; <a
 													href="javascript:disabled();"> <label id="RepQualID"
 														for="selRepQualifier" title=""
-														onclick="javascript:SearchBuildingBlocks('RepQualifier', 'true');"</label>
+														onclick="javascript:SearchBuildingBlocks('RepQualifier', 'true');"/>
 												</a>
 												</td>
 												<td colspan="3">&nbsp;&nbsp; <a
 													href="javascript:disabled();"> <label id="RepTermID"
 														for="selRepTerm" title=""
-														onclick="javascript:SearchBuildingBlocks('RepTerm', 'true');"</label>
+														onclick="javascript:SearchBuildingBlocks('RepTerm', 'true');"/>
 												</a>
 												</td>
 											</tr>
