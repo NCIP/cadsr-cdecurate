@@ -2517,8 +2517,8 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
  ,ar.registration_status	--GF32398
  ,AMIW.date_created -- GF32036
  ,AMIW.date_modified -- GF32036
- ,sbrext_cde_curator_pkg.get_ua_full_name(AMIW.created_by)  created_by -- GF32036
- ,sbrext_cde_curator_pkg.get_ua_full_name(AMIW.modified_by) modified_by -- GF32036
+ ,AMIW.created_by  -- GF32036 avoid calling sbrext_cde_curator_pkg.get_ua_full_name
+ ,AMIW.modified_by  -- GF32036 avoid calling sbrext_cde_curator_pkg.get_ua_full_name
  ,vc.min_value
  ,vc.value_count
  ,r.condr_idseq rep_condr_idseq
