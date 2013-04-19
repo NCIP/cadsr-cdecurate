@@ -7,7 +7,7 @@
 
 The scripts need to be executed in the correct order for them to work. They are showed as below -
 
-Run with user SBREXT (note: there is no need to run the specs, just the bodies):
+Run with user SBREXT (note: there is no need to run the specs, just the bodies where applicable):
 
 SQL> @gf32649_SBREXT_GET_ROW_BODY.sql
 
@@ -114,6 +114,15 @@ Grant succeeded.
 
 
 Grant succeeded.
+
+SQL> 
+
+SQL> @change_default_context.sql
+
+1 row updated.
+
+
+Commit complete.
 
 SQL> 
 
