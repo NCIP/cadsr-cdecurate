@@ -6,7 +6,10 @@
 <struts>
 	<constant name="struts.devMode" value="true" />
 	<package name="action" extends="struts-default,json-default"
-		namespace="/">
+		namespace="/wireframe">
+		<action name="sayHello">
+			<result>index.jsp</result>
+		</action>
 		<action name="pvJson"
 			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueJsonTableAction">
 			<result type="json" />
