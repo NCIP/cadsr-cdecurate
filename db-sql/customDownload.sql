@@ -3,8 +3,10 @@
 
 SET DEFINE OFF;
 
-insert into sbrext.tool_options_view_ext (tool_name, property, value)
-values('CURATION', 'CUSTOM.COLUMN.EXCLUDED', 'CDE_IDSEQ,DEC_IDSEQ,VD_IDSEQ,Conceptual Domain Public ID,Conceptual Domain Short Name,Conceptual Domain Version,Conceptual Domain Context Name,Classification Scheme Public ID,DDE Methods,Representation Concept Origin,Value Domain Concept Origin,Property Concept Origin,Object Class Concept Origin,Derivation Type Description,DDE Preferred Name,DDE Preferred Definition,Document Organization');
+--insert into sbrext.tool_options_view_ext (tool_name, property, value)
+--values('CURATION', 'CUSTOM.COLUMN.EXCLUDED', 'CDE_IDSEQ,DEC_IDSEQ,VD_IDSEQ,Conceptual Domain Public ID,Conceptual Domain Short Name,Conceptual Domain Version,Conceptual Domain Context Name,Classification Scheme Public ID,DDE Methods,Representation Concept Origin,Value Domain Concept Origin,Property Concept Origin,Object Class Concept Origin,Derivation Type Description,DDE Preferred Name,DDE Preferred Definition,Document Organization,VD Workflow Status,DEC Workflow Status,Property Workflow Status,OC Workflow Status,DEC Registration Status,VD Registration Status');
+--GF32667--Added six new attributes in excluded columns.
+update tool_options_ext set value= 'CDE_IDSEQ,DEC_IDSEQ,VD_IDSEQ,Conceptual Domain Public ID,Conceptual Domain Short Name,Conceptual Domain Version,Conceptual Domain Context Name,Classification Scheme Public ID,DDE Methods,Representation Concept Origin,Value Domain Concept Origin,Property Concept Origin,Object Class Concept Origin,Derivation Type Description,DDE Preferred Name,DDE Preferred Definition,Document Organization,Value Domain Workflow Status,Data Element Concept Workflow Status,Property Workflow Status,Object Class Workflow Status,Data Element Concept Registration Status,Value Domain Registration Status' where property ='CUSTOM.COLUMN.EXCLUDED';
 
 insert into sbrext.tool_options_view_ext (tool_name, property, Value) 
 values('CURATION', 'CUSTOM_DOWNLOAD_LIMIT', '5000');
@@ -271,22 +273,28 @@ CREATE OR REPLACE FORCE VIEW SBREXT.CDE_EXCEL_GENERATOR_VIEW (
    "DEC Version",
    "DEC Context Name",
    "DEC Context Version",
+   "DEC Workflow Status", --GF32667
+   "DEC Registration Status", --GF32667
    "OC Public ID",
    "OC Long Name",
    "OC Short Name",
    "OC Context Name",
    "OC Version",
+   "OC Workflow Status", --GF32667
    oc_concepts,
    "Property Public ID",
    "Property Long Name",
    "Property Short Name",
    "Property Context Name",
    "Property Version",
+   "Property Workflow Status", --GF32667
    prop_concepts,
    "VD Public ID",
    "VD Short Name",
    "VD Long Name",
    "VD Version",
+   "VD Workflow Status", --GF32667
+   "VD Registration Status", --GF32667
    "VD Context Name",
    "VD Context Version",
    "VD Type",
@@ -334,11 +342,14 @@ AS
           dec.version dec_version,
           dec_conte.name dec_conte_name,
           dec_conte.version dec_conte_version,
+		  dec.asl_name dec_wk_flow_status, --GF32667
+		  acr.registration_status, --GF32667
           oc.oc_id,
           oc.long_name oc_long_name,
           oc.preferred_name oc_preferred_name,
           oc_conte.name oc_conte_name,
           oc.version oc_version,
+		  oc.asl_name oc_wk_flow_status, --GF32667
           CAST (MULTISET (SELECT con.preferred_name,
                                  con.long_name,
                                  con.con_id,
@@ -359,6 +370,7 @@ AS
           prop.preferred_name prop_preferred_name,
           prop_conte.name prop_conte_name,
           prop.version prop_version,
+		  prop.asl_name prop_wk_flow_status, --GF32667
           CAST (MULTISET (SELECT con.preferred_name,
                                  con.long_name,
                                  con.con_id,
@@ -378,8 +390,10 @@ AS
           vd.preferred_name vd_preferred_name,
           vd.long_name vd_long_name,
           vd.version vd_version,
+		  vd.asl_name vd_wk_flow_status, --GF32667
+		  acr.registration_status, --GF32667
           vd_conte.name vd_conte_name,
-          vd_conte.version vd_conte_version,
+          vd_conte.version vd_conte_version,		  
           DECODE (vd.vd_type_flag,
              'E', 'Enumerated',
              'N', 'Non Enumerated',
@@ -554,18 +568,22 @@ CREATE OR REPLACE FORCE VIEW SBREXT.DEC_EXCEL_GENERATOR_VIEW (
    "DEC Long Name",
    "DEC Version",
    "DEC Context Name",
-   "DEC Context Version",  
+   "DEC Context Version",
+   "DEC Workflow Status", --GF32667
+   "DEC Registration Status", --GF32667   
    "OC Public ID",
    "OC Long Name",
    "OC Short Name",
    "OC Context Name",
    "OC Version",
+   "OC Workflow Status", --GF32667
    oc_concepts,
    "Property Public ID",
    "Property Long Name",
    "Property Short Name",
    "Property Context Name",
    "Property Version",
+   "Property Workflow Status", --GF32667
    prop_concepts,
    classifications,
    designations
@@ -578,11 +596,14 @@ AS
           dec.version dec_version,
           dec_conte.name dec_conte_name,
           dec_conte.version dec_conte_version,
+		  dec.asl_name dec_wk_flow_status, --GF32667
+		  acr.registration_status, --GF32667
           oc.oc_id,
           oc.long_name oc_long_name,
           oc.preferred_name oc_preferred_name,
           oc_conte.name oc_conte_name,
           oc.version oc_version,
+		  oc.asl_name oc_wk_flow_status, --GF32667
           CAST (MULTISET (SELECT con.preferred_name, 
 								 con.long_name,
                                  con.con_id,
@@ -603,6 +624,7 @@ AS
           prop.preferred_name prop_preferred_name,
           prop_conte.name prop_conte_name,
           prop.version prop_version,
+		  prop.asl_name prop_wk_flow_status, --GF32667
           CAST (MULTISET (SELECT con.preferred_name, 
 								 con.long_name,
                                  con.con_id,
@@ -682,6 +704,8 @@ CREATE OR REPLACE FORCE VIEW SBREXT.VD_EXCEL_GENERATOR_VIEW (
    "VD Max Value",
    "VD Decimal Place",
    "VD Format",
+   "VD Workflow Status", --GF32667
+   "VD Registration Status", --GF32667
    vd_concepts,
    "Representation Public ID",
    "Representation Long Name",
@@ -717,6 +741,8 @@ AS
           vd.high_value_num,
           vd.decimal_place,
           vd.forml_name,
+		  vd.asl_name vd_wk_flow_status, --GF32667
+		  acr.registration_status, --GF32667
           CAST (MULTISET (SELECT con.preferred_name,
 				 con.long_name,
                                  con.con_id,
