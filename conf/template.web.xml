@@ -1,0 +1,73 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+	<description>cdecurate</description>
+	<filter>
+		<filter-name>struts2</filter-name>
+		<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>struts2</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<servlet>
+		<servlet-name>NCICurationServlet</servlet-name>
+		<servlet-class>gov.nih.nci.cadsr.cdecurate.tool.NCICurationServlet</servlet-class>
+		<init-param>
+			<param-name>jbossDataSource</param-name>
+			<param-value>jdbc/CDECurateDS</param-value>
+		</init-param>
+		<init-param>
+			<param-name>jbossAuthenticate</param-name>
+			<param-value>jdbc/caDSR</param-value>
+		</init-param>
+		<init-param>
+			<param-name>username</param-name>
+			<param-value>@CADSR.DS.USER@</param-value>
+		</init-param>
+		<init-param>
+			<param-name>password</param-name>
+			<param-value>@CADSR.DS.PSWD@</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+
+	</servlet>
+	<servlet>
+		<servlet-name>ViewServlet</servlet-name>
+		<servlet-class>gov.nih.nci.cadsr.cdecurate.tool.ViewServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>NCICurationServlet</servlet-name>
+		<url-pattern>
+			/NCICurationServlet
+		</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ViewServlet</servlet-name>
+		<url-pattern>
+			/View
+		</url-pattern>
+	</servlet-mapping>
+
+	<session-config>
+		<session-timeout>45</session-timeout>
+	</session-config>
+
+	<welcome-file-list>
+		<welcome-file>/jsp/index.jsp</welcome-file>
+	</welcome-file-list>
+
+
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<form-login-config>
+			<form-login-page>/jsp/LoginE.jsp</form-login-page>
+			<form-error-page>/jsp/LoginE.jsp</form-error-page>
+		</form-login-config>
+	</login-config>
+
+</web-app>
