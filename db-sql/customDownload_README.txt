@@ -7,6 +7,9 @@
 Run with user SBREXT:
 
 SQL> @customDownload.sql
+
+1 row updated.
+
 insert into sbrext.tool_options_view_ext (tool_name, property, value)
 *
 ERROR at line 1:
