@@ -1,0 +1,265 @@
+<project name="CDE Curation Tool" default="dist" basedir=".">
+	<description>
+        Build and deploy the CDE Curation Tool
+    </description>
+	<tstamp />
+
+	<!-- set global properties for this build  -->
+	<property name="root.dir" location="${basedir}/WebRoot" />
+	<property name="dist.dir" location="${basedir}/dist" />
+	<property name="package.download.dir" location="${basedir}/package-download" />
+	<property name="doc.dir" location="${package.download.dir}/javadoc" />
+	<property name="temp.dir" location="${basedir}/tmp" />
+	<property name="odi.dir" location="${package.download.dir}/ospack" />
+	<property name="web.dir" location="${root.dir}/WEB-INF" />
+	<property name="classes.dir" location="${web.dir}/classes" />
+	<property name="wlib.dir" location="${web.dir}/lib" />
+	<property name="jsp.dir" location="${root.dir}/jsp" />
+	<property name="src.dir" location="${basedir}/src" />
+	<property name="lib.dir" location="${basedir}/lib" />
+
+	<path id="libpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+		<fileset dir="${wlib.dir}" includes="**/*.jar" />
+	</path>
+
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="libpath" />
+
+	<!--
+	<property name="tier" value="qa"/>
+	-->
+	<if>
+		<isset property="tier" />
+		<then>
+			<!-- if tier is defined, load tier specific properties for tier based installation -->
+			<property file="${tier}.properties" />
+			<echo message="loaded ${tier} tier properties." />
+		</then>
+		<else>
+			<property file="build.properties" />
+			<echo message="loaded build.properties" />
+		</else>
+	</if>
+	<property file="default.properties" />
+	<property file="project.properties" />
+
+	<property name="appl.version" value="${appl.release}.${DSTAMP}${TSTAMP}" />
+
+	<filter token="CADSR.DS.URL" value="${CADSR.DS.URL}" />
+	<filter token="CADSR.DS.USER" value="${CADSR.DS.USER}" />
+	<filter token="CADSR.DS.PSWD" value="${CADSR.DS.PSWD}" />
+	<filter token="JBOSS.LOG.DIR" value="${JBOSS.LOG.DIR}" />
+	<filter token="appl.version" value="${appl.version}" />
+	<filter token="help.url" value="${help.url}"/>
+	<filter token="LINKS.PCS.HOST.URL" value="${LINKS.PCS.HOST.URL}"/>
+	<filter token="LINKS.PCS.NAME" value="${LINKS.PCS.NAME}"/>
+	<filter token="trackStatements" value="${track.statements}" />
+	<filter token="logLevel" value="${log.level}" />
+
+	<target name="init" depends="clean" description="Set up initial directories">
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${package.download.dir}" />
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}/jboss" />
+		<mkdir dir="${package.download.dir}/gforge" />
+	</target>
+
+	<target name="clean" description="Deletes all project build artifacts and temporary files.">
+		<echo>Remove old artifacts ...</echo>
+		<delete dir="${classes.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete dir="${package.download.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete file="${web.dir}/web.xml" />
+	</target>
+
+	<target name="compile" depends="init" description="Compiles the project source.">
+		<echo>Compiling project source, debug is ${JDEBUG} ...</echo>
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" tempdir="${temp.dir}" debug="${JDEBUG}">
+			<compilerarg line="-deprecation" />
+			<compilerarg line="-Xlint:unchecked" />
+			<classpath refid="libpath" />
+			<exclude name="**/AllTests.java" />
+			<exclude name="**/CDECurateWebTest.java" />
+		</javac>
+		<copy todir="${classes.dir}">
+			<fileset dir="conf">
+				<include name="application-*.*" />
+				<include name="struts.xml"/>
+				<include name="gov.*.*" />
+				<include name="mapping.*" />
+				<include name="*-mapping.*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="dist" depends="compile" description="Assembles the deployment artifacts into the dist folders.">
+		<echo>Assembling artifacts ...</echo>
+
+		<copy tofile="${root.dir}/WEB-INF/classes/application-config-client.xml" filtering="false">
+			<fileset file="conf/application-config-client.xml" />
+		</copy>
+
+		<copy tofile="${root.dir}/WEB-INF/classes/curationtool.properties" filtering="true">
+			<fileset file="conf/template.curationtool.properties" />
+		</copy>
+		
+		<copy tofile="${web.dir}/web.xml" filtering="true">
+			<fileset file="conf/template.web.xml" />
+		</copy>
+		
+		<copy tofile="${dist.dir}/jboss/cdecurate-oracle-ds.xml" filtering="true">
+			<fileset file="conf/template.cdecurate-oracle-ds.xml" />
+		</copy>
+		<!--
+		<copy tofile="${dist.dir}/jboss/cdecurate-log4j-appender.xml" filtering="true">
+			<fileset file="conf/template.cdecurate-log4j-appender.xml" />
+		</copy>
+		
+		<copy tofile="${dist.dir}/jboss/cdecurate-log4j-category.xml" filtering="true">
+			<fileset file="conf/template.cdecurate-log4j-category.xml" />
+		</copy>
+		-->
+		<copy tofile="${dist.dir}/jboss/jboss-log4j.xml" filtering="true">
+			<fileset file="conf/template.cdecurate-jboss-log4j.xml" />
+		</copy>
+
+		<copy todir="${classes.dir}/gov/nih/nci/cadsr/cdecurate/tool" filtering="true">
+			<fileset file="${src.dir}/gov/nih/nci/cadsr/cdecurate/tool/NCICuration.properties" />
+		</copy>
+
+		<copy todir="${dist.dir}/jboss">
+		   	<fileset file="${basedir}/lib/ojdbc6.jar"/>
+		</copy>
+
+		<fixcrlf srcdir="${dist.dir}" eol="lf" includes="**/*.sh, **/*.xml, **/*.properties" />
+
+		<echo>Building deployable WAR file ...</echo>
+		<war destfile="${dist.dir}/cdecurate.war" basedir="${root.dir}" update="true" webxml="${web.dir}/web.xml" excludes="**/commons-logging*.jar"/>
+
+	</target>
+
+	<target name="-cjsp" description="Compiles the project JSP files to verify syntax.">
+		<echo>Compiling JSP files to verify syntax ...</echo>
+		<jspc srcdir="${root.dir}/jsp" destdir="${classes.dir}" compiler="jasper41">
+			<classpath refid="libpath" />
+			<include name="**/*.jsp" />
+		</jspc>
+		<javac srcdir="${classes.dir}/jsp" destdir="${classes.dir}" encoding="Cp1252">
+			<classpath refid="libpath" />
+			<include name="**/*.java" />
+		</javac>
+		<delete dir="${classes.dir}/jsp" />
+		<delete dir="${classes.dir}/org" />
+	</target>
+
+	<target name="build-jar" depends="compile" description="Build the project JAR files.">
+		<echo>Building distributable JAR files ...</echo>
+		<jar destfile="${package.download.dir}/gforge/cdecurateapi.jar">
+			<fileset dir="${classes.dir}">
+				<include name="gov/nih/nci/cadsr/cdecurate/*.properties" />
+				<include name="gov/nih/nci/cadsr/cdecurate/util/*.class" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="package-download" depends="init" description="Packages the project for public distribution and access.">
+		<echo>Building project Open Source Download package ...</echo>
+		<delete dir="${odi.dir}" />
+		<mkdir dir="${odi.dir}" />
+		<copy todir="${odi.dir}">
+			<fileset file="build.xml" />
+			<fileset file="template.build.properties" />
+		</copy>
+		<mkdir dir="${odi.dir}/conf" />
+		<copy todir="${odi.dir}/conf">
+			<fileset dir="conf" />
+		</copy>
+		<!--
+		<mkdir dir="${odi.dir}/doc" />
+		<copy todir="${odi.dir}/doc">
+			<fileset dir="doc" />
+		</copy>
+		-->
+		<mkdir dir="${odi.dir}/lib" />
+		<copy todir="${odi.dir}/lib">
+			<fileset dir="lib" />
+		</copy>
+		<mkdir dir="${odi.dir}/src" />
+		<copy todir="${odi.dir}/src">
+			<fileset dir="src" />
+		</copy>
+		<mkdir dir="${odi.dir}/WebRoot" />
+		<copy todir="${odi.dir}/WebRoot">
+			<fileset dir="WebRoot">
+				<exclude name="**/classes/**" />
+				<exclude name="**/web.xml" />
+			</fileset>
+		</copy>
+		<zip destfile="${package.download.dir}/gforge/cdecurate_ospack.zip">
+			<zipfileset dir="${odi.dir}" />
+		</zip>
+		<tar destfile="${package.download.dir}/gforge/cdecurate_ospack.tar.gz" basedir="${odi.dir}" compression="gzip" />
+		<delete dir="${odi.dir}" />
+
+		<antcall target="build-jar" />
+		<antcall target="javadoc" />
+	</target>
+
+	<target name="javadoc" description="Build the project Javadoc.">
+		<echo>Building project Javadoc ...</echo>
+		<mkdir dir="${temp.dir}" />
+		<delete dir="${doc.dir}" />
+		<mkdir dir="${doc.dir}" />
+		<mkdir dir="${package.download.dir}" />
+		<mkdir dir="${package.download.dir}/gforge" />
+		<javadoc destdir="${doc.dir}" Private="false" author="true" version="true" use="true" windowtitle="caDSR Curation Tool API">
+			<classpath refid="libpath" />
+			<packageset dir="${src.dir}" defaultexcludes="yes">
+				<include name="gov/nih/nci/cadsr/cdecurate/**" />
+			</packageset>
+			<doctitle>caDSR Curation Tool</doctitle>
+			<bottom>Copyright &#169; 2005 ScenPro, Inc. All Rights Reserved.</bottom>
+			<tag name="todo" scope="all" description="To do:" />
+			<group title="Source Package" packages="gov.nih.nci.cadsr.cdecurate.tool;gov.nih.nci.cadsr.cdecurate.tool.Test;gov.nih.nci.cadsr.cdecurate.tool.audits;gov.nih.nci.cadsr.cdecurate.tool.database;gov.nih.nci.cadsr.cdecurate.tool.ui;gov.nih.nci.cadsr.cdecurate.tool.util" />
+			<link offline="true" href="http://java.sun.com/products/jdk/1.2/docs/api/" packagelistLoc="${temp.dir}" />
+		</javadoc>
+		<zip destfile="${package.download.dir}/gforge/cdecurate_doc.zip">
+			<zipfileset dir="${doc.dir}" />
+		</zip>
+		<delete dir="${doc.dir}" />
+	</target>
+
+	<target name="deploy" depends="dist" description="Deploys the war file and conf files to app server.">
+		<echo>Deploying war to jboss ...</echo>
+
+		<copy todir="${JBOSS.DEPLOY.DIR}">
+			<fileset dir="${dist.dir}/jboss">
+				<include name="**/*-ds.xml" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${JBOSS.SERVER.DIR}/lib">
+		   	<fileset file="${dist.dir}/jboss/ojdbc6.jar"/>
+		</copy>
+			
+		<copy todir="${JBOSS.SERVER.DIR}/conf">
+		   <fileset file="${dist.dir}/jboss/jboss-log4j.xml"/>
+		</copy>
+		   	
+		<sleep seconds="15" />
+		<copy tofile="${JBOSS.DEPLOY.DIR}/cdecurate.waz">
+			<fileset file="${dist.dir}/cdecurate.war" />
+		</copy>
+		<move file="${JBOSS.DEPLOY.DIR}/cdecurate.waz" tofile="${JBOSS.DEPLOY.DIR}/cdecurate.war" />
+	</target>
+
+	<target name="update-vocabs" description="Updates the EVS Vocabs.">
+		<echo> Filter EVS Vocab properties ...</echo>
+		<copy file="conf/template.update_load_tool_options_evs.sql" toFile="${dist.dir}/sql/update_load_tool_options_evs.sql" filtering="true">
+			<filterset begintoken="@" endtoken="@">
+				<filtersfile file="conf/vocabulary.properties" />
+			</filterset>
+		</copy>
+	</target>
+</project>
