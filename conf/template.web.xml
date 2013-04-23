@@ -62,7 +62,7 @@
   </servlet-mapping>
   -->
   
-  	<filter>
+  	<!-- filter>
 		<filter-name>struts2</filter-name>
 		<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
 	</filter>
@@ -70,7 +70,7 @@
 	<filter-mapping>
 		<filter-name>struts2</filter-name>
 		<url-pattern>/wireframe/*</url-pattern>
-	</filter-mapping>
+	</filter-mapping -->
 	
   <session-config>
     <session-timeout>45</session-timeout>
