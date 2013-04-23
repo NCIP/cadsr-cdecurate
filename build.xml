@@ -83,7 +83,8 @@
 			<exclude name="**/CDECurateWebTest.java" />
 			<exclude name="**/OracleLoggingConnectionPooledDataSource.java" />
 			<exclude name="**/PooledLoggingConnection.java" />
-		</javac>
+			<exclude name="**/PLSQLTest.java" />
+					</javac>
 		<copy todir="${classes.dir}">
 			<fileset dir="conf">
 				<include name="application-*.*" />
