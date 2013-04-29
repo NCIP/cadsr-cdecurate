@@ -1,6 +1,18 @@
 --Please keep the following queries. They are generally difficult to create or
 --require significantly huge effort to be found in the PL/SQL codes
 
+--GF30798
+select preferred_name from SBREXT.CONCEPTS_VIEW_EXT
+where preferred_name like '%61009%'
+
+select 
+long_name
+from SBREXT.CONCEPTS_VIEW_EXT 
+group by long_name
+having count(*) = 1
+
+
+
 --GF32667
 --------------------------------------------------------
 --  select query for DEC
