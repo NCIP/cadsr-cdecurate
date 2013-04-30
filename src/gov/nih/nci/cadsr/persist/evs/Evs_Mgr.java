@@ -1,4 +1,4 @@
-	/**
+/**
  * 
  */
 package gov.nih.nci.cadsr.persist.evs;
@@ -52,7 +52,7 @@ private Logger logger = Logger.getLogger(this.getClass());
 		evsVO.setIDSEQ(this.generatePrimaryKey(conn));
 		evsVO.setDeleted_ind(DBConstants.RECORD_DELETED_NO);
 		evsVO.setBegin_date(new java.sql.Timestamp(new java.util.Date().getTime()));
-		
+		logger.debug("at line 55 of EVS_Mgr.java***"+evsVO.getBegin_date());	//GF32724
 		try {
 			int column = 0;
 			statement = conn.prepareStatement(sql);
