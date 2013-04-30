@@ -692,6 +692,26 @@ public class DataElementConceptServlet extends CurationServlet {
 		String sOCName = "";
 		String sPropName = "";
 		String sDef = "";
+		//======================GF30798==============START
+		InsACService ins = new InsACService(m_classReq, m_classRes, this);
+		Vector vObjectClass = (Vector) session.getAttribute("vObjectClass");
+		if(newBean != null) {
+			logger.debug("at Line 698 of DEC.java" + newBean.getEVS_DATABASE());
+			if (!(newBean.getEVS_DATABASE().equals("caDSR"))) {
+				for(int i=0; i<vObjectClass.size(); i++){
+					EVS_Bean conceptBean = (EVS_Bean) vObjectClass.elementAt(i);
+					String conIdseq = ins.getConcept("", conceptBean, false);
+					if (conIdseq == null || conIdseq.equals("")){
+						logger.debug("at Line 704 of DEC.java");
+						break;
+					}else {
+						newBean = conceptBean;
+						logger.debug("at Line 708 of DEC.java"+newBean.getPREFERRED_DEFINITION());
+					}
+		        }
+			}
+		}
+		//======================GF30798==============END
 		// get the existing one if not restructuring the name but appending it
 		if (newBean != null)
 		{
@@ -713,7 +733,7 @@ public class DataElementConceptServlet extends CurationServlet {
 				pageDEC.setAC_USER_PREF_NAME(sPrefName);
 		}
 		// get the object class into the long name and abbr name
-		Vector vObjectClass = (Vector) session.getAttribute("vObjectClass");
+		//Vector vObjectClass = (Vector) session.getAttribute("vObjectClass");	//GF30798
 		if (vObjectClass == null)
 			vObjectClass = new Vector();
 		logger.debug("At line 703 of DECServlet.java"+Arrays.asList(vObjectClass));
