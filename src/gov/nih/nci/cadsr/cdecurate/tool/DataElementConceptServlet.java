@@ -697,7 +697,7 @@ public class DataElementConceptServlet extends CurationServlet {
 				InsACService ins = new InsACService(m_classReq, m_classRes, this);
 				Vector vObjectClass = (Vector) session.getAttribute("vObjectClass");
 				Vector vProperty = (Vector) session.getAttribute("vProperty");
-				logger.debug("at Line 700 of DEC.java" + newBean.getEVS_DATABASE()+"***" + sComp + "***" + newBean);
+				logger.debug("at Line 700 of DEC.java" + "***" + sComp + "***" + newBean);
 				if(newBean != null) {
 					if (sComp.startsWith("Object")) {
 						logger.debug("at Line 703 of DEC.java" + newBean.getEVS_DATABASE());
