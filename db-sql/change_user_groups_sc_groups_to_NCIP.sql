@@ -1,8 +1,9 @@
+--Better be safe than sorry
 --Run with SBR user
---CREATE TABLE SBR.USER_ACCOUNTS_BACKUP
---AS (SELECT *
---    FROM SBR.USER_ACCOUNTS
---);
+CREATE TABLE SBR.USER_ACCOUNTS_BACKUP
+AS (SELECT *
+    FROM SBR.USER_ACCOUNTS
+);
 CREATE TABLE SBR.SC_USER_ACCOUNTS_BACKUP
 AS (SELECT *
     FROM SBR.SC_USER_ACCOUNTS
@@ -46,9 +47,8 @@ update sbr.sc_groups set grp_name = 'NCIP_CONTRIBUTOR' where grp_name = 'caBIG_C
 update sbr.sc_groups set grp_name = 'NCIP_MANAGER' where grp_name = 'caBIG_MANAGER';
 
 --Remove old names
-
-
-
+delete from sbr.sc_contexts where scl_name = 'caBIG_SC';
+delete from sbr.SECURITY_CONTEXTS_LOV where scl_name = 'caBIG_SC';
 
 commit;
 
@@ -57,3 +57,7 @@ where lower(grp_name) like '%cabig%';
 
 select count(*) from sbr.sc_groups 
 where lower(grp_name) like '%cabig%';
+
+select count(*) from sbr.sc_contexts where lower(scl_name) like '%cabig%';
+
+select count(*) from sbr.SECURITY_CONTEXTS_LOV where lower(scl_name) like '%cabig%';
