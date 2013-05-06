@@ -52,6 +52,7 @@ delete from sbr.SECURITY_CONTEXTS_LOV where scl_name = 'caBIG_SC';
 
 commit;
 
+--Making sure the mission is accomplished
 select count(*) from sbr.user_groups 
 where lower(grp_name) like '%cabig%';
 

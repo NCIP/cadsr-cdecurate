@@ -1,6 +1,6 @@
 *** APPLYING CHANGES ***
 
-Run with user SBR:
+=========> Run with user SBR:
 
 SQL> @change_default_context_to_NCIP.sql
 
@@ -18,6 +18,118 @@ NAME
 NCI
 
 SQL> 
+
+=========> Run with user SBREXT:
+
+SQL> @gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql
+
+Package body created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL>
+
+SQL> @gf32649_MAINTAIN_CONCEPTS_BODY.sql
+
+Package body created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL>
+
+SQL> @gf32649_SBREXT_GET_ROW_BODY.sql
+
+Package body created.
+
+SQL>
+
+SQL> @gf32649_SBREXT_SET_ROW_BODY.sql
+
+Package body created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL>
+
+=========> Run with user SBR:
 
 SQL> @change_user_groups_sc_groups_to_NCIP.sql
 
@@ -37,7 +149,11 @@ Table created.
 ----------
 	 4
 
-*** DO NOT EXECUTE THIS YET !!! ***
+
+
+*************************************************************************************
+*** DO NOT EXECUTE THIS !!! ***
+*************************************************************************************
 ONLY IF the update is successful (like after the user's test), execute the following:
 
 SQL> @change_user_groups_sc_groups_to_NCIP_cleanup.sql
