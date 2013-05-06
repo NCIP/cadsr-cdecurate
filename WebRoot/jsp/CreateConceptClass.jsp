@@ -8,6 +8,7 @@
 <%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <html>
 <head>
+		<!-- includes change for NCIP -->
 		<title>
 			Create Concept Class
 		</title>
