@@ -986,7 +986,7 @@ BEGIN
 
 select conte_idseq into v_conte_idseq
 from contexts
-where upper(name) = upper('NCI');		--GF32649
+where upper(name) = upper('NCIP');		--GF32649
   p_return_code := NULL;
   --At least one of the ID or Name parameters has to be provided
   IF P_CON_CON_IDSEQ IS NOT NULL THEN  --Retrieve the Data Element Concept by key
