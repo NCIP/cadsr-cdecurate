@@ -998,10 +998,14 @@ public class DataElementConceptServlet extends CurationServlet {
 			m_setAC.setDECValueFromPage(m_classReq, m_classRes, m_DEC);
 			Vector<EVS_Bean> vObjectClass = (Vector) session.getAttribute("vObjectClass");
 			//begin of GF30798
-			for (int i=0; i<vObjectClass.size();i++){
-				EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
-				logger.debug("At line 1001 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
+			if(vObjectClass != null && vObjectClass.size() > 0) {
+				for (int i=0; i<vObjectClass.size();i++){
+					EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
+					if(eBean != null)
+					logger.debug("At line 1001 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
+				}
 			}
+			
 			//end of GF30798
 			if (vObjectClass == null || vObjectClass.size() == 0) {
 				vObjectClass = new Vector<EVS_Bean>();
@@ -1012,10 +1016,14 @@ public class DataElementConceptServlet extends CurationServlet {
 			}
 			Vector<EVS_Bean> vProperty = (Vector) session.getAttribute("vProperty");
 			//begin of GF30798
-			for (int i=0; i<vProperty.size();i++){
-				EVS_Bean eBean =(EVS_Bean)vProperty.get(i);
-				logger.debug("At line 1015 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
+			if(vProperty != null && vProperty.size() > 0) {
+				for (int i=0; i<vProperty.size();i++){
+					EVS_Bean eBean =(EVS_Bean)vProperty.get(i);
+					if(eBean != null)
+					logger.debug("At line 1015 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
+				}
 			}
+			
 			//end of GF30798
 			if (vProperty == null || vProperty.size() == 0) {
 				vProperty = new Vector<EVS_Bean>();
@@ -2248,7 +2256,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					DataManager.setAttribute(session, "vProperty", vProperty);
 				}
 
-				m_setAC.setDECValueFromPage(m_classReq, m_classRes, m_DEC);
+				//m_setAC.setDECValueFromPage(m_classReq, m_classRes, m_DEC); //GF30798
 				DataManager.setAttribute(session, "m_DEC", m_DEC);
 	} // end of doRemoveQualifier
 
