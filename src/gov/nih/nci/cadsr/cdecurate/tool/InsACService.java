@@ -6415,7 +6415,7 @@ public class InsACService implements Serializable {
 			}
 			//if nothing found, create new oc or prop or rep term
 			if (resultList == null || resultList.size() < 1) {
-				statusBean.setStatusMessage("**  Creating a new "+type + " in NCI");	//GF32649
+				statusBean.setStatusMessage("**  Creating a new "+type + " in " + Constants.DEFAULT_CONTEXT);	//caBIG to NCIP + GF32649
 				statusBean.setCondrExists(false);
 				statusBean.setEvsBeanExists(false);
 				logger.info("At Line 6222 of InsACService.java");
@@ -6463,7 +6463,7 @@ public class InsACService implements Serializable {
 					//if none are found in different context and condr exists, create new (oc or prop or rep term) in NCI
 					ResultVO vo = resultList.get(0);
 					if (vo.getCondr_IDSEQ() != null) {
-							statusBean.setStatusMessage("**  Creating a new "+type + " in NCI");	//GF32649
+							statusBean.setStatusMessage("**  Creating a new "+type + " in " + Constants.DEFAULT_CONTEXT);	//caBIG to NCIP + GF32649
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
 							statusBean.setEvsBeanExists(false);
@@ -6535,7 +6535,7 @@ public class InsACService implements Serializable {
 			
 			
 		} else {//if all the concepts does not exist
-			statusBean.setStatusMessage("**  Creating a new "+type + " in NCI");	//GF32649
+			statusBean.setStatusMessage("**  Creating a new "+type + " in " + Constants.DEFAULT_CONTEXT);	//caBIG to NCIP + GF32649
 		}
          
         return statusBean;
