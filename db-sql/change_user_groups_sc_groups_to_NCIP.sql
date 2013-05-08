@@ -50,7 +50,12 @@ update sbr.sc_groups set grp_name = 'NCIP_MANAGER' where grp_name = 'caBIG_MANAG
 delete from sbr.sc_contexts where scl_name = 'caBIG_SC';
 delete from sbr.SECURITY_CONTEXTS_LOV where scl_name = 'caBIG_SC';
 
+--Take care of GUEST account
+Insert into SBR.USER_GROUPS (UA_NAME,GRP_NAME,CREATED_BY,DATE_CREATED,MODIFIED_BY,DATE_MODIFIED) values ('GUEST','NCIP_BROWSER','DWARZEL',to_timestamp('19-JUL-07','DD-MON-RR HH.MI.SSXFF AM'),'DWARZEL',to_timestamp('19-JUL-07','DD-MON-RR HH.MI.SSXFF AM'))
+
 commit;
+
+
 
 --Making sure the mission is accomplished
 select count(*) from sbr.user_groups 
@@ -62,3 +67,5 @@ where lower(grp_name) like '%cabig%';
 select count(*) from sbr.sc_contexts where lower(scl_name) like '%cabig%';
 
 select count(*) from sbr.SECURITY_CONTEXTS_LOV where lower(scl_name) like '%cabig%';
+
+select g.grp_name from SBR.USER_GROUPS where ua_name = 'GUEST';
