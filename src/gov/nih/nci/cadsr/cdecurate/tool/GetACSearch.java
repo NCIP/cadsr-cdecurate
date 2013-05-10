@@ -137,7 +137,7 @@ public class GetACSearch implements Serializable
                 String sContext = "";
                 sContext = getMultiReqValues(sSearchAC, "MainSearch", "Context");
                 // filter by contextUse
-                String sContextUse = (String) req.getParameter("rContextUse");
+                String sContextUse = (String) req.getParameter("rContextUse");	//NCIP null here???
                 DataManager.setAttribute(session, "serContextUse", sContextUse);
                 if (sContextUse == null)
                     sContextUse = "";
@@ -1741,6 +1741,11 @@ public class GetACSearch implements Serializable
     {
         ResultSet rs = null;
         CallableStatement cstmt = null;
+        logger.debug(" [" + DEC_IDSEQ+ ",  [" + InString+ ",  [" + ContID+ ",  [" + ContName+ ",  [" + sVersion +
+                " [" + ASLName+ ",  [" + sCreatedFrom+ ",  [" + sCreatedTo+ ",  [" + regStatus+ ",  [" + sModifiedFrom+ ",  [" + sModifiedTo +
+                " [" + sCreator+ ",  [" + sModifier+ ",  [" + DEC_ID+ ",  [" + sObject+ ",  [" + sProperty+ ",  [" + sOrigin +
+                dVersion+ ",  [" + sCDid+ ",  [" + deIDseq+ ",  [" + cscsiIDseq+ ",  [" + conIDseq+ ",  [" + conName +
+                vList+ ",  [" + sRecordsDisplayed);
         try
         {
         	if ((DEC_ID != null) && !(DEC_ID.equals(""))){
