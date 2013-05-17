@@ -2256,7 +2256,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					DataManager.setAttribute(session, "vProperty", vProperty);
 				}
 
-				//m_setAC.setDECValueFromPage(m_classReq, m_classRes, m_DEC); //GF30798
+				m_setAC.setDECValueFromPage(m_classReq, m_classRes, m_DEC);
 				DataManager.setAttribute(session, "m_DEC", m_DEC);
 	} // end of doRemoveQualifier
 
