@@ -3759,8 +3759,10 @@ public class SetACService implements Serializable
 
 			//get the selected contexts from the DE bean
 			DEC_Bean selDEC = (DEC_Bean)session.getAttribute("m_DEC");
-			m_DEC.setAC_SELECTED_CONTEXT_ID(selDEC.getAC_SELECTED_CONTEXT_ID());
-
+			if(selDEC != null) {
+				m_DEC.setAC_SELECTED_CONTEXT_ID(selDEC.getAC_SELECTED_CONTEXT_ID());
+			}
+			
 			String sID;  //sIdx,
 			String sName = "";
 
