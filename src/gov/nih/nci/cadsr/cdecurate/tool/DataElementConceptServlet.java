@@ -702,32 +702,23 @@ public class DataElementConceptServlet extends CurationServlet {
 					if (sComp.startsWith("Object")) {
 						logger.debug("at Line 703 of DEC.java" + newBean.getEVS_DATABASE());
 						if (!(newBean.getEVS_DATABASE().equals("caDSR"))) {
-							for(int i=0; i<vObjectClass.size(); i++){
-								EVS_Bean conceptBean = (EVS_Bean) vObjectClass.elementAt(i);
-								String conIdseq = ins.getConcept("", conceptBean, false);
+								String conIdseq = ins.getConcept("", newBean, false);
 								if (conIdseq == null || conIdseq.equals("")){
-									logger.debug("at Line 709 of DEC.java");
-									break;
+									logger.debug("at Line 707 of DEC.java"+newBean.getPREFERRED_DEFINITION()+"**"+newBean.getLONG_NAME());
 								}else {
-									newBean = conceptBean;
-									logger.debug("at Line 713 of DEC.java"+newBean.getPREFERRED_DEFINITION());
+									logger.debug("at Line 709 of DEC.java"+newBean.getPREFERRED_DEFINITION()+"**"+newBean.getLONG_NAME());
 								}
-					        }
+					        
 						}
 					}else if (sComp.startsWith("Prop")) {
-						logger.debug("at Line 717 of DEC.java" + newBean.getEVS_DATABASE());
+						logger.debug("at Line 714 of DEC.java" + newBean.getEVS_DATABASE());
 						if (!(newBean.getEVS_DATABASE().equals("caDSR"))) {
-							for(int i=0; i<vProperty.size(); i++){
-								EVS_Bean conceptBean = (EVS_Bean) vProperty.elementAt(i);
-								String conIdseq = ins.getConcept("", conceptBean, false);
-								if (conIdseq == null || conIdseq.equals("")){
-									logger.debug("at Line 724 of DEC.java");
-									break;
-								}else {
-									newBean = conceptBean;
-									logger.debug("at Line 728 of DEC.java"+newBean.getPREFERRED_DEFINITION());
-								}
-					        }
+							String conIdseq = ins.getConcept("", newBean, false);
+							if (conIdseq == null || conIdseq.equals("")){
+								logger.debug("at Line 718 of DEC.java"+newBean.getPREFERRED_DEFINITION()+"**"+newBean.getLONG_NAME());
+							}else {
+								logger.debug("at Line 720 of DEC.java"+newBean.getPREFERRED_DEFINITION()+"**"+newBean.getLONG_NAME());
+							}
 						}
 					}
 				}
@@ -956,7 +947,7 @@ public class DataElementConceptServlet extends CurationServlet {
 			logger.debug("At line 956 of DECServlet.java"+sLongName+"**"+sDef);
 		}
 		// store the long names, definition, and usr name in vd bean if searched
-		if (nameAct.equals("Search"))
+		if (nameAct.equals("Search") || nameAct.equals("Remove")) // GF30798 - added to call when name act is remove
 		{
 			pageDEC.setDEC_LONG_NAME(AdministeredItemUtil.handleLongName(sLongName));	//GF32004;
 			pageDEC.setDEC_PREFERRED_DEFINITION(sDef);
@@ -2256,7 +2247,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					DataManager.setAttribute(session, "vProperty", vProperty);
 				}
 
-				m_setAC.setDECValueFromPage(m_classReq, m_classRes, m_DEC);
+				m_setAC.setDECValueFromPage(m_classReq, m_classRes, m_DEC); //GF30798
 				DataManager.setAttribute(session, "m_DEC", m_DEC);
 	} // end of doRemoveQualifier
 
