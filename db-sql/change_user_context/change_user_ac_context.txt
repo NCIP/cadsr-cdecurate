@@ -1,8 +1,5 @@
-From: "Warzel, Denise (NIH/NCI) [E]" <warzeld@mail.nih.gov> 
-Date: 05/22/2013 1:13 AM (GMT-05:00) 
-To: "Gaheen, Sharon (NIH/NCI) [C]" <gaheens@mail.nih.gov>,"Tan, James (NIH/NCI) [C]" <james.tan@nih.gov> 
-Subject: Script to Move content from one Context to another 
-
+*** REQUIREMENTS ***
+From: "Warzel, Denise
 
 Dianne says this will be needed again, so please proceed with the script as we discussed.
 
@@ -24,3 +21,14 @@ This should result in changes on DEV to:
 1 Enumerated VD 3636043
 
 And nothing else.
+
+*** USEFUL SQLs ***
+select ac.date_created, ac.actl_name, ac.public_id, c.name, ac.created_by from SBR.ADMINISTERED_COMPONENTS ac, SBR.CONTEXTS c 
+where 
+ac.conte_idseq = c.conte_idseq
+and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NIDA')
+and ac.actl_name in ('DATAELEMENT', 'VALUEDOMAIN', 'DE_CONCEPT')
+and (upper(ac.created_by) = 'xxx' or lower(ac.created_by) = 'xxx')
+and trunc(ac.date_created) >= to_date('2013-03-01', 'YYYY-MM-DD')
+and trunc(ac.date_created) <= to_date('2013-05-22', 'YYYY-MM-DD')
+
