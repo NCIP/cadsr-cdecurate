@@ -1,0 +1,26 @@
+From: "Warzel, Denise (NIH/NCI) [E]" <warzeld@mail.nih.gov> 
+Date: 05/22/2013 1:13 AM (GMT-05:00) 
+To: "Gaheen, Sharon (NIH/NCI) [C]" <gaheens@mail.nih.gov>,"Tan, James (NIH/NCI) [C]" <james.tan@nih.gov> 
+Subject: Script to Move content from one Context to another 
+
+
+Dianne says this will be needed again, so please proceed with the script as we discussed.
+
+I created some test content on Dev.
+
+Move content created by dwarzel in NIDA Context to NHLBI Context.
+Also we need to be able to specify a date created equal to or greater than a specified data 
+(date range would be great, but if too much loe, equal to or greater than would be fine)
+
+
+E.g. Date created is equal to or greater than (after) 05-22-2013.  So items with date 05-22-2013 and 05-23-2013 
+would match, but 05-21-2013 would not match – it this becomes too big LOE, we will just go with equal to and 
+run it multiple times for all the dates the curator created content ... 
+
+This should result in changes on DEV to: 
+
+1 DEC 3636041
+2 CDEs 3636046, 3636047
+1 Enumerated VD 3636043
+
+And nothing else.
