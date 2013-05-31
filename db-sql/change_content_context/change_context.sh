@@ -11,5 +11,5 @@ export HOST=@"(description=(address_list=(address=(protocol=TCP)(host=137.187.18
 #$SQLPLUS_PATH/sqlplus $user/$pwd$HOST @change_user_ac_context.sql 'NCIP' 'NHLBI' '2013-04-01' '2013-04-30' xxx
 #$SQLPLUS_PATH/sqlplus $user/$pwd$HOST @check_user_ac_context.sql 'NCIP' 'NHLBI' '2013-04-01' '2013-04-30' xxx
 
-$SQLPLUS_PATH/sqlplus $user/$pwd$HOST @change_user_ac_context.sql 'NIDA' 'NHLBI' '2013-05-22' '2013-05-23' xxx
-$SQLPLUS_PATH/sqlplus $user/$pwd$HOST @check_user_ac_context.sql 'NIDA' 'NHLBI' '2013-05-22' '2013-05-23' xxx
+$SQLPLUS_PATH/sqlplus $user/$pwd$HOST @change_user_ac_context.sql 'NHLBI' 'NHLBI' '2013-05-22' '2013-05-23' xxx 'Changed by the context moving script'
+$SQLPLUS_PATH/sqlplus $user/$pwd$HOST @check_user_ac_context.sql 'NHLBI' 'NHLBI' '2013-05-22' '2013-05-23' xxx

@@ -53,9 +53,10 @@ MacBook-Pro:cdecurate ag$ cd db-sql/change_content_context/
 MacBook-Pro:change_content_context ag$ clear
 
 MacBook-Pro:change_content_context ag$ ./change_context.sh input parameters in the order specified:
+input parameters in the order specified:
 old_context to new_context from_date(format YYYY-MM-DD) end_date (format YYYY-MM-DD) curator_id
 
-SQL*Plus: Release 10.2.0.4.0 - Production on Thu May 30 11:23:54 2013
+SQL*Plus: Release 10.2.0.4.0 - Production on Fri May 31 11:20:44 2013
 
 Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
 
@@ -64,62 +65,114 @@ Connected to:
 Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
 With the Partitioning, Data Mining and Real Application Testing options
 
-old   2: set dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
-new   2: set dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NHLBI')
-old   4: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
-new   4: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NIDA')
-old   5: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
-new   5: and (upper(dec.created_by) = 'DWARZEL' or lower(dec.created_by) = 'DWARZEL')
-old   6: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
-new   6: and trunc(dec.date_created) >= to_date('2013-05-22', 'YYYY-MM-DD')
-old   7: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
-new   7: and trunc(dec.date_created) <= to_date('2013-05-23', 'YYYY-MM-DD')
+CREATE TABLE SBR.DEC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     52376
+
+CREATE TABLE SBR.DE_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     67137
+
+CREATE TABLE SBR.VD_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     17085
+
+CREATE TABLE SBR.AC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+    919780
+
+old   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NHLBI'),
+old   4: dec.change_note = '&6'
+new   4: dec.change_note = 'Final change by the context moving script 5-31-2013 11.19 AM ET'
+old   6: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   6: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NHLBI')
+old   7: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   7: and (upper(dec.created_by) = 'DWARZEL' or lower(dec.created_by) = 'DWARZEL')
+old   8: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   8: and trunc(dec.date_created) >= to_date('2013-05-22', 'YYYY-MM-DD')
+old   9: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   9: and trunc(dec.date_created) <= to_date('2013-05-23', 'YYYY-MM-DD')
 
 1 row updated.
 
-old   2: set de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
-new   2: set de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NHLBI')
-old   4: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
-new   4: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NIDA')
-old   5: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
-new   5: and (upper(de.created_by) = 'DWARZEL' or lower(de.created_by) = 'DWARZEL')
-old   6: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
-new   6: and trunc(de.date_created) >= to_date('2013-05-22', 'YYYY-MM-DD')
-old   7: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
-new   7: and trunc(de.date_created) <= to_date('2013-05-23', 'YYYY-MM-DD')
+old   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NHLBI'),
+old   4: de.change_note = '&6'
+new   4: de.change_note = 'Final change by the context moving script 5-31-2013 11.19 AM ET'
+old   6: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   6: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NHLBI')
+old   7: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   7: and (upper(de.created_by) = 'DWARZEL' or lower(de.created_by) = 'DWARZEL')
+old   8: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   8: and trunc(de.date_created) >= to_date('2013-05-22', 'YYYY-MM-DD')
+old   9: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   9: and trunc(de.date_created) <= to_date('2013-05-23', 'YYYY-MM-DD')
 
 2 rows updated.
 
-old   2: set vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
-new   2: set vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NHLBI')
-old   4: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
-new   4: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NIDA')
-old   5: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
-new   5: and (upper(vd.created_by) = 'DWARZEL' or lower(vd.created_by) = 'DWARZEL')
-old   6: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
-new   6: and trunc(vd.date_created) >= to_date('2013-05-22', 'YYYY-MM-DD')
-old   7: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
-new   7: and trunc(vd.date_created) <= to_date('2013-05-23', 'YYYY-MM-DD')
+old   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NHLBI'),
+old   4: vd.change_note = '&6'
+new   4: vd.change_note = 'Final change by the context moving script 5-31-2013 11.19 AM ET'
+old   6: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   6: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NHLBI')
+old   7: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   7: and (upper(vd.created_by) = 'DWARZEL' or lower(vd.created_by) = 'DWARZEL')
+old   8: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   8: and trunc(vd.date_created) >= to_date('2013-05-22', 'YYYY-MM-DD')
+old   9: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   9: and trunc(vd.date_created) <= to_date('2013-05-23', 'YYYY-MM-DD')
 
 1 row updated.
 
-old   2: set ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
-new   2: set ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NHLBI')
-old  11: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
-new  11: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NIDA')
-old  13: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
-new  13: and (upper(ac.created_by) = 'DWARZEL' or lower(ac.created_by) = 'DWARZEL')
-old  14: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
-new  14: and trunc(ac.date_created) >= to_date('2013-05-22', 'YYYY-MM-DD')
-old  15: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
-new  15: and trunc(ac.date_created) <= to_date('2013-05-23', 'YYYY-MM-DD')
+old   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NHLBI'),
+old   4: ac.change_note = '&6'
+new   4: ac.change_note = 'Final change by the context moving script 5-31-2013 11.19 AM ET'
+old  13: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new  13: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NHLBI')
+old  15: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new  15: and (upper(ac.created_by) = 'DWARZEL' or lower(ac.created_by) = 'DWARZEL')
+old  16: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new  16: and trunc(ac.date_created) >= to_date('2013-05-22', 'YYYY-MM-DD')
+old  17: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  17: and trunc(ac.date_created) <= to_date('2013-05-23', 'YYYY-MM-DD')
 
-0 rows updated.
+4 rows updated.
 
 Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
 With the Partitioning, Data Mining and Real Application Testing options
 
-SQL*Plus: Release 10.2.0.4.0 - Production on Thu May 30 11:23:59 2013
+SQL*Plus: Release 10.2.0.4.0 - Production on Fri May 31 11:21:01 2013
 
 Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
 
@@ -137,9 +190,13 @@ new   5: and trunc(dec.date_created) >= to_date('2013-05-22', 'YYYY-MM-DD')
 old   6: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
 new   6: and trunc(dec.date_created) <= to_date('2013-05-23', 'YYYY-MM-DD')
 
-    DEC_ID NAME
----------- ------------------------------
-   3636041 NHLBI
+    DEC_ID NAME 			  DATE_CREA
+---------- ------------------------------ ---------
+CHANGE_NOTE
+--------------------------------------------------------------------------------
+   3636041 NHLBI			  22-MAY-13
+Final change by the context moving script 5-31-2013 11.19 AM ET
+
 
 old   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
 new   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NHLBI')
@@ -150,10 +207,16 @@ new   5: and trunc(de.date_created) >= to_date('2013-05-22', 'YYYY-MM-DD')
 old   6: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
 new   6: and trunc(de.date_created) <= to_date('2013-05-23', 'YYYY-MM-DD')
 
-    CDE_ID NAME
----------- ------------------------------
-   3636046 NHLBI
-   3636047 NHLBI
+    CDE_ID NAME 			  DATE_CREA
+---------- ------------------------------ ---------
+CHANGE_NOTE
+--------------------------------------------------------------------------------
+   3636046 NHLBI			  22-MAY-13
+Final change by the context moving script 5-31-2013 11.19 AM ET
+
+   3636047 NHLBI			  22-MAY-13
+Final change by the context moving script 5-31-2013 11.19 AM ET
+
 
 old   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
 new   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NHLBI')
@@ -164,9 +227,13 @@ new   5: and trunc(vd.date_created) >= to_date('2013-05-22', 'YYYY-MM-DD')
 old   6: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
 new   6: and trunc(vd.date_created) <= to_date('2013-05-23', 'YYYY-MM-DD')
 
-     VD_ID NAME
----------- ------------------------------
-   3636043 NHLBI
+     VD_ID NAME 			  DATE_CREA
+---------- ------------------------------ ---------
+CHANGE_NOTE
+--------------------------------------------------------------------------------
+   3636043 NHLBI			  22-MAY-13
+Final change by the context moving script 5-31-2013 11.19 AM ET
+
 
 old   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
 new   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'NHLBI')
@@ -177,12 +244,27 @@ new   5: and trunc(ac.date_created) >= to_date('2013-05-22', 'YYYY-MM-DD')
 old   6: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
 new   6: and trunc(ac.date_created) <= to_date('2013-05-23', 'YYYY-MM-DD')
 
- PUBLIC_ID NAME
----------- ------------------------------
-   3636041 NHLBI
-   3636043 NHLBI
-   3636046 NHLBI
-   3636047 NHLBI
+ PUBLIC_ID NAME 			  DATE_CREA
+---------- ------------------------------ ---------
+CHANGE_NOTE
+--------------------------------------------------------------------------------
+   3636041 NHLBI			  22-MAY-13
+Final change by the context moving script 5-31-2013 11.19 AM ET
+
+   3636043 NHLBI			  22-MAY-13
+Final change by the context moving script 5-31-2013 11.19 AM ET
+
+   3636046 NHLBI			  22-MAY-13
+Final change by the context moving script 5-31-2013 11.19 AM ET
+
+
+ PUBLIC_ID NAME 			  DATE_CREA
+---------- ------------------------------ ---------
+CHANGE_NOTE
+--------------------------------------------------------------------------------
+   3636047 NHLBI			  22-MAY-13
+Final change by the context moving script 5-31-2013 11.19 AM ET
+
 
 Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
 With the Partitioning, Data Mining and Real Application Testing options
