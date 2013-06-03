@@ -1,4 +1,5 @@
 :Please run with user SBR
+:************* DATABASE SETTINS *************
 echo input parameters in the order specified:
 echo old_context to new_context from_date(format YYYY-MM-DD) end_date (format YYYY-MM-DD) curator_id
 set user=SBR
@@ -7,6 +8,7 @@ set SQLPLUS_PATH=C:\instantclient_11_2\
 :set SQLPLUS_PATH=
 set HOST=@"(description=(address_list=(address=(protocol=TCP)(host=137.187.181.4)(port=1551)))(connect_data=(SID=DSRDEV)))"
 
+:************* APPLICATION SETTINS *************
 set FROM_CONTEXT=NHLBI
 set TO_CONTEXT=NHLBI
 set FROM_DATE=2013-05-22
