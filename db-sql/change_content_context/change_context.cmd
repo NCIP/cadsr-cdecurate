@@ -13,5 +13,5 @@ set FROM_DATE=2013-05-22
 set TO_DATE=2013-05-23
 set CREATOR=DWARZEL
 
-%SQLPLUS_PATH%sqlplus %user%/%pwd%%HOST% @change_user_ac_context.sql '%FROM_CONTEXT%' '%TO_CONTEXT%' '%FROM_DATE%' '%TO_DATE%' '%CREATOR%' 'Changed from [%FROM_CONTEXT%] to [%TO_CONTEXT%] for [%CREATOR%] by script [%DATE% %TIME%] '
+%SQLPLUS_PATH%sqlplus %user%/%pwd%%HOST% @change_user_ac_context.sql '%FROM_CONTEXT%' '%TO_CONTEXT%' '%FROM_DATE%' '%TO_DATE%' '%CREATOR%' 'Changed from [%FROM_CONTEXT%] to [%TO_CONTEXT%] for [%CREATOR%] by script [%DATE% %TIME%]'
 %SQLPLUS_PATH%sqlplus %user%/%pwd%%HOST% @check_user_ac_context.sql '%FROM_CONTEXT%' '%TO_CONTEXT%' '%FROM_DATE%' '%TO_DATE%' '%CREATOR%'
