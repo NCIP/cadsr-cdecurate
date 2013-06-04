@@ -12,7 +12,6 @@ export HOST=@"(description=(address_list=(address=(protocol=TCP)(host=137.187.18
 
 #************* APPLICATION SETTINS *************
 #------------- Please change according to the request before executing the script -------------
-export DATE_TIME=$(date)
 export FROM_CONTEXT=NHLBI
 export TO_CONTEXT=NHLBI
 export FROM_DATE=2013-05-22
@@ -20,6 +19,7 @@ export TO_DATE=2013-05-23
 export CREATOR=yyy
 
 #------------- One generally DO NOT need to change anything beyond this line -------------
+export DATE_TIME=$(date)
 export CHANGE_NOTE="'Changed from $FROM_CONTEXT to $TO_CONTEXT for $CREATOR by script $DATE_TIME'"
 #echo $CHANGE_NOTE
 #exit
