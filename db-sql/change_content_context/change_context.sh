@@ -20,7 +20,7 @@ export TO_DATE=2013-05-23
 export CREATOR=yyy
 
 #------------- One generally DO NOT need to change anything beyond this line -------------
-export CHANGE_NOTE="'Changed from [$FROM_CONTEXT] to [$TO_CONTEXT] for [$CREATOR] by script [$DATE_TIME]'"
+export CHANGE_NOTE="'Changed from $FROM_CONTEXT to $TO_CONTEXT for $CREATOR by script $DATE_TIME'"
 #echo $CHANGE_NOTE
 #exit
 #$SQLPLUS_PATH/sqlplus $user/$pwd$HOST @change_user_ac_context.sql 'NHLBI' 'NHLBI' '2013-05-22' '2013-05-23' xxx
