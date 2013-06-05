@@ -27,8 +27,7 @@
    			</sj:a></td>
 	</tr>
 	<tr>
-		<td></td>
-		<td><br> <s:include value="conceptsGrid.jsp">
+		<td colspan="2"><br> <s:include value="conceptsGrid.jsp">
 				<s:param name="withParent">no</s:param>
 				<s:param name="gridModel">editVmConceptModel</s:param>
 				<s:param name="gridId">editVmConceptTable</s:param>

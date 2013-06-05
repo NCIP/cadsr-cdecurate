@@ -38,10 +38,10 @@
 		position="center" height="600" width="1000" />
 
 	<sj:dialog id="valueMeaningDetail" title="Value Meaning"
-		autoOpen="false" modal="true" height="900" width="1000"
+		autoOpen="false" draggable="true" modal="true" height="900" width="1000"
 		position="['center', 'top']" closeTopics="closeDialog">
 	</sj:dialog>
-	<sj:dialog id="pvEditDialog" title="Edit PV" autoOpen="false"
+	<sj:dialog id="pvEditDialog" title="Edit PV" autoOpen="false" draggable="true"
 		modal="true" height="600" width="1000" closeTopics="closeDialog"
 		position="[100, 250]">
 	</sj:dialog>
@@ -86,10 +86,10 @@
 			//return "<a href='#' onClick='javascript:openDialog("+cellvalue+")'>"+cellvalue+"</a>";
 			var editLink = "<a href='#' onClick='javascript:openPvEditDialog(&#34;"
 					+ cellvalue
-					+ "&#34;)'><img src='images/edit.gif' alt='edit PV'/></a>";
+					+ "&#34;)'><img src='images/edit.gif' alt='edit PV' title='Edit Permissible Value'/></a>";
 			var removeLink = "<a href='#' onClick='javascript:deletePvDialog(&#34;"
 					+ cellvalue
-					+ "&#34;)'><img src='images/delete_white.gif' alt='delete PV'/></a>";
+					+ "&#34;)'><img src='images/delete_white.gif' alt='delete PV' title='Delete Permissible Value'/></a>";
 			return editLink + "&nbsp;&nbsp;&nbsp;" + removeLink;
 		}
 

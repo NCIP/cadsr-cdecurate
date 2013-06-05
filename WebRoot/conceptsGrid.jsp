@@ -51,7 +51,7 @@
 	pager="true" caption="%{#gridCaption}" navigator="%{#showNagivator}"
 	navigatorEdit="false" navigatorAdd="false" navigatorSearch="false"
 	navigatorDelete="false" multiselect="false" cellEdit="%{#cellEdit}"
-	cellurl="#"
+	cellurl="#" autowidth="true" height="25" 
 	navigatorExtraButtons="{
 			seperator: { 
                         title : 'seperator'  
