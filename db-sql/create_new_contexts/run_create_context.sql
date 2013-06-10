@@ -1,4 +1,4 @@
---Please run with SBREXT account, it requires two script parameters:
+--Please run with SBR account, it requires two script parameters:
 --the name of the context and its description e.g.
 --@run_create_context.sql '{context name}' '{context description}'
 
