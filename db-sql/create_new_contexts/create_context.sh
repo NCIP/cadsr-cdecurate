@@ -1,3 +1,4 @@
+#!/bin/sh
 #Please run with user SBR
 export user=SBR
 export pwd=jjsbr
