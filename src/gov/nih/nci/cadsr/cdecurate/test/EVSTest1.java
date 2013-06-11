@@ -52,12 +52,14 @@ import oracle.jdbc.pool.OracleDataSource;
  *
  * Setup -
  * 1. Add two arguments in Run/Debug configuration i.e.
- * log4j.xml EVSTest1.xml
+ * [full path]log4j.xml EVSTest1.xml
  * 2. Add the directory of the test (where EVSTest1.xml/log4j.xml are) into the classpath e.g.
  * [YOUR PROJECT DIR]/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test
  * 3. Add the directory of the conf (where application-config-client.xml) into the classpath e.g.
  * [YOUR PROJECT DIR]/cdecurate/conf
- * 4. Choose Run/Debug
+ * 4. Add lib/test/spring.jar (to avoid java.lang.NoClassDefFoundError: org/springframework/beans/factory/support/BeanDefinitionRegistry runtime exception)
+ * 5. Add lib/test/ (to avoid java.lang.NoClassDefFoundError: org/hibernate/criterion/DetachedCriteria runtime exception)
+ * 6. Choose Run/Debug
  * 
  * @author lhebel
  *

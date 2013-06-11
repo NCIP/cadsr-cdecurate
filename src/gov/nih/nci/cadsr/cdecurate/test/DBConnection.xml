@@ -9,7 +9,7 @@
         <!-- Specify the caDSR database being used by the Curation Tool to be tested.-->
         <entry key="DSurl">137.187.181.4:1551:DSRDEV</entry>
         <entry key="DSusername">sbrext</entry>
-        <entry key="DSpassword">jjuser</entry>
+        <entry key="DSpassword"></entry>
         
      <!--    <entry key="DSurl">cbiodb30.nci.nih.gov:1521:CBTEST</entry>
         <entry key="DSusername">sbrext</entry>

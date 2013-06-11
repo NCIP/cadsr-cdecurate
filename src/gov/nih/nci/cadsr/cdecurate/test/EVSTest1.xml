@@ -12,8 +12,8 @@
         <entry key="DSurl">cbiodb10.nci.nih.gov:1521:CBPROD</entry>
 -->        
         <entry key="DSurl">137.187.181.4:1551:DSRDEV</entry>
-        <entry key="DSusername">guest</entry>
-        <entry key="DSpassword">guest</entry>
+        <entry key="DSusername">SBREXT</entry>
+        <entry key="DSpassword">jjuser</entry>
         <!-- (optional) Specify the EVS URL for the caCORE API. If not included here it will be retrieved
             from the tool options table in the caDSR identified above.
         		<entry key="evs.url">http://cabio-lexbig.nci.nih.gov/cacore32/http/remoteService</entry>
