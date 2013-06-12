@@ -3,6 +3,8 @@ update sbr.contexts_view  set name='NCIP' where conte_idseq=(select tv.value fro
 /
 update sbrext.tool_options_view_ext set value = 'NCIP' where property = 'REPTERM.DEFAULT.CONTEXT'
 /
+update SBR.CONCEPTUAL_DOMAINS set preferred_name = 'NCIP', long_name = 'NCIP' where preferred_name = 'CABIG'
+/
 commit
 /
 -- To Check whether default context is changed to "NCIP" in Database
@@ -22,4 +24,6 @@ SELECT count(*) FROM sbr.value_domains where conte_idseq = (select CONTE_IDSEQ f
 select PROPERTY,VALUE,DESCRIPTION from sbrext.tool_options_view_ext where property like '%DEFAULT.CONTEXT%' or property = 'DEFAULT_CONTEXT'
 /
 select 'The second value of the above should be = '|| conte_idseq from sbr.contexts_view where name='NCIP'
+/
+select 'SBR_CONCEPTUAL_DOMAINS should return 0 row' from SBR.CONCEPTUAL_DOMAINS where preferred_name = 'CABIG'
 /
