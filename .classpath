@@ -34,8 +34,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-core-2.4.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-regex-2.4.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-snowball-2.4.0.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/org.eclipse.emf.ecore_2.2.1.v200609210005.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/org.eclipse.emf.ecore.xmi_2.2.1.v200609210005.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sdk-client-framework.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sdk-grid-remoting.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sdk-security.jar"/>
@@ -51,8 +49,10 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/LexEVSSecurity.jar"/>
 	<classpathentry kind="lib" path="lib/ojdbc6.jar"/>
 	<classpathentry kind="lib" path="testlib/log4jdbc4-1.2.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="testlib/sqlj/runtime12.jar"/>
+	<classpathentry kind="lib" path="testlib/sqlj/runtime12ee.jar"/>
 	<classpathentry kind="lib" path="testlib/junit/selenium-server-standalone-2.25.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
