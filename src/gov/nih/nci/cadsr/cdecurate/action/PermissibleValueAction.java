@@ -1,5 +1,15 @@
 package gov.nih.nci.cadsr.cdecurate.action;
 
+ 
+import gov.nih.nci.cadsr.cdecurate.tool.NCICurationServlet;
+
+import java.sql.Connection;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
+import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
 public class PermissibleValueAction extends ActionSupport {
@@ -45,6 +55,57 @@ public class PermissibleValueAction extends ActionSupport {
 	}
 
 	public String editPv() throws Exception {
+		System.out.println("PermissibleValueAction.editPv()....");
+		return SUCCESS;
+	}
+    private Connection getConnFromDS()
+    {
+        // Use tool database pool.
+        Context envContext = null;
+        DataSource ds = null;
+        String user_;
+        String pswd_;
+        try
+        {
+            envContext = new InitialContext();
+            ds = (DataSource) envContext.lookup(NCICurationServlet._dataSourceName);
+            user_ = NCICurationServlet._userName;
+            pswd_ = NCICurationServlet._password;
+        }
+        catch (Exception ex)
+        {
+            String stErr = "Error creating database pool[" + ex.getMessage() + "].";
+            System.out.println("PermissibleValueAction.getConnFromDS()..:"+stErr);
+            return null;
+        }
+        // Open connection
+        Connection con = null;
+        try
+        {
+            con = ds.getConnection(user_, pswd_);
+        }
+        catch (Exception e)
+        {
+//            logger.fatal("Could not open database connection.", e);
+            e.printStackTrace();
+            return null;
+        }
+        return con;
+    }
+    
+	public String deletePv( ) throws Exception {
+		System.out.println("PermissibleValueAction.deletePv()..NCICurationServlet._dataSourceName="+NCICurationServlet._dataSourceName);
+		System.out.println("PermissibleValueAction.deletePv()..NCICurationServlet._userName="+NCICurationServlet._userName);
+		System.out.println("PermissibleValueAction.deletePv()..NCICurationServlet._password="+NCICurationServlet._password);
+		
+		InitialContext ctx = new InitialContext();
+		DataSource ds = (DataSource)ctx.lookup("java:jdbc/CDECurateDS");
+		System.out.println("PermissibleValueAction.deletePv()..dataSource:"+ds);
+		Connection con=getConnFromDS();
+		System.out.println("PermissibleValueAction.deletePv()..conn:"+con);
+		con.close();
+ 		String paramValue = ServletActionContext.getRequest().getParameter("pvId");
+		System.out.println("PermissibleValueAction.deletePv()..pvId="+paramValue);
 		return SUCCESS;
 	}
 

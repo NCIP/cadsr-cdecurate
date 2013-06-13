@@ -89,6 +89,7 @@ public class PermissibleValueJsonTableAction extends ActionSupport implements
 			PermissibleValueBean pvBean = new PermissibleValueBean(value,
 					origin, beginDate, endDate);
 			pvBean.setValueMeaning(vmBean);
+			pvBean.setId(pv.getPV_PV_IDSEQ());
 			permissibleValues.add(pvBean);
 		}
 
@@ -101,11 +102,11 @@ public class PermissibleValueJsonTableAction extends ActionSupport implements
 			session.put("pvList", permissibleValues);
 		}
 		// this.pvModel = dao.getPvModel();
-		this.emptyModel = dao.getEmptyModel();
-		this.addedPvModel = dao.getAddedPvModel();
-		this.editedPvModel = dao.getEditedPvModel();
-		this.pvModelFromParent = dao.getPvModelFromParent();
-		this.editedPvModelWithEditedVm = dao.getEditedPvModelWithEditedVm();
+//		this.emptyModel = dao.getEmptyModel();
+//		this.addedPvModel = dao.getAddedPvModel();
+//		this.editedPvModel = dao.getEditedPvModel();
+//		this.pvModelFromParent = dao.getPvModelFromParent();
+//		this.editedPvModelWithEditedVm = dao.getEditedPvModelWithEditedVm();
 		return SUCCESS;
 	}
 

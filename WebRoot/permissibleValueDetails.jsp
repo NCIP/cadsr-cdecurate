@@ -2,18 +2,21 @@
 <%@ taglib prefix="sj" uri="/struts-jquery-tags"%>
 <%@ taglib prefix="sjg" uri="/struts-jquery-grid-tags"%>
 <sj:div id="pvDetails">
-	Test Selected Conceptual Domain:&nbsp;<s:property
-		value="#session.m_VD.VD_CD_NAME" />
+	Selected Conceptual Domain:&nbsp;<s:property value="#session.m_VD.VD_CD_NAME" />
 	<br>
 	<br>
 	<s:url id="createNewPvUrl" action="createNewPv" />
+	<%--<s:url id="editPvUrl" action="editPv"/>  --%>
+	<s:url var="editPvUrl" value="editPermissibleValue.jsp" />
+	<s:url id="deletePvUrl" action="deletePv"/> 
+		
 	<s:url id="pvFromConceptsOption" action="createPvListFromConcepts" />
 	<s:url id="pvAlert" value="permissibleValueListFromParentAlert.jsp" />
 
 	<sj:dialog id="newPvDialog" autoOpen="false" modal="true" height="600"
 		width="1000" position="[70, 200]" title="Create a New PV" />
-	<sj:a id="createNewPvUrl" href="%{createNewPvUrl}" button="true"
-		openDialog="newPvDialog">Create New</sj:a>
+	<sj:a id="createNewPvUrlLink" href="%{createNewPvUrl}" button="true"
+		openDialog="newPvDialog">Create link New</sj:a>
 	<sj:dialog id="subConceptsDialog" autoOpen="false" modal="false"
 		title="permissible value dialogs" openTopics="openRemoteDialog"
 		position="center" height="600" width="1000" />
@@ -46,8 +49,6 @@
 		position="[100, 250]">
 	</sj:dialog>
 	<s:url var="vmUrl" action="vmDetails" />
-	<%--<s:url var="pvEditUrl" action="editPv" /> --%>
-	<s:url var="pvEditUrl" value="editPermissibleValue.jsp" />
 	<s:url var="editVmUrl" action="editVm" />
 
 	<script>
@@ -87,9 +88,13 @@
 			var editLink = "<a href='#' onClick='javascript:openPvEditDialog(&#34;"
 					+ cellvalue
 					+ "&#34;)'><img src='images/edit.gif' alt='edit PV' title='Edit Permissible Value'/></a>";
-			var removeLink = "<a href='#' onClick='javascript:deletePvDialog(&#34;"
+			var deletePvUrlLink = '<s:property value="deletePvUrl"/>'+"?pvId="+cellvalue;
+			var removeLink = "<a href='" +deletePvUrlLink+"'>"
+						+"<img src='images/delete_white.gif' alt='delete PV' title='Delete Permissible Value'/></a>";
+			/*	var removeLink = "<a href='#' onClick='javascript:deletePvDialog(&#34;"
 					+ cellvalue
 					+ "&#34;)'><img src='images/delete_white.gif' alt='delete PV' title='Delete Permissible Value'/></a>";
+			*/
 			return editLink + "&nbsp;&nbsp;&nbsp;" + removeLink;
 		}
 
@@ -108,6 +113,7 @@
 			//$("#newPvDialog").load(newPvUrl).dialog("open");
 			$("#onePv").load(newPvUrl);
 		}
+
 		function openPvEditDialog(pv) {
 		/*	
 			var id = jQuery('#existingPvTable')
@@ -119,7 +125,7 @@
      		var pvEditUrl = '<s:property value="pvEditUrl"/>'
 					+ "?oper=edit&rowInd=" + id;
 			alert(pvEditUrl);*/
-			var pvEditUrl = '<s:property value="pvEditUrl"/>';
+			var pvEditUrl = '<s:property value="editPvUrl"/>';
 			//$("#pvEditDialog").load(pvEditUrl).dialog("open");
 			$("#pvEditDialog").load(pvEditUrl).dialog("open");
 
@@ -193,7 +199,7 @@
 	    		onclick: function(){ selectTheVm() }
     		}
     		}">
-			<sjg:gridColumn name="value" title="Actions" width="50"
+			<sjg:gridColumn name="id" title="Actions" width="50"
 				cssClass="link" formatter="formatActionLink" sortable="false" />
 			<sjg:gridColumn name="value" index="value" title="PV" sortable="true" />
 			<sjg:gridColumn name="valueMeaning.longName" index="vmLongName"

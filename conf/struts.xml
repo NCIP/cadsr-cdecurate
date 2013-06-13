@@ -32,6 +32,12 @@
 			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
 			<result name="success">newPermissibleValue.jsp</result>
 		</action>
+		<action name="deletePv" method="deletePv"
+			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
+			<result name="success" type="json">NCICurationServlet?reqType=editVD</result>
+			<result name="showResult"  type="redirect">NCICurationServlet?reqType=showResult</result>
+			<result name="test">editedPermissibleValueTable.jsp</result>
+		</action>
 		<action name="addPv" method="addPv"
 			class="gov.nih.nci.cadsr.cdecurate.action.PermissibleValueAction">
 			<result name="success">addedPermissibleValueGrid.jsp</result>
