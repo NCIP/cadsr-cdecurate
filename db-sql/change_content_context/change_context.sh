@@ -23,4 +23,5 @@ export DATE_TIME=$(date)
 export CHANGE_NOTE="'Changed from $FROM_CONTEXT to $TO_CONTEXT for $CREATOR by script $DATE_TIME'"
 #echo $CHANGE_NOTE
 #exit
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
