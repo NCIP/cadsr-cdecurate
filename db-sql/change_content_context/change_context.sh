@@ -12,16 +12,25 @@ export HOST=@"(description=(address_list=(address=(protocol=TCP)(host=137.187.18
 
 #************* APPLICATION SETTINS *************
 #------------- Please change according to the request before executing the script -------------
-export FROM_CONTEXT=NHLBI
-export TO_CONTEXT=NHLBI
-export FROM_DATE=2013-05-22
-export TO_DATE=2013-05-23
-export CREATOR=yyy
+export FROM_CONTEXT=CTEP
+export TO_CONTEXT=SWOG
+export FROM_DATE=2011-12-01
+export TO_DATE=2013-06-26
 
 #------------- One generally DO NOT need to change anything beyond this line -------------
 export DATE_TIME=$(date)
 export CHANGE_NOTE="'Changed from $FROM_CONTEXT to $TO_CONTEXT for $CREATOR by script $DATE_TIME'"
 #echo $CHANGE_NOTE
 #exit
+
+export CREATOR=smitha
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+
+export CREATOR=scottm
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+
+export CREATOR=kearnsd
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
