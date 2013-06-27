@@ -57,7 +57,7 @@ public class TestDECAltName extends CurationServlet
    */
   public static void main(String[] args)
   {
-	CurationTestLogger logger1 = new CurationTestLogger(TestDECAltName.class);
+//	CurationTestLogger logger1 = new CurationTestLogger(TestDECAltName.class);
     // Initialize the Log4j environment.
     String logXML = "log4j.xml";
     if (args.length > 0)
@@ -88,7 +88,13 @@ public class TestDECAltName extends CurationServlet
   }
   
   public void run() {
+	  
 	    m_classReq = EasyMock.createStrictMock(HttpServletRequest.class);
+		HttpSession mockHttpSession = EasyMock.createMock(HttpSession.class);
+		EasyMock.expect(m_classReq.getSession()).andReturn(mockHttpSession);
+		EasyMock.expect(m_classReq.getParameter("MenuAction")).andReturn("editDEC");
+		EasyMock.replay(m_classReq);
+	    
 	    try {
 			doEditDECActions();
 		} catch (Exception e) {
@@ -99,9 +105,8 @@ public class TestDECAltName extends CurationServlet
   
 	private void doEditDECActions() throws Exception
 	{
-//		HttpSession session = m_classReq.getSession();
-		HttpSession session = (HttpSession) EasyMock.expect(m_classReq.getSession()).andReturn(m_classReq.getSession());
-
+		HttpSession session = m_classReq.getSession();
+		
 		String sMenuAction = (String) m_classReq.getParameter("MenuAction");
 		if (sMenuAction != null)
 			DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
