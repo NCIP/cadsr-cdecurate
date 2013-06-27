@@ -121,7 +121,10 @@ public class TestDECAltName //extends TestCase	//CurationServlet
 		
 		EasyMock.replay(mockHttpSession);
 		EasyMock.replay(m_classReq);
-		
+		EasyMock.replay(m_classRes);
+		EasyMock.replay(servletConfig);
+		EasyMock.replay(servletContext);
+        
 	    try {
 			doEditDECActions();
 		} catch (Exception e) {
