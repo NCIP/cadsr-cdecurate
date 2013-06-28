@@ -56,7 +56,35 @@ public class TestDECAltName //extends TestCase	//CurationServlet
 	3. DataElementConceptServlet.java
 
    * Useful SQLs -
-   * 
+   *
+select 
+--*
+asl_name, long_name, preferred_name, preferred_definition 
+from concepts_view_ext 
+where 
+length(preferred_definition) < 200
+--and asl_name = 'RELEASED'
+--and rownum < 10
+and preferred_name in ('C19067','C42774','CL000986')
+"ASL_NAME"	"LONG_NAME"	"PREFERRED_NAME"	"PREFERRED_DEFINITION"
+"RELEASED"	"Title"	"C19067"	"CL000986: Title "
+"RELEASED"	"Title"	"C42774"	"An official descriptive name of a document, e.g. the long name of a study protocol provided by the study sponsor."
+"RETIRED PHASED OUT"	"Title"	"CL000986"	"CL000986: Title "
+/
+delete from COMPONENT_CONCEPTS_EXT where CON_IDSEQ = (select CON_IDSEQ from concepts_view_ext where preferred_name = 'C62682')
+/
+delete from concepts_view_ext where preferred_name = 'C62682' --to reuse Annual Sreening concept for GF30798 test
+/
+select 
+--*
+CON_IDSEQ, asl_name, long_name, preferred_name, preferred_definition 
+from concepts_view_ext con
+where 
+length(preferred_definition) < 200
+--and asl_name = 'RELEASED'
+--and rownum < 10
+and preferred_name in ('C19067','C42774','CL000986','C62682','C1134631')
+/
    *
    */
 
