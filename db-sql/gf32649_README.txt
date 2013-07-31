@@ -117,11 +117,6 @@ Grant succeeded.
 
 SQL> 
 
-SQL> @change_default_context.sql
-
-1 row updated.
-
-
 Commit complete.
 
 SQL> 
