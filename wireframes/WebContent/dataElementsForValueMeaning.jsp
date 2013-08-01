@@ -1,3 +1,9 @@
+<%--L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L--%>
 
 <div class="ind2" style="display:inline;  width: 4in">
 	<!--  width:49%;">  -->

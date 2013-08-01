@@ -1,3 +1,10 @@
+<%--L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L--%>
+
 <!-- Copyright (c) 2006 ScenPro, Inc.
     $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/PermissibleValueWindow.jsp,v 1.4 2009-04-16 17:14:27 hegdes Exp $
     $Name: not supported by cvs2svn $

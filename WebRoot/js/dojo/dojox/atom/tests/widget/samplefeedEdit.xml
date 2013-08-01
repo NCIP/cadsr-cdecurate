@@ -1,4 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
+
+<!--L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L-->
+
 <feed xmlns='http://www.w3.org/2005/Atom' xml:lang='en-US'>
 	<title>Example.com</title>
 	<link rel="alternate" type="text/html" href="http://example.com/" hreflang="en" title="Example.com" />

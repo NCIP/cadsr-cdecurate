@@ -1,3 +1,10 @@
+/*L
+ * Copyright ScenPro Inc, SAIC-F
+ *
+ * Distributed under the OSI-approved BSD 3-Clause License.
+ * See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+ */
+
 // Copyright (c) 2000 ScenPro, Inc.
 // $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/GetACService.java,v 1.68 2009-04-09 15:20:16 veerlah Exp $
 // $Name: not supported by cvs2svn $

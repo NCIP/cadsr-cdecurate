@@ -1,3 +1,10 @@
+/*L
+ * Copyright ScenPro Inc, SAIC-F
+ *
+ * Distributed under the OSI-approved BSD 3-Clause License.
+ * See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+ */
+
 // Copyright (c) 2006 ScenPro, Inc.
 
 // $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/datalov/Attributes.java,v 1.16 2008-07-03 21:46:17 chickerura Exp $

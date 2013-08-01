@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
+<!--L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L-->
+
 <foo><bar baz='thonk'>blarg</bar></foo>

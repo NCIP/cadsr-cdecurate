@@ -1,3 +1,10 @@
+<%--L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L--%>
+
 <!-- CreatePVPage.jsp -->
 <!-- goes to login page if error occurs -->
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate" %>

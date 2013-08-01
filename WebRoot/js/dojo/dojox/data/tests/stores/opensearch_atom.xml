@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L-->
+
 <!--  This is an invalid OpenSearch Description Document, but it's simply used for testing.  -->
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
   <Url type="application/atom+xml" template="atom1.xml?q={searchTerms}"/>

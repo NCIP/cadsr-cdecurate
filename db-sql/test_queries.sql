@@ -1,3 +1,10 @@
+/*L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L*/
+
 --Please keep the following queries. They are generally difficult to create or
 --require significantly huge effort to be found in the PL/SQL codes
 

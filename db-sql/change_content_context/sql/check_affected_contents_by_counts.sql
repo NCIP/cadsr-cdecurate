@@ -1,3 +1,10 @@
+/*L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L*/
+
 --Please run with account SBR
 --ACs for KEARNSD
 select 'DEC_affected_for_KEARNSD = ' || count(*) from sbr.data_element_concepts_view dec, sbr.contexts c

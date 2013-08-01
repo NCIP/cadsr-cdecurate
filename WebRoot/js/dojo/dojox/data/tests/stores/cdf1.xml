@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L-->
+
 <data jsxassignids="1" jsxid="jsxroot">
   <record name="myA" jsxtext="A" jsxid="1" a1="v1" a2="v2" a3="v3"/>
   <record name="myB" jsxtext="B" jsxid="2"/>

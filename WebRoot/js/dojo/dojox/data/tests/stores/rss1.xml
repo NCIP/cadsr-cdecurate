@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L-->
+
 <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:date="http://exslt.org/dates-and-times" version="2.0">
   <channel><language>en</language><description><![CDATA[..where the wave finally broke, and rolled back.. Shane O'Sullivan's technical blog]]></description>
 	<title><![CDATA[SOS]]></title>

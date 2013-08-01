@@ -1,3 +1,10 @@
+/*L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L*/
+
 SQL*Plus: Release 10.2.0.4.0 - Production on Fri Jun 28 09:39:08 2013
 
 Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.

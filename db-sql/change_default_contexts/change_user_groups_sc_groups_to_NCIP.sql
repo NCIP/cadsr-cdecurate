@@ -1,3 +1,10 @@
+/*L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L*/
+
 --Better be safe than sorry
 --Run with SBR user
 CREATE TABLE SBR.USER_ACCOUNTS_BACKUP

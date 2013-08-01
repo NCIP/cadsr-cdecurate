@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="windows-1252" standalone="yes"?>
+
+<!--L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L-->
+
 <feed xmlns="http://purl.org/atom/ns#" version="0.3" xml:lang="en-US">
 <link href="https://www.blogger.com/atom/3191291" rel="service.post" title="Coding In Paradise" type="application/atom+xml"/>
 <link href="https://www.blogger.com/atom/3191291" rel="service.feed" title="Coding In Paradise" type="application/atom+xml"/>

@@ -1,3 +1,10 @@
+/*L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L*/
+
 /* Copyright ScenPro, Inc, 2005
 
    $Header: /cvsshare/content/cvsroot/cdecurate/conf/template.update_load_tool_options_evs.sql,v 1.2 2008-01-23 22:10:27 hebell Exp $

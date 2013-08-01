@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?> 
+
+<!--L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L-->
+
 <service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom">
 	<workspace>
 		<atom:title type="text">Test Service</atom:title>
