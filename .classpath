@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry excluding="gov/nih/nci/cadsr/cdecurate/test/SoundsLike.java|gov/nih/nci/cadsr/cdecurate/test/Util.java" kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="lib" path="lib/jasper-runtime.jar"/>
 	<classpathentry kind="lib" path="lib/jboss-system.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.13.jar"/>
@@ -52,6 +53,43 @@
 	<classpathentry kind="lib" path="testlib/sqlj/runtime12.jar"/>
 	<classpathentry kind="lib" path="testlib/sqlj/runtime12ee.jar"/>
 	<classpathentry kind="lib" path="testlib/junit/selenium-server-standalone-2.25.0.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/acegi-security-1.0.4.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/antlr-2.7.6.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/asm.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/axis.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/caGrid-CQL-cql.1.0-1.2.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/castor-1.0.2.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/castor-1.2.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/castor-bean-serializer.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/cglib-2.1.3.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/cog-jglobus.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/commons-cli-1.0.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/commons-codec-1.3.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/commons-collections-3.2.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/commons-discovery-0.2.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/commons-lang-2.2.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/commons-pool-1.3.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/hibernate3.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/jakarta-regexp-1.4.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/jaxrpc.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/lexbig.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/lexevsapi51-beans.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/lexevsapi51-client.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/lexevsapi51-framework.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/LexEVSSecurity.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/lucene-core-2.4.0.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/lucene-regex-2.4.0.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/lucene-snowball-2.4.0.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/org.eclipse.emf.ecore_2.2.1.v200609210005.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/org.eclipse.emf.ecore.xmi_2.2.1.v200609210005.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/sdk-client-framework.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/sdk-grid-remoting.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/sdk-security.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/spring.jar"/>
+	<classpathentry kind="lib" path="testlib/LexEVS_51_client/lib/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="testlib/easymock-2.3.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
