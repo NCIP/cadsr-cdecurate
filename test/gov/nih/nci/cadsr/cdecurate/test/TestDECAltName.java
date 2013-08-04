@@ -1,8 +1,3 @@
-// Copyright ScenPro, Inc 2007
-
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/testdec.java,v 1.11 2008-03-13 17:57:59 chickerura Exp $
-// $Name: not supported by cvs2svn $
-
 package gov.nih.nci.cadsr.cdecurate.test;
 
 import gov.nih.nci.cadsr.cdecurate.tool.AC_Bean;
@@ -34,7 +29,11 @@ import org.easymock.EasyMock;
 //import com.sun.org.apache.xerces.internal.impl.xs.dom.DOMParser;
 
 /**
- * @author shegde
+ * Setup:
+ * 
+ * 1. mkdir -p /local/content/cadsrsentinel/reports
+ * 2. sudo touch /local/content/cadsrsentinel/reports/evstest1_log.txt
+ * 3. sudo chmod 777 /local/content/cadsrsentinel/reports/evstest1_log.txt
  *
  */
 public class TestDECAltName //extends TestCase	//CurationServlet
@@ -615,3 +614,5 @@ and preferred_name in ('C19067','C42774','CL000986','C62682','C1134631')
 		return (eCon.getNAME_VALUE_PAIR_IND() > 0 && eCon.getLONG_NAME().indexOf("::") < 1 && eCon.getNVP_CONCEPT_VALUE().length() > 0);	//JT not sure what is this checking for, second portion could be buggy!!!
 	}	
 }
+
+
