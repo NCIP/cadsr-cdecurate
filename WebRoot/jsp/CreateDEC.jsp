@@ -1286,6 +1286,7 @@ String propCDR = "";
 
 				<!--    </fieldset>-->
 			</table>
+			<input type="hidden" name="userSelectedDef" value="nothing"> <!-- GF30798 -->
 			<input type="hidden" name="pageAction" value="nothing">
 			<input type="hidden" name="openToTree" value="">
 			<input type="hidden" name="DECAction" value="NewDEC">
