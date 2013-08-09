@@ -989,16 +989,24 @@ public class DataElementConceptServlet extends CurationServlet {
 			m_setAC.setDECValueFromPage(m_classReq, m_classRes, m_DEC);
 			Vector<EVS_Bean> vObjectClass = (Vector) session.getAttribute("vObjectClass");
 			//begin of GF30798
+			String evsDef = null;
 			if(vObjectClass != null && vObjectClass.size() > 0) {
 				for (int i=0; i<vObjectClass.size();i++){
 					EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
-					if(eBean != null)
-					logger.debug("At line 1001 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
+					if(eBean != null) {
+						logger.debug("At line 1001 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
+						evsDef = eBean.getPREFERRED_DEFINITION();
+					}
 				}
 			}
 			
+			boolean changedOCDefsWarningFlag = false;
+			String userSelectedDef = (String) m_classReq.getParameter("userSelectedDef");
+			if(!userSelectedDef.equals(evsDef)) {	//TBD - should check user selection against caDSR not EVS !!!
+				changedOCDefsWarningFlag = true;
+			}
 			//end of GF30798
-			if (vObjectClass == null || vObjectClass.size() == 0) {
+			if (!changedOCDefsWarningFlag && vObjectClass == null || vObjectClass.size() == 0) {
 				vObjectClass = new Vector<EVS_Bean>();
 				//reset the attributes for keeping track of non-caDSR choices...
 				session.removeAttribute("chosenOCCodes");
