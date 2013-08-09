@@ -110,6 +110,10 @@
       var source = opener.document.newDECForm.DECAction.value;
       opener.document.newDECForm.sCompBlocks.value = sComp;
       opener.document.newDECForm.selCompBlockRow.value = selRow;
+      //begin GF30798
+	  //alert(editDefinition);
+      opener.document.newDECForm.userSelectedDef.value = editDefinition;	//set the correct selected definition!!!
+      //end GF30798
       opener.SubmitValidate("UseSelection");
       window.close();
     }
