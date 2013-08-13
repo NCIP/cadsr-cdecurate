@@ -979,6 +979,14 @@ public class DataElementConceptServlet extends CurationServlet {
 		try
 		{
 			HttpSession session = m_classReq.getSession();
+			//begin of GF30798
+			String isAConcept = (String) m_classReq.getParameter("isAConcept");
+			session.setAttribute(isAConcept, isAConcept);
+			String userSelectedDef = (String) m_classReq.getParameter("userSelectedDef");
+			session.setAttribute(userSelectedDef, userSelectedDef);
+			//(isAConcept != null && isAConcept.trim().equals("false"))	//GF30798
+			//end of GF30798
+			
 			String sSelRow = "";
 			boolean selectedOCQualifiers = false;
 			boolean selectedPropQualifiers =  false;
@@ -988,25 +996,17 @@ public class DataElementConceptServlet extends CurationServlet {
 				m_DEC = new DEC_Bean();
 			m_setAC.setDECValueFromPage(m_classReq, m_classRes, m_DEC);
 			Vector<EVS_Bean> vObjectClass = (Vector) session.getAttribute("vObjectClass");
-			//begin of GF30798
-			String evsDef = null;
-			if(vObjectClass != null && vObjectClass.size() > 0) {
-				for (int i=0; i<vObjectClass.size();i++){
-					EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
-					if(eBean != null) {
-						logger.debug("At line 1001 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
-						evsDef = eBean.getPREFERRED_DEFINITION();
-					}
-				}
-			}
-			
-			boolean changedOCDefsWarningFlag = false;
-			String userSelectedDef = (String) m_classReq.getParameter("userSelectedDef");
-			if(!userSelectedDef.equals(evsDef)) {	//TBD - should check user selection against caDSR not EVS !!!
-				changedOCDefsWarningFlag = true;
-			}
-			//end of GF30798
-			if (!changedOCDefsWarningFlag && vObjectClass == null || vObjectClass.size() == 0) {
+//			String evsDef = null;
+//			if(vObjectClass != null && vObjectClass.size() > 0) {
+//				for (int i=0; i<vObjectClass.size();i++){
+//					EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
+//					if(eBean != null) {
+//						logger.debug("At line 1001 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
+//						evsDef = eBean.getPREFERRED_DEFINITION();
+//					}
+//				}
+//			}
+			if (vObjectClass == null || vObjectClass.size() == 0) {
 				vObjectClass = new Vector<EVS_Bean>();
 				//reset the attributes for keeping track of non-caDSR choices...
 				session.removeAttribute("chosenOCCodes");
@@ -1014,16 +1014,13 @@ public class DataElementConceptServlet extends CurationServlet {
 				session.removeAttribute("changedOCDefsWarning");
 			}
 			Vector<EVS_Bean> vProperty = (Vector) session.getAttribute("vProperty");
-			//begin of GF30798
-			if(vProperty != null && vProperty.size() > 0) {
-				for (int i=0; i<vProperty.size();i++){
-					EVS_Bean eBean =(EVS_Bean)vProperty.get(i);
-					if(eBean != null)
-					logger.debug("At line 1015 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
-				}
-			}
-			
-			//end of GF30798
+//			if(vProperty != null && vProperty.size() > 0) {
+//				for (int i=0; i<vProperty.size();i++){
+//					EVS_Bean eBean =(EVS_Bean)vProperty.get(i);
+//					if(eBean != null)
+//					logger.debug("At line 1015 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
+//				}
+//			}
 			if (vProperty == null || vProperty.size() == 0) {
 				vProperty = new Vector<EVS_Bean>();
 				//reset the attributes for keeping track of non-caDSR choices...
@@ -1151,7 +1148,6 @@ public class DataElementConceptServlet extends CurationServlet {
 				else
 					// evs search results
 				{
-					logger.debug("At line 1147 of DECServlet.java ");
 					if (sComp.equals("ObjectClass"))
 						m_DEC = this.addOCConcepts(nameAction, m_DEC, blockBean, "Primary");
 					else
@@ -1185,7 +1181,6 @@ public class DataElementConceptServlet extends CurationServlet {
 				m_DEC = this.addPropConcepts(nameAction, m_DEC, blockBean, "Qualifier");
 			}
 
-
 			if ( sComp.equals("ObjectClass") || sComp.equals("ObjectQualifier")){
 				vObjectClass = (Vector) session.getAttribute("vObjectClass");
 				for (int i=0; i<vObjectClass.size();i++){
@@ -1201,7 +1196,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					}
 					m_DEC = this.updateOCAttribues(vObjectClass, m_DEC);	//populate caDSR's DEC bean based on VO (from EVS results)
 
-					this.checkChosenConcepts(session,codes, defs, vObjectClass, "OC");	//make sure user's chosen/edited definition is not different from the EVS definition???
+					this.checkChosenConcepts(session,codes, defs, vObjectClass, "OC", userSelectedDef);	//make sure user's chosen/edited definition is not different from the EVS definition???
 				} 
 
 				if (blockBean.getcaDSR_COMPONENT() != null && blockBean.getcaDSR_COMPONENT().equals("Concept Class")){
@@ -1241,7 +1236,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					Vector<String> rebuiltDefs = new Vector<String>();
 
 					//added in 4.1 to check if OC exists and set alternate def. if used an EVS concept	   
-					this.checkChosenConcepts(session,codes, defs, vProperty, "Prop");
+					this.checkChosenConcepts(session,codes, defs, vProperty, "Prop", userSelectedDef);
 
 				}
 				if (blockBean.getcaDSR_COMPONENT()!= null && blockBean.getcaDSR_COMPONENT().equals("Concept Class")){
@@ -1278,7 +1273,7 @@ public class DataElementConceptServlet extends CurationServlet {
 		}
 	} // end of doDECUseSelection
 	
-	public static void checkChosenConcepts(HttpSession session, Vector<String> codes, Vector<String> defs, Vector<EVS_Bean> vConcepts, String type) {
+	public static void checkChosenConcepts(HttpSession session, Vector<String> codes, Vector<String> defs, Vector<EVS_Bean> vConcepts, String type, String userSelectedDef) {
 		
 		if (codes == null && session.getAttribute("chosen"+type+"Codes") != null) {
 			codes = (Vector<String>) session.getAttribute("chosen"+type+"Codes");
@@ -1286,7 +1281,7 @@ public class DataElementConceptServlet extends CurationServlet {
 		} else if (codes == null)
 			return;
 		logger.debug("At line 1207 of DECServlet.java "+Arrays.asList(codes)+"**"+Arrays.asList(defs));
-		boolean warning = false;
+//		boolean warning = false;
 		//Rebuilding codes and defs to get rid of unused codes
 		Vector<String> rebuiltCodes = new Vector<String>();
 		Vector<String> rebuiltDefs = new Vector<String>();
@@ -1297,9 +1292,11 @@ public class DataElementConceptServlet extends CurationServlet {
 		//The codes list should not include anything that's not in vConcept (in case of removal)
 		//Also need to make sure that the new concepts are at the end of the list, like they're supposed to be.
 		//added in 4.1 to check if OC exists and set alternate def. if used an EVS concept	   
+		String usedCode = "";
+		String usedDef = "";
 		for(EVS_Bean eb: vConcepts){
-			String usedCode = eb.getCONCEPT_IDENTIFIER();
-			String usedDef = eb.getPREFERRED_DEFINITION();
+			usedCode = eb.getCONCEPT_IDENTIFIER();
+			usedDef = eb.getPREFERRED_DEFINITION();
 			logger.debug("At line 1222 of DECServlet.java "+usedCode+"**"+usedDef);
 			boolean found = false;
 			for(int codeCounter = 0; codeCounter < codes.size(); codeCounter++){
@@ -1313,9 +1310,16 @@ public class DataElementConceptServlet extends CurationServlet {
 						rebuiltDefs.add("*"+defs.get(codeCounter));
 						logger.debug("At line 1233 of DECServlet.java"+defs.get(codeCounter)+"**"+usedDef);
 						//if definitions don't match, put up a warning.
-						if (defs  != null && usedDef != null && !defs.get(codeCounter).equals(usedDef))	//GF32004 not related to this ticket, but found NPE during the test
-							warning = true;
-					
+//						if (defs  != null && usedDef != null && !defs.get(codeCounter).equals(usedDef))	{//GF32004 not related to this ticket, but found NPE during the test
+//							warning = true;
+//						}
+						//begin GF30798
+						if (userSelectedDef  != null && usedDef != null && !userSelectedDef.equals(usedDef))	{
+							session.setAttribute("changed"+type+"DefsWarning", Boolean.toString(true));
+						} else {
+							session.removeAttribute("changed"+type+"DefsWarning");
+						}
+						//end GF30798
 				}
 				logger.debug("At line 1239 of DECServlet.java"+Arrays.asList(rebuiltCodes)+"**"+Arrays.asList(rebuiltDefs));
 			}
@@ -1328,15 +1332,14 @@ public class DataElementConceptServlet extends CurationServlet {
 				logger.debug("At line 1247 of DECServlet.java"+Arrays.asList(rebuiltCodes)+"**"+Arrays.asList(rebuiltDefs));
 			}
 		}
-		
-		logger.debug("At line 1251 of DECServlet.java"+warning+"**");
+
 		session.setAttribute("chosen"+type+"Codes", rebuiltCodes);
 		session.setAttribute("chosen"+type+"Defs", rebuiltDefs);
 
-		if (warning)
-			session.setAttribute("changed"+type+"DefsWarning", Boolean.toString(warning));
-		else
-			session.removeAttribute("changed"+type+"DefsWarning");
+//		if (warning)
+//			session.setAttribute("changed"+type+"DefsWarning", Boolean.toString(warning));
+//		else
+//			session.removeAttribute("changed"+type+"DefsWarning");
 	}
 	
 	/**
@@ -2134,6 +2137,8 @@ public class DataElementConceptServlet extends CurationServlet {
 					m_DEC.setDEC_OCL_IDSEQ("");
 					DataManager.setAttribute(session, "RemoveOCBlock", "true");
 					DataManager.setAttribute(session, "newObjectClass", "true");
+					//GF30798
+		        	session.removeAttribute("changedOCDefsWarning");
 				}
 				else if (sComp.equals("Property") || sComp.equals("PropertyClass"))
 				{
@@ -2146,6 +2151,8 @@ public class DataElementConceptServlet extends CurationServlet {
 					m_DEC.setDEC_PROPL_IDSEQ("");
 					DataManager.setAttribute(session, "RemovePropBlock", "true");
 					DataManager.setAttribute(session, "newProperty", "true");
+					//GF30798
+		        	session.removeAttribute("changedPropDefsWarning");
 				}
 				else if (sComp.equals("ObjectQualifier"))
 				{
@@ -2240,7 +2247,7 @@ public class DataElementConceptServlet extends CurationServlet {
 						//end of GF30798
 						m_DEC = this.updateOCAttribues(vObjectClass, m_DEC);
 						
-						this.checkChosenConcepts(session, null, null, vObjectClass, "OC");
+						this.checkChosenConcepts(session, null, null, vObjectClass, "OC", (String)session.getAttribute("userSelectedDef"));
 					} 
 					DataManager.setAttribute(session, "vObjectClass", vObjectClass);
 				}
@@ -2250,7 +2257,7 @@ public class DataElementConceptServlet extends CurationServlet {
 						vProperty = this.getMatchingThesarusconcept(vProperty, "Property");
 						m_DEC = this.updatePropAttribues(vProperty, m_DEC);
 						
-						this.checkChosenConcepts(session,null, null, vProperty, "Prop");
+						this.checkChosenConcepts(session,null, null, vProperty, "Prop", (String)session.getAttribute("userSelectedDef"));
 					} 
 					DataManager.setAttribute(session, "vProperty", vProperty);
 				}
