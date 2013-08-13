@@ -453,7 +453,7 @@ String propCDR = "";
 										</tr>
 											<% if (session.getAttribute("changedOCDefsWarning") != null) {%>
 										<tr height="8">
-											<td colspan=6>
+											<td colspan=6 id="changedOCDefsWarning">
 												<!-- GF30796/GF30798 -->
 												Warning: One or more Object Class concepts you've selected already exist in caDSR with a different definition.
 												The existing standard caDSR definition will be used, and your chosen definition will be used to create an alternate definition for this element.
@@ -588,7 +588,7 @@ String propCDR = "";
 										</tr>
 											<% if (session.getAttribute("changedPropDefsWarning") != null) {%>
 										<tr height="8">
-											<td colspan=6>
+											<td colspan=6 id="changedPropDefsWarning">
 												<!-- GF30796/GF30798 -->
 												Warning: One or more Property concepts you've selected already exist in caDSR with a different definition.
 												The existing standard caDSR definition will be used, and your chosen definition will be used to create an alternate definition for this element.
@@ -1286,6 +1286,7 @@ String propCDR = "";
 
 				<!--    </fieldset>-->
 			</table>
+			<input type="hidden" name="isAConcept" value="false"> <!-- GF30798 -->
 			<input type="hidden" name="userSelectedDef" value="nothing"> <!-- GF30798 -->
 			<input type="hidden" name="pageAction" value="nothing">
 			<input type="hidden" name="openToTree" value="">

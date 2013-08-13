@@ -233,6 +233,8 @@ function openAltNameViewWindow()
       document.newDECForm.sCompBlocks.value = thisBlock;
       if (thisBlock == "ObjectClass")
       {
+		//document.getElementById('changedOCDefsWarning').style.display='none';	//GF30798
+      
         document.newDECForm.selObjRow.value = selIdx;
         if(document.newDECForm.selObjectClass[0].value != null 
           && (document.newDECForm.selObjectClass[0].value != "" || document.newDECForm.selObjectClass[0].text != ""))
@@ -243,6 +245,8 @@ function openAltNameViewWindow()
       }
       else if (thisBlock == "Property")
       {
+		//document.getElementById('changedPropDefsWarning').style.display='none';	//GF30798
+
         document.newDECForm.selPropRow.value = selIdx;
         if(document.newDECForm.selPropertyClass[0].value != null 
           && (document.newDECForm.selPropertyClass[0].value != "" || document.newDECForm.selPropertyClass[0].text != ""))

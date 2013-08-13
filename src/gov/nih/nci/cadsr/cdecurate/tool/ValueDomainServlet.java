@@ -1261,7 +1261,7 @@ public class ValueDomainServlet extends CurationServlet {
 				if (vRepTerm != null && vRepTerm.size() > 0){
 					vRepTerm = this.getMatchingThesarusconcept(vRepTerm, "Representation Term");
 					m_VD = this.updateRepAttribues(vRepTerm, m_VD);
-					DataElementConceptServlet.checkChosenConcepts(session, codes, defs, vRepTerm, "Rep");
+					DataElementConceptServlet.checkChosenConcepts(session, codes, defs, vRepTerm, "Rep", null);	//TBD
 					
 				} 
 				if (m_REP.getcaDSR_COMPONENT()!= null && m_REP.getcaDSR_COMPONENT().equals("Concept Class")){
@@ -2253,7 +2253,7 @@ public class ValueDomainServlet extends CurationServlet {
 					vRepTerm = this.getMatchingThesarusconcept(vRepTerm, "Representation Term");
 					m_VD = this.updateRepAttribues(vRepTerm, m_VD);
 					
-					DataElementConceptServlet.checkChosenConcepts(session, null, null, vRepTerm, "Rep");
+					DataElementConceptServlet.checkChosenConcepts(session, null, null, vRepTerm, "Rep", null);	//TBD
 				}  
 				DataManager.setAttribute(session, "vRepTerm", vRepTerm);
 			}
