@@ -673,6 +673,8 @@ public class SearchServlet extends CurationServlet {
     private void doOpenSearchPage() throws Exception
     {
         HttpSession session = m_classReq.getSession();
+        DataElementConceptServlet.clearAlternateDefinition(session);	//GF30798 didn't have time to refactor, bad design I know
+        
         DataManager.setAttribute(session, "vStatMsg", new Vector());
         DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, "nothing");
         DataManager.setAttribute(session, "LastMenuButtonPressed", "Search");

@@ -29,6 +29,9 @@
 String ocCDR = "";
 String propCDR = "";
 		
+	//GF30798 final user selected defs
+	String userSelectedDefFinal = (String)session.getAttribute("userSelectedDefFinal");
+	
     Vector vContext = (Vector)session.getAttribute("vWriteContextDEC");
     Vector vContextID = (Vector)session.getAttribute("vWriteContextDEC_ID");
     Vector vStatus = (Vector)session.getAttribute("vStatusDEC");
@@ -363,6 +366,9 @@ String propCDR = "";
 									<font color="#FF0000">
 										Data Element Concept
 									</font>
+									<p>
+									>>><%= userSelectedDefFinal %><<<
+									<p>
 									<% if (sMenuAction.equals("NewDECVersion")) { %>
 									Version
 									<% } else if (sMenuAction.equals("NewDECTemplate")) { %>
