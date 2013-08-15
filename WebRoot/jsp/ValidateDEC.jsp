@@ -166,6 +166,9 @@
       String sContent = (String)vValidate.elementAt(i+1);
       if (sContent == null) sContent = "";
       String sStat = (String)vValidate.elementAt(i+2);
+      if(sItem != null && sItem.equals("Alternate Definition")) {
+      	sContent = (String)session.getAttribute("userSelectedDefFinal");	//GF30798
+      }
       String sFont = "#000000";
       if (sStat.startsWith("Valid") || sStat.equals("No Change"))
         sFont = "#238E23";

@@ -2,6 +2,8 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
@@ -61,6 +63,8 @@ public class DataElementConceptServlet extends CurationServlet {
 	private void doOpenCreateNewPages() throws Exception
 	{
 		HttpSession session = m_classReq.getSession();
+        DataElementConceptServlet.clearAlternateDefinition(session);	//GF30798 didn't have time to refactor, bad design I know
+		
 		clearSessionAttributes(m_classReq, m_classRes);
 		this.clearBuildingBlockSessionAttributes(m_classReq, m_classRes);
 		String context = (String) session.getAttribute("sDefaultContext"); // from Login.jsp
@@ -189,6 +193,10 @@ public class DataElementConceptServlet extends CurationServlet {
         		DECBean.setDEC_ASL_NAME("DRAFT NEW");
         		DECBean.setAC_PREF_NAME_TYPE("SYS");
         	}
+        	
+			//GF30798
+        	clearAlternateDefinition(session);
+        	
         	DEC_Bean pgBean = new DEC_Bean();
         	DataManager.setAttribute(session, "m_DEC", pgBean.cloneDEC_Bean(DECBean));
         	ForwardJSP(m_classReq, m_classRes, "/CreateDECPage.jsp");
@@ -212,6 +220,13 @@ public class DataElementConceptServlet extends CurationServlet {
         }
 	}
 
+	//GF30797
+	public static void clearAlternateDefinition(HttpSession session) {
+		session.setAttribute("userSelectedDefFinal", "");
+		session.removeAttribute("objectQualifierMap");
+		session.removeAttribute("propertyQualifierMap");
+	}
+	
 	/**
 	 * The doEditDECActions method handles EditDEC actions of the request. Called from 'service' method where reqType is
 	 * 'EditDEC' Calls 'ValidateDEC' if the action is Validate or submit. Calls 'doSuggestionDEC' if the action is open
@@ -292,6 +307,10 @@ public class DataElementConceptServlet extends CurationServlet {
 				// logger.debug("cleared name " + DECBean.getDEC_PREFERRED_NAME());
 				DECBean = serAC.getDECAttributes(DECBean, sOriginAction, sMenuAction);
 			}
+			
+			//GF30798
+        	clearAlternateDefinition(session);
+			
 			DEC_Bean pgBean = new DEC_Bean();
 			DataManager.setAttribute(session, "m_DEC", pgBean.cloneDEC_Bean(DECBean));
 			ForwardJSP(m_classReq, m_classRes, "/EditDECPage.jsp");
@@ -967,6 +986,32 @@ public class DataElementConceptServlet extends CurationServlet {
 		return pageDEC;
 	}
 
+	private String createOCQualifierDefinition(HashMap map) {
+		String retVal = "";
+		
+		Iterator<Map.Entry<Integer, Integer>> entries = map.entrySet().iterator();
+		while (entries.hasNext()) {
+		    Map.Entry<Integer, Integer> entry = entries.next();
+		    System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+		    retVal = retVal + "_" + entry.getValue();
+		}
+		
+		return retVal;
+	}
+	
+	private String createPropQualifierDefinition(HashMap map) {
+		String retVal = "";
+		
+		Iterator<Map.Entry<Integer, Integer>> entries = map.entrySet().iterator();
+		while (entries.hasNext()) {
+		    Map.Entry<Integer, Integer> entry = entries.next();
+		    System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+		    retVal = retVal + "_" + entry.getValue();
+		}
+		
+		return retVal;
+	}
+
 	/**
 	 *
 	 * @param nameAction
@@ -1041,6 +1086,40 @@ public class DataElementConceptServlet extends CurationServlet {
 				sComp = "";
 			// get the search bean from the selected row
 			sSelRow = (String) m_classReq.getParameter("selCompBlockRow");
+			//begin GF30798
+			Integer rowIndex = null;
+			if(sSelRow != null && !sSelRow.startsWith("CK")) {
+				throw new Exception("Can not get the row index from the front end for alternate defintion!");
+			} else {
+				rowIndex = new Integer(sSelRow.substring(2, sSelRow.length()));
+			}
+			HashMap<Integer, String> objectQualifierMap = (HashMap<Integer, String>)session.getAttribute("objectQualifierMap");
+			if(objectQualifierMap == null) {
+				objectQualifierMap = new HashMap<Integer, String>();
+			}
+			HashMap<Integer, String> propertyQualifierMap = (HashMap<Integer, String>)session.getAttribute("propertyQualifierMap");
+			if(propertyQualifierMap == null) {
+				propertyQualifierMap = new HashMap<Integer, String>();
+			}
+			String comp1 = null, comp2 = null, comp3 = null, comp4 = null;
+			if (sComp.equals("ObjectQualifier")) {
+				objectQualifierMap.put(rowIndex, userSelectedDef);
+				comp1 = createOCQualifierDefinition(objectQualifierMap);
+				session.setAttribute("objectQualifierMap", objectQualifierMap);
+				//TBD - need to handle remove
+			} else if (sComp.startsWith("Object")) {
+				comp2 = userSelectedDef;
+			} else if (sComp.equals("PropertyQualifier")) {
+				propertyQualifierMap.put(rowIndex, userSelectedDef);
+				comp3 = createPropQualifierDefinition(propertyQualifierMap);
+				session.setAttribute("propertyQualifierMap", propertyQualifierMap);
+				//TBD - need to handle remove
+			} else if (sComp.startsWith("Prop")) {
+				comp4 = userSelectedDef;
+			}
+			session.setAttribute("userSelectedDefFinal", comp1 + comp2 + comp3 + "_" + comp4);
+			//end GF30798
+			
 			vAC = (Vector) session.getAttribute("vACSearch");
 			logger.debug("At Line 951 of DECServlet.java"+Arrays.asList(vAC));
 			if (vAC == null)
@@ -1178,7 +1257,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					DataManager.setAttribute(session, "vProperty", vProperty);
 				}
 				m_DEC.setDEC_PROPL_IDSEQ("");
-				m_DEC = this.addPropConcepts(nameAction, m_DEC, blockBean, "Qualifier");
+				m_DEC = this.addPropConcepts(nameAction, m_DEC, blockBean, "Qualifier"); //GF30798 #3
 			}
 
 			if ( sComp.equals("ObjectClass") || sComp.equals("ObjectQualifier")){
@@ -1196,6 +1275,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					}
 					m_DEC = this.updateOCAttribues(vObjectClass, m_DEC);	//populate caDSR's DEC bean based on VO (from EVS results)
 
+					//GF30798 #2
 					this.checkChosenConcepts(session,codes, defs, vObjectClass, "OC", userSelectedDef);	//make sure user's chosen/edited definition is not different from the EVS definition???
 				} 
 
@@ -1235,6 +1315,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					Vector<String> rebuiltCodes = new Vector<String>();
 					Vector<String> rebuiltDefs = new Vector<String>();
 
+					//GF30798 #3
 					//added in 4.1 to check if OC exists and set alternate def. if used an EVS concept	   
 					this.checkChosenConcepts(session,codes, defs, vProperty, "Prop", userSelectedDef);
 
@@ -2262,7 +2343,10 @@ public class DataElementConceptServlet extends CurationServlet {
 					DataManager.setAttribute(session, "vProperty", vProperty);
 				}
 
-				m_setAC.setDECValueFromPage(m_classReq, m_classRes, m_DEC); //GF30798
+				m_setAC.setDECValueFromPage(m_classReq, m_classRes, m_DEC);
+				//GF30798
+				session.setAttribute("userSelectedDefFinal", "");
+
 				DataManager.setAttribute(session, "m_DEC", m_DEC);
 	} // end of doRemoveQualifier
 
