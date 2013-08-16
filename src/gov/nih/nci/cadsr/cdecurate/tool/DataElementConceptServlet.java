@@ -986,14 +986,20 @@ public class DataElementConceptServlet extends CurationServlet {
 		return pageDEC;
 	}
 
+	//begin GF30798
 	private String createOCQualifierDefinition(HashMap map) {
 		String retVal = "";
 		
-		Iterator<Map.Entry<Integer, Integer>> entries = map.entrySet().iterator();
-		while (entries.hasNext()) {
-		    Map.Entry<Integer, Integer> entry = entries.next();
-		    System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-		    retVal = retVal + "_" + entry.getValue();
+		Iterator iter = map.keySet().iterator();
+		while(iter.hasNext()) {
+			Integer key = (Integer)iter.next();
+			String val = (String)map.get(key);
+			System.out.println("key,val: " + key + "," + val);
+			if(key == 0) {
+				retVal = val;
+			} else {
+				retVal = retVal + "_" + val;
+			}
 		}
 		
 		return retVal;
@@ -1002,15 +1008,21 @@ public class DataElementConceptServlet extends CurationServlet {
 	private String createPropQualifierDefinition(HashMap map) {
 		String retVal = "";
 		
-		Iterator<Map.Entry<Integer, Integer>> entries = map.entrySet().iterator();
-		while (entries.hasNext()) {
-		    Map.Entry<Integer, Integer> entry = entries.next();
-		    System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-		    retVal = retVal + "_" + entry.getValue();
+		Iterator iter = map.keySet().iterator();
+		while(iter.hasNext()) {
+			Integer key = (Integer)iter.next();
+			String val = (String)map.get(key);
+			System.out.println("key,val: " + key + "," + val);
+			if(key == 0) {
+				retVal = val;
+			} else {
+				retVal = retVal + "_" + val;
+			}
 		}
 		
 		return retVal;
 	}
+	//end GF30798
 
 	/**
 	 *
@@ -1117,7 +1129,7 @@ public class DataElementConceptServlet extends CurationServlet {
 			} else if (sComp.startsWith("Prop")) {
 				comp4 = userSelectedDef;
 			}
-			session.setAttribute("userSelectedDefFinal", comp1 + comp2 + comp3 + "_" + comp4);
+			session.setAttribute("userSelectedDefFinal", comp1 + "_" + comp2 + "_" + comp3 + "_" + comp4);
 			//end GF30798
 			
 			vAC = (Vector) session.getAttribute("vACSearch");
