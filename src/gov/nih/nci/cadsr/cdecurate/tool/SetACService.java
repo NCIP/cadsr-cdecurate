@@ -2819,11 +2819,17 @@ public class SetACService implements Serializable
         }
         else*/ if (sField.equals("Name"))
         {
+        	String decID = mDEC.getDEC_DEC_ID();
         	sValue = mDEC.getDEC_PREFERRED_NAME();
         	sValue = m_util.parsedStringSingleQuoteOracle(sValue);
-        	sSQL = "SELECT COUNT(*) FROM DATA_ELEMENT_CONCEPTS_VIEW DEC, CONTEXTS_VIEW CV" +
+        	/*sSQL = "SELECT COUNT(*) FROM DATA_ELEMENT_CONCEPTS_VIEW DEC, CONTEXTS_VIEW CV" +
         	" WHERE DEC.CONTE_IDSEQ = CV.CONTE_IDSEQ AND DEC.PREFERRED_NAME = '" + sValue + "'" +
-        	" AND DEC.VERSION = '" + sVersion + "' AND CV.NAME = '" + sContext + "'" + editSQL;
+        	" AND DEC.VERSION = '" + sVersion + "' AND CV.NAME = '" + sContext + "'" + editSQL;*/
+        	//GF32788
+        	sSQL="SELECT COUNT(*) FROM DATA_ELEMENT_CONCEPTS_VIEW DEC, CONTEXTS_VIEW CV" +
+            	" WHERE DEC.CONTE_IDSEQ = CV.CONTE_IDSEQ AND DEC.VERSION = '" + sVersion + "' AND CV.NAME = '" + sContext + "' AND DEC.DEC_ID = '" + decID+"'"  +editSQL;
+        	retValue="Combination of Object Class, Property and context exists with different short name";
+        	//GF32788
         }
         else if (sField.equals("Version"))
         {
