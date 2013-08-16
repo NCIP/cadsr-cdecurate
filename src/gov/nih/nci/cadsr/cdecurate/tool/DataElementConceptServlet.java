@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
@@ -220,13 +221,62 @@ public class DataElementConceptServlet extends CurationServlet {
         }
 	}
 
-	//GF30797
-	public static void clearAlternateDefinition(HttpSession session) {
-		session.setAttribute("userSelectedDefFinal", "");
-		session.removeAttribute("objectQualifierMap");
-		session.removeAttribute("propertyQualifierMap");
+	//begin GF30798
+	//TBD these methods should be in a common utility class
+	/*
+	 * Clear the DEC's alternate definition.
+	 */
+	public static void clearAlternateDefinition(HttpSession session) throws Exception {
+		if(session != null) {
+			session.setAttribute("userSelectedDefFinal", "");
+			session.removeAttribute("objectQualifierMap");
+			session.removeAttribute("propertyQualifierMap");
+		} else {
+			throw new Exception("Session is NULL or empty");
+		}
+	}
+
+	/**
+	 * Clear the alternate definition of the OC.
+	 *
+	 * @param session
+	 */
+	public static void clearAlternateDefinitionForOC(HttpServletRequest request) {
+		String sSelRow = (String) request.getParameter("selObjQRow");
+		Integer selectedIndex = new Integer(sSelRow);
+		HttpSession session = request.getSession();
+		HashMap<Integer, String> map = (HashMap<Integer, String>)session.getAttribute("objectQualifierMap");
+		Iterator iter = map.entrySet().iterator();
+		Entry<Integer, String> entry = null;
+		while (iter.hasNext()) {
+		    entry = (Entry<Integer, String>) iter.next();
+		    if(entry.getKey().intValue() == selectedIndex.intValue()) {
+		        iter.remove();
+		    }
+		}
 	}
 	
+	/**
+	 * Clear the alternate definition of the Prop.
+	 *
+	 * @param session
+	 */
+	public static void clearAlternateDefinitionForProp(HttpServletRequest request) {
+		String sSelRow = (String) request.getParameter("selObjQRow");
+		Integer selectedIndex = new Integer(sSelRow);
+		HttpSession session = request.getSession();
+		HashMap<Integer, String> map = (HashMap<Integer, String>)session.getAttribute("propertyQualifierMap");
+		Iterator iter = map.entrySet().iterator();
+		Entry<Integer, String> entry = null;
+		while (iter.hasNext()) {
+		    entry = (Entry<Integer, String>) iter.next();
+		    if(entry.getKey() == selectedIndex) {
+		        iter.remove();
+		    }
+		}
+	}
+	//end GF30798
+
 	/**
 	 * The doEditDECActions method handles EditDEC actions of the request. Called from 'service' method where reqType is
 	 * 'EditDEC' Calls 'ValidateDEC' if the action is Validate or submit. Calls 'doSuggestionDEC' if the action is open
@@ -1022,6 +1072,44 @@ public class DataElementConceptServlet extends CurationServlet {
 		
 		return retVal;
 	}
+	
+	private void createFinalAlternateDefinition(HttpServletRequest request, Integer rowIndex, String userSelectedDef) throws Exception {
+		HttpSession session = request.getSession();
+		String sComp = (String) request.getParameter("sCompBlocks");
+		if (sComp == null)
+			sComp = "";
+//		String sSelRow = "";
+//		sSelRow = (String) request.getParameter("selCompBlockRow");
+//		Integer rowIndex = null;
+//		if(sSelRow != null && !sSelRow.startsWith("CK")) {
+//			throw new Exception("Can not get the row index from the front end for alternate defintion!");
+//		} else {
+//			rowIndex = new Integer(sSelRow.substring(2, sSelRow.length()));
+//		}
+		HashMap<Integer, String> objectQualifierMap = (HashMap<Integer, String>)session.getAttribute("objectQualifierMap");
+		if(objectQualifierMap == null) {
+			objectQualifierMap = new HashMap<Integer, String>();
+		}
+		HashMap<Integer, String> propertyQualifierMap = (HashMap<Integer, String>)session.getAttribute("propertyQualifierMap");
+		if(propertyQualifierMap == null) {
+			propertyQualifierMap = new HashMap<Integer, String>();
+		}
+		String comp1 = null, comp2 = null, comp3 = null, comp4 = null;
+		if (sComp.equals("ObjectQualifier")) {
+			objectQualifierMap.put(rowIndex, userSelectedDef);
+			comp1 = createOCQualifierDefinition(objectQualifierMap);
+			session.setAttribute("objectQualifierMap", objectQualifierMap);
+		} else if (sComp.startsWith("Object")) {
+			comp2 = userSelectedDef;
+		} else if (sComp.equals("PropertyQualifier")) {
+			propertyQualifierMap.put(rowIndex, userSelectedDef);
+			comp3 = createPropQualifierDefinition(propertyQualifierMap);
+			session.setAttribute("propertyQualifierMap", propertyQualifierMap);
+		} else if (sComp.startsWith("Prop")) {
+			comp4 = userSelectedDef;
+		}
+		session.setAttribute("userSelectedDefFinal", comp1 + "_" + comp2 + "_" + comp3 + "_" + comp4);
+	}
 	//end GF30798
 
 	/**
@@ -1098,41 +1186,8 @@ public class DataElementConceptServlet extends CurationServlet {
 				sComp = "";
 			// get the search bean from the selected row
 			sSelRow = (String) m_classReq.getParameter("selCompBlockRow");
-			//begin GF30798
-			Integer rowIndex = null;
-			if(sSelRow != null && !sSelRow.startsWith("CK")) {
-				throw new Exception("Can not get the row index from the front end for alternate defintion!");
-			} else {
-				rowIndex = new Integer(sSelRow.substring(2, sSelRow.length()));
-			}
-			HashMap<Integer, String> objectQualifierMap = (HashMap<Integer, String>)session.getAttribute("objectQualifierMap");
-			if(objectQualifierMap == null) {
-				objectQualifierMap = new HashMap<Integer, String>();
-			}
-			HashMap<Integer, String> propertyQualifierMap = (HashMap<Integer, String>)session.getAttribute("propertyQualifierMap");
-			if(propertyQualifierMap == null) {
-				propertyQualifierMap = new HashMap<Integer, String>();
-			}
-			String comp1 = null, comp2 = null, comp3 = null, comp4 = null;
-			if (sComp.equals("ObjectQualifier")) {
-//				objectQualifierMap.put(rowIndex, userSelectedDef);
-				objectQualifierMap.put(objectQualifierMap.size(), userSelectedDef);
-				comp1 = createOCQualifierDefinition(objectQualifierMap);
-				session.setAttribute("objectQualifierMap", objectQualifierMap);
-				//TBD - need to handle remove
-			} else if (sComp.startsWith("Object")) {
-				comp2 = userSelectedDef;
-			} else if (sComp.equals("PropertyQualifier")) {
-//				propertyQualifierMap.put(rowIndex, userSelectedDef);
-				propertyQualifierMap.put(propertyQualifierMap.size(), userSelectedDef);
-				comp3 = createPropQualifierDefinition(propertyQualifierMap);
-				session.setAttribute("propertyQualifierMap", propertyQualifierMap);
-				//TBD - need to handle remove
-			} else if (sComp.startsWith("Prop")) {
-				comp4 = userSelectedDef;
-			}
-			session.setAttribute("userSelectedDefFinal", comp1 + "_" + comp2 + "_" + comp3 + "_" + comp4);
-			//end GF30798
+
+			createFinalAlternateDefinition(m_classReq, new Integer(sSelRow.substring(2, sSelRow.length())), userSelectedDef);	//GF30798
 			
 			vAC = (Vector) session.getAttribute("vACSearch");
 			logger.debug("At Line 951 of DECServlet.java"+Arrays.asList(vAC));
@@ -2251,10 +2306,14 @@ public class DataElementConceptServlet extends CurationServlet {
 				}
 				else if (sComp.equals("ObjectQualifier"))
 				{
+					//GF30798
+					clearAlternateDefinitionForOC(m_classReq);
+
 					sSelRow = (String) m_classReq.getParameter("selObjQRow");
 					if (sSelRow != null && !(sSelRow.equals("")))
 					{
 						Integer intObjRow = new Integer(sSelRow);
+						createFinalAlternateDefinition(m_classReq, intObjRow, null);	//GF30798
 						int intObjRow2 = intObjRow.intValue();
 						// add 1 because 0 element is OC, not a qualifier
 						int int1 = intObjRow2 + 1;
@@ -2291,10 +2350,14 @@ public class DataElementConceptServlet extends CurationServlet {
 				}
 				else if (sComp.equals("PropertyQualifier"))
 				{
+					//GF30798
+					clearAlternateDefinitionForProp(m_classReq);
+
 					sSelRow = (String) m_classReq.getParameter("selPropQRow");
 					if (sSelRow != null && !(sSelRow.equals("")))
 					{
 						Integer intPropRow = new Integer(sSelRow);
+						createFinalAlternateDefinition(m_classReq, intPropRow, null);	//GF30798
 						int intPropRow2 = intPropRow.intValue();
 						// add 1 because 0 element is OC, not a qualifier
 						int int1 = intPropRow2 + 1;
@@ -2334,12 +2397,12 @@ public class DataElementConceptServlet extends CurationServlet {
 					logger.debug("at line 2225 of DECServlet.java"+vObjectClass.size());
 					if (vObjectClass != null && vObjectClass.size()>0){
 						vObjectClass = this.getMatchingThesarusconcept(vObjectClass, "Object Class");
-						//begin of GF30798
-						for (int i=0; i<vObjectClass.size();i++){
-							EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
-							logger.debug("At line 2229 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER()+"**"+vObjectClass.size());
-						}
-						//end of GF30798
+//						//begin of GF30798
+//						for (int i=0; i<vObjectClass.size();i++){
+//							EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
+//							logger.debug("At line 2229 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER()+"**"+vObjectClass.size());
+//						}
+//						//end of GF30798
 						m_DEC = this.updateOCAttribues(vObjectClass, m_DEC);
 						
 						this.checkChosenConcepts(session, null, null, vObjectClass, "OC", (String)session.getAttribute("userSelectedDef"));
@@ -2358,9 +2421,6 @@ public class DataElementConceptServlet extends CurationServlet {
 				}
 
 				m_setAC.setDECValueFromPage(m_classReq, m_classRes, m_DEC);
-				//GF30798
-				session.setAttribute("userSelectedDefFinal", "");
-
 				DataManager.setAttribute(session, "m_DEC", m_DEC);
 	} // end of doRemoveQualifier
 
