@@ -1115,14 +1115,16 @@ public class DataElementConceptServlet extends CurationServlet {
 			}
 			String comp1 = null, comp2 = null, comp3 = null, comp4 = null;
 			if (sComp.equals("ObjectQualifier")) {
-				objectQualifierMap.put(rowIndex, userSelectedDef);
+//				objectQualifierMap.put(rowIndex, userSelectedDef);
+				objectQualifierMap.put(objectQualifierMap.size(), userSelectedDef);
 				comp1 = createOCQualifierDefinition(objectQualifierMap);
 				session.setAttribute("objectQualifierMap", objectQualifierMap);
 				//TBD - need to handle remove
 			} else if (sComp.startsWith("Object")) {
 				comp2 = userSelectedDef;
 			} else if (sComp.equals("PropertyQualifier")) {
-				propertyQualifierMap.put(rowIndex, userSelectedDef);
+//				propertyQualifierMap.put(rowIndex, userSelectedDef);
+				propertyQualifierMap.put(propertyQualifierMap.size(), userSelectedDef);
 				comp3 = createPropQualifierDefinition(propertyQualifierMap);
 				session.setAttribute("propertyQualifierMap", propertyQualifierMap);
 				//TBD - need to handle remove
