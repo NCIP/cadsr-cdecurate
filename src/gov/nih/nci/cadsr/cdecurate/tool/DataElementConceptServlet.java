@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import gov.nih.nci.cadsr.common.Constants;
+
 import oracle.net.aso.e;
 
 public class DataElementConceptServlet extends CurationServlet {
@@ -229,8 +231,10 @@ public class DataElementConceptServlet extends CurationServlet {
 	public static void clearAlternateDefinition(HttpSession session) throws Exception {
 		if(session != null) {
 			session.setAttribute("userSelectedDefFinal", "");
-			session.removeAttribute("objectQualifierMap");
-			session.removeAttribute("propertyQualifierMap");
+			session.removeAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1);
+			session.removeAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2);
+			session.removeAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3);
+			session.removeAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4);
 		} else {
 			throw new Exception("Session is NULL or empty");
 		}
@@ -245,7 +249,7 @@ public class DataElementConceptServlet extends CurationServlet {
 		String sSelRow = (String) request.getParameter("selObjQRow");
 		Integer selectedIndex = new Integer(sSelRow);
 		HttpSession session = request.getSession();
-		HashMap<Integer, String> map = (HashMap<Integer, String>)session.getAttribute("objectQualifierMap");
+		HashMap<Integer, String> map = (HashMap<Integer, String>)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1);
 		Iterator iter = map.entrySet().iterator();
 		Entry<Integer, String> entry = null;
 		while (iter.hasNext()) {
@@ -254,6 +258,7 @@ public class DataElementConceptServlet extends CurationServlet {
 		        iter.remove();
 		    }
 		}
+		session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, map);
 	}
 	
 	/**
@@ -265,7 +270,7 @@ public class DataElementConceptServlet extends CurationServlet {
 		String sSelRow = (String) request.getParameter("selObjQRow");
 		Integer selectedIndex = new Integer(sSelRow);
 		HttpSession session = request.getSession();
-		HashMap<Integer, String> map = (HashMap<Integer, String>)session.getAttribute("propertyQualifierMap");
+		HashMap<Integer, String> map = (HashMap<Integer, String>)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3);
 		Iterator iter = map.entrySet().iterator();
 		Entry<Integer, String> entry = null;
 		while (iter.hasNext()) {
@@ -274,6 +279,7 @@ public class DataElementConceptServlet extends CurationServlet {
 		        iter.remove();
 		    }
 		}
+		session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3, map);
 	}
 	//end GF30798
 
@@ -1073,7 +1079,7 @@ public class DataElementConceptServlet extends CurationServlet {
 		return retVal;
 	}
 	
-	private void createFinalAlternateDefinition(HttpServletRequest request, Integer rowIndex, String userSelectedDef) throws Exception {
+	private void createFinalAlternateDefinition(HttpServletRequest request, String userSelectedDef) throws Exception {
 		HttpSession session = request.getSession();
 		String sComp = (String) request.getParameter("sCompBlocks");
 		if (sComp == null)
@@ -1086,7 +1092,7 @@ public class DataElementConceptServlet extends CurationServlet {
 //		} else {
 //			rowIndex = new Integer(sSelRow.substring(2, sSelRow.length()));
 //		}
-		HashMap<Integer, String> objectQualifierMap = (HashMap<Integer, String>)session.getAttribute("objectQualifierMap");
+		HashMap<Integer, String> objectQualifierMap = (HashMap<Integer, String>)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1);
 		if(objectQualifierMap == null) {
 			objectQualifierMap = new HashMap<Integer, String>();
 		}
@@ -1095,19 +1101,25 @@ public class DataElementConceptServlet extends CurationServlet {
 			propertyQualifierMap = new HashMap<Integer, String>();
 		}
 		String comp1 = null, comp2 = null, comp3 = null, comp4 = null;
-		if (sComp.equals("ObjectQualifier")) {
-			objectQualifierMap.put(rowIndex, userSelectedDef);
-			comp1 = createOCQualifierDefinition(objectQualifierMap);
-			session.setAttribute("objectQualifierMap", objectQualifierMap);
-		} else if (sComp.startsWith("Object")) {
-			comp2 = userSelectedDef;
-		} else if (sComp.equals("PropertyQualifier")) {
-			propertyQualifierMap.put(rowIndex, userSelectedDef);
-			comp3 = createPropQualifierDefinition(propertyQualifierMap);
-			session.setAttribute("propertyQualifierMap", propertyQualifierMap);
-		} else if (sComp.startsWith("Prop")) {
-			comp4 = userSelectedDef;
+		if(userSelectedDef != null) {
+			if (sComp.equals("ObjectQualifier")) {
+				objectQualifierMap.put(objectQualifierMap.size(), userSelectedDef);
+				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, objectQualifierMap);
+			} else if (sComp.startsWith("Object")) {
+				comp2 = userSelectedDef;
+				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2, comp2);
+			} else if (sComp.equals("PropertyQualifier")) {
+				propertyQualifierMap.put(objectQualifierMap.size(), userSelectedDef);
+				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3, propertyQualifierMap);
+			} else if (sComp.startsWith("Prop")) {
+				comp4 = userSelectedDef;
+				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4, comp4);
+			}
 		}
+		comp1 = createOCQualifierDefinition(objectQualifierMap);
+		comp2 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2);
+		comp3 = createPropQualifierDefinition(propertyQualifierMap);
+		comp4 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4);
 		session.setAttribute("userSelectedDefFinal", comp1 + "_" + comp2 + "_" + comp3 + "_" + comp4);
 	}
 	//end GF30798
@@ -1187,7 +1199,7 @@ public class DataElementConceptServlet extends CurationServlet {
 			// get the search bean from the selected row
 			sSelRow = (String) m_classReq.getParameter("selCompBlockRow");
 
-			createFinalAlternateDefinition(m_classReq, new Integer(sSelRow.substring(2, sSelRow.length())), userSelectedDef);	//GF30798
+			createFinalAlternateDefinition(m_classReq, userSelectedDef);	//GF30798
 			
 			vAC = (Vector) session.getAttribute("vACSearch");
 			logger.debug("At Line 951 of DECServlet.java"+Arrays.asList(vAC));
@@ -2313,7 +2325,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					if (sSelRow != null && !(sSelRow.equals("")))
 					{
 						Integer intObjRow = new Integer(sSelRow);
-						createFinalAlternateDefinition(m_classReq, intObjRow, null);	//GF30798
+						createFinalAlternateDefinition(m_classReq, null);	//GF30798
 						int intObjRow2 = intObjRow.intValue();
 						// add 1 because 0 element is OC, not a qualifier
 						int int1 = intObjRow2 + 1;
@@ -2357,7 +2369,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					if (sSelRow != null && !(sSelRow.equals("")))
 					{
 						Integer intPropRow = new Integer(sSelRow);
-						createFinalAlternateDefinition(m_classReq, intPropRow, null);	//GF30798
+						createFinalAlternateDefinition(m_classReq, null);	//GF30798
 						int intPropRow2 = intPropRow.intValue();
 						// add 1 because 0 element is OC, not a qualifier
 						int int1 = intPropRow2 + 1;
