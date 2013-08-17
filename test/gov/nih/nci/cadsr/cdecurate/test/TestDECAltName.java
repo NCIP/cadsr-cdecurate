@@ -51,7 +51,6 @@ public class TestDECAltName
 //	public static HttpServletRequest  m_classReq       = null;
 	public static HttpServletRequest  request       = null;		//GF30798
 	public static HttpServletResponse m_classRes       = null;
-//	static HttpSession mockHttpSession = null;
 	static HttpSession session = null;		//GF30798
     protected SetACService       m_setAC          = null;
     ServletConfig servletConfig = null;
@@ -63,7 +62,147 @@ public class TestDECAltName
 	String prop = null;
 	  public static final String MOCK_SESSION_ID = "mock session id";
 	  public static final String REMOTE_IP = "127.0.0.1";
-	String finalStrDebug = null;
+	String userSelectedDefFinal = null;
+
+	class MyHttpSession implements HttpSession {
+		HashMap objectQualifierMap;
+		HashMap propQualifierMap;
+		String oc;
+		String prop;
+		
+		@Override
+		public Object getAttribute(String arg0) {
+			Object retVal = null;
+			
+			if(arg0 != null && arg0.equals(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1)) {
+				retVal = objectQualifierMap;
+			} else
+			if(arg0 != null && arg0.equals(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2)) {
+				retVal = oc;
+			} else
+			if(arg0 != null && arg0.equals(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3)) {
+				retVal = propQualifierMap;
+			} else
+			if(arg0 != null && arg0.equals(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4)) {
+				retVal = prop;
+			} else
+			if(arg0 != null && arg0.equals(Constants.FINAL_ALT_DEF_STRING)) {
+				retVal = userSelectedDefFinal;
+			}
+
+			return retVal;
+		}
+
+		@Override
+		public Enumeration getAttributeNames() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public long getCreationTime() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public String getId() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public long getLastAccessedTime() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int getMaxInactiveInterval() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public ServletContext getServletContext() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public HttpSessionContext getSessionContext() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Object getValue(String arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String[] getValueNames() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void invalidate() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public boolean isNew() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public void putValue(String arg0, Object arg1) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void removeAttribute(String arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void removeValue(String arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void setAttribute(String arg0, Object arg1) {
+			if(arg0 != null && arg0.equals(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1)) {
+				objectQualifierMap = (HashMap)arg1;
+			} else
+			if(arg0 != null && arg0.equals(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2)) {
+				oc = (String)arg1;
+			} else
+			if(arg0 != null && arg0.equals(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3)) {
+				objectQualifierMap = (HashMap)arg1;
+			} else
+			if(arg0 != null && arg0.equals(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4)) {
+				prop = (String)arg1;
+			} else
+			if(arg0 != null && arg0.equals(Constants.FINAL_ALT_DEF_STRING)) {
+				userSelectedDefFinal = (String)arg1;
+			}
+		}
+
+		@Override
+		public void setMaxInactiveInterval(int arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
 	
   public static void main(String[] args) throws Exception
   {
@@ -104,8 +243,10 @@ public class TestDECAltName
 
   //=== courtesy of https://opencast.jira.com/svn/MH/trunk/modules/matterhorn-usertracking-impl/src/test/java/org/opencastproject/usertracking/impl/UserTrackingRestServiceTest.java
   private HttpServletRequest getMockHttpSession() {
-	    session = EasyMock.createMock(HttpSession.class);
-	    EasyMock.expect(session.getId()).andReturn(MOCK_SESSION_ID).anyTimes();
+	  	if(session == null) {
+	  		session = new MyHttpSession();	//EasyMock.createMock(HttpSession.class);
+	  	}
+//	    EasyMock.expect(session.getId()).andReturn(MOCK_SESSION_ID).anyTimes();
 	    HttpServletRequest request = EasyMock.createMock(HttpServletRequest.class);
 	    EasyMock.expect(request.getSession()).andReturn(session).anyTimes();
 	    EasyMock.expect(request.getHeader("X-FORWARDED-FOR")).andReturn(null).anyTimes();
@@ -117,27 +258,22 @@ public class TestDECAltName
   private HttpSession initEasyMock() {
 	  	request = getMockHttpSession();
 
-//			objectQualifierMap = new HashMap<Integer, String>();
-//		    EasyMock.expect(session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1)).andReturn(objectQualifierMap).anyTimes();
-//			propertyQualifierMap = new HashMap<Integer, String>();
-//		    EasyMock.expect(session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3)).andReturn(propertyQualifierMap).anyTimes();
-
-	    EasyMock.expect(session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1)).andReturn(EasyMock.isA(HashMap.class)).anyTimes();
-	    EasyMock.expect(session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2)).andReturn(EasyMock.isA(String.class)).anyTimes();
-	    EasyMock.expect(session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3)).andReturn(EasyMock.isA(HashMap.class)).anyTimes();
-	    EasyMock.expect(session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4)).andReturn(EasyMock.isA(String.class)).anyTimes();
-	    EasyMock.expect(session.getAttribute("userSelectedDefFinal")).andReturn(EasyMock.isA(String.class)).anyTimes();
-	    
-	    session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, EasyMock.anyObject());
-	    session.setAttribute(EasyMock.eq(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2), EasyMock.isA(String.class));
-	    session.setAttribute(EasyMock.eq(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3), EasyMock.isA(HashMap.class));
-	    session.setAttribute(EasyMock.eq(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4), EasyMock.isA(String.class));
-		session.setAttribute(EasyMock.eq("userSelectedDefFinal"), EasyMock.anyObject());
-
-		session.removeAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1);
-	    session.removeAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2);
-	    session.removeAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3);
-	    session.removeAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4);
+//	    EasyMock.expect(session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1)).andReturn(EasyMock.isA(HashMap.class)).anyTimes();
+//	    EasyMock.expect(session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2)).andReturn(EasyMock.isA(String.class)).anyTimes();
+//	    EasyMock.expect(session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3)).andReturn(EasyMock.isA(HashMap.class)).anyTimes();
+//	    EasyMock.expect(session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4)).andReturn(EasyMock.isA(String.class)).anyTimes();
+//	    EasyMock.expect(session.getAttribute("userSelectedDefFinal")).andReturn(EasyMock.isA(String.class)).anyTimes();
+//	    
+//	    session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, EasyMock.anyObject());
+//	    session.setAttribute(EasyMock.eq(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2), EasyMock.isA(String.class));
+//	    session.setAttribute(EasyMock.eq(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3), EasyMock.isA(HashMap.class));
+//	    session.setAttribute(EasyMock.eq(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4), EasyMock.isA(String.class));
+//		session.setAttribute(EasyMock.eq("userSelectedDefFinal"), EasyMock.anyObject());
+//
+//		session.removeAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1);
+//	    session.removeAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2);
+//	    session.removeAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3);
+//	    session.removeAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4);
 		
 	    servletConfig = EasyMock.createMock(ServletConfig.class);
 	    servletContext = EasyMock.createMock(ServletContext.class);
@@ -155,26 +291,16 @@ public class TestDECAltName
 
 		EasyMock.expect(request.getParameter("sCompBlocks")).andReturn(clickType);
 
-	    EasyMock.replay(session, request);	//key!!!
+//	    EasyMock.replay(session, request);
+	    EasyMock.replay(request);
 		EasyMock.replay(servletConfig);
 		EasyMock.replay(servletContext);
 
 		createFinalAlternateDefinition(request, userSelectedValue);
-		System.out.println("Final string = >>>" + getAttribute("userSelectedDefFinal") + "<<<");
+		System.out.println("Final string = >>>" + session.getAttribute(Constants.FINAL_ALT_DEF_STRING) + "<<<");
 		System.out.println("\n");
   }
   
-  private String getAttribute(String key) {
-	//this is not neccessary if EasyMock's session.getAttribute is working!
-	String retVal = null;
-	
-	if(key != null && key.equals("userSelectedDefFinal")) {
-		retVal = finalStrDebug;
-	}
-	
-	return retVal;
-  }
-
   private void testGF30798RemoveAltDef(String message, String clickType, String userSelectedValue) throws Exception {
 		initEasyMock();
 	  	System.out.println(message);
@@ -182,12 +308,13 @@ public class TestDECAltName
 //		EasyMock.expect(m_classReq.getParameter("MenuAction")).andReturn("editDEC");
 
 		EasyMock.expect(request.getParameter("sCompBlocks")).andReturn(clickType);
-	    EasyMock.replay(session, request);	//key!!!
+//	    EasyMock.replay(session, request);
+	    EasyMock.replay(request);
 		EasyMock.replay(servletConfig);
 		EasyMock.replay(servletContext);
 
 		createFinalAlternateDefinition(request, null);
-		System.out.println("Final string = >>>" + session.getAttribute("userSelectedDefFinal") + "<<< " + finalStrDebug);
+		System.out.println("Final string = >>>" + session.getAttribute(Constants.FINAL_ALT_DEF_STRING) + "<<< ");
 		System.out.println("\n");
   }
   
@@ -198,14 +325,14 @@ public class TestDECAltName
 //		EasyMock.expect(m_classReq.getParameter("MenuAction")).andReturn("editDEC");
 
 		EasyMock.expect(request.getParameter("sCompBlocks")).andReturn(clickType);
-	    EasyMock.replay(session, request);	//key!!!
+//	    EasyMock.replay(session, request);
+	    EasyMock.replay(request);
 		EasyMock.replay(servletConfig);
 		EasyMock.replay(servletContext);
 
 		DECHelper.clearAlternateDefinition(session);
-		finalStrDebug = null;	//just for EasyMock test - comment this out in the real codes
 
-		System.out.println("Final string = >>>" + session.getAttribute("userSelectedDefFinal") + "<<< " + finalStrDebug);
+		System.out.println("Final string = >>>" + session.getAttribute(Constants.FINAL_ALT_DEF_STRING) + "<<< ");
 		System.out.println("\n");
   }
 
@@ -257,8 +384,7 @@ public class TestDECAltName
 		comp3 = createPropQualifierDefinition(propertyQualifierMap);
 		comp4 = prop;	//(String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4);
 		String finalStr = trimTrailingEndingUnderscores(comp1 + "_" + comp2 + "_" + comp3 + "_" + comp4);
-		finalStrDebug = finalStr;	//just for EasyMock test - comment this out in the real codes
-		session.setAttribute("userSelectedDefFinal", finalStr);
+		session.setAttribute(Constants.FINAL_ALT_DEF_STRING, finalStr);
 	}
 
 	private String trimTrailingEndingUnderscores(String def) {
