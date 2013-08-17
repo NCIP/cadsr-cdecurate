@@ -2,6 +2,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
+import gov.nih.nci.cadsr.cdecurate.util.DECHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolConstants;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
@@ -673,7 +674,7 @@ public class SearchServlet extends CurationServlet {
     private void doOpenSearchPage() throws Exception
     {
         HttpSession session = m_classReq.getSession();
-        DataElementConceptServlet.clearAlternateDefinition(session);	//GF30798 didn't have time to refactor, bad design I know
+        DECHelper.clearAlternateDefinition(session);	//GF30798 didn't have time to refactor, bad design I know
         
         DataManager.setAttribute(session, "vStatMsg", new Vector());
         DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, "nothing");

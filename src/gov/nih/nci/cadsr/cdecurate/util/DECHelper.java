@@ -36,15 +36,17 @@ public class DECHelper {
 		Integer selectedIndex = new Integer(sSelRow);
 		HttpSession session = request.getSession();
 		HashMap<Integer, String> map = (HashMap<Integer, String>)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1);
-		Iterator iter = map.entrySet().iterator();
-		Entry<Integer, String> entry = null;
-		while (iter.hasNext()) {
-		    entry = (Entry<Integer, String>) iter.next();
-		    if(entry.getKey().intValue() == selectedIndex.intValue()) {
-		        iter.remove();
-		    }
+		if(map != null) {
+			Iterator iter = map.entrySet().iterator();
+			Entry<Integer, String> entry = null;
+			while (iter.hasNext()) {
+			    entry = (Entry<Integer, String>) iter.next();
+			    if(entry.getKey().intValue() == selectedIndex.intValue()) {
+			        iter.remove();
+			    }
+			}
+			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, map);
 		}
-		session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, map);
 	}
 	
 	/**
@@ -57,15 +59,17 @@ public class DECHelper {
 		Integer selectedIndex = new Integer(sSelRow);
 		HttpSession session = request.getSession();
 		HashMap<Integer, String> map = (HashMap<Integer, String>)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3);
-		Iterator iter = map.entrySet().iterator();
-		Entry<Integer, String> entry = null;
-		while (iter.hasNext()) {
-		    entry = (Entry<Integer, String>) iter.next();
-		    if(entry.getKey() == selectedIndex) {
-		        iter.remove();
-		    }
+		if(map != null) {
+			Iterator iter = map.entrySet().iterator();
+			Entry<Integer, String> entry = null;
+			while (iter.hasNext()) {
+			    entry = (Entry<Integer, String>) iter.next();
+			    if(entry.getKey().intValue() == selectedIndex.intValue()) {
+			        iter.remove();
+			    }
+			}
+			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3, map);
 		}
-		session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3, map);
 	}
 	
 	public static String trimTrailingEndingUnderscores(String def) {

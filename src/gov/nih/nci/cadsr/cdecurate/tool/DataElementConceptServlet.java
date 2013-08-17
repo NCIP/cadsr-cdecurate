@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
+import gov.nih.nci.cadsr.cdecurate.util.DECHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import javax.servlet.ServletContext;
@@ -66,7 +67,7 @@ public class DataElementConceptServlet extends CurationServlet {
 	private void doOpenCreateNewPages() throws Exception
 	{
 		HttpSession session = m_classReq.getSession();
-        DataElementConceptServlet.clearAlternateDefinition(session);	//GF30798 didn't have time to refactor, bad design I know
+        DECHelper.clearAlternateDefinition(session);	//GF30798 didn't have time to refactor, bad design I know
 		
 		clearSessionAttributes(m_classReq, m_classRes);
 		this.clearBuildingBlockSessionAttributes(m_classReq, m_classRes);
@@ -198,7 +199,7 @@ public class DataElementConceptServlet extends CurationServlet {
         	}
         	
 			//GF30798
-        	clearAlternateDefinition(session);
+        	DECHelper.clearAlternateDefinition(session);
         	
         	DEC_Bean pgBean = new DEC_Bean();
         	DataManager.setAttribute(session, "m_DEC", pgBean.cloneDEC_Bean(DECBean));
@@ -222,80 +223,6 @@ public class DataElementConceptServlet extends CurationServlet {
         		ForwardJSP(m_classReq, m_classRes, "/CreateDEPage.jsp");
         }
 	}
-
-	//begin GF30798
-	//TBD these methods should be in a common utility class
-	/*
-	 * Clear the DEC's alternate definition.
-	 */
-	public static void clearAlternateDefinition(HttpSession session) throws Exception {
-		if(session != null) {
-			session.setAttribute("userSelectedDefFinal", "");
-			session.removeAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1);
-			session.removeAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2);
-			session.removeAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3);
-			session.removeAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4);
-		} else {
-			throw new Exception("Session is NULL or empty");
-		}
-	}
-
-	/**
-	 * Clear the alternate definition of the OC.
-	 *
-	 * @param session
-	 */
-	public static void clearAlternateDefinitionForOC(HttpServletRequest request) {
-		String sSelRow = (String) request.getParameter("selObjQRow");
-		Integer selectedIndex = new Integer(sSelRow);
-		HttpSession session = request.getSession();
-		HashMap<Integer, String> map = (HashMap<Integer, String>)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1);
-		Iterator iter = map.entrySet().iterator();
-		Entry<Integer, String> entry = null;
-		while (iter.hasNext()) {
-		    entry = (Entry<Integer, String>) iter.next();
-		    if(entry.getKey().intValue() == selectedIndex.intValue()) {
-		        iter.remove();
-		    }
-		}
-		session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, map);
-	}
-	
-	/**
-	 * Clear the alternate definition of the Prop.
-	 *
-	 * @param session
-	 */
-	public static void clearAlternateDefinitionForProp(HttpServletRequest request) {
-		String sSelRow = (String) request.getParameter("selObjQRow");
-		Integer selectedIndex = new Integer(sSelRow);
-		HttpSession session = request.getSession();
-		HashMap<Integer, String> map = (HashMap<Integer, String>)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3);
-		Iterator iter = map.entrySet().iterator();
-		Entry<Integer, String> entry = null;
-		while (iter.hasNext()) {
-		    entry = (Entry<Integer, String>) iter.next();
-		    if(entry.getKey() == selectedIndex) {
-		        iter.remove();
-		    }
-		}
-		session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3, map);
-	}
-	
-	private String trimTrailingEndingUnderscores(String def) {
-		String retVal = def;
-		
-		if(def != null && def.trim().startsWith("_")) {
-			retVal = retVal.trim().substring(1, def.length());
-		}
-		
-		if(def != null && def.trim().endsWith("_")) {
-			retVal = retVal.trim().substring(0, def.length()-1);
-		}
-		
-		return retVal;
-	}
-	//end GF30798
 
 	/**
 	 * The doEditDECActions method handles EditDEC actions of the request. Called from 'service' method where reqType is
@@ -379,7 +306,7 @@ public class DataElementConceptServlet extends CurationServlet {
 			}
 			
 			//GF30798
-        	clearAlternateDefinition(session);
+			DECHelper.clearAlternateDefinition(session);
 			
 			DEC_Bean pgBean = new DEC_Bean();
 			DataManager.setAttribute(session, "m_DEC", pgBean.cloneDEC_Bean(DECBean));
@@ -1134,7 +1061,7 @@ public class DataElementConceptServlet extends CurationServlet {
 		comp2 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2);
 		comp3 = createPropQualifierDefinition(propertyQualifierMap);
 		comp4 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4);
-		session.setAttribute("userSelectedDefFinal", trimTrailingEndingUnderscores(comp1 + "_" + comp2 + "_" + comp3 + "_" + comp4));
+		session.setAttribute("userSelectedDefFinal", DECHelper.trimTrailingEndingUnderscores(comp1 + "_" + comp2 + "_" + comp3 + "_" + comp4));
 	}
 	//end GF30798
 
@@ -2333,7 +2260,7 @@ public class DataElementConceptServlet extends CurationServlet {
 				else if (sComp.equals("ObjectQualifier"))
 				{
 					//GF30798
-					clearAlternateDefinitionForOC(m_classReq);
+					DECHelper.clearAlternateDefinitionForOC(m_classReq);
 
 					sSelRow = (String) m_classReq.getParameter("selObjQRow");
 					if (sSelRow != null && !(sSelRow.equals("")))
@@ -2377,7 +2304,7 @@ public class DataElementConceptServlet extends CurationServlet {
 				else if (sComp.equals("PropertyQualifier"))
 				{
 					//GF30798
-					clearAlternateDefinitionForProp(m_classReq);
+					DECHelper.clearAlternateDefinitionForProp(m_classReq);
 
 					sSelRow = (String) m_classReq.getParameter("selPropQRow");
 					if (sSelRow != null && !(sSelRow.equals("")))

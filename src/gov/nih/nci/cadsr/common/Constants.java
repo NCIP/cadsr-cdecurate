@@ -9,4 +9,5 @@ public class Constants {
 	public static final String USER_SELECTED_ALTERNATE_DEF_COMP2 = "object_UserALtDef";
 	public static final String USER_SELECTED_ALTERNATE_DEF_COMP3 = "propQualifierMap_UserALtDef";
 	public static final String USER_SELECTED_ALTERNATE_DEF_COMP4 = "prop_UserALtDef";
+	public static final String FINAL_ALT_DEF_STRING = "userSelectedDefFinal";
 }
