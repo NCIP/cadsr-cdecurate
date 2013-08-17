@@ -281,6 +281,20 @@ public class DataElementConceptServlet extends CurationServlet {
 		}
 		session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3, map);
 	}
+	
+	private String trimTrailingEndingUnderscores(String def) {
+		String retVal = def;
+		
+		if(def != null && def.trim().startsWith("_")) {
+			retVal = retVal.trim().substring(1, def.length());
+		}
+		
+		if(def != null && def.trim().endsWith("_")) {
+			retVal = retVal.trim().substring(0, def.length()-1);
+		}
+		
+		return retVal;
+	}
 	//end GF30798
 
 	/**
@@ -1096,12 +1110,12 @@ public class DataElementConceptServlet extends CurationServlet {
 		if(objectQualifierMap == null) {
 			objectQualifierMap = new HashMap<Integer, String>();
 		}
-		HashMap<Integer, String> propertyQualifierMap = (HashMap<Integer, String>)session.getAttribute("propertyQualifierMap");
+		HashMap<Integer, String> propertyQualifierMap = (HashMap<Integer, String>)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3);
 		if(propertyQualifierMap == null) {
 			propertyQualifierMap = new HashMap<Integer, String>();
 		}
 		String comp1 = null, comp2 = null, comp3 = null, comp4 = null;
-		if(userSelectedDef != null) {
+//		if(userSelectedDef != null) {
 			if (sComp.equals("ObjectQualifier")) {
 				objectQualifierMap.put(objectQualifierMap.size(), userSelectedDef);
 				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, objectQualifierMap);
@@ -1109,18 +1123,18 @@ public class DataElementConceptServlet extends CurationServlet {
 				comp2 = userSelectedDef;
 				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2, comp2);
 			} else if (sComp.equals("PropertyQualifier")) {
-				propertyQualifierMap.put(objectQualifierMap.size(), userSelectedDef);
+				propertyQualifierMap.put(propertyQualifierMap.size(), userSelectedDef);
 				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3, propertyQualifierMap);
 			} else if (sComp.startsWith("Prop")) {
 				comp4 = userSelectedDef;
 				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4, comp4);
 			}
-		}
+//		}
 		comp1 = createOCQualifierDefinition(objectQualifierMap);
 		comp2 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2);
 		comp3 = createPropQualifierDefinition(propertyQualifierMap);
 		comp4 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4);
-		session.setAttribute("userSelectedDefFinal", comp1 + "_" + comp2 + "_" + comp3 + "_" + comp4);
+		session.setAttribute("userSelectedDefFinal", trimTrailingEndingUnderscores(comp1 + "_" + comp2 + "_" + comp3 + "_" + comp4));
 	}
 	//end GF30798
 
