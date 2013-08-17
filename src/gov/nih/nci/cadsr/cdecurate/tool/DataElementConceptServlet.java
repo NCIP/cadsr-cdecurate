@@ -1,8 +1,10 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
@@ -984,42 +986,6 @@ public class DataElementConceptServlet extends CurationServlet {
 	}
 
 	//begin GF30798
-	private String createOCQualifierDefinition(HashMap map) {
-		String retVal = "";
-		
-		Iterator iter = map.keySet().iterator();
-		while(iter.hasNext()) {
-			Integer key = (Integer)iter.next();
-			String val = (String)map.get(key);
-			System.out.println("key,val: " + key + "," + val);
-			if(key == 0) {
-				retVal = val;
-			} else {
-				retVal = retVal + "_" + val;
-			}
-		}
-		
-		return retVal;
-	}
-	
-	private String createPropQualifierDefinition(HashMap map) {
-		String retVal = "";
-		
-		Iterator iter = map.keySet().iterator();
-		while(iter.hasNext()) {
-			Integer key = (Integer)iter.next();
-			String val = (String)map.get(key);
-			System.out.println("key,val: " + key + "," + val);
-			if(key == 0) {
-				retVal = val;
-			} else {
-				retVal = retVal + "_" + val;
-			}
-		}
-		
-		return retVal;
-	}
-	
 	private void createFinalAlternateDefinition(HttpServletRequest request, String userSelectedDef) throws Exception {
 		HttpSession session = request.getSession();
 		String sComp = (String) request.getParameter("sCompBlocks");
@@ -1033,35 +999,52 @@ public class DataElementConceptServlet extends CurationServlet {
 //		} else {
 //			rowIndex = new Integer(sSelRow.substring(2, sSelRow.length()));
 //		}
-		HashMap<Integer, String> objectQualifierMap = (HashMap<Integer, String>)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1);
+		List objectQualifierMap = (ArrayList)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1);
 		if(objectQualifierMap == null) {
-			objectQualifierMap = new HashMap<Integer, String>();
+			objectQualifierMap = new ArrayList();
 		}
-		HashMap<Integer, String> propertyQualifierMap = (HashMap<Integer, String>)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3);
+		List propertyQualifierMap = (ArrayList)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3);
 		if(propertyQualifierMap == null) {
-			propertyQualifierMap = new HashMap<Integer, String>();
+			propertyQualifierMap = new ArrayList();
 		}
 		String comp1 = null, comp2 = null, comp3 = null, comp4 = null;
 //		if(userSelectedDef != null) {
 			if (sComp.equals("ObjectQualifier")) {
-				objectQualifierMap.put(objectQualifierMap.size(), userSelectedDef);
+				objectQualifierMap.add(userSelectedDef);
 				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, objectQualifierMap);
 			} else if (sComp.startsWith("Object")) {
 				comp2 = userSelectedDef;
 				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2, comp2);
 			} else if (sComp.equals("PropertyQualifier")) {
-				propertyQualifierMap.put(propertyQualifierMap.size(), userSelectedDef);
+				propertyQualifierMap.add(userSelectedDef);
 				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3, propertyQualifierMap);
 			} else if (sComp.startsWith("Prop")) {
 				comp4 = userSelectedDef;
 				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4, comp4);
 			}
 //		}
-		comp1 = createOCQualifierDefinition(objectQualifierMap);
+		comp1 = DECHelper.createOCQualifierDefinition(objectQualifierMap);
 		comp2 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2);
-		comp3 = createPropQualifierDefinition(propertyQualifierMap);
+		comp3 = DECHelper.createPropQualifierDefinition(propertyQualifierMap);
 		comp4 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4);
-		session.setAttribute("userSelectedDefFinal", DECHelper.trimTrailingEndingUnderscores(comp1 + "_" + comp2 + "_" + comp3 + "_" + comp4));
+		//logic to construct
+		String finalString = "";
+		if(comp1 != null) {
+			finalString = comp1 + "_"; 
+		}
+		if(comp2 != null) {
+			finalString = finalString + comp2 + "_"; 
+		}
+		if(comp3 != null && comp4 != null) {
+			finalString = finalString + comp3 + "_" + comp4; 
+		} else {
+			if(comp3 != null) {
+				finalString = finalString + comp3;
+			} else {
+				finalString = finalString + comp4;
+			}
+		}
+		session.setAttribute(Constants.FINAL_ALT_DEF_STRING, DECHelper.trimTrailingEndingUnderscores(finalString));
 	}
 	//end GF30798
 
