@@ -364,7 +364,7 @@ public class TestDECAltName
 			propertyQualifierMap = new HashMap<Integer, String>();
 		}
 		String comp1 = null, comp2 = null, comp3 = null, comp4 = null;
-	//		if(userSelectedDef != null) {
+		if(userSelectedDef != null) {
 			if (sComp.equals("ObjectQualifier")) {
 				objectQualifierMap.put(objectQualifierMap.size(), userSelectedDef);
 				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, objectQualifierMap);
@@ -378,7 +378,7 @@ public class TestDECAltName
 				comp4 = userSelectedDef;
 				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4, comp4);
 			}
-	//		}
+		}
 		comp1 = createOCQualifierDefinition(objectQualifierMap);
 		comp2 = oc;	//(String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2);
 		comp3 = createPropQualifierDefinition(propertyQualifierMap);
