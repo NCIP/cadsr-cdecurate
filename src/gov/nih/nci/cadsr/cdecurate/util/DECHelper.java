@@ -2,14 +2,12 @@ package gov.nih.nci.cadsr.cdecurate.util;
 
 import gov.nih.nci.cadsr.common.Constants;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 
 public class DECHelper {
 
@@ -35,6 +33,10 @@ public class DECHelper {
 	 */
 	public static void clearAlternateDefinitionForOCQualifier(HttpServletRequest request) {
 		String sSelRow = (String) request.getParameter("selObjQRow");
+		if(sSelRow == null || sSelRow.trim().equals("")) {
+			System.out.println("clearAlternateDefinitionForOCQualifier: sSelRow is NULL or empty (no row is selected), assumed the first row");
+			sSelRow = "0";
+		}
 		Integer selectedIndex = new Integer(sSelRow);
 		HttpSession session = request.getSession();
 		List map = (ArrayList)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1);
@@ -42,7 +44,9 @@ public class DECHelper {
 		if(map != null) {
 			for (int i = 0; i<map.size(); i++) {
 			    if(i != selectedIndex.intValue()) {
-			    	newArray.add(map.get(i));
+			    	if(map.get(i) != null) {
+			    		newArray.add(map.get(i));
+			    	}
 			    }
 			}
 			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, newArray);
@@ -60,7 +64,11 @@ public class DECHelper {
 	 * @param session
 	 */
 	public static void clearAlternateDefinitionForPropQualifier(HttpServletRequest request) {
-		String sSelRow = (String) request.getParameter("selObjQRow");
+		String sSelRow = (String) request.getParameter("selPropQRow");
+		if(sSelRow == null || sSelRow.trim().equals("")) {
+			System.out.println("clearAlternateDefinitionForPropQualifier: sSelRow is NULL or empty (no row is selected), assumed the first row");
+			sSelRow = "0";
+		}
 		Integer selectedIndex = new Integer(sSelRow);
 		HttpSession session = request.getSession();
 		List map = (ArrayList)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3);
@@ -68,7 +76,9 @@ public class DECHelper {
 		if(map != null) {
 			for (int i = 0; i<map.size(); i++) {
 			    if(i != selectedIndex.intValue()) {
-			    	newArray.add(map.get(i));
+			    	if(map.get(i) != null) {
+			    		newArray.add(map.get(i));
+			    	}
 			    }
 			}
 			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3, newArray);
