@@ -33,7 +33,7 @@ public class DECHelper {
 	 *
 	 * @param session
 	 */
-	public static void clearAlternateDefinitionForOC(HttpServletRequest request) {
+	public static void clearAlternateDefinitionForOCQualifier(HttpServletRequest request) {
 		String sSelRow = (String) request.getParameter("selObjQRow");
 		Integer selectedIndex = new Integer(sSelRow);
 		HttpSession session = request.getSession();
@@ -49,12 +49,17 @@ public class DECHelper {
 		}
 	}
 	
+	public static void clearAlternateDefinitionForOC(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2, null);
+	}
+	
 	/**
 	 * Clear the alternate definition of the Prop.
 	 *
 	 * @param session
 	 */
-	public static void clearAlternateDefinitionForProp(HttpServletRequest request) {
+	public static void clearAlternateDefinitionForPropQualifier(HttpServletRequest request) {
 		String sSelRow = (String) request.getParameter("selObjQRow");
 		Integer selectedIndex = new Integer(sSelRow);
 		HttpSession session = request.getSession();
@@ -68,6 +73,11 @@ public class DECHelper {
 			}
 			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3, newArray);
 		}
+	}
+	
+	public static void clearAlternateDefinitionForProp(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4, null);
 	}
 	
 	public static String trimTrailingEndingUnderscores(String def) {

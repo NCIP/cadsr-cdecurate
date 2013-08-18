@@ -69,7 +69,8 @@ public class DataElementConceptServlet extends CurationServlet {
 	private void doOpenCreateNewPages() throws Exception
 	{
 		HttpSession session = m_classReq.getSession();
-        DECHelper.clearAlternateDefinition(session);	//GF30798 didn't have time to refactor, bad design I know
+
+		DECHelper.clearAlternateDefinition(session);	//GF30798
 		
 		clearSessionAttributes(m_classReq, m_classRes);
 		this.clearBuildingBlockSessionAttributes(m_classReq, m_classRes);
@@ -1027,6 +1028,7 @@ public class DataElementConceptServlet extends CurationServlet {
 		comp2 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2);
 		comp3 = DECHelper.createPropQualifierDefinition(propertyQualifierMap);
 		comp4 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4);
+
 		//logic to construct
 		String finalString = "";
 		if(comp1 != null) {
@@ -2223,8 +2225,11 @@ public class DataElementConceptServlet extends CurationServlet {
 					m_DEC.setDEC_OCL_IDSEQ("");
 					DataManager.setAttribute(session, "RemoveOCBlock", "true");
 					DataManager.setAttribute(session, "newObjectClass", "true");
-					//GF30798
+					//begin GF30798
 		        	session.removeAttribute("changedOCDefsWarning");
+					DECHelper.clearAlternateDefinitionForOC(m_classReq);		        	
+					createFinalAlternateDefinition(m_classReq, null);
+					//end GF30798
 				}
 				else if (sComp.equals("Property") || sComp.equals("PropertyClass"))
 				{
@@ -2237,13 +2242,16 @@ public class DataElementConceptServlet extends CurationServlet {
 					m_DEC.setDEC_PROPL_IDSEQ("");
 					DataManager.setAttribute(session, "RemovePropBlock", "true");
 					DataManager.setAttribute(session, "newProperty", "true");
-					//GF30798
+					//begin GF30798
 		        	session.removeAttribute("changedPropDefsWarning");
+					DECHelper.clearAlternateDefinitionForProp(m_classReq);
+					createFinalAlternateDefinition(m_classReq, null);
+					//end GF30798
 				}
 				else if (sComp.equals("ObjectQualifier"))
 				{
 					//GF30798
-					DECHelper.clearAlternateDefinitionForOC(m_classReq);
+					DECHelper.clearAlternateDefinitionForOCQualifier(m_classReq);
 
 					sSelRow = (String) m_classReq.getParameter("selObjQRow");
 					if (sSelRow != null && !(sSelRow.equals("")))
@@ -2287,7 +2295,7 @@ public class DataElementConceptServlet extends CurationServlet {
 				else if (sComp.equals("PropertyQualifier"))
 				{
 					//GF30798
-					DECHelper.clearAlternateDefinitionForProp(m_classReq);
+					DECHelper.clearAlternateDefinitionForPropQualifier(m_classReq);
 
 					sSelRow = (String) m_classReq.getParameter("selPropQRow");
 					if (sSelRow != null && !(sSelRow.equals("")))
