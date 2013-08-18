@@ -1009,7 +1009,7 @@ public class DataElementConceptServlet extends CurationServlet {
 			propertyQualifierMap = new ArrayList();
 		}
 		String comp1 = null, comp2 = null, comp3 = null, comp4 = null;
-//		if(userSelectedDef != null) {
+		if(userSelectedDef != null) {
 			if (sComp.equals("ObjectQualifier")) {
 				objectQualifierMap.add(userSelectedDef);
 				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, objectQualifierMap);
@@ -1023,7 +1023,7 @@ public class DataElementConceptServlet extends CurationServlet {
 				comp4 = userSelectedDef;
 				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4, comp4);
 			}
-//		}
+		}
 		comp1 = DECHelper.createOCQualifierDefinition(objectQualifierMap);
 		comp2 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2);
 		comp3 = DECHelper.createPropQualifierDefinition(propertyQualifierMap);
