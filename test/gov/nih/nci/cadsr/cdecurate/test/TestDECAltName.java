@@ -1,25 +1,17 @@
 package gov.nih.nci.cadsr.cdecurate.test;
 
-import gov.nih.nci.cadsr.cdecurate.tool.AC_Bean;
-import gov.nih.nci.cadsr.cdecurate.tool.AC_CONTACT_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
-import gov.nih.nci.cadsr.cdecurate.tool.DEC_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
-import gov.nih.nci.cadsr.cdecurate.tool.GetACSearch;
-import gov.nih.nci.cadsr.cdecurate.tool.InsACService;
-import gov.nih.nci.cadsr.cdecurate.tool.Session_Data;
 import gov.nih.nci.cadsr.cdecurate.tool.SetACService;
 import gov.nih.nci.cadsr.cdecurate.tool.UtilService;
-import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DECHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -27,8 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
-
-import junit.framework.TestCase;
 
 import org.apache.log4j.Logger;
 import org.easymock.EasyMock;
@@ -56,8 +46,8 @@ public class TestDECAltName
     ServletConfig servletConfig = null;
     ServletContext servletContext = null;
 
-	HashMap<Integer, String> objectQualifierMap = null;
-	HashMap<Integer, String> propertyQualifierMap = null;
+	List objectQualifierMap = null;
+	List propertyQualifierMap = null;
 	String oc = null;
 	String prop = null;
 	  public static final String MOCK_SESSION_ID = "mock session id";
@@ -65,10 +55,10 @@ public class TestDECAltName
 	String userSelectedDefFinal = null;
 
 	class MyHttpSession implements HttpSession {
-		HashMap objectQualifierMap;
-		HashMap propQualifierMap;
-		String oc;
-		String prop;
+		private List objectQualifierMap;
+		private List propQualifierMap;
+		private String oc;
+		private String prop;
 		
 		@Override
 		public Object getAttribute(String arg0) {
@@ -180,13 +170,13 @@ public class TestDECAltName
 		@Override
 		public void setAttribute(String arg0, Object arg1) {
 			if(arg0 != null && arg0.equals(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1)) {
-				objectQualifierMap = (HashMap)arg1;
+				objectQualifierMap = (ArrayList)arg1;
 			} else
 			if(arg0 != null && arg0.equals(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2)) {
 				oc = (String)arg1;
 			} else
 			if(arg0 != null && arg0.equals(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3)) {
-				objectQualifierMap = (HashMap)arg1;
+				propQualifierMap = (ArrayList)arg1;
 			} else
 			if(arg0 != null && arg0.equals(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4)) {
 				prop = (String)arg1;
@@ -223,22 +213,37 @@ public class TestDECAltName
     //testdec.test();
 
     //add and removals
-    testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "minor");			//0
-    testdec.testGF30798AddAltDef("Add one more oc qualifier", "ObjectQualifier", "major");		//1
+    testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "oc qual 0");			//0
+    testdec.testGF30798AddAltDef("Add one more oc qualifier", "ObjectQualifier", "oc qual 1");		//1
     testdec.testGF30798RemoveAltDef("Remove the second oc qualifier", "ObjectQualifier", "1");
     testdec.testGF30798RemoveAltDef("Remove the first oc qualifier", "ObjectQualifier", "0");
-    testdec.testGF30798RemoveAltDef("Add one prop qualifier", "PropertyQualifier", "blood");
+    testdec.testGF30798AddAltDef("Add one prop qualifier", "PropertyQualifier", "prop qual 0");
     testdec.testGF30798RemoveAltDef("Remove the prop qualifier", "PropertyQualifier", "0");
+    testdec.testGF30798AddAltDef("Add one prop", "Prop", "prop 0");
+    testdec.testGF30798RemoveAltDef("Remove the prop", "Property", "0");
     //clear it
     testdec.testGF30798ClearAltDef("Clear the alt def", null, null);
     //more add and removals
-    testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "minor");			//0
-    testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "major");			//1
-    testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "major");			//2
-    testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "minor");			//3
-    testdec.testGF30798RemoveAltDef("Remove the second oc qualifier", "ObjectQualifier", "1");
-    
-	
+    testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "oc q 0");			//0
+    testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "oc q 1");			//1
+    testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "oc q 1");			//2
+    testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "oc q 2");			//3
+    testdec.testGF30798RemoveAltDef("Remove the second oc qualifier (first oc q 1)", "ObjectQualifier", "1");
+    testdec.testGF30798AddAltDef("Add one prop", "Prop", "prop 0");
+    testdec.testGF30798AddAltDef("Add second prop", "Prop", "prop 1");
+    testdec.testGF30798AddAltDef("Add third prop", "Prop", "prop 2");
+    testdec.testGF30798AddAltDef("Add one oc", "Object", "oc 0");			//0
+    testdec.testGF30798AddAltDef("Add second oc", "Object", "oc 1");		//1
+    testdec.testGF30798AddAltDef("Add 1 prop qualifier", "PropertyQualifier", "prop qual 0");    
+    testdec.testGF30798RemoveAltDef("Remove the first oc  (first oc 0)", "ObjectClass", "0");
+    testdec.testGF30798ClearAltDef("Clear the alt def", null, null);
+    //no one each
+    testdec.testGF30798AddAltDef("Add 1 oc qualifier", "ObjectQualifier", "oc qual 0");			//0
+    testdec.testGF30798AddAltDef("Add 1 oc", "Object", "oc 0");			//0
+    testdec.testGF30798AddAltDef("Add 1 prop qualifier", "PropertyQualifier", "prop qual 0");
+    testdec.testGF30798AddAltDef("Add 1 prop", "Prop", "prop 0");
+
+		
   }
 
   //=== courtesy of https://opencast.jira.com/svn/MH/trunk/modules/matterhorn-usertracking-impl/src/test/java/org/opencastproject/usertracking/impl/UserTrackingRestServiceTest.java
@@ -286,8 +291,8 @@ public class TestDECAltName
   private void testGF30798AddAltDef(String message, String clickType, String userSelectedValue) throws Exception {
 	    initEasyMock();
 	  	System.out.println(message);
-//	    EasyMock.expect(m_classReq.getParameter("pageAction")).andReturn("UseSelection");
-//		EasyMock.expect(m_classReq.getParameter("MenuAction")).andReturn("editDEC");
+	    EasyMock.expect(request.getParameter("pageAction")).andReturn("UseSelection");
+		EasyMock.expect(request.getParameter("MenuAction")).andReturn("editDEC");
 
 		EasyMock.expect(request.getParameter("sCompBlocks")).andReturn(clickType);
 
@@ -304,8 +309,13 @@ public class TestDECAltName
   private void testGF30798RemoveAltDef(String message, String clickType, String userSelectedValue) throws Exception {
 		initEasyMock();
 	  	System.out.println(message);
-//		EasyMock.expect(m_classReq.getParameter("pageAction")).andReturn("RemoveSelection");
-//		EasyMock.expect(m_classReq.getParameter("MenuAction")).andReturn("editDEC");
+		EasyMock.expect(request.getParameter("pageAction")).andReturn("RemoveSelection");
+		EasyMock.expect(request.getParameter("MenuAction")).andReturn("editDEC");
+		if(clickType != null && clickType.equals("ObjectQualifier")) {
+			EasyMock.expect(request.getParameter("selObjQRow")).andReturn(userSelectedValue);	//index to delete
+		} else {
+			EasyMock.expect(request.getParameter("selPropQRow")).andReturn(userSelectedValue);	//index to delete
+		}
 
 		EasyMock.expect(request.getParameter("sCompBlocks")).andReturn(clickType);
 //	    EasyMock.replay(session, request);
@@ -313,6 +323,19 @@ public class TestDECAltName
 		EasyMock.replay(servletConfig);
 		EasyMock.replay(servletContext);
 
+		if(clickType != null && clickType.equals("ObjectQualifier")) {
+			DECHelper.clearAlternateDefinitionForOCQualifier(request);
+		} else
+		if(clickType != null && clickType.equals("ObjectClass")) {
+			DECHelper.clearAlternateDefinitionForOC(request);
+		} else
+		if(clickType != null && clickType.equals("PropertyQualifier")) {
+			DECHelper.clearAlternateDefinitionForPropQualifier(request);
+		} else
+		if(clickType != null && (clickType.equals("Property") || clickType.equals("PropertyClass"))) {
+			DECHelper.clearAlternateDefinitionForProp(request);
+		}
+		
 		createFinalAlternateDefinition(request, null);
 		System.out.println("Final string = >>>" + session.getAttribute(Constants.FINAL_ALT_DEF_STRING) + "<<< ");
 		System.out.println("\n");
@@ -321,8 +344,8 @@ public class TestDECAltName
   private void testGF30798ClearAltDef(String message, String clickType, String userSelectedValue) throws Exception {
 	    initEasyMock();
 	  	System.out.println(message);
-//	    EasyMock.expect(m_classReq.getParameter("pageAction")).andReturn("clearBoxes");
-//		EasyMock.expect(m_classReq.getParameter("MenuAction")).andReturn("editDEC");
+	    EasyMock.expect(request.getParameter("pageAction")).andReturn("clearBoxes");
+//		EasyMock.expect(request.getParameter("MenuAction")).andReturn("editDEC");
 
 		EasyMock.expect(request.getParameter("sCompBlocks")).andReturn(clickType);
 //	    EasyMock.replay(session, request);
@@ -347,94 +370,60 @@ public class TestDECAltName
 		String sComp = (String) request.getParameter("sCompBlocks");
 		if (sComp == null)
 			sComp = "";
-	//		String sSelRow = "";
-	//		sSelRow = (String) request.getParameter("selCompBlockRow");
-	//		Integer rowIndex = null;
-	//		if(sSelRow != null && !sSelRow.startsWith("CK")) {
-	//			throw new Exception("Can not get the row index from the front end for alternate defintion!");
-	//		} else {
-	//			rowIndex = new Integer(sSelRow.substring(2, sSelRow.length()));
-	//		}
-		objectQualifierMap = (HashMap<Integer, String>)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1);
+//		String sSelRow = "";
+//		sSelRow = (String) request.getParameter("selCompBlockRow");
+//		Integer rowIndex = null;
+//		if(sSelRow != null && !sSelRow.startsWith("CK")) {
+//			throw new Exception("Can not get the row index from the front end for alternate defintion!");
+//		} else {
+//			rowIndex = new Integer(sSelRow.substring(2, sSelRow.length()));
+//		}
+		List objectQualifierMap = (ArrayList)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1);
 		if(objectQualifierMap == null) {
-			objectQualifierMap = new HashMap<Integer, String>();
+			objectQualifierMap = new ArrayList();
 		}
-		propertyQualifierMap = (HashMap<Integer, String>)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3);
+		List propertyQualifierMap = (ArrayList)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3);
 		if(propertyQualifierMap == null) {
-			propertyQualifierMap = new HashMap<Integer, String>();
+			propertyQualifierMap = new ArrayList();
 		}
 		String comp1 = null, comp2 = null, comp3 = null, comp4 = null;
 		if(userSelectedDef != null) {
 			if (sComp.equals("ObjectQualifier")) {
-				objectQualifierMap.put(objectQualifierMap.size(), userSelectedDef);
+				objectQualifierMap.add(userSelectedDef);
 				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, objectQualifierMap);
 			} else if (sComp.startsWith("Object")) {
 				comp2 = userSelectedDef;
 				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2, comp2);
 			} else if (sComp.equals("PropertyQualifier")) {
-				propertyQualifierMap.put(propertyQualifierMap.size(), userSelectedDef);
+				propertyQualifierMap.add(userSelectedDef);
 				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3, propertyQualifierMap);
 			} else if (sComp.startsWith("Prop")) {
 				comp4 = userSelectedDef;
 				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4, comp4);
 			}
 		}
-		comp1 = createOCQualifierDefinition(objectQualifierMap);
-		comp2 = oc;	//(String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2);
-		comp3 = createPropQualifierDefinition(propertyQualifierMap);
-		comp4 = prop;	//(String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4);
-		String finalStr = trimTrailingEndingUnderscores(comp1 + "_" + comp2 + "_" + comp3 + "_" + comp4);
-		session.setAttribute(Constants.FINAL_ALT_DEF_STRING, finalStr);
-	}
-
-	private String trimTrailingEndingUnderscores(String def) {
-		String retVal = def;
-		
-		if(def != null && def.trim().startsWith("_")) {
-			retVal = retVal.trim().substring(1, def.length());
+		comp1 = DECHelper.createOCQualifierDefinition(objectQualifierMap);
+		comp2 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2);
+		comp3 = DECHelper.createPropQualifierDefinition(propertyQualifierMap);
+		comp4 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4);
+		//logic to construct
+		String finalString = "";
+		if(comp1 != null) {
+			finalString = comp1 + "_"; 
 		}
-		
-		if(def != null && def.trim().endsWith("_")) {
-			retVal = retVal.trim().substring(0, def.length()-1);
+		if(comp2 != null) {
+			finalString = finalString + comp2 + "_"; 
 		}
-		
-		return retVal;
-	}
-	
-	private String createOCQualifierDefinition(HashMap map) {
-		String retVal = null;
-		
-		Iterator iter = map.keySet().iterator();
-		while(iter.hasNext()) {
-			Integer key = (Integer)iter.next();
-			String val = (String)map.get(key);
-			//System.out.println("key,val: " + key + "," + val);
-			if(key == 0) {
-				retVal = val;
+		if(comp3 != null && comp4 != null) {
+			finalString = finalString + comp3 + "_" + comp4; 
+		} else {
+			if(comp3 != null) {
+				finalString = finalString + comp3;
 			} else {
-				retVal = retVal + "_" + val;
+				finalString = finalString + comp4;
 			}
 		}
-		
-		return retVal;
-	}
-	
-	private String createPropQualifierDefinition(HashMap map) {
-		String retVal = null;
-		
-		Iterator iter = map.keySet().iterator();
-		while(iter.hasNext()) {
-			Integer key = (Integer)iter.next();
-			String val = (String)map.get(key);
-			//System.out.println("key,val: " + key + "," + val);
-			if(key == 0) {
-				retVal = val;
-			} else {
-				retVal = retVal + "_" + val;
-			}
-		}
-		
-		return retVal;
+		session.setAttribute(Constants.FINAL_ALT_DEF_STRING, DECHelper.trimTrailingEndingUnderscores(finalString));
 	}
   //end GF30798
 
