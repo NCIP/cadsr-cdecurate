@@ -986,70 +986,6 @@ public class DataElementConceptServlet extends CurationServlet {
 		return pageDEC;
 	}
 
-	//begin GF30798
-	private void createFinalAlternateDefinition(HttpServletRequest request, String userSelectedDef) throws Exception {
-		HttpSession session = request.getSession();
-		String sComp = (String) request.getParameter("sCompBlocks");
-		if (sComp == null)
-			sComp = "";
-//		String sSelRow = "";
-//		sSelRow = (String) request.getParameter("selCompBlockRow");
-//		Integer rowIndex = null;
-//		if(sSelRow != null && !sSelRow.startsWith("CK")) {
-//			throw new Exception("Can not get the row index from the front end for alternate defintion!");
-//		} else {
-//			rowIndex = new Integer(sSelRow.substring(2, sSelRow.length()));
-//		}
-		List objectQualifierMap = (ArrayList)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1);
-		if(objectQualifierMap == null) {
-			objectQualifierMap = new ArrayList();
-		}
-		List propertyQualifierMap = (ArrayList)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3);
-		if(propertyQualifierMap == null) {
-			propertyQualifierMap = new ArrayList();
-		}
-		String comp1 = null, comp2 = null, comp3 = null, comp4 = null;
-		if(userSelectedDef != null) {
-			if (sComp.equals("ObjectQualifier")) {
-				objectQualifierMap.add(userSelectedDef);
-				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, objectQualifierMap);
-			} else if (sComp.startsWith("Object")) {
-				comp2 = userSelectedDef;
-				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2, comp2);
-			} else if (sComp.equals("PropertyQualifier")) {
-				propertyQualifierMap.add(userSelectedDef);
-				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3, propertyQualifierMap);
-			} else if (sComp.startsWith("Prop")) {
-				comp4 = userSelectedDef;
-				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4, comp4);
-			}
-		}
-		comp1 = DECHelper.createOCQualifierDefinition(objectQualifierMap);
-		comp2 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2);
-		comp3 = DECHelper.createPropQualifierDefinition(propertyQualifierMap);
-		comp4 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4);
-
-		//logic to construct
-		String finalString = "";
-		if(comp1 != null) {
-			finalString = comp1 + "_"; 
-		}
-		if(comp2 != null) {
-			finalString = finalString + comp2 + "_"; 
-		}
-		if(comp3 != null && comp4 != null) {
-			finalString = finalString + comp3 + "_" + comp4; 
-		} else {
-			if(comp3 != null) {
-				finalString = finalString + comp3;
-			} else {
-				finalString = finalString + comp4;
-			}
-		}
-		session.setAttribute(Constants.FINAL_ALT_DEF_STRING, DECHelper.trimTrailingEndingUnderscores(finalString));
-	}
-	//end GF30798
-
 	/**
 	 *
 	 * @param nameAction
@@ -1125,7 +1061,7 @@ public class DataElementConceptServlet extends CurationServlet {
 			// get the search bean from the selected row
 			sSelRow = (String) m_classReq.getParameter("selCompBlockRow");
 
-			createFinalAlternateDefinition(m_classReq, userSelectedDef);	//GF30798
+			DECHelper.createFinalAlternateDefinition(m_classReq, userSelectedDef);	//GF30798
 			
 			vAC = (Vector) session.getAttribute("vACSearch");
 			logger.debug("At Line 951 of DECServlet.java"+Arrays.asList(vAC));
@@ -2228,7 +2164,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					//begin GF30798
 		        	session.removeAttribute("changedOCDefsWarning");
 					DECHelper.clearAlternateDefinitionForOC(m_classReq);		        	
-					createFinalAlternateDefinition(m_classReq, null);
+					DECHelper.createFinalAlternateDefinition(m_classReq, null);
 					//end GF30798
 				}
 				else if (sComp.equals("Property") || sComp.equals("PropertyClass"))
@@ -2245,7 +2181,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					//begin GF30798
 		        	session.removeAttribute("changedPropDefsWarning");
 					DECHelper.clearAlternateDefinitionForProp(m_classReq);
-					createFinalAlternateDefinition(m_classReq, null);
+					DECHelper.createFinalAlternateDefinition(m_classReq, null);
 					//end GF30798
 				}
 				else if (sComp.equals("ObjectQualifier"))
@@ -2257,7 +2193,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					if (sSelRow != null && !(sSelRow.equals("")))
 					{
 						Integer intObjRow = new Integer(sSelRow);
-						createFinalAlternateDefinition(m_classReq, null);	//GF30798
+						DECHelper.createFinalAlternateDefinition(m_classReq, null);	//GF30798
 						int intObjRow2 = intObjRow.intValue();
 						// add 1 because 0 element is OC, not a qualifier
 						int int1 = intObjRow2 + 1;
@@ -2301,7 +2237,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					if (sSelRow != null && !(sSelRow.equals("")))
 					{
 						Integer intPropRow = new Integer(sSelRow);
-						createFinalAlternateDefinition(m_classReq, null);	//GF30798
+						DECHelper.createFinalAlternateDefinition(m_classReq, null);	//GF30798
 						int intPropRow2 = intPropRow.intValue();
 						// add 1 because 0 element is OC, not a qualifier
 						int int1 = intPropRow2 + 1;

@@ -301,7 +301,7 @@ public class TestDECAltName
 		EasyMock.replay(servletConfig);
 		EasyMock.replay(servletContext);
 
-		createFinalAlternateDefinition(request, userSelectedValue);
+		DECHelper.createFinalAlternateDefinition(request, userSelectedValue);
 		System.out.println("Final string = >>>" + session.getAttribute(Constants.FINAL_ALT_DEF_STRING) + "<<<");
 		System.out.println("\n");
   }
@@ -336,7 +336,7 @@ public class TestDECAltName
 			DECHelper.clearAlternateDefinitionForProp(request);
 		}
 		
-		createFinalAlternateDefinition(request, null);
+		DECHelper.createFinalAlternateDefinition(request, null);
 		System.out.println("Final string = >>>" + session.getAttribute(Constants.FINAL_ALT_DEF_STRING) + "<<< ");
 		System.out.println("\n");
   }
@@ -358,74 +358,6 @@ public class TestDECAltName
 		System.out.println("Final string = >>>" + session.getAttribute(Constants.FINAL_ALT_DEF_STRING) + "<<< ");
 		System.out.println("\n");
   }
-
-  /**
-   * ==================================================================================================================
-   * The following are the real methods copied from the application methods
-   * ==================================================================================================================
-   */
-  //begin GF30798
-	private void createFinalAlternateDefinition(HttpServletRequest request, String userSelectedDef) throws Exception {
-		HttpSession session = request.getSession();
-		String sComp = (String) request.getParameter("sCompBlocks");
-		if (sComp == null)
-			sComp = "";
-//		String sSelRow = "";
-//		sSelRow = (String) request.getParameter("selCompBlockRow");
-//		Integer rowIndex = null;
-//		if(sSelRow != null && !sSelRow.startsWith("CK")) {
-//			throw new Exception("Can not get the row index from the front end for alternate defintion!");
-//		} else {
-//			rowIndex = new Integer(sSelRow.substring(2, sSelRow.length()));
-//		}
-		List objectQualifierMap = (ArrayList)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1);
-		if(objectQualifierMap == null) {
-			objectQualifierMap = new ArrayList();
-		}
-		List propertyQualifierMap = (ArrayList)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3);
-		if(propertyQualifierMap == null) {
-			propertyQualifierMap = new ArrayList();
-		}
-		String comp1 = null, comp2 = null, comp3 = null, comp4 = null;
-		if(userSelectedDef != null) {
-			if (sComp.equals("ObjectQualifier")) {
-				objectQualifierMap.add(userSelectedDef);
-				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, objectQualifierMap);
-			} else if (sComp.startsWith("Object")) {
-				comp2 = userSelectedDef;
-				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2, comp2);
-			} else if (sComp.equals("PropertyQualifier")) {
-				propertyQualifierMap.add(userSelectedDef);
-				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3, propertyQualifierMap);
-			} else if (sComp.startsWith("Prop")) {
-				comp4 = userSelectedDef;
-				session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4, comp4);
-			}
-		}
-		comp1 = DECHelper.createOCQualifierDefinition(objectQualifierMap);
-		comp2 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2);
-		comp3 = DECHelper.createPropQualifierDefinition(propertyQualifierMap);
-		comp4 = (String)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4);
-		//logic to construct
-		String finalString = "";
-		if(comp1 != null) {
-			finalString = comp1 + "_"; 
-		}
-		if(comp2 != null) {
-			finalString = finalString + comp2 + "_"; 
-		}
-		if(comp3 != null && comp4 != null) {
-			finalString = finalString + comp3 + "_" + comp4; 
-		} else {
-			if(comp3 != null) {
-				finalString = finalString + comp3;
-			} else {
-				finalString = finalString + comp4;
-			}
-		}
-		session.setAttribute(Constants.FINAL_ALT_DEF_STRING, DECHelper.trimTrailingEndingUnderscores(finalString));
-	}
-  //end GF30798
 
 }
 
