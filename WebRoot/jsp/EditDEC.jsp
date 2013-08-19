@@ -658,14 +658,14 @@
 													<% } else { %>
 													  <%for (int i = 0; vOCQualifierNames.size()>i; i++){
                                                           String   sQualName = (String)vOCQualifierNames.elementAt(i); 
-                                                          //GF30798 - reconstruct alt def for edit
-                                                          request.setAttribute("sCompBlocks", "ObjectQualifier");
-                                                          DECHelper.createFinalAlternateDefinition(request, sQualName);
                                                           %>
 													    <option value="<%=sQualName%>" <%if(i==0){%> selected <%}%>>
 														    <%=sQualName%>
 													    </option>
-													  <%}%>
+													  <%}
+                                                      //GF30798 - save the count
+                                                      session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1_COUNT, vOCQualifierNames.size());
+													  %>
 													<%}%>
 												</select>
 											</td>
@@ -673,9 +673,8 @@
 											  	
 												<select name="selObjectClass" style="width: 98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<%
-													//GF30798 - reconstruct alt def for edit
-                                                    request.setAttribute("sCompBlocks", "Object");
-                                                    DECHelper.createFinalAlternateDefinition(request, sObjClassPrimary);
+                                                    //GF30798 - save the count
+                                                    session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2_COUNT, sObjClassPrimary != null && !sObjClassPrimary.trim().equals("")?1:0);
                                                     %>
 													<option value="<%=sObjClassPrimary%>">
 														<%=sObjClassPrimary%>
@@ -815,14 +814,14 @@
 													  <%											     
 													     for (int i = 0; vPropQualifierNames.size()>i; i++){ 
                                                           String sQualName = (String)vPropQualifierNames.elementAt(i);
-                                                          //GF30798 - reconstruct alt def for edit
-                                                          request.setAttribute("sCompBlocks", "PropertyQualifier");
-                                                          DECHelper.createFinalAlternateDefinition(request, sQualName);
                                                           %>
 													      <option value="<%=sQualName%>" <% if(i==0){%> selected <%}%>>
 														     <%=sQualName%>
 													      </option>
-													  <%}%>
+													  <%}
+                                                      //GF30798 - save the count
+                                                      session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3_COUNT, vPropQualifierNames.size());
+													  %>
 													<%}%>
 												</select>
 											</td>
@@ -830,9 +829,8 @@
 											  
 												<select name="selPropertyClass" style="width: 98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
 													<%
-													//GF30798 - reconstruct alt def for edit
-                                                    request.setAttribute("sCompBlocks", "Prop");
-                                                    DECHelper.createFinalAlternateDefinition(request, sPropClassPrimary);
+                                                    //GF30798 - save the count
+                                                    session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4_COUNT, sPropClassPrimary != null && !sPropClassPrimary.trim().equals("")?1:0);
                                                     %>
 													<option value="<%=sPropClassPrimary%>">
 														<%=sPropClassPrimary%>
@@ -882,12 +880,6 @@
 						</font>
 					</td>
 					<td>
-					     <!-- the following 3 lines is just for test -->
-						 <p>
-						 >>><%= userSelectedDefFinal %><<<
-						 <p>
-					</td>
-					<td>
 						<font color="#C0C0C0">
 							Verify Data Element Concept Long Name (* ISO Preferred Name)
 						</font>
@@ -910,6 +902,16 @@
 						Data Element Concept Long Name (* ISO Preferred Name)
 					</td>
 					<% } %>
+				</tr>
+				<tr>
+<%
+String temp = 
+"OC Q=" + session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1_COUNT)
++ "OC=" + session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2_COUNT)
++ "Prop Q=" + session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3_COUNT)
++ "Prop=" + session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4_COUNT);
+%>
+					 >>><%= temp %><<<
 				</tr>
 
 				<tr valign="top">
