@@ -676,7 +676,7 @@ public class SetACService implements Serializable
 			
 			//Check Definition against (constructed) chosen definition, add to Alt Def if not same, add Warning in vValidate vector.
 			System.out.println("req [" + req + "] req.getSession() [" + req.getSession() + "] noldDef [" + oldDef + "] ");
-			String chosenDef = constructChosenDefinition(req.getSession(), "DEC", oldDef);
+			String chosenDef = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);	//GF30798 constructChosenDefinition(req.getSession(), "DEC", oldDef);
 			logger.debug("At line 680 of SetACService.java "+chosenDef);
 			if (chosenDef != null && !chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
