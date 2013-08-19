@@ -2,6 +2,8 @@
     $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/EditDEC.jsp,v 1.33 2009-04-23 18:06:53 veerlah Exp $
     $Name: not supported by cvs2svn $
 -->
+<%@ page import="gov.nih.nci.cadsr.common.Constants" %>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 	<head>
@@ -476,11 +478,6 @@
 							      <font color="#FF0000">
 								     Data Element Concept
 							     </font>
-							     <!-- the following 3 lines is just for test -->
-								 <p>
-								 >>><%= userSelectedDefFinal %><<<
-								 <p>
-							     
 							<% } %>         
 						<% } %>	
 						</font>
@@ -660,7 +657,11 @@
 													<option value=""></option>
 													<% } else { %>
 													  <%for (int i = 0; vOCQualifierNames.size()>i; i++){
-                                                          String   sQualName = (String)vOCQualifierNames.elementAt(i); %>
+                                                          String   sQualName = (String)vOCQualifierNames.elementAt(i); 
+                                                          //GF30798 - reconstruct alt def for edit
+                                                          request.setAttribute("sCompBlocks", "ObjectQualifier");
+                                                          DECHelper.createFinalAlternateDefinition(request, sQualName);
+                                                          %>
 													    <option value="<%=sQualName%>" <%if(i==0){%> selected <%}%>>
 														    <%=sQualName%>
 													    </option>
@@ -671,6 +672,11 @@
 											<td colspan="3" valign="top">
 											  	
 												<select name="selObjectClass" style="width: 98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
+													<%
+													//GF30798 - reconstruct alt def for edit
+                                                    request.setAttribute("sCompBlocks", "Object");
+                                                    DECHelper.createFinalAlternateDefinition(request, sObjClassPrimary);
+                                                    %>
 													<option value="<%=sObjClassPrimary%>">
 														<%=sObjClassPrimary%>
 													</option>
@@ -808,7 +814,11 @@
 													<% } else { %>
 													  <%											     
 													     for (int i = 0; vPropQualifierNames.size()>i; i++){ 
-                                                          String sQualName = (String)vPropQualifierNames.elementAt(i);%>
+                                                          String sQualName = (String)vPropQualifierNames.elementAt(i);
+                                                          //GF30798 - reconstruct alt def for edit
+                                                          request.setAttribute("sCompBlocks", "PropertyQualifier");
+                                                          DECHelper.createFinalAlternateDefinition(request, sQualName);
+                                                          %>
 													      <option value="<%=sQualName%>" <% if(i==0){%> selected <%}%>>
 														     <%=sQualName%>
 													      </option>
@@ -819,6 +829,11 @@
 											<td colspan="3" valign="top">
 											  
 												<select name="selPropertyClass" style="width: 98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks'); return false">
+													<%
+													//GF30798 - reconstruct alt def for edit
+                                                    request.setAttribute("sCompBlocks", "Prop");
+                                                    DECHelper.createFinalAlternateDefinition(request, sPropClassPrimary);
+                                                    %>
 													<option value="<%=sPropClassPrimary%>">
 														<%=sPropClassPrimary%>
 													</option>
@@ -865,6 +880,12 @@
 							<%=item++%>
 							)
 						</font>
+					</td>
+					<td>
+					     <!-- the following 3 lines is just for test -->
+						 <p>
+						 >>><%= userSelectedDefFinal %><<<
+						 <p>
 					</td>
 					<td>
 						<font color="#C0C0C0">

@@ -337,18 +337,26 @@ String propCDR = "";
 			<table width="100%" border="0">
 				<tr>
 					<td height="26" align="left" valign="top">
-						<input type="button" name="btnValidate" value="Validate" onClick="SubmitValidate('validate');" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_Validation',helpUrl); return false">
+						<input type="button" name="btnValidate" value="Validate" onClick="SubmitValidate('validate');" 
+
+onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_Validation',helpUrl); return false">
 						&nbsp;&nbsp;
 						<input type="button" name="btnClear" value="Clear" onClick="ClearBoxes();">
 						&nbsp;&nbsp;
-						<% if (sOriginAction.equals("CreateNewDECfromCreateDE") || sOriginAction.equals("CreateNewDECfromEditDE") || sOriginAction.equals("CreateNewDEC") 
+						<% if (sOriginAction.equals("CreateNewDECfromCreateDE") || sOriginAction.equals("CreateNewDECfromEditDE") || 
+
+sOriginAction.equals("CreateNewDEC") 
             || sMenuAction.equals("NewDECTemplate") || sMenuAction.equals("NewDECVersion")){%>
 						<input type="button" name="btnBack" value="Back" onClick="Back();">
 						&nbsp;&nbsp;
 						<% } %>
-						<input type="button" name="btnAltName" value="Alt Names/Defs" onClick="openDesignateWindow('Alternate Names');" onHelp="showHelp('html/Help_Updates.html#newDECForm_altNames',helpUrl); return false">
+						<input type="button" name="btnAltName" value="Alt Names/Defs" onClick="openDesignateWindow('Alternate Names');" 
+
+onHelp="showHelp('html/Help_Updates.html#newDECForm_altNames',helpUrl); return false">
 						&nbsp;&nbsp;
-						<input type="button" name="btnRefDoc" value="Reference Documents" onClick="openDesignateWindow('Reference Documents');" onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return false">
+						<input type="button" name="btnRefDoc" value="Reference Documents" onClick="openDesignateWindow('Reference Documents');" 
+
+onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return false">
 						&nbsp;&nbsp;
 						<img name="Message" src="images/WaitMessage1.gif" width="250px" height="25px" alt="WaitMessage" style="visibility:hidden;">
 					</td>
@@ -461,8 +469,12 @@ String propCDR = "";
 										<tr height="8">
 											<td colspan=6 id="changedOCDefsWarning">
 												<!-- GF30796/GF30798 -->
-												Warning: One or more Object Class concepts you've selected already exist in caDSR with a different definition.
-												The existing standard caDSR definition will be used, and your chosen definition will be used to create an alternate definition for this element.
+												Warning: One or more Object Class concepts you've selected already exist in caDSR 
+
+with a different definition.
+												The existing standard caDSR definition will be used, and your chosen definition 
+
+will be used to create an alternate definition for this element.
 												
 											</td>
 										</tr>
@@ -474,7 +486,9 @@ String propCDR = "";
 												Long Name
 											</td>
 											<td colspan="5" align="left">
-												<input type="text" name="txtObjClass" value="<%=sObjClass%>" style="width: 95%" valign="top" readonly="readonly">
+												<input type="text" name="txtObjClass" value="<%=sObjClass%>" style="width: 95%" 
+
+valign="top" readonly="readonly">
 											</td>
 										</tr>
 										<tr height="8">
@@ -522,7 +536,9 @@ String propCDR = "";
 										</tr>
 										<tr align="left">
 											<td colspan="3" valign="top">
-												<select name="selObjectQualifier" size="2" style="width: 98%" valign="top" onClick="ShowEVSInfo('ObjectQualifier')" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks',helpUrl); return false">
+												<select name="selObjectQualifier" size="2" style="width: 98%" valign="top" 
+
+onClick="ShowEVSInfo('ObjectQualifier')" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks',helpUrl); return false">
 													<%if (vOCQualifierNames.size()<1) {%>
 													<option value=""></option>
 													<% } else { %>
@@ -541,7 +557,9 @@ String propCDR = "";
 												</select>
 											</td>
 											<td colspan="3" valign="top">
-												<select name="selObjectClass" style="width: 98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks',helpUrl); return false">
+												<select name="selObjectClass" style="width: 98%" valign="top" size="1" multiple 
+
+onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks',helpUrl); return false">
 													<option value="<%=sObjClassPrimary%>">
 														<%=sObjClassPrimary%>
 													</option>
@@ -566,13 +584,17 @@ String propCDR = "";
 											<td colspan="3">
 												&nbsp;&nbsp;
 												<a href="javascript:disabled();">
-													<label id="ObjQualID" for="selObjectQualifier" title="" onclick="javascript:SearchBuildingBlocks('ObjectQualifier', 'true')"></label>
+													<label id="ObjQualID" for="selObjectQualifier" title="" 
+
+onclick="javascript:SearchBuildingBlocks('ObjectQualifier', 'true')"></label>
 												</a>
 											</td>
 											<td colspan="3">
 												&nbsp;&nbsp;
 												<a href="javascript:disabled();">
-													<label id="ObjClassID" for="selObjectClass" title="" onclick="javascript:SearchBuildingBlocks('ObjectClass', 'true')"></label>
+													<label id="ObjClassID" for="selObjectClass" title="" 
+
+onclick="javascript:SearchBuildingBlocks('ObjectClass', 'true')"></label>
 												</a>
 											</td>
 										</tr>
@@ -596,8 +618,12 @@ String propCDR = "";
 										<tr height="8">
 											<td colspan=6 id="changedPropDefsWarning">
 												<!-- GF30796/GF30798 -->
-												Warning: One or more Property concepts you've selected already exist in caDSR with a different definition.
-												The existing standard caDSR definition will be used, and your chosen definition will be used to create an alternate definition for this element.
+												Warning: One or more Property concepts you've selected already exist in caDSR 
+
+with a different definition.
+												The existing standard caDSR definition will be used, and your chosen definition 
+
+will be used to create an alternate definition for this element.
 												
 											</td>
 										</tr>
@@ -609,7 +635,9 @@ String propCDR = "";
 												Long Name
 											</td>
 											<td colspan="5" align="left">
-												<input type="text" name="txtPropClass" value="<%=sPropClass%>" style="width: 95%" valign="top" readonly="readonly">
+												<input type="text" name="txtPropClass" value="<%=sPropClass%>" style="width: 95%" 
+
+valign="top" readonly="readonly">
 											</td>
 										</tr>
 										<tr height="6">
@@ -657,7 +685,9 @@ String propCDR = "";
 										</tr>
 										<tr align="left">
 											<td colspan="3" valign="top">
-												<select name="selPropertyQualifier" size="2" style="width: 98%" valign="top" onClick="ShowEVSInfo('PropertyQualifier')" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks',helpUrl); return false">
+												<select name="selPropertyQualifier" size="2" style="width: 98%" valign="top" 
+
+onClick="ShowEVSInfo('PropertyQualifier')" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks',helpUrl); return false">
 													<%if (vPropQualifierNames.size()<1) {%>
 													<option value=""></option>
 													<% } else { %>
@@ -676,7 +706,9 @@ String propCDR = "";
 												</select>
 											</td>
 											<td colspan="3" valign="top">
-												<select name="selPropertyClass" style="width: 98%" valign="top" size="1" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks',helpUrl); return false">
+												<select name="selPropertyClass" style="width: 98%" valign="top" size="1" multiple 
+
+onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_nameBlocks',helpUrl); return false">
 													<option value="<%=sPropClassPrimary%>">
 														<%=sPropClassPrimary%>
 													</option>
@@ -701,13 +733,17 @@ String propCDR = "";
 											<td colspan="3">
 												&nbsp;&nbsp;
 												<a href="javascript:disabled();">
-													<label id="PropQualID" for="selPropertyQualifier" title="" onclick="javascript:SearchBuildingBlocks('PropertyQualifier', 'true')"></label>
+													<label id="PropQualID" for="selPropertyQualifier" title="" 
+
+onclick="javascript:SearchBuildingBlocks('PropertyQualifier', 'true')"></label>
 												</a>
 											</td>
 											<td colspan="3">
 												&nbsp;&nbsp;
 												<a href="javascript:disabled();">
-													<label id="PropClassID" for="selPropertyClass" title="" onclick="javascript:SearchBuildingBlocks('PropertyClass', 'true')"></label>
+													<label id="PropClassID" for="selPropertyClass" title="" 
+
+onclick="javascript:SearchBuildingBlocks('PropertyClass', 'true')"></label>
 												</a>
 											</td>
 										</tr>
@@ -742,9 +778,13 @@ String propCDR = "";
 						</font>
 					</td>
 					<td height="24" valign="top">
-						<input name="txtLongName" type="text" size="80" maxlength=255 value="<%=sLongName%>" onKeyUp="changeCountLN();" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_txtLongName',helpUrl); return false">
+						<input name="txtLongName" type="text" size="80" maxlength=255 value="<%=sLongName%>" onKeyUp="changeCountLN();" 
+
+onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_txtLongName',helpUrl); return false">
 						&nbsp;&nbsp;&nbsp;
-						<input name="txtLongNameCount" type="text" size="1" value="<%=sLongNameCount%>" readonly onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_txtLongName',helpUrl); return false">
+						<input name="txtLongNameCount" type="text" size="1" value="<%=sLongNameCount%>" readonly 
+
+onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_txtLongName',helpUrl); return false">
 						Character Count &nbsp;&nbsp;(Database Max = 255)
 					</td>
 				</tr>
@@ -776,11 +816,17 @@ String propCDR = "";
 						&nbsp;
 					</td>
 					<td height="24" valign="top">
-						<input name="rNameConv" type="radio" value="SYS" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("SYS")) {%> checked <%}%>>
+						<input name="rNameConv" type="radio" value="SYS" onclick="javascript:SubmitValidate('changeNameType');" <%if 
+
+(sPrefType.equals("SYS")) {%> checked <%}%>>
 						System Generated &nbsp;&nbsp;&nbsp;
-						<input name="rNameConv" type="radio" value="ABBR" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("ABBR")) {%> checked <%}%>>
+						<input name="rNameConv" type="radio" value="ABBR" onclick="javascript:SubmitValidate('changeNameType');" <%if 
+
+(sPrefType.equals("ABBR")) {%> checked <%}%>>
 						Abbreviated &nbsp;&nbsp;&nbsp;
-						<input name="rNameConv" type="radio" value="USER" onclick="javascript:SubmitValidate('changeNameType');" <%if (sPrefType.equals("USER")) {%> checked <%}%>>
+						<input name="rNameConv" type="radio" value="USER" onclick="javascript:SubmitValidate('changeNameType');" <%if 
+
+(sPrefType.equals("USER")) {%> checked <%}%>>
 						<%=lblUserType%>
 						<!--Existing Name (Editable)  User Maintained-->
 					</td>
@@ -791,10 +837,14 @@ String propCDR = "";
 						</font>
 					</td>
 					<td>
-						<input name="txtPreferredName" type="text" size="80" maxlength=30 value="<%=sName%>" onKeyUp="changeCountPN();" <%if(sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")){%> readonly <%}%>
+						<input name="txtPreferredName" type="text" size="80" maxlength=30 value="<%=sName%>" onKeyUp="changeCountPN();" 
+
+<%if(sPrefType.equals("") || sPrefType.equals("SYS") || sPrefType.equals("ABBR")){%> readonly <%}%>
 							onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_txtPreferredName',helpUrl); return false">
 						&nbsp;&nbsp;&nbsp;
-						<input name="txtPrefNameCount" type="text" size="1" value="<%=sNameCount%>" readonly onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_txtPreferredName',helpUrl); return false">
+						<input name="txtPrefNameCount" type="text" size="1" value="<%=sNameCount%>" readonly 
+
+onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_txtPreferredName',helpUrl); return false">
 						Character Count &nbsp;&nbsp;(Database Max = 30)
 					</td>
 				</tr>
@@ -851,7 +901,9 @@ String propCDR = "";
 						</font>
 					</td>
 					<td valign="top">
-						<select name="selConceptualDomain" size="1" style="width:430" multiple onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selConceptualDomain',helpUrl); return false">
+						<select name="selConceptualDomain" size="1" style="width:430" multiple 
+
+onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selConceptualDomain',helpUrl); return false">
 							<option value=<%=sConDomID%>>
 								<%=sConDom%>
 							</option>
@@ -945,7 +997,9 @@ String propCDR = "";
 						</font>
 					</td>
 					<td valign="top">
-						<input type="text" name="Version" value="<%=sVersion%>" size=12 maxlength=5 onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_Version',helpUrl); return false">
+						<input type="text" name="Version" value="<%=sVersion%>" size=12 maxlength=5 
+
+onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_Version',helpUrl); return false">
 						&nbsp;&nbsp;&nbsp;
 						<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
 							Business Rules
@@ -1007,7 +1061,9 @@ String propCDR = "";
 						</font>
 					</td>
 					<td valign="top">
-						<input type="text" name="BeginDate" value="<%=sBeginDate%>" size=12 maxlength=10 onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_BeginDate',helpUrl); return false">
+						<input type="text" name="BeginDate" value="<%=sBeginDate%>" size=12 maxlength=10 
+
+onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_BeginDate',helpUrl); return false">
 						<font color="#0099FF" size="3"></font>
 						<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('BeginDate', event);">
 						&nbsp;&nbsp;MM/DD/YYYY
@@ -1033,7 +1089,9 @@ String propCDR = "";
 					</td>
 					<td valign="top">
 						<p>
-							<input type="text" name="EndDate" value="<%=sEndDate%>" size=12 maxlength=10 onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_EndDate',helpUrl); return false">
+							<input type="text" name="EndDate" value="<%=sEndDate%>" size=12 maxlength=10 
+
+onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_EndDate',helpUrl); return false">
 							<font color="#0099FF" size="3"></font>
 							<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('EndDate', event);">
 							&nbsp;&nbsp;MM/DD/YYYY
@@ -1069,7 +1127,9 @@ String propCDR = "";
 							<col width="15%">
 							<tr>
 								<td colspan=3 valign=top>
-									<select name="selCS" size="1" style="width:95%" onChange="ChangeCS();" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selCS',helpUrl); return false">
+									<select name="selCS" size="1" style="width:95%" onChange="ChangeCS();" 
+
+onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selCS',helpUrl); return false">
 										<option value="" selected></option>
 										<%                  for (int i = 0; vCS.size()>i; i++)
                     {
@@ -1083,7 +1143,9 @@ String propCDR = "";
 									</select>
 								</td>
 								<td colspan=2 valign=top>
-									<select name="selCSI" size="5" style="width:100%" onChange="selectCSI();" onHelp="showHelp('html/Help_CreateDE.html#newDECForm_selCS',helpUrl); return false">
+									<select name="selCSI" size="5" style="width:100%" onChange="selectCSI();" 
+
+onHelp="showHelp('html/Help_CreateDE.html#newDECForm_selCS',helpUrl); return false">
 									</select>
 								</td>
 							</tr>
@@ -1112,7 +1174,9 @@ String propCDR = "";
 									&nbsp;
 								</td>
 								<td colspan=2 valign=top>
-									<select name="selectedCS" size="5" style="width:98%" multiple onchange="addSelectCSI(false, true, '');" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selCS',helpUrl); return false">
+									<select name="selectedCS" size="5" style="width:98%" multiple onchange="addSelectCSI(false, true, '');" 
+
+onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selCS',helpUrl); return false">
 										<%                  //store selected cs list on load 
                     if (vSelCSIDList != null) 
                     {
@@ -1131,7 +1195,9 @@ String propCDR = "";
 									</select>
 								</td>
 								<td colspan=2 valign=top>
-									<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selCS',helpUrl); return false">
+									<select name="selectedCSI" size="5" style="width:100%" multiple onchange="addSelectedAC();" 
+
+onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selCS',helpUrl); return false">
 									</select>
 								</td>
 							</tr>
@@ -1164,18 +1230,24 @@ String propCDR = "";
 									&nbsp;
 								</td>
 								<td align="left">
-									<input type="button" name="btnViewCt" value="Edit Item" onClick="javascript:editContact('view');" disabled>
+									<input type="button" name="btnViewCt" value="Edit Item" onClick="javascript:editContact('view');" 
+
+disabled>
 								</td>
 								<td align="left">
 									<input type="button" name="btnCreateCt" value="Create New" onClick="javascript:editContact('new');">
 								</td>
 								<td align="center">
-									<input type="button" name="btnRmvCt" value="Remove Item" onClick="javascript:editContact('remove');" disabled>
+									<input type="button" name="btnRmvCt" value="Remove Item" onClick="javascript:editContact('remove');" 
+
+disabled>
 								</td>
 							</tr>
 							<tr>
 								<td colspan=4 valign="top">
-									<select name="selContact" size="4" style="width:100%" onchange="javascript:enableContButtons();" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContact',helpUrl); return false">
+									<select name="selContact" size="4" style="width:100%" onchange="javascript:enableContButtons();" 
+
+onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContact',helpUrl); return false">
 										<%	
 				Enumeration enum1 = hContacts.keys();
 				while (enum1.hasMoreElements())
