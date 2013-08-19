@@ -81,6 +81,10 @@ public class DECHelper {
 			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2, null);
 			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3, null);
 			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4, null);
+			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1_COUNT, null);
+			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2_COUNT, null);
+			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3_COUNT, null);
+			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4_COUNT, null);
 		} else {
 			throw new Exception("Session is NULL or empty");
 		}
