@@ -21,6 +21,10 @@
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<%
 		
+		//GF30798 final user selected defs
+		String userSelectedDefFinal = (String)session.getAttribute("userSelectedDefFinal");
+
+		
 		//for view only page
 	    String bodyPage = (String) request.getAttribute("IncludeViewPage");
 	    boolean isView = false;
@@ -472,6 +476,11 @@
 							      <font color="#FF0000">
 								     Data Element Concept
 							     </font>
+							     <!-- the following 3 lines is just for test -->
+								 <p>
+								 >>><%= userSelectedDefFinal %><<<
+								 <p>
+							     
 							<% } %>         
 						<% } %>	
 						</font>
@@ -1596,6 +1605,8 @@
 				<% } %>
 			</table>
 
+			<input type="hidden" name="isAConcept" value="false"> <!-- GF30798 -->
+			<input type="hidden" name="userSelectedDef" value="nothing"> <!-- GF30798 -->
 			<input type="hidden" name="pageAction" value="nothing">
 			<input type="hidden" name="decIDSEQ" value="<%=sDECIDSEQ%>">
 			<input type="hidden" name="regStatusIDSEQ" value="<%=sRegStatusIDSEQ%>"> <!-- GF32398 -->
