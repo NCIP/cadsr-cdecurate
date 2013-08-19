@@ -1,5 +1,7 @@
 package gov.nih.nci.cadsr.cdecurate.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
 import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.SetACService;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpSessionContext;
 import org.apache.log4j.Logger;
 import org.easymock.EasyMock;
 //import com.sun.org.apache.xerces.internal.impl.xs.dom.DOMParser;
+import org.junit.Test;
 
 /**
  * Setup:
@@ -194,55 +197,67 @@ public class TestDECAltName
 		
 	}
 	
-  public static void main(String[] args) throws Exception
+  @Test
+  public void runTest() throws Exception
   {
-//	CurationTestLogger logger1 = new CurationTestLogger(TestDECAltName.class);
-    // Initialize the Log4j environment.
-    String logXML = "log4j.xml";
-    if (args.length > 0)
-    {
-        logXML = args[0];
-    }
-//    logger.initLogger(logXML);
-    //initialize connection
-    String connXML = "";
-    if (args.length > 1)
-      connXML = args[1];
-    
     TestDECAltName testdec = new TestDECAltName();    
-    //testdec.test();
-
+    String status = null;
     //add and removals
-    testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "oc qual 0");			//0
-    testdec.testGF30798AddAltDef("Add one more oc qualifier", "ObjectQualifier", "oc qual 1");		//1
-    testdec.testGF30798RemoveAltDef("Remove the second oc qualifier", "ObjectQualifier", "1");
-    testdec.testGF30798RemoveAltDef("Remove the first oc qualifier", "ObjectQualifier", "0");
-    testdec.testGF30798AddAltDef("Add one prop qualifier", "PropertyQualifier", "prop qual 0");
-    testdec.testGF30798RemoveAltDef("Remove the prop qualifier", "PropertyQualifier", "0");
-    testdec.testGF30798AddAltDef("Add one prop", "Prop", "prop 0");
-    testdec.testGF30798RemoveAltDef("Remove the prop", "Property", "0");
+    status = testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "oc qual 0");
+	assertEquals(status, "oc qual 0");
+    status = testdec.testGF30798AddAltDef("Add one more oc qualifier", "ObjectQualifier", "oc qual 1");		//1
+	assertEquals(status, "oc qual 0_oc qual 1");
+    status = testdec.testGF30798RemoveAltDef("Remove the second oc qualifier", "ObjectQualifier", "1");
+	assertEquals(status, "oc qual 0");
+    status = testdec.testGF30798RemoveAltDef("Remove the first oc qualifier", "ObjectQualifier", "0");
+	assertNull(status, null);
+    status = testdec.testGF30798AddAltDef("Add one prop qualifier", "PropertyQualifier", "prop qual 0");
+	assertEquals(status, "prop qual 0");
+    status = testdec.testGF30798RemoveAltDef("Remove the prop qualifier", "PropertyQualifier", "0");
+	assertNull(status, null);
+    status = testdec.testGF30798AddAltDef("Add one prop", "Prop", "prop 0");
+	assertEquals(status, "prop 0");
+    status = testdec.testGF30798RemoveAltDef("Remove the prop", "Property", "0");
+	assertNull(status, null);
     //clear it
-    testdec.testGF30798ClearAltDef("Clear the alt def", null, null);
+    status = testdec.testGF30798ClearAltDef("Clear the alt def", null, null);
+	assertNull(status, null);
     //more add and removals
-    testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "oc q 0");			//0
-    testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "oc q 1");			//1
-    testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "oc q 1");			//2
-    testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "oc q 2");			//3
-    testdec.testGF30798RemoveAltDef("Remove the second oc qualifier (first oc q 1)", "ObjectQualifier", "1");
-    testdec.testGF30798AddAltDef("Add one prop", "Prop", "prop 0");
-    testdec.testGF30798AddAltDef("Add second prop", "Prop", "prop 1");
-    testdec.testGF30798AddAltDef("Add third prop", "Prop", "prop 2");
-    testdec.testGF30798AddAltDef("Add one oc", "Object", "oc 0");			//0
-    testdec.testGF30798AddAltDef("Add second oc", "Object", "oc 1");		//1
-    testdec.testGF30798AddAltDef("Add 1 prop qualifier", "PropertyQualifier", "prop qual 0");    
-    testdec.testGF30798RemoveAltDef("Remove the first oc  (first oc 0)", "ObjectClass", "0");
-    testdec.testGF30798ClearAltDef("Clear the alt def", null, null);
+    status = testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "oc q 0");			//0
+	assertEquals(status, "oc q 0");
+    status = testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "oc q 1");			//1
+	assertEquals(status, "oc q 0_oc q 1");
+    status = testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "oc q 1");			//2
+	assertEquals(status, "oc q 0_oc q 1_oc q 1");
+    status = testdec.testGF30798AddAltDef("Add one oc qualifier", "ObjectQualifier", "oc q 2");			//3
+	assertEquals(status, "oc q 0_oc q 1_oc q 1_oc q 2");
+    status = testdec.testGF30798RemoveAltDef("Remove the second oc qualifier (first oc q 1)", "ObjectQualifier", "1");
+	assertEquals(status, "oc q 0_oc q 1_oc q 2");
+    status = testdec.testGF30798AddAltDef("Add one prop", "Prop", "prop 0");
+	assertEquals(status, "oc q 0_oc q 1_oc q 2_prop 0");
+    status = testdec.testGF30798AddAltDef("Add second prop", "Prop", "prop 1");
+	assertEquals(status, "oc q 0_oc q 1_oc q 2_prop 1");
+    status = testdec.testGF30798AddAltDef("Add third prop", "Prop", "prop 2");
+	assertEquals(status, "oc q 0_oc q 1_oc q 2_prop 2");
+    status = testdec.testGF30798AddAltDef("Add one oc", "Object", "oc 0");			//0
+	assertEquals(status, "oc q 0_oc q 1_oc q 2_oc 0_prop 2");
+    status = testdec.testGF30798AddAltDef("Add second oc", "Object", "oc 1");		//1
+	assertEquals(status, "oc q 0_oc q 1_oc q 2_oc 1_prop 2");
+    status = testdec.testGF30798AddAltDef("Add 1 prop qualifier", "PropertyQualifier", "prop qual 0");    
+	assertEquals(status, "oc q 0_oc q 1_oc q 2_oc 1_prop qual 0_prop 2");
+    status = testdec.testGF30798RemoveAltDef("Remove the first oc  (first oc 0)", "ObjectClass", "0");
+	assertEquals(status, "oc q 0_oc q 1_oc q 2_prop qual 0_prop 2");
+    status = testdec.testGF30798ClearAltDef("Clear the alt def", null, null);
+	assertNull(status, null);
     //no one each
-    testdec.testGF30798AddAltDef("Add 1 oc qualifier", "ObjectQualifier", "oc qual 0");			//0
-    testdec.testGF30798AddAltDef("Add 1 oc", "Object", "oc 0");			//0
-    testdec.testGF30798AddAltDef("Add 1 prop qualifier", "PropertyQualifier", "prop qual 0");
-    testdec.testGF30798AddAltDef("Add 1 prop", "Prop", "prop 0");
-
+    status = testdec.testGF30798AddAltDef("Add 1 oc qualifier", "ObjectQualifier", "oc qual 0");			//0
+	assertEquals(status, "oc qual 0");
+    status = testdec.testGF30798AddAltDef("Add 1 oc", "Object", "oc 0");			//0
+	assertEquals(status, "oc qual 0_oc 0");
+    status = testdec.testGF30798AddAltDef("Add 1 prop qualifier", "PropertyQualifier", "prop qual 0");
+	assertEquals(status, "oc qual 0_oc 0_prop qual 0");
+    status = testdec.testGF30798AddAltDef("Add 1 prop", "Prop", "prop 0");
+	assertEquals(status, "oc qual 0_oc 0_prop qual 0_prop 0");
 		
   }
 
@@ -288,7 +303,7 @@ public class TestDECAltName
 		return session;
   }
 
-  private void testGF30798AddAltDef(String message, String clickType, String userSelectedValue) throws Exception {
+  private String testGF30798AddAltDef(String message, String clickType, String userSelectedValue) throws Exception {
 	    initEasyMock();
 	  	System.out.println(message);
 	    EasyMock.expect(request.getParameter("pageAction")).andReturn("UseSelection");
@@ -302,11 +317,14 @@ public class TestDECAltName
 		EasyMock.replay(servletContext);
 
 		DECHelper.createFinalAlternateDefinition(request, userSelectedValue);
-		System.out.println("Final string = >>>" + session.getAttribute(Constants.FINAL_ALT_DEF_STRING) + "<<<");
+		String retVal = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
+		System.out.println("Final string = >>>" + retVal + "<<<");
 		System.out.println("\n");
+		
+		return retVal;
   }
   
-  private void testGF30798RemoveAltDef(String message, String clickType, String userSelectedValue) throws Exception {
+  private String testGF30798RemoveAltDef(String message, String clickType, String userSelectedValue) throws Exception {
 		initEasyMock();
 	  	System.out.println(message);
 		EasyMock.expect(request.getParameter("pageAction")).andReturn("RemoveSelection");
@@ -337,11 +355,14 @@ public class TestDECAltName
 		}
 		
 		DECHelper.createFinalAlternateDefinition(request, null);
-		System.out.println("Final string = >>>" + session.getAttribute(Constants.FINAL_ALT_DEF_STRING) + "<<< ");
+		String retVal = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
+		System.out.println("Final string = >>>" + retVal + "<<< ");
 		System.out.println("\n");
+		
+		return retVal;
   }
   
-  private void testGF30798ClearAltDef(String message, String clickType, String userSelectedValue) throws Exception {
+  private String testGF30798ClearAltDef(String message, String clickType, String userSelectedValue) throws Exception {
 	    initEasyMock();
 	  	System.out.println(message);
 	    EasyMock.expect(request.getParameter("pageAction")).andReturn("clearBoxes");
@@ -355,8 +376,11 @@ public class TestDECAltName
 
 		DECHelper.clearAlternateDefinition(session);
 
-		System.out.println("Final string = >>>" + session.getAttribute(Constants.FINAL_ALT_DEF_STRING) + "<<< ");
+		String retVal = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
+		System.out.println("Final string = >>>" + retVal + "<<< ");
 		System.out.println("\n");
+
+		return retVal;
   }
 
 }
