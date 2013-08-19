@@ -1,6 +1,7 @@
 package gov.nih.nci.cadsr.cdecurate.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
 import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
@@ -198,6 +199,96 @@ public class TestDECAltName
 	}
 	
   @Test
+  public void runDecomposeTest() {
+	  Object stat[] = null;
+
+	  String altDef = "oc q 1_oc q 2_oc q 3_oc 1_prop q 1_prop q 2_prop 1";
+	  int count1 = 3;	//3 oc qualifiers
+	  int count2 = 1;	//1 oc
+	  int count3 = 2;	//2 prop qualifiers
+	  int count4 = 1;	//1 prop
+	  stat = DECHelper.decompose(altDef, count1, count2, count3, count4);
+	  assertEquals(((ArrayList)(stat[0])).size(), 3);
+	  assertNotNull((String)(stat[1]));
+	  assertEquals(((ArrayList)(stat[2])).size(), 2);
+	  assertNotNull((String)(stat[3]));
+	  System.out.println("\n");
+	  
+	  altDef = "oc q 1_oc q 2_oc 1_prop q 1_prop q 2_prop 1";
+	  count1 = 2;	//2 oc qualifiers
+	  count2 = 1;	//1 oc
+	  count3 = 2;	//2 prop qualifiers
+	  count4 = 1;	//1 prop
+	  stat = DECHelper.decompose(altDef, count1, count2, count3, count4);
+	  assertEquals(((ArrayList)(stat[0])).size(), 2);
+	  assertNotNull((String)(stat[1]));
+	  assertEquals(((ArrayList)(stat[2])).size(), 2);
+	  assertNotNull((String)(stat[3]));
+	  System.out.println("\n");
+
+	  altDef = "oc q 1_oc q 2_prop q 1_prop q 2_prop 1";
+	  count1 = 2;	//2 oc qualifiers
+	  count2 = 0;	//1 oc
+	  count3 = 2;	//2 prop qualifiers
+	  count4 = 1;	//1 prop
+	  stat = DECHelper.decompose(altDef, count1, count2, count3, count4);
+	  assertEquals(((ArrayList)(stat[0])).size(), 2);
+	  assertNull((String)(stat[1]));
+	  assertEquals(((ArrayList)(stat[2])).size(), 2);
+	  assertNotNull((String)(stat[3]));
+	  System.out.println("\n");
+
+	  altDef = "oc q 1_oc q 2_prop q 1_prop q 2";
+	  count1 = 2;	//2 oc qualifiers
+	  count2 = 0;	//1 oc
+	  count3 = 2;	//2 prop qualifiers
+	  count4 = 0;	//1 prop
+	  stat = DECHelper.decompose(altDef, count1, count2, count3, count4);
+	  assertEquals(((ArrayList)(stat[0])).size(), 2);
+	  assertNull((String)(stat[1]));
+	  assertEquals(((ArrayList)(stat[2])).size(), 2);
+	  assertNull((String)(stat[3]));
+	  System.out.println("\n");
+
+	  altDef = "oc q 1_prop q 1_prop q 2";
+	  count1 = 1;	//2 oc qualifiers
+	  count2 = 0;	//1 oc
+	  count3 = 2;	//2 prop qualifiers
+	  count4 = 0;	//1 prop
+	  stat = DECHelper.decompose(altDef, count1, count2, count3, count4);
+	  assertEquals(((ArrayList)(stat[0])).size(), 1);
+	  assertNull((String)(stat[1]));
+	  assertEquals(((ArrayList)(stat[2])).size(), 2);
+	  assertNull((String)(stat[3]));
+	  System.out.println("\n");
+
+	  altDef = "prop q 1_prop q 2";
+	  count1 = 0;	//2 oc qualifiers
+	  count2 = 0;	//1 oc
+	  count3 = 2;	//2 prop qualifiers
+	  count4 = 0;	//1 prop
+	  stat = DECHelper.decompose(altDef, count1, count2, count3, count4);
+	  assertEquals(((ArrayList)(stat[0])).size(), 0);
+	  assertNull((String)(stat[1]));
+	  assertEquals(((ArrayList)(stat[2])).size(), 2);
+	  assertNull((String)(stat[3]));
+	  System.out.println("\n");
+
+	  altDef = "oc q 1_oc q 2_oc q 3_oc q 4_prop 1";
+	  count1 = 4;	//2 oc qualifiers
+	  count2 = 0;	//1 oc
+	  count3 = 0;	//2 prop qualifiers
+	  count4 = 1;	//1 prop
+	  stat = DECHelper.decompose(altDef, count1, count2, count3, count4);
+	  assertEquals(((ArrayList)(stat[0])).size(), 4);
+	  assertNull((String)(stat[1]));
+	  assertEquals(((ArrayList)(stat[2])).size(), 0);
+	  assertNotNull((String)(stat[3]));
+	  System.out.println("\n");
+	 
+  }
+  
+//  @Test
   public void runTest() throws Exception
   {
     TestDECAltName testdec = new TestDECAltName();    
