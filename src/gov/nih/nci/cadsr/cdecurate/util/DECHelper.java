@@ -5,6 +5,8 @@ import gov.nih.nci.cadsr.common.Constants;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
+import java.util.regex.MatchResult;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -207,6 +209,24 @@ public class DECHelper {
 		}
 		
 		return retVal;
+	}
+	
+	/**
+	 * Decompose big string into individual components e.g. OC qualifier, OC, Prop qualifer, Prop
+	 * @param altDef
+	 * @return
+	 */
+	public static Object[] decompose(String altDef, int count1, int count2, int count3, int count4) {
+		String input = altDef;	//"1 fish 2 fish red fish blue fish";
+		Scanner s = new Scanner(input).useDelimiter("_");
+//		s.findInLine("(\\d+) fish (\\d+) fish (\\w+) fish (\\w+)");
+		MatchResult result = s.match();
+		for (int i=1; i<=result.groupCount(); i++) {
+		    System.out.println(result.group(i));
+		}
+		s.close();
+		
+		return null;
 	}
 	
 }
