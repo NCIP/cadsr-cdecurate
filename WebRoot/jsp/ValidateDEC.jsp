@@ -167,7 +167,11 @@
       if (sContent == null) sContent = "";
       String sStat = (String)vValidate.elementAt(i+2);
       if(sItem != null && sItem.equals("Alternate Definition")) {
-      	sContent = (String)session.getAttribute("userSelectedDefFinal");	//GF30798
+	String temp = (String)session.getAttribute("userSelectedDefFinal");
+System.out.println("temp [" + temp + "] temp.trim().indexOf(null) = " + temp.trim().indexOf("null"));
+      	if (temp.trim().indexOf("null") != 0) {
+      		sContent = "..." + temp;	//GF30798
+	}
       }
       String sFont = "#000000";
       if (sStat.startsWith("Valid") || sStat.equals("No Change"))
@@ -181,7 +185,7 @@
 						</strong>
 					</td>
 					<td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000">
-						<%=sContent%>
+						<%="TBD " + sContent%>
 						&nbsp;
 					</td>
 					<td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000">
