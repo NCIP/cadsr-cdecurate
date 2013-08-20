@@ -678,7 +678,7 @@ public class SetACService implements Serializable
 			System.out.println("req [" + req + "] req.getSession() [" + req.getSession() + "] noldDef [" + oldDef + "] ");
 			String chosenDef = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);	//GF30798 constructChosenDefinition(req.getSession(), "DEC", oldDef);
 			logger.debug("At line 680 of SetACService.java "+chosenDef);
-			if (chosenDef != null && !chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
+			if (chosenDef != null && !chosenDef.trim().equals("null") && !chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
 				String warningMessage = "Valid \n Note: Your chosen definition is being replaced by standard definition.  Your chosen definition is being added as an alternate definition if it does not exist already.";
 				UtilService.setValPageVector(vValidate, "Alternate Definition",chosenDef, false, 0, warningMessage, sOriginAction);

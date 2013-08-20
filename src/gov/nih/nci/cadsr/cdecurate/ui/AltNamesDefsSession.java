@@ -462,11 +462,11 @@ public class AltNamesDefsSession implements Serializable
         }
 
         //GF30798
-        if(ac != null && ac.getAlternates() != null && ac.getAlternates()._alts != null && ac.getAlternates()._alts[0] != null) {
-        	String altDef = ac.getAlternates()._alts[0].getName();
-        	session_.setAttribute(Constants.FINAL_ALT_DEF_STRING, altDef);
-        	System.out.println("AltNamesDefsSession: getSessionDataAC() altDef = >>>" + altDef + "<<<");
-        }
+//        if(ac != null && ac.getAlternates() != null && ac.getAlternates()._alts != null && ac.getAlternates()._alts[0] != null) {
+//        	String altDef = ac.getAlternates()._alts[0].getName();
+//        	session_.setAttribute(Constants.FINAL_ALT_DEF_STRING, altDef);
+//        	System.out.println("AltNamesDefsSession: getSessionDataAC() altDef = >>>" + altDef + "<<<");
+//        }
         
         // Need to reset visible manually curated definitions.
         altSess._showMC = showMC;
