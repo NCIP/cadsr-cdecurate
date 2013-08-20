@@ -27,6 +27,7 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
 import gov.nih.nci.cadsr.cdecurate.util.Tree;
 import gov.nih.nci.cadsr.cdecurate.util.TreeNode;
+import gov.nih.nci.cadsr.common.Constants;
 
 /**
  * This class maps and manges the session data needed for processing Alternate Names and Definitions.
@@ -419,7 +420,7 @@ public class AltNamesDefsSession implements Serializable
      * @return the alt name/def buffer
      * @throws Exception
      */
-    private static AltNamesDefsSession getSessionDataAC(HttpSession session_, String launch_) throws Exception
+    public static AltNamesDefsSession getSessionDataAC(HttpSession session_, String launch_) throws Exception
     {
         // VM Edit is special, don't show the manually curated definition.
         boolean showMC = true;
@@ -460,6 +461,13 @@ public class AltNamesDefsSession implements Serializable
             }
         }
 
+        //GF30798
+        if(ac != null && ac.getAlternates() != null && ac.getAlternates()._alts != null && ac.getAlternates()._alts[0] != null) {
+        	String altDef = ac.getAlternates()._alts[0].getName();
+        	session_.setAttribute(Constants.FINAL_ALT_DEF_STRING, altDef);
+        	System.out.println("AltNamesDefsSession: getSessionDataAC() altDef = >>>" + altDef + "<<<");
+        }
+        
         // Need to reset visible manually curated definitions.
         altSess._showMC = showMC;
         return altSess;

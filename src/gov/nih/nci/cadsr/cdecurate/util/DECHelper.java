@@ -14,6 +14,13 @@ import javax.servlet.http.HttpSession;
 public class DECHelper {
 
 	//GF30798
+	/**
+	 * userSelectedDef matters only if it is adding AC; regeneration does not require it
+	 * 
+	 * @param request
+	 * @param userSelectedDef
+	 * @throws Exception
+	 */
 	public static void createFinalAlternateDefinition(HttpServletRequest request, String userSelectedDef) throws Exception {
 		HttpSession session = request.getSession();
 		String sComp = (String) request.getParameter("sCompBlocks");
@@ -217,16 +224,69 @@ public class DECHelper {
 	 * @return
 	 */
 	public static Object[] decompose(String altDef, int count1, int count2, int count3, int count4) {
-		String input = altDef;	//"1 fish 2 fish red fish blue fish";
-		Scanner s = new Scanner(input).useDelimiter("_");
-//		s.findInLine("(\\d+) fish (\\d+) fish (\\w+) fish (\\w+)");
-		MatchResult result = s.match();
-		for (int i=1; i<=result.groupCount(); i++) {
-		    System.out.println(result.group(i));
+		Object[] retVal = new Object[4];
+		List objectQualifierMap = new ArrayList();
+		String oc = null;
+		List propQualifierMap = new ArrayList();
+		String prop = null;
+
+		if(altDef != null) {
+			int total = count1 + count2 + count3 + count4;
+			String input = altDef;	//"1 fish 2 fish red fish blue fish";
+			Scanner s = new Scanner(input).useDelimiter("_");
+			String def = null;
+			try {
+				for (int a=0; a<count1; a++) {
+					def = s.next();
+				    System.out.println("comp1="+ def);
+				    objectQualifierMap.add(def);
+				}
+				retVal[0] = objectQualifierMap;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			try {
+				if(count2 > 0) {
+					def = s.next();
+				    System.out.println("comp2="+ def);
+				    oc = def;
+					retVal[1] = oc;
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			try {
+				for (int c=0; c<count3; c++) {
+					def = s.next();
+				    System.out.println("comp3="+ def);
+				    propQualifierMap.add(def);
+				}
+				retVal[2] = propQualifierMap;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
+			try {
+				if(count4 > 0) {
+					def = s.next();
+				    System.out.println("comp4="+ def);
+				    prop = def;
+					retVal[3] = prop;
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			s.close();
 		}
-		s.close();
 		
-		return null;
+		return retVal;
 	}
 	
 }
