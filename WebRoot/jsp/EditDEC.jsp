@@ -3,6 +3,8 @@
     $Name: not supported by cvs2svn $
 -->
 <%@ page import="gov.nih.nci.cadsr.common.Constants" %>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession" %>
+
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -24,7 +26,7 @@
 		<%
 		
 		//GF30798 final user selected defs
-		String userSelectedDefFinal = (String)session.getAttribute("userSelectedDefFinal");
+		String userSelectedDefFinal = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
 
 		
 		//for view only page
@@ -488,6 +490,9 @@
 					</th>
 				</tr>
 
+<tr>
+>>><%= userSelectedDefFinal %><<<
+</tr>
 				<%if(!sOriginAction.equals("BlockEditDEC") && (!isView)){%>
 				<tr valign="bottom" height="25">
 					<td align="left" colspan=2 height="11">
@@ -911,7 +916,6 @@ String temp =
 + "Prop Q=" + session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3_COUNT)
 + "Prop=" + session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4_COUNT);
 %>
-					 >>><%= temp %><<<
 				</tr>
 
 				<tr valign="top">
@@ -1766,4 +1770,11 @@ ShowEVSInfo('PropertyQualifier');
 </script>
 		</form>
 	</body>
+<%
+
+	//AltNamesDefsSession.getSessionDataAC(session, AltNamesDefsSession._searchDEC);
+
+	//String altDef = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
+
+%>
 </html>
