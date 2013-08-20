@@ -760,6 +760,7 @@ public class AltNamesDefsSession implements Serializable
         req_.setAttribute(_searchEVS, launch_);
         req_.setAttribute(_showClear, (altSess._enableClear) ? "Y" : "N");
 
+        //GF30798
 		if(altSess != null && altSess._alts != null && altSess._alts[0] != null) {
 			String altDef = (String)altSess._alts[0].getName();
 			System.out.println("AltNamesDefsSession: getAlternates() = " + altDef);
