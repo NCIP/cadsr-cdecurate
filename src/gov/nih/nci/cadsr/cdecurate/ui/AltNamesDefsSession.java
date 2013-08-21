@@ -447,9 +447,10 @@ public class AltNamesDefsSession implements Serializable
 
         // Get the AC bean.
         AC_Bean ac = (AC_Bean) session_.getAttribute(beanName);
-        if (ac == null)
-            throw new Exception("Missing session Bean [" + beanName + "].");
-
+//        if (ac == null)
+//            throw new Exception("Missing session Bean [" + beanName + "].");
+        if(ac != null) {	//GF30796
+        
         // If it hasn't been used before, create a new buffer.
         altSess = ac.getAlternates();
         if (altSess == null)
@@ -475,6 +476,8 @@ public class AltNamesDefsSession implements Serializable
         
         // Need to reset visible manually curated definitions.
         altSess._showMC = showMC;
+        }
+
         return altSess;
     }
 
@@ -754,8 +757,9 @@ public class AltNamesDefsSession implements Serializable
             altSess = getSessionDataAC(session, launch_);
             break;
         }
-        if (altSess == null)
-            throw new Exception("Unable to find or create a data buffer.");
+//        if (altSess == null)
+//            throw new Exception("Unable to find or create a data buffer.");
+      if (altSess != null) {	//GF30796
 
         // Update the display flag in the alternates.
         altSess.resetShowMC();
@@ -766,16 +770,16 @@ public class AltNamesDefsSession implements Serializable
         req_.setAttribute(_showClear, (altSess._enableClear) ? "Y" : "N");
 
         //GF30798
-		if(altSess != null && altSess._alts != null && altSess._alts[0] != null) {
-			String altDef = (String)altSess._alts[0].getName();
-			System.out.println("AltNamesDefsSession: getAlternates() = " + altDef);
+//		if(altSess != null && altSess._alts != null && altSess._alts[0] != null) {
 			//GF30796 need to check if it is already exists, if new add it
 //			session.setAttribute(Constants.FINAL_ALT_DEF_STRING, altDef);
-		}
+//		}
 
         
         // Must do any initialization that needs the session.
         altSess.setContexts(session);
+      	} 
+      
         return altSess;
     }
 
