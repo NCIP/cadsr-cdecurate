@@ -488,7 +488,7 @@
 				</tr>
 
 <tr>
->>><%= userSelectedDefFinal %><<<
+b1 >>><%= userSelectedDefFinal %><<<
 </tr>
 				<%if(!sOriginAction.equals("BlockEditDEC") && (!isView)){%>
 				<tr valign="bottom" height="25">
