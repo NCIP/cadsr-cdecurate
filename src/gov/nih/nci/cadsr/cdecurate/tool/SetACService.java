@@ -687,7 +687,7 @@ public class SetACService implements Serializable
 			
 				AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);
 				
-				altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());
+				altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796 check this!
 				
 				m_DEC.setAlternates(altSession);
 				logger.info("At line 693 of SetACService.java");				
