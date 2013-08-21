@@ -1,6 +1,7 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
 import gov.nih.nci.cadsr.cdecurate.util.DECHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
@@ -674,7 +675,8 @@ public class SearchServlet extends CurationServlet {
     private void doOpenSearchPage() throws Exception
     {
         HttpSession session = m_classReq.getSession();
-        DECHelper.clearAlternateDefinition(session);	//GF30798 didn't have time to refactor, bad design I know
+		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
         
         DataManager.setAttribute(session, "vStatMsg", new Vector());
         DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, "nothing");

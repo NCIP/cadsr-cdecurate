@@ -202,7 +202,12 @@ public class AltNamesDefsSession implements Serializable
         _showMC = true;
     }
 
-    /**
+    //GF30796
+    public Alternates[] getAlternates() {
+		return _alts;
+	}
+
+	/**
      * Clear the session edit buffer
      */
     public void clearEdit(int inst_)
@@ -764,7 +769,8 @@ public class AltNamesDefsSession implements Serializable
 		if(altSess != null && altSess._alts != null && altSess._alts[0] != null) {
 			String altDef = (String)altSess._alts[0].getName();
 			System.out.println("AltNamesDefsSession: getAlternates() = " + altDef);
-			session.setAttribute(Constants.FINAL_ALT_DEF_STRING, altDef);
+			//GF30796 need to check if it is already exists, if new add it
+//			session.setAttribute(Constants.FINAL_ALT_DEF_STRING, altDef);
 		}
 
         
@@ -1333,7 +1339,7 @@ public class AltNamesDefsSession implements Serializable
     {
         return _conteName[0];
     }
-    
+
     // This will add alternate definition if one with exact content does not exist.
     public boolean addAlternateDefinition(String def, AC_Bean acb, Connection conn) throws ToolException{
     	boolean ret = false;
@@ -1342,22 +1348,26 @@ public class AltNamesDefsSession implements Serializable
     		DBAccess db = new DBAccess(conn);
     		this.loadAlternates(db, _sortName);
     	}
-    	for (Alternates alt: _alts) {
-    		
-    		if (alt.isDef()) {
-    			String temp = alt.getName();
-    			if (def.equals(temp))
-    				exists = true;
-    		}
-    	}
     	
-    	if (!exists) {
-    		Alternates newAlt = new Alternates(Alternates._INSTANCEDEF, def, "System-generated", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
-            
-    		updateAlternatesList(newAlt, false);
-    		
+        //GF30796 just making the codes more robust
+    	if(def != null && !def.trim().equals("")) {
+    		def = def.trim();
+	    	for (Alternates alt: _alts) {
+	    		if (alt.isDef()) {
+	    			String temp = alt.getName();
+	    			if (def.equals(temp)) {
+	    				exists = true;
+	    			}
+	    		}
+	    	}
+	    	
+	    	if (!exists) {
+	    		Alternates newAlt = new Alternates(Alternates._INSTANCEDEF, def, "System-generated", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
+	            
+	    		updateAlternatesList(newAlt, false);
+	    		ret = true;
+	    	}
     	}
-    		
     	
     	return ret;
     }

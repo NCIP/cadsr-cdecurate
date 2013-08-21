@@ -70,7 +70,8 @@ public class DataElementConceptServlet extends CurationServlet {
 	{
 		HttpSession session = m_classReq.getSession();
 
-		DECHelper.clearAlternateDefinition(session);	//GF30798
+		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
 		
 		clearSessionAttributes(m_classReq, m_classRes);
 		this.clearBuildingBlockSessionAttributes(m_classReq, m_classRes);
@@ -201,8 +202,8 @@ public class DataElementConceptServlet extends CurationServlet {
         		DECBean.setAC_PREF_NAME_TYPE("SYS");
         	}
         	
-			//GF30798
-        	DECHelper.clearAlternateDefinition(session);
+    		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+    		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
         	
         	DEC_Bean pgBean = new DEC_Bean();
         	DataManager.setAttribute(session, "m_DEC", pgBean.cloneDEC_Bean(DECBean));
@@ -308,8 +309,8 @@ public class DataElementConceptServlet extends CurationServlet {
 				DECBean = serAC.getDECAttributes(DECBean, sOriginAction, sMenuAction);
 			}
 			
-			//GF30798
-			DECHelper.clearAlternateDefinition(session);
+			AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+			DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
 			
 			DEC_Bean pgBean = new DEC_Bean();
 			DataManager.setAttribute(session, "m_DEC", pgBean.cloneDEC_Bean(DECBean));
@@ -2163,7 +2164,8 @@ public class DataElementConceptServlet extends CurationServlet {
 					DataManager.setAttribute(session, "newObjectClass", "true");
 					//begin GF30798
 		        	session.removeAttribute("changedOCDefsWarning");
-					DECHelper.clearAlternateDefinitionForOC(m_classReq);		        	
+		    		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+		    		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
 					DECHelper.createFinalAlternateDefinition(m_classReq, null);
 					//end GF30798
 				}
@@ -2180,14 +2182,15 @@ public class DataElementConceptServlet extends CurationServlet {
 					DataManager.setAttribute(session, "newProperty", "true");
 					//begin GF30798
 		        	session.removeAttribute("changedPropDefsWarning");
-					DECHelper.clearAlternateDefinitionForProp(m_classReq);
+		    		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+		    		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
 					DECHelper.createFinalAlternateDefinition(m_classReq, null);
 					//end GF30798
 				}
 				else if (sComp.equals("ObjectQualifier"))
 				{
-					//GF30798
-					DECHelper.clearAlternateDefinitionForOCQualifier(m_classReq);
+					AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+					DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
 
 					sSelRow = (String) m_classReq.getParameter("selObjQRow");
 					if (sSelRow != null && !(sSelRow.equals("")))
@@ -2230,8 +2233,8 @@ public class DataElementConceptServlet extends CurationServlet {
 				}
 				else if (sComp.equals("PropertyQualifier"))
 				{
-					//GF30798
-					DECHelper.clearAlternateDefinitionForPropQualifier(m_classReq);
+					AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+					DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
 
 					sSelRow = (String) m_classReq.getParameter("selPropQRow");
 					if (sSelRow != null && !(sSelRow.equals("")))
