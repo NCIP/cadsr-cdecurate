@@ -30,8 +30,8 @@ String ocCDR = "";
 String propCDR = "";
 		
 	//GF30798 final user selected defs
-	String userSelectedDefFinal = (String)session.getAttribute("userSelectedDefFinal");
-	
+	String userSelectedDefFinal = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
+
     Vector vContext = (Vector)session.getAttribute("vWriteContextDEC");
     Vector vContextID = (Vector)session.getAttribute("vWriteContextDEC_ID");
     Vector vStatus = (Vector)session.getAttribute("vStatusDEC");
