@@ -96,12 +96,15 @@ public class DECHelper {
 			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2_COUNT, null);
 			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3_COUNT, null);
 			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4_COUNT, null);
+		} else {
+			throw new Exception("Session is NULL or empty");
+		}
+
+		if(altSession != null) {
 			//GF30796
 			altSession.cleanBuffers();
 			altSession.clearAlts();
 //			altSession.clearEdit(inst_); 	//c.f. AltNamesDefsServlet's doAction form.clearEdit()
-		} else {
-			throw new Exception("Session is NULL or empty");
 		}
 	}
 
@@ -305,16 +308,18 @@ public class DECHelper {
 			throw new Exception("New alternate definition can not be NULL or empty.");
 		}
 		Alternates[] _alts = altSession.getAlternates();
-		if(_alts == null) {
-			throw new Exception("Existing alternate definition(s) can not be NULL or empty.");
+//		if(_alts == null) {
+//			throw new Exception("Existing alternate definition(s) can not be NULL or empty.");
+//		}
+
+		if(_alts != null) {
+			for (Alternates alt: _alts) {
+				String temp = alt.getName();
+				if (altDef.trim().equals(temp.trim())) {
+					retVal = true;
+				}
+	    	}
 		}
-    	
-		for (Alternates alt: _alts) {
-			String temp = alt.getName();
-			if (altDef.trim().equals(temp.trim())) {
-				retVal = true;
-			}
-    	}
     	
 		return retVal;
 	}

@@ -321,6 +321,7 @@ public class CurationServlet
 	      }
     	  catch (Exception ex)
     	  {
+    		  ex.printStackTrace();
     		  userbean=null;
     		  logger.error("Failed credential validation, code is " + uc.getCheckCode());
     	      logger.error("Redirecting the user to Login Page");
