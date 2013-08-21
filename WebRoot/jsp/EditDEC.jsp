@@ -24,10 +24,7 @@
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<%
-		
-		//GF30798 final user selected defs
 		String userSelectedDefFinal = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
-
 		
 		//for view only page
 	    String bodyPage = (String) request.getAttribute("IncludeViewPage");
@@ -1757,6 +1754,41 @@ This is refilled with ac id from ac-csi to use it for block edit-->
 				</option>
 				<%}
   }   
+		
+/*				
+	//GF30798 reconstruct the alt def
+	int count1=-1, count2=-1, count3=-1, count4=-1;
+	if(session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1_COUNT) != null) {
+		count1 = (Integer)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1_COUNT);
+	}
+	if(session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2_COUNT) != null) {
+		count2 = (Integer)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2_COUNT);
+	}
+	if(session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3_COUNT) != null) {
+		count3 = (Integer)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3_COUNT);
+	}
+	if(session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4_COUNT) != null) {
+		count4 = (Integer)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4_COUNT);
+	}
+	
+	System.out.println("comp1 count=" + count1);		
+	System.out.println("comp2 count=" + count2);		
+	System.out.println("comp3 count=" + count3);		
+	System.out.println("comp4 count=" + count4);	
+	
+	AltNamesDefsSession.getSessionDataAC(session, "DataElementConcept");
+	
+	String userSelectedDefFinal = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
+
+	Object comp[] = DECHelper.decompose(userSelectedDefFinal, count1, count2, count3, count4);
+	session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, comp[0]);
+	session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2, comp[1]);
+	session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3, comp[2]);
+	session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4, comp[3]);
+
+	DECHelper.createFinalAlternateDefinition(request, null);
+*/	
+
 %>
 			</select>
 			<script language="javascript">
@@ -1768,7 +1800,7 @@ loadCSCSI();
 ShowEVSInfo('ObjectQualifier');
 ShowEVSInfo('PropertyQualifier');
 </script>
-		</form>
+		</form>		
 	</body>
 <%
 
