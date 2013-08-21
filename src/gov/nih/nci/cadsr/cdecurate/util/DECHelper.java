@@ -1,5 +1,7 @@
 package gov.nih.nci.cadsr.cdecurate.util;
 
+import gov.nih.nci.cadsr.cdecurate.database.Alternates;
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.common.Constants;
 
 import java.util.ArrayList;
@@ -83,7 +85,7 @@ public class DECHelper {
 	/*
 	 * Clear the DEC's alternate definition.
 	 */
-	public static void clearAlternateDefinition(HttpSession session) throws Exception {
+	public static void clearAlternateDefinition(HttpSession session, AltNamesDefsSession altSession) throws Exception {
 		if(session != null) {
 			session.setAttribute(Constants.FINAL_ALT_DEF_STRING, null);
 			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP1, null);
@@ -94,6 +96,10 @@ public class DECHelper {
 			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP2_COUNT, null);
 			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP3_COUNT, null);
 			session.setAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4_COUNT, null);
+			//GF30796
+			altSession.cleanBuffers();
+			altSession.clearAlts();
+//			altSession.clearEdit(inst_); 	//c.f. AltNamesDefsServlet's doAction form.clearEdit()
 		} else {
 			throw new Exception("Session is NULL or empty");
 		}
@@ -286,6 +292,30 @@ public class DECHelper {
 			s.close();
 		}
 		
+		return retVal;
+	}
+	
+	public static boolean isAlternateDefinitionExists(String altDef, AltNamesDefsSession altSession) throws Exception {
+		boolean retVal = false;
+		
+		if(altSession == null) {
+			throw new Exception("Alternate definition session can not be NULL or empty.");
+		}
+		if(altDef == null) {
+			throw new Exception("New alternate definition can not be NULL or empty.");
+		}
+		Alternates[] _alts = altSession.getAlternates();
+		if(_alts == null) {
+			throw new Exception("Existing alternate definition(s) can not be NULL or empty.");
+		}
+    	
+		for (Alternates alt: _alts) {
+			String temp = alt.getName();
+			if (altDef.trim().equals(temp.trim())) {
+				retVal = true;
+			}
+    	}
+    	
 		return retVal;
 	}
 	

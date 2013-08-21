@@ -10,6 +10,7 @@ import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
+import gov.nih.nci.cadsr.cdecurate.util.DECHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.persist.common.DBConstants;
@@ -686,10 +687,13 @@ public class SetACService implements Serializable
 				//add Alt Def
 			
 				AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);
-				
-				altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796 check this!
-				
-				m_DEC.setAlternates(altSession);
+
+			    //GF30796
+				if(!DECHelper.isAlternateDefinitionExists(chosenDef, altSession)) {
+					altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796 check this!
+					m_DEC.setAlternates(altSession);
+				}
+
 				logger.info("At line 693 of SetACService.java");				
 			}
 			//validation for both edit and DEc
@@ -1128,9 +1132,12 @@ public class SetACService implements Serializable
 				//add Alt Def
 				
 				AltNamesDefsSession	altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchVD);
-			
-				altSession.addAlternateDefinition(chosenDef,m_VD, m_servlet.getConn());
-				m_VD.setAlternates(altSession);
+
+				//GF30796
+				if(!DECHelper.isAlternateDefinitionExists(chosenDef, altSession)) {
+					altSession.addAlternateDefinition(chosenDef,m_VD, m_servlet.getConn());
+					m_VD.setAlternates(altSession);
+				}
 			}
 			
 			//same for both edit and new
