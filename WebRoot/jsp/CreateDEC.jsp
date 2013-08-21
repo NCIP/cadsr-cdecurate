@@ -1025,7 +1025,7 @@ onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_Version',helpUrl); return 
 						&nbsp;
 					</td>
 					<td height="25" valign="top">
-						<select name="selRegStatus" size="1" style="Width:50%" onHelp="#">
+						<select name="selRegStatus" size="1" style="Width:50%;" onHelp="">	<!-- GF30798 remove # as it is causing 'invalid character' in IE 8!!! -->
 							<option value="" selected></option>
 							<%          if (vRegStatus != null) 
             {            
