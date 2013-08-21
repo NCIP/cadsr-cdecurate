@@ -1,8 +1,10 @@
 package gov.nih.nci.cadsr.cdecurate.test;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
 import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.SetACService;
@@ -198,8 +200,24 @@ public class TestDECAltName
 		
 	}
 	
-  @Test
+	@Test
+	public void handleUserSelectedAlternateDefinition() throws Exception {
+		Alternates[] _alts = new Alternates[3];
+		_alts[0].setName("Def 1");
+		_alts[1].setName("Def 2");
+		_alts[2].setName("Def 3");
+
+		assertTrue(DECHelper.isAlternateDefinitionExists("Def 1", _alts));
+		assertTrue(DECHelper.isAlternateDefinitionExists("Def 3", _alts));
+		assertFalse(DECHelper.isAlternateDefinitionExists("Def 112", _alts));
+		assertFalse(DECHelper.isAlternateDefinitionExists("Def", _alts));
+		assertTrue(DECHelper.isAlternateDefinitionExists("Def 2", _alts));
+		assertTrue(DECHelper.isAlternateDefinitionExists("Def 3", _alts));	
+	}
+		
+//  @Test
   public void runDecomposeTest() {
+	  //created specifically for GF30798 editing of DEC
 	  Object stat[] = null;
 
 	  String altDef = "oc q 1_oc q 2_oc q 3_oc 1_prop q 1_prop q 2_prop 1";
