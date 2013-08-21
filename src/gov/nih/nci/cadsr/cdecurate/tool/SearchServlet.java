@@ -1994,8 +1994,11 @@ public class SearchServlet extends CurationServlet {
         DataManager.setAttribute(session, "DDEAction", "nothing"); // reset from "CreateNewDEFComp"
         String searchAC = "DataElement";
         // sets the session attributes of the selection menu action and selected component
-        if (sMAction.equals("editDE") || sMAction.equals("editDEC") || sMAction.equals("editVD"))
+        if (sMAction.equals("editDE") || sMAction.equals("editDEC") || sMAction.equals("editVD")) {
             DataManager.setAttribute(session, "LastMenuButtonPressed", "Edit");
+    		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+    		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
+        }
         else if (sMAction.equals("NewDETemplate") || sMAction.equals("NewDEVersion")
                         || sMAction.equals("NewDECTemplate") || sMAction.equals("NewDECVersion")
                         || sMAction.equals("NewVDTemplate") || sMAction.equals("NewVDVersion"))
@@ -2007,8 +2010,11 @@ public class SearchServlet extends CurationServlet {
             if ((sMAction.equals("NewDETemplate")) || (sMAction.equals("NewDEVersion")) || (sMAction.equals("editDE")))
                 searchAC = "DataElement";
             else if ((sMAction.equals("NewDECTemplate")) || (sMAction.equals("NewDECVersion"))
-                            || (sMAction.equals("editDEC")))
+                            || (sMAction.equals("editDEC"))) {
                 searchAC = "DataElementConcept";
+        		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+        		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
+            }
             else if ((sMAction.equals("NewVDTemplate")) || (sMAction.equals("NewVDVersion"))
                             || (sMAction.equals("editVD")))
             {
@@ -2066,8 +2072,11 @@ public class SearchServlet extends CurationServlet {
         DataManager.setAttribute(session, "DDEAction", "nothing"); // reset from "CreateNewDEFComp"
         String searchAC = "DataElement";
         // sets the session attributes of the selection menu action and selected component
-        if (sMAction.equals("editDE") || sMAction.equals("editDEC") || sMAction.equals("editVD"))
+        if (sMAction.equals("editDE") || sMAction.equals("editDEC") || sMAction.equals("editVD")) {
             DataManager.setAttribute(session, "LastMenuButtonPressed", "Edit");
+    		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+    		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798            
+        }
         else if (sMAction.equals("NewDETemplate") || sMAction.equals("NewDEVersion")
                         || sMAction.equals("NewDECTemplate") || sMAction.equals("NewDECVersion")
                         || sMAction.equals("NewVDTemplate") || sMAction.equals("NewVDVersion"))
@@ -2079,8 +2088,11 @@ public class SearchServlet extends CurationServlet {
             if ((sMAction.equals("NewDETemplate")) || (sMAction.equals("NewDEVersion")) || (sMAction.equals("editDE")))
                 searchAC = "DataElement";
             else if ((sMAction.equals("NewDECTemplate")) || (sMAction.equals("NewDECVersion"))
-                            || (sMAction.equals("editDEC")))
+                            || (sMAction.equals("editDEC"))) {
                 searchAC = "DataElementConcept";
+        		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+        		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
+            }
             else if ((sMAction.equals("NewVDTemplate")) || (sMAction.equals("NewVDVersion"))
                             || (sMAction.equals("editVD")))
             {
