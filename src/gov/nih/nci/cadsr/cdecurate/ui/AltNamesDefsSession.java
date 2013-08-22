@@ -202,7 +202,11 @@ public class AltNamesDefsSession implements Serializable
         _showMC = true;
     }
 
-    //GF30796
+    public AltNamesDefsSession(Alternates[] alts) {
+    	_alts = alts;
+	}
+
+	//GF30796
     public Alternates[] getAlternates() {
 		return _alts;
 	}
