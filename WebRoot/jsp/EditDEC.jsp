@@ -399,6 +399,9 @@
 </Script>
 	</head>
 	<body onLoad="setup();hideCloseButton(<%=isView%>);" onUnload="closeDep();">
+	<!--
+	b5 [<%= userSelectedDefFinal %>]
+	-->
 
 		<form name="SearchActionForm" method="post" action="">
 			<input type="hidden" name="searchComp" value="">
@@ -486,10 +489,6 @@
 					    </font>
 					</th>
 				</tr>
-
-<tr>
-b3 >>><%= userSelectedDefFinal %><<<
-</tr>
 				<%if(!sOriginAction.equals("BlockEditDEC") && (!isView)){%>
 				<tr valign="bottom" height="25">
 					<td align="left" colspan=2 height="11">
