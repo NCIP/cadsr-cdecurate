@@ -374,10 +374,10 @@ onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return fa
 									<font color="#FF0000">
 										Data Element Concept
 									</font>
-							     <!-- the following 3 lines is just for test -->									
-									<p>
-									b3 >>><%= userSelectedDefFinal %><<<
-									<p>
+							     	<!-- the following 3 lines is just for test -->									
+									<!--
+									b5 [<%= userSelectedDefFinal %>]
+									-->
 									<% if (sMenuAction.equals("NewDECVersion")) { %>
 									Version
 									<% } else if (sMenuAction.equals("NewDECTemplate")) { %>
