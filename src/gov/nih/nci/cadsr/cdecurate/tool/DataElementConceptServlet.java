@@ -2164,8 +2164,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					DataManager.setAttribute(session, "newObjectClass", "true");
 					//begin GF30798
 		        	session.removeAttribute("changedOCDefsWarning");
-		    		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
-		    		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
+					DECHelper.clearAlternateDefinitionForOC(m_classReq);
 					DECHelper.createFinalAlternateDefinition(m_classReq, null);
 					//end GF30798
 				}
@@ -2182,15 +2181,19 @@ public class DataElementConceptServlet extends CurationServlet {
 					DataManager.setAttribute(session, "newProperty", "true");
 					//begin GF30798
 		        	session.removeAttribute("changedPropDefsWarning");
-		    		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
-		    		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
+					DECHelper.clearAlternateDefinitionForProp(m_classReq);
 					DECHelper.createFinalAlternateDefinition(m_classReq, null);
 					//end GF30798
 				}
 				else if (sComp.equals("ObjectQualifier"))
 				{
-					AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
-					DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
+//					AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+//					DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
+					//begin GF30798
+		        	session.removeAttribute("changedOCDefsWarning");
+					DECHelper.clearAlternateDefinitionForOCQualifier(m_classReq);
+					DECHelper.createFinalAlternateDefinition(m_classReq, null);
+					//end GF30798
 
 					sSelRow = (String) m_classReq.getParameter("selObjQRow");
 					if (sSelRow != null && !(sSelRow.equals("")))
@@ -2233,8 +2236,11 @@ public class DataElementConceptServlet extends CurationServlet {
 				}
 				else if (sComp.equals("PropertyQualifier"))
 				{
-					AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
-					DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
+					//begin GF30798
+		        	session.removeAttribute("changedPropDefsWarning");
+					DECHelper.clearAlternateDefinitionForPropQualifier(m_classReq);
+					DECHelper.createFinalAlternateDefinition(m_classReq, null);
+					//end GF30798
 
 					sSelRow = (String) m_classReq.getParameter("selPropQRow");
 					if (sSelRow != null && !(sSelRow.equals("")))
