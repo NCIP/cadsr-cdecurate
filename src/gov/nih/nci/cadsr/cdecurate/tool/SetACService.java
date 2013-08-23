@@ -677,7 +677,11 @@ public class SetACService implements Serializable
 			
 			//Check Definition against (constructed) chosen definition, add to Alt Def if not same, add Warning in vValidate vector.
 			System.out.println("req [" + req + "] req.getSession() [" + req.getSession() + "] noldDef [" + oldDef + "] ");
-			String chosenDef = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);	//GF30798 constructChosenDefinition(req.getSession(), "DEC", oldDef);
+			String chosenDef = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
+			//GF30798 constructChosenDefinition(req.getSession(), "DEC", oldDef);
+			
+			//String chosenDef = constructChosenDefinition(req.getSession(), "DEC", oldDef);
+			
 			logger.debug("At line 680 of SetACService.java "+chosenDef);
 			if (chosenDef != null && !chosenDef.trim().equals("null") && !chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
@@ -696,6 +700,18 @@ public class SetACService implements Serializable
 
 				logger.info("At line 693 of SetACService.java");				
 			}
+		/*	String ret="";
+			
+			 String sAC_ID=m_OC.getIDSEQ();
+	            String sContextID=m_DEC.getContextIDSEQ();
+	            String sContext=m_DEC.getContextName();
+	            String sValue=m_OC.getEVS_ORIGIN();
+	        
+	           
+	        	InsACService ins=new InsACService(req, res, m_servlet);
+	        	//ins.doAddRemoveAltNames(sAC_ID, sContextID, "INS");
+	         ret=ins.setDES("INS", sAC_ID, sContextID, sContext, "Prior Preferred Name", sValue, "ENGLISH", "");
+	          System.out.println("designation is"+ ret);*/
 			//validation for both edit and DEc
 			s = m_DEC.getDEC_CD_NAME();
 			if (s == null) s = "";
@@ -1122,7 +1138,10 @@ public class SetACService implements Serializable
 				}
 			}
 			//Check Definition against (constructed) chosen definition, add to Alt Def if not same, add Warning in vValidate vector.
-			String chosenDef = constructChosenDefinition(req.getSession(), "VD", oldDef);
+			//GF32723
+			//String chosenDef = constructChosenDefinition(req.getSession(), "VD", oldDef);
+			String chosenDef = m_REP.getPREFERRED_DEFINITION()+"_"+m_REPQ.getPREFERRED_DEFINITION();
+			//GF32723
 			
 			if (!chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
