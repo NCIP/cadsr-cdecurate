@@ -4182,7 +4182,7 @@ public class GetACSearch implements Serializable
                     conBean.markNVPConcept(conBean, session);
                     // make sure it is included only once by matching evsId and concept name only if oc/prop/rep search
                     // was done earlier.
-//                    boolean isExist = false;
+                    boolean isExist = false;
                     if (bVListExist == true)
                     {
                         for (int j = 0; j < vList.size(); j++)
@@ -4197,17 +4197,14 @@ public class GetACSearch implements Serializable
                                 String evsId = conBean.getCONCEPT_IDENTIFIER();
                                 String longName = conBean.getLONG_NAME();
                                 if (evsId != null && evsId.equals(curEvsId) && longName != null
-                                                && longName.equals(curLName)) {
-//                                    isExist = true;	//b3
-                                } else {
-                                        vList.addElement(conBean);
-                                }
+                                                && longName.equals(curLName))
+                                    isExist = true;
                             }
                         }
                     }
                     logger.debug("At line 4194 of GetACSearch.java "+conBean.getCONCEPT_NAME()+"**"+conBean.getLONG_NAME()+"**"+conBean.getCONTEXT_NAME()+"**"+conBean.getCONCEPT_IDENTIFIER()+"**"+conBean.getPREFERRED_DEFINITION());
-//                    if (isExist == false)		//b3
-//                        vList.addElement(conBean);
+                    if (isExist == false)
+                        vList.addElement(conBean);
                 }
             
                 if (g == recordsDisplayed){
