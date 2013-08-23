@@ -376,7 +376,7 @@ onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return fa
 									</font>
 							     <!-- the following 3 lines is just for test -->									
 									<p>
-									b1 >>><%= userSelectedDefFinal %><<<
+									b2 >>><%= userSelectedDefFinal %><<<
 									<p>
 									<% if (sMenuAction.equals("NewDECVersion")) { %>
 									Version
