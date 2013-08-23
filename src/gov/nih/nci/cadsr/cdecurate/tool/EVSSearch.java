@@ -49,6 +49,7 @@ import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.ActiveOption;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
 import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
+import org.LexGrid.LexBIG.Utility.LBConstants;
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 import org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService;
 import org.LexGrid.codingSchemes.CodingScheme;
@@ -60,6 +61,8 @@ import org.LexGrid.naming.Mappings;
 import org.LexGrid.naming.SupportedHierarchy;
 import org.LexGrid.naming.SupportedSource;
 import org.apache.log4j.Logger;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.SearchDesignationOption;
+import org.LexGrid.concepts.Entity;
 
 /**
  * EVSSearch class is for search action of the tool for all components.
@@ -1862,11 +1865,12 @@ public class EVSSearch implements Serializable {
 					//call method to do the search from EVS vocab
 					ResolvedConceptReferenceList lstResults = null;
 					//do not do vocab search if it is meta code search
-					if (!sSearchIn.equals("MetaCode")
-							&& !sMetaName.equals(vocabDisp))
-						lstResults = this.doConceptQuery(	//GF29786
+					if (!sSearchIn.equals("MetaCode") && !sMetaName.equals(vocabDisp)) {
+						//GF29786
+						lstResults = doConceptQuery(
 								vocabBean.getVocabAccess(), termStr, dtsVocab,
 								sSearchIn, vocabType, namePropIn, sSearchAC);
+					}
 					logger.debug("at line 1870 of EVSSearch.java" + lstResults +"dtsvocab is "+ dtsVocab);
 					//get the desc object from the list
 					if (lstResults != null) {
@@ -2056,7 +2060,7 @@ public class EVSSearch implements Serializable {
 	 * @param sPropIn
 	 * @return
 	 */
-	private ResolvedConceptReferenceList doConceptQuery(String vocabAccess, String termStr,
+	private ResolvedConceptReferenceList doConceptQuery(String vocabAccess, String termStr,	//JT needs to look into this EVS search!!!
 			String dtsVocab, String sSearchIn, String vocabType, String sPropIn, String sSearchAC) {
 		ResolvedConceptReferenceList lstResult = null;
 		List lstResult1 = null;
@@ -3784,6 +3788,42 @@ public class EVSSearch implements Serializable {
 		}
 
 		return concepts;
+	}
+	
+	//codes courtesy of Tracy S
+	public int searchConceptsName(LexEVSApplicationService lbSvc, String vocabName, String vocabVersion) {
+        String searchTerm = "name";
+        
+        try {
+                CodingSchemeVersionOrTag cvt = new CodingSchemeVersionOrTag();
+                cvt.setVersion(vocabVersion);
+                CodedNodeSet nodes = lbSvc.getNodeSet(vocabName, cvt, null);
+                nodes = nodes.restrictToMatchingDesignations(searchTerm,
+                                SearchDesignationOption.ALL,
+                                LBConstants.MatchAlgorithms.exactMatch.name(), null);
+                nodes = nodes.restrictToStatus(ActiveOption.ALL, null);
+                ResolvedConceptReferenceList crl = nodes.resolveToList(null, null,
+                                null, 20);
+                Vector<String> definitions = new Vector<String>();
+                for(int i=0; i<crl.getResolvedConceptReferenceCount();i++){
+                        Entity concept = crl.getResolvedConceptReference(i).getEntity();
+                        Definition[] defs = concept.getDefinition();
+                        for (int j=0;j < defs.length; j++){
+                                Definition tempDef = defs[j];
+                                String defText = tempDef.getValue().getContent();
+                                definitions.add(concept.getEntityCode()+ " " + tempDef.getSource(0).getContent() + " " +   defText);
+                        }
+                }
+                
+                for (String def:definitions){
+                        System.out.println(def);
+                }
+                return crl.getResolvedConceptReferenceCount();
+        } catch (Exception ex) {
+                System.out.println("searchConcepts_name " + vocabName + " and "
+                                + vocabVersion + " throws Exception = " + ex);
+        }
+        return 0;
 	}
 	
 	private String getAlgorithm(String termStr) {
