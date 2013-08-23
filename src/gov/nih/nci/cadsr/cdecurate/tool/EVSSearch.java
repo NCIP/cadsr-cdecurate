@@ -1867,7 +1867,7 @@ public class EVSSearch implements Serializable {
 					//do not do vocab search if it is meta code search
 					if (!sSearchIn.equals("MetaCode") && !sMetaName.equals(vocabDisp)) {
 						//GF29786
-						lstResults = doConceptQuery(
+						lstResults = doConceptQuery(	//JT b4
 								vocabBean.getVocabAccess(), termStr, dtsVocab,
 								sSearchIn, vocabType, namePropIn, sSearchAC);
 					}
@@ -1884,9 +1884,9 @@ public class EVSSearch implements Serializable {
 							String vocabMetaType = "", vocabMetaCode = "";
 
 							ResolvedConceptReference rcr = new ResolvedConceptReference();
-//							rcr = (ResolvedConceptReference) lstResults.getResolvedConceptReference(i);
-							rcr = (ResolvedConceptReference) lstResults.enumerateResolvedConceptReference()	//GF32446 need to get to next element to get to "Semantic Type"
-				                    .nextElement();
+							rcr = (ResolvedConceptReference) lstResults.getResolvedConceptReference(i);
+//							rcr = (ResolvedConceptReference) lstResults.enumerateResolvedConceptReference().nextElement();	//GF32446 need to get to next element to get to "Semantic Type"
+
 
 							if (!rcr.getEntity().isIsActive()){
 								if (sIncludeRet != null
@@ -1951,7 +1951,7 @@ public class EVSSearch implements Serializable {
 							sSemantic = this.getMetaSemantics(props);	//GF32446 - might not need this!!! see above
 							
 							//store to concept according to the number of defitions exist for a concept if already not stored
-							if (!sConSet.contains(sConID)) {	//GF29786 - comparing concepts based on EVS identifier and save it
+							if (!sConSet.contains(sConID)) {	//JT b4 //GF29786 - comparing concepts based on EVS identifier and save it
 								vConList = this.storeConceptToBean(vConList,
 										definitions, dtsVocab, sConName, sDispName,
 										conCodeType, sConID, ilevel, sStatus,
@@ -2120,12 +2120,16 @@ public class EVSSearch implements Serializable {
 						//GF32446 this cause Semantic_Type to not to be included
 						LocalNameList lnl = new LocalNameList();
 						lnl.addEntry(sPropIn);
-						nodeSet = nodeSet.restrictToMatchingProperties(
-								lnl, //the Property Name to match
-								null, //the Property Type to match (null matches all)
-								termStr, //the text to match
-								algorithm, //the match algorithm to use
-								null );//the language to match (null matches all)
+//						nodeSet = nodeSet.restrictToMatchingProperties(	//JT b4
+//						lnl, //the Property Name to match
+//						null, //the Property Type to match (null matches all)
+//						termStr, //the text to match
+//						algorithm, //the match algorithm to use
+//						null );//the language to match (null matches all)
+						//JT begin b4
+						nodeSet = nodeSet.restrictToMatchingDesignations(termStr, SearchDesignationOption.ALL,LBConstants.MatchAlgorithms.exactMatch.name(), null);
+						nodeSet = nodeSet.restrictToStatus(ActiveOption.ALL, null);
+						//JT end b4
 						
 						logger.debug("EVSSearch:doConceptQuery() nodeSet retrieved from lexEVS.");	//GF29786 - geting the concept list from lexevs based on synonyms done (old way???)
 					}
@@ -2153,7 +2157,7 @@ public class EVSSearch implements Serializable {
 					lstResult = nodeSet.resolveToList(
 							null, //Sorts used to sort results (null means sort by match score)
 							null, //PropertyNames to resolve (null resolves all)
-							new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
+							null,	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
 							100	  //cap the number of results returned (-1 resolves all)
 					);
 					
