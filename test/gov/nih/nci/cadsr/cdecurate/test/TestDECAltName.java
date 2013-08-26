@@ -204,6 +204,7 @@ public class TestDECAltName
 	@Test
 	public void handleUserSelectedAlternateDefinition() throws Exception {
 		Alternates[] _alts = new Alternates[3];
+		for(int i = 0; i < _alts.length ; i++) _alts[i] = new Alternates();
 		_alts[0].setName("Def 1");
 		_alts[1].setName("Def 2");
 		_alts[2].setName("Def 3");
@@ -308,7 +309,7 @@ public class TestDECAltName
 	 
   }
   
-//  @Test
+  @Test
   public void runTest() throws Exception
   {
     TestDECAltName testdec = new TestDECAltName();    
