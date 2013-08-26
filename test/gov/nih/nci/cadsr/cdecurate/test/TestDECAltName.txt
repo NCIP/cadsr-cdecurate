@@ -1,0 +1,106 @@
+Sample output:
+
+Add one oc qualifier
+Final string = >>>oc qual 0<<<
+
+
+Add one more oc qualifier
+Final string = >>>oc qual 0_oc qual 1<<<
+
+
+Remove the second oc qualifier
+Final string = >>>oc qual 0<<< 
+
+
+Remove the first oc qualifier
+Final string = >>>null<<< 
+
+
+Add one prop qualifier
+Final string = >>>prop qual 0<<<
+
+
+Remove the prop qualifier
+Final string = >>>null<<< 
+
+
+Add one prop
+Final string = >>>prop 0<<<
+
+
+Remove the prop
+Final string = >>>null<<< 
+
+
+Clear the alt def
+Final string = >>>null<<< 
+
+
+Add one oc qualifier
+Final string = >>>oc q 0<<<
+
+
+Add one oc qualifier
+Final string = >>>oc q 0_oc q 1<<<
+
+
+Add one oc qualifier
+Final string = >>>oc q 0_oc q 1_oc q 1<<<
+
+
+Add one oc qualifier
+Final string = >>>oc q 0_oc q 1_oc q 1_oc q 2<<<
+
+
+Remove the second oc qualifier (first oc q 1)
+Final string = >>>oc q 0_oc q 1_oc q 2<<< 
+
+
+Add one prop
+Final string = >>>oc q 0_oc q 1_oc q 2_prop 0<<<
+
+
+Add second prop
+Final string = >>>oc q 0_oc q 1_oc q 2_prop 1<<<
+
+
+Add third prop
+Final string = >>>oc q 0_oc q 1_oc q 2_prop 2<<<
+
+
+Add one oc
+Final string = >>>oc q 0_oc q 1_oc q 2_oc 0_prop 2<<<
+
+
+Add second oc
+Final string = >>>oc q 0_oc q 1_oc q 2_oc 1_prop 2<<<
+
+
+Add 1 prop qualifier
+Final string = >>>oc q 0_oc q 1_oc q 2_oc 1_prop qual 0_prop 2<<<
+
+
+Remove the first oc  (first oc 0)
+Final string = >>>oc q 0_oc q 1_oc q 2_prop qual 0_prop 2<<< 
+
+
+Clear the alt def
+Final string = >>>null<<< 
+
+
+Add 1 oc qualifier
+Final string = >>>oc qual 0<<<
+
+
+Add 1 oc
+Final string = >>>oc qual 0_oc 0<<<
+
+
+Add 1 prop qualifier
+Final string = >>>oc qual 0_oc 0_prop qual 0<<<
+
+
+Add 1 prop
+Final string = >>>oc qual 0_oc 0_prop qual 0_prop 0<<<
+
+
