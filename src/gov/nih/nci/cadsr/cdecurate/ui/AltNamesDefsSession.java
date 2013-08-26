@@ -1379,4 +1379,30 @@ public class AltNamesDefsSession implements Serializable
     	
     	return ret;
     }
+    //GF32723 added alternate name
+    public boolean addAlternateName(String name, AC_Bean acb, Connection conn) throws ToolException{
+    	boolean ret = false;
+    	boolean exists = false;
+    	if (_alts == null){
+    		DBAccess db = new DBAccess(conn);
+    		this.loadAlternates(db, _sortName);
+    	}
+    	for (Alternates alt: _alts) {
+    		
+    		if (alt.isDef()) {
+    			String temp = alt.getName();
+    			if (name.equals(temp))
+    				exists = true;
+    		}
+    	}
+    	
+    	if (!exists) {
+    		Alternates newAlt = new Alternates(Alternates._INSTANCENAME, name, "Prior Preferred Name", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
+          	updateAlternatesList(newAlt, false);
+    	
+    		
+    	}
+    	   	
+    	return ret;
+    }
 }
