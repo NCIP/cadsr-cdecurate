@@ -695,6 +695,10 @@ public class SetACService implements Serializable
 			    //GF30796
 				if(!DECHelper.isAlternateDefinitionExists(chosenDef, altSession)) {
 					altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796 check this!
+					//GF32723
+					String name=m_OC.getEVS_ORIGIN();
+					altSession.addAlternateName(name, m_DEC, m_servlet.getConn());
+					//GF32723
 					m_DEC.setAlternates(altSession);
 				}
 
@@ -1142,7 +1146,6 @@ public class SetACService implements Serializable
 			//String chosenDef = constructChosenDefinition(req.getSession(), "VD", oldDef);
 			String chosenDef = m_REP.getPREFERRED_DEFINITION()+"_"+m_REPQ.getPREFERRED_DEFINITION();
 			//GF32723
-			
 			if (!chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
 				String warningMessage = "Warning: Your chosen definitions are being replaced by standard definitions.  Your chosen definition is being added as an alternate definition if it does not exist already.";
@@ -1151,12 +1154,14 @@ public class SetACService implements Serializable
 				//add Alt Def
 				
 				AltNamesDefsSession	altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchVD);
-
-				//GF30796
-				if(!DECHelper.isAlternateDefinitionExists(chosenDef, altSession)) {
-					altSession.addAlternateDefinition(chosenDef,m_VD, m_servlet.getConn());
-					m_VD.setAlternates(altSession);
-				}
+			
+				altSession.addAlternateDefinition(chosenDef,m_VD, m_servlet.getConn());
+				//GF32723
+				
+				String name=m_REP.getEVS_ORIGIN();
+				System.out.println("Alternate name is "+name);
+				altSession.addAlternateName(name, m_VD, m_servlet.getConn());
+				m_VD.setAlternates(altSession);
 			}
 			
 			//same for both edit and new
