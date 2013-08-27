@@ -74,18 +74,6 @@ PL/SQL procedure successfully completed.
 
 SQL> 
 
-SQL> @gf30681_update_existing_DEC_CDR_no_oc.sql
-CREATE TABLE SBR.DATA_ELEMENT_CONCEPTS_BACKUP AS SELECT * FROM SBR.DATA_ELEMENT_CONCEPTS
-                 *
-ERROR at line 1:
-ORA-00955: name is already used by an existing object
-
-
-
-PL/SQL procedure successfully completed.
-
-SQL> 
-
 
 Run with user SBREXT:
 
