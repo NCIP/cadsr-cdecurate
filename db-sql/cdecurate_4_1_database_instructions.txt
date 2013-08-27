@@ -58,4 +58,4 @@ gf30681_update_existing_DEC_CDR.sql
 
 *** Notes ***
 
-Some *_SPEC.sql files are purposely skipped as seen above. They execution are optional as there is no change made for this release.
+Some *_SPEC.sql files are purposely skipped as seen above. Their execution are optional as there is no change made for this release.
