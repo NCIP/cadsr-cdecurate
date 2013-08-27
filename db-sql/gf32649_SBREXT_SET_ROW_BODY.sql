@@ -9617,7 +9617,7 @@ BEGIN
     v_con_rec.asl_name             := P_CON_ASL_NAME;
     v_con_rec.latest_version_ind   := 'Yes';
     v_con_rec.change_note          := NULL;
-    v_con_rec.begin_date           := SYSDATE;
+    v_con_rec.begin_date           := SYSDATE; --GF32724
     v_con_rec.end_date             := NULL;
     v_con_rec.deleted_ind          := 'No';
     v_con_rec.definition_source    := P_CON_DEFINITION_SOURCE;
