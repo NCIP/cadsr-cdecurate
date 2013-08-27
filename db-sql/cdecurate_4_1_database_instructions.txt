@@ -25,6 +25,7 @@
 . gf32649_SBREXT_SET_ROW_BODY.sql
 . SBREXT_CDE_CURATOR_PKG_BODY.sql
 . update_evs_url.sql
+. GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql
 
 *** Execution order ***
 
@@ -55,6 +56,7 @@ SBREXT_CDE_CURATOR_PKG_BODY.sql
 update_evs_url.sql
 gf30681_update_ac_exists.sql
 gf30681_update_existing_DEC_CDR.sql
+GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql
 
 *** Notes ***
 
