@@ -1,0 +1,61 @@
+*** All scripts related to Release 4.1 of Curation Tool ***
+
+. customDownload.sql
+. gf30681_alter_grant_dec_table.sql
+. gf30681_update_SBR_INS_UPD_SPEC.sql
+. gf30681_update_existing_DEC_CDR_no_oc.sql
+. gf30681_update_existing_DEC_CDR_no_prop.sql
+. gf30681_update_SBREXT_Set_Row_SET_DEC_BODY.sql 
+. gf30681_update_ac_exists.sql
+. gf30681_update_existing_DEC_CDR.sql
+. gf30681_update_SBR_data_element_concepts_view.sql
+. gf30681_update_SBR_INS_UPD_BODY.sql
+. gf30681_update_SBR_INS_UPD_SPEC.sql
+. gf30681_update_SBREXT_Set_Row_SET_DEC_BODY.sql
+. gf30681_update_SBREXT_Set_Row_SET_DEC_SPEC.sql
+. SBREXT_CDE_CURATOR_PKG_SPEC.sql
+. SBREXT_CDE_CURATOR_PKG_BODY.sql
+. GF32647_VALID_VALUE_T.sql
+. gf32649_SBREXT_GET_ROW_BODY.sql
+. gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql
+. gf32649_CADSR_XLS_LOADER_PKG_WORK3_SPEC.sql
+. gf32649_MAINTAIN_CONCEPTS_BODY.sql
+. gf32649_MAINTAIN_CONCEPTS_SPEC.sql
+. gf32649_SBREXT_GET_ROW_BODY.sql
+. gf32649_SBREXT_SET_ROW_BODY.sql
+. SBREXT_CDE_CURATOR_PKG_BODY.sql
+. update_evs_url.sql
+
+*** Execution order ***
+
+Please execute the scripts in the order written as the following (as well as the order as appeared in the sample *_REAME.txt files):
+
+Scripts Part 1 -
+
+https://ncisvn.nci.nih.gov/svn/cdecurate/trunk/db-sql/customDownload_README.txt
+
+Scripts Part 2 -
+
+https://ncisvn.nci.nih.gov/svn/cdecurate/trunk/db-sql/gf30681_README.txt
+
+Scripts Part 3 -
+
+https://ncisvn.nci.nih.gov/svn/cdecurate/trunk/db-sql/gf32398_gf32036_README.txt
+
+Scripts Part 4 -
+
+https://ncisvn.nci.nih.gov/svn/cdecurate/trunk/db-sql/gf32649_README.txt
+
+Please execute the following scripts after the above in the order written:
+
+GF32647_VALID_VALUE_T.sql
+gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql
+SBREXT_CDE_CURATOR_PKG_SPEC.sql
+SBREXT_CDE_CURATOR_PKG_BODY.sql
+update_evs_url.sql
+gf30681_update_ac_exists.sql
+gf30681_update_existing_DEC_CDR.sql
+
+*** Notes ***
+
+Some *_SPEC.sql files are purposely skipped as seen above. They execution are optional as there is no change made for this release.
