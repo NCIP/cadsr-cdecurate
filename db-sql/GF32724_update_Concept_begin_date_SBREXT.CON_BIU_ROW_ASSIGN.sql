@@ -33,7 +33,7 @@ BEGIN
        :new.date_modified := sysdate;
 
    end if;
-   commit;
+  
 END;
 
 /
