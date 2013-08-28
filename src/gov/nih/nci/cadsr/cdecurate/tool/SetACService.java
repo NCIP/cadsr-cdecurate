@@ -1157,11 +1157,20 @@ public class SetACService implements Serializable
 			
 				altSession.addAlternateDefinition(chosenDef,m_VD, m_servlet.getConn());
 				//GF32723
+                //begin GF32723
 				
-				String name=m_REP.getEVS_ORIGIN();
+				String type=m_REPQ.getEVS_ORIGIN();
+				String name= m_REPQ.getCONCEPT_IDENTIFIER();
+			
+				System.out.println("Alternate type" + type);
 				System.out.println("Alternate name is "+name);
-				altSession.addAlternateName(name, m_VD, m_servlet.getConn());
+				int rc1=0;
+				rc1 = altSession.insertAltName(type,name,m_VD,m_servlet.getConn());	//VD_ID somehow is null here!!!?
+				System.out.println(rc1);
+				
+				//altSession.addAlternateName(name,m_VD,m_servlet.getConn());
 				m_VD.setAlternates(altSession);
+				//end GF32723
 			}
 			
 			//same for both edit and new
