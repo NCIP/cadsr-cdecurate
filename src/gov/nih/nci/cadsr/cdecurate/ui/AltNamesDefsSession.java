@@ -1380,8 +1380,10 @@ public class AltNamesDefsSession implements Serializable
     	
     	return ret;
     }
-    //GF32723 added alternate name
-    public boolean addAlternateName(String name, AC_Bean acb, Connection conn) throws ToolException{
+    
+    //begin GF32723 added alternate name
+    //brand new method
+    public boolean addAlternateName(String type, String name, AC_Bean acb, Connection conn) throws ToolException{
     	boolean ret = false;
     	boolean exists = false;
     	if (_alts == null){
@@ -1398,63 +1400,66 @@ public class AltNamesDefsSession implements Serializable
     	}
     	
     	if (!exists) {
-    		Alternates newAlt = new Alternates(Alternates._INSTANCENAME, name, "Prior Preferred Name", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
+//    		Alternates newAlt = new Alternates(Alternates._INSTANCENAME, name, "Prior Preferred Name", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
+    		Alternates newAlt = new Alternates(Alternates._INSTANCENAME, name, type, "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
           	updateAlternatesList(newAlt, false);
     	
     		
     	}
+    	
+    	ret = true;
     	   	
     	return ret;
     }
- // start GF32723
-    public int insertAltName(String type, String name, AC_Bean acb,
-			Connection conn) {
-		// TODO Auto-generated method stub
-	    CallableStatement cstmt = null;
-	    
-	    int rc  = 0;
-	    
-	    String insert = "begin insert into sbr.designations_view "
-	                + "(ac_idseq, conte_idseq, name, detl_name, lae_name) "
-	                + "values (?, ?, ?, ?, ?) return desig_idseq into ?; end;";
-	    
-	    System.out.println (acb.getIDSEQ());
-	    System.out.println(acb.getContextIDSEQ());
-	    System.out.println(name);
-	    System.out.println(type);
-	    
-	        try
-	        {
-	        	     	
 
-	            cstmt = conn.prepareCall(insert);
-	            cstmt.setString(1, acb.getIDSEQ());
-	            cstmt.setString(2, acb.getContextIDSEQ());
-	            cstmt.setString(3, name);
-	            cstmt.setString(4, "LOINC_CODE");
-	            cstmt.setString(5, "ENGLISH");
-	            cstmt.registerOutParameter(6, java.sql.Types.VARCHAR);
-	            rc = cstmt.executeUpdate();
-	         }
-	        catch (SQLException ex)
-	        {
-	        System.out.println("caught exception while inserting to designations: " + ex.toString());
-	      		}
-	        
-	        finally {
-	        if (cstmt != null) {
-	                try {
-	                cstmt.close();
-	               
-	                } catch (SQLException e1) {
-	                System.out.println("Exception is"+e1);
-	              cstmt = null;
-	            }
-	        }
-	        }
-	        System.out.println(rc);
-	        return rc;
-	        
-	    }
-    //End GF32723
+    //brand new method
+//    public int insertAltName(String type, String name, AC_Bean acb, Connection conn) {
+//		// TODO Auto-generated method stub
+//	    CallableStatement cstmt = null;
+//	    
+//	    int rc  = 0;
+//	    
+//	    String insert = "begin insert into sbr.designations_view "
+//	                + "(ac_idseq, conte_idseq, name, detl_name, lae_name) "
+//	                + "values (?, ?, ?, ?, ?) return desig_idseq into ?; end;";
+//	    
+//	    System.out.println (acb.getIDSEQ());
+//	    System.out.println(acb.getContextIDSEQ());
+//	    System.out.println(name);
+//	    System.out.println(type);
+//	    
+//	        try
+//	        {
+//	        	     	
+//
+//	            cstmt = conn.prepareCall(insert);
+//	            cstmt.setString(1, acb.getIDSEQ());
+//	            cstmt.setString(2, acb.getContextIDSEQ());
+//	            cstmt.setString(3, name);
+//	            cstmt.setString(4, "LOINC_CODE");	//GF32723 TBD need to get this from somewhere
+//	            cstmt.setString(5, "ENGLISH");
+//	            cstmt.registerOutParameter(6, java.sql.Types.VARCHAR);
+//	            rc = cstmt.executeUpdate();
+//	         }
+//	        catch (SQLException ex)
+//	        {
+//	        System.out.println("caught exception while inserting to designations: " + ex.toString());
+//	      		}
+//	        
+//	        finally {
+//	        if (cstmt != null) {
+//	                try {
+//	                cstmt.close();
+//	               
+//	                } catch (SQLException e1) {
+//	                System.out.println("Exception is"+e1);
+//	              cstmt = null;
+//	            }
+//	        }
+//        }
+//        System.out.println(rc);
+//        return rc;
+//        
+//    }
+	//end GF32723
 }

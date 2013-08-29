@@ -694,12 +694,21 @@ public class SetACService implements Serializable
 
 			    //GF30796
 				if(!DECHelper.isAlternateDefinitionExists(chosenDef, altSession)) {
-					altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796 check this!
 					//GF32723
-					String name=m_OC.getEVS_ORIGIN();
-					altSession.addAlternateName(name, m_DEC, m_servlet.getConn());
+					String type= m_OC.getEVS_ORIGIN();
+					String name= m_OC.getCONCEPT_IDENTIFIER();
+				
+					System.out.println("Alternate type" + type);
+					System.out.println("Alternate name is "+name);
+					
+					if(altSession.addAlternateName(type,name,m_DEC,m_servlet.getConn())) {
+						altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796
+
+						m_DEC.setAlternates(altSession);
+					} else {
+						System.out.println("************************ DEC SetACService: AC [" + m_DEC.getDEC_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
+					}
 					//GF32723
-					m_DEC.setAlternates(altSession);
 				}
 
 				logger.info("At line 693 of SetACService.java");				
@@ -1144,32 +1153,31 @@ public class SetACService implements Serializable
 			//Check Definition against (constructed) chosen definition, add to Alt Def if not same, add Warning in vValidate vector.
 			//GF32723
 			//String chosenDef = constructChosenDefinition(req.getSession(), "VD", oldDef);
-			String chosenDef = m_REP.getPREFERRED_DEFINITION()+"_"+m_REPQ.getPREFERRED_DEFINITION();
+			String comp1 = "";
+			if(m_REP.getPREFERRED_DEFINITION() != null) comp1 = m_REP.getPREFERRED_DEFINITION()+"_";
+			String chosenDef = comp1 + m_REPQ.getPREFERRED_DEFINITION();
 			//GF32723
 			if (!chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
 				String warningMessage = "Warning: Your chosen definitions are being replaced by standard definitions.  Your chosen definition is being added as an alternate definition if it does not exist already.";
 				UtilService.setValPageVector(vValidate, "Alternate Definition", chosenDef, false, 0, warningMessage, sOriginAction);
 				
-				//add Alt Def
-				
 				AltNamesDefsSession	altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchVD);
-			
-				altSession.addAlternateDefinition(chosenDef,m_VD, m_servlet.getConn());
-				//GF32723
-                //begin GF32723
-				
+
+				//begin GF32723
 				String type=m_REPQ.getEVS_ORIGIN();
 				String name= m_REPQ.getCONCEPT_IDENTIFIER();
 			
 				System.out.println("Alternate type" + type);
 				System.out.println("Alternate name is "+name);
-				int rc1=0;
-				rc1 = altSession.insertAltName(type,name,m_VD,m_servlet.getConn());	//VD_ID somehow is null here!!!?
-				System.out.println(rc1);
-				
-				//altSession.addAlternateName(name,m_VD,m_servlet.getConn());
-				m_VD.setAlternates(altSession);
+//				rc1 = altSession.insertAltName(type,name,m_VD,m_servlet.getConn());	//VD_ID somehow is null here!!!?
+				if(altSession.addAlternateName(type,name,m_VD,m_servlet.getConn())) {
+					altSession.addAlternateDefinition(chosenDef,m_VD, m_servlet.getConn());		//GF30796
+
+					m_VD.setAlternates(altSession);
+				} else {
+					System.out.println("************************ VD SetACService: AC [" + m_VD.getVD_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
+				}
 				//end GF32723
 			}
 			
