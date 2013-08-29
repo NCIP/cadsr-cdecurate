@@ -400,7 +400,7 @@
 	</head>
 	<body onLoad="setup();hideCloseButton(<%=isView%>);" onUnload="closeDep();">
 	<!--
-	b5 [<%= userSelectedDefFinal %>]
+	b6 [<%= userSelectedDefFinal %>]
 	-->
 
 		<form name="SearchActionForm" method="post" action="">
