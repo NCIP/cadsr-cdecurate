@@ -695,10 +695,9 @@ public class SetACService implements Serializable
 			    //GF30796
 				if(!DECHelper.isAlternateDefinitionExists(chosenDef, altSession)) {
 					altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796
-					m_DEC.setAlternates(altSession);
 				}
 				//GF32723
-				String type= m_OC.getEVS_ORIGIN();	//TBD to ask evs team what are the whole list
+				String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);	//m_OC.getEVS_ORIGIN();
 				String name= m_OC.getCONCEPT_IDENTIFIER();
 			
 				System.out.println("Alternate type" + type);
@@ -708,6 +707,7 @@ public class SetACService implements Serializable
 					System.out.println("************************ DEC SetACService: AC [" + m_DEC.getDEC_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
 				}
 				//GF32723
+				m_DEC.setAlternates(altSession);
 
 				logger.info("At line 693 of SetACService.java");				
 			}
@@ -1161,10 +1161,13 @@ public class SetACService implements Serializable
 				UtilService.setValPageVector(vValidate, "Alternate Definition", chosenDef, false, 0, warningMessage, sOriginAction);
 				
 				AltNamesDefsSession	altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchVD);
-				altSession.addAlternateDefinition(chosenDef,m_VD, m_servlet.getConn());		//GF30796
-
+			    //GF30796
+				if(!DECHelper.isAlternateDefinitionExists(chosenDef, altSession)) {
+					altSession.addAlternateDefinition(chosenDef,m_VD, m_servlet.getConn());		//GF30796
+				}
+				
 				//begin GF32723
-				String type=m_REPQ.getEVS_ORIGIN();	//Rep term qualifier can come from any terminology, that is why we are using qualifier only :)
+				String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);	//m_REPQ.getEVS_ORIGIN();	//Rep term qualifier can come from any terminology, that is why we are using qualifier only :)
 				String name= m_REPQ.getCONCEPT_IDENTIFIER();
 			
 				System.out.println("Alternate type" + type);

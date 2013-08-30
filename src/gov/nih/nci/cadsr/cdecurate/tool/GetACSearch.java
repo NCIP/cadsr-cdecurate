@@ -10,6 +10,7 @@ import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.common.Constants;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -7689,6 +7690,7 @@ public class GetACSearch implements Serializable
             DataManager.setAttribute(session, "creSearchInBlocks", sSearchIn);
             boolean isBlockSearch = false;
             String dtsVocab = req.getParameter("listContextFilterVocab");
+            session.setAttribute(Constants.USER_SELECTED_VOCAB, dtsVocab);	//GF32723 save front end EVS vocab
             if (dtsVocab != null && !dtsVocab.equals(""))
                 isBlockSearch = true;
             if (dtsVocab == null)

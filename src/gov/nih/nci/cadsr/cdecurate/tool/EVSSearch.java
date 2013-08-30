@@ -1867,7 +1867,7 @@ public class EVSSearch implements Serializable {
 					//do not do vocab search if it is meta code search
 					if (!sSearchIn.equals("MetaCode") && !sMetaName.equals(vocabDisp)) {
 						//GF29786
-						lstResults = doConceptQuery(	//JT b4
+						lstResults = doConceptQuery(	//dtsVocab e.g. Logical Observation Identifier Names and Codes
 								vocabBean.getVocabAccess(), termStr, dtsVocab,
 								sSearchIn, vocabType, namePropIn, sSearchAC);
 					}
@@ -2079,7 +2079,7 @@ public class EVSSearch implements Serializable {
 
 			this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab, m_eUser);
 			
-			CodedNodeSet nodeSet = evsService.getNodeSet(dtsVocab, null, null);
+			CodedNodeSet nodeSet = evsService.getNodeSet(dtsVocab, null, null);	//dtsVocab example value = Logical Observation Identifier Names and Codes
 
 			if (sSearchIn.equals("ConCode")) {
 				

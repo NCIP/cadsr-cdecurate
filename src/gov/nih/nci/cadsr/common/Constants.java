@@ -16,5 +16,6 @@ public class Constants {
 	public static final String USER_SELECTED_ALTERNATE_DEF_COMP2_COUNT = "userSelectedDef_Comp2_Count";
 	public static final String USER_SELECTED_ALTERNATE_DEF_COMP3_COUNT = "userSelectedDef_Comp3_Count";
 	public static final String USER_SELECTED_ALTERNATE_DEF_COMP4_COUNT = "userSelectedDef_Comp4_Count";
-	
+	//GF32723
+	public static final String USER_SELECTED_VOCAB = "userSelectedDtsVocab";
 }

@@ -93,7 +93,7 @@ public class GF30798 {
 		driver.quit();
 	}
 
-	// @Test
+	@Test
 	public void testGoogleSearch() {
 		driver.get("http://www.google.com");
 		WebElement searchBox = driver.findElement(By.name("q"));
@@ -101,33 +101,10 @@ public class GF30798 {
 		searchBox.clear();
 		assertEquals("Google", driver.getTitle());
 	}
-
-	@Test
-	public void GAEJSRM_CORE() throws Exception {
-		selenium.open("/sr");
-		selenium.waitForPageToLoad("30000");
-		// JavascriptExecutor jse = (JavascriptExecutor) driver;
-		// jse.executeScript("document.getElementById('usernameField').focus();");
-		selenium.type("usernameField", "a");
-		selenium.type("passwordField", "test123");
-		// selenium.keyPress("passwordField", "13");
-		driver.findElement(By.id("passwordField")).sendKeys(Keys.ENTER);
-		Thread.sleep(5000);
-		String response = selenium.getText("xpath=//*");
-		System.out.println("GAEJSRM_CORE: response [" + response + "]");
-		Assert.assertTrue(response.contains("Service Registry Manager"));
-
-		// === opening protected page
-		selenium.open("/g/owasp/securedstart");
-		// selenium.waitForPageToLoad("30000");
-		Thread.sleep(5000);
-		Assert.assertTrue(selenium.getText("xpath=//*").contains(
-				"App Security Manager"));
-	}
-
-//  @Test
+	
+  @Test
   public void testGF30798OCQOCPropQPropSelected() throws Exception {
-    driver.get(baseUrl + "/cdecurate/NCICurationServlet?reqType=login");
+    driver.get(baseUrl + "/cdecurate");
     driver.findElement(By.xpath("//td[@onclick=\"menuShow(this, event, 'no');\"]")).click();
     driver.findElement(By.xpath("(//dt[@id=''])[15]")).click();
     driver.findElement(By.linkText("Search")).click();
