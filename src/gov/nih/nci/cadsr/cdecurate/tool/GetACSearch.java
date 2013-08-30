@@ -7691,6 +7691,7 @@ public class GetACSearch implements Serializable
             boolean isBlockSearch = false;
             String dtsVocab = req.getParameter("listContextFilterVocab");
             session.setAttribute(Constants.USER_SELECTED_VOCAB, dtsVocab);	//GF32723 save front end EVS vocab
+            System.out.println(">>>>>>>>> Constants.USER_SELECTED_VOCAB [" + session.getAttribute(Constants.USER_SELECTED_VOCAB) + "] saved.");
             if (dtsVocab != null && !dtsVocab.equals(""))
                 isBlockSearch = true;
             if (dtsVocab == null)
