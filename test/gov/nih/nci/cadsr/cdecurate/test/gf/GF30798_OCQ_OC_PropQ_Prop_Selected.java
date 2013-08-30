@@ -65,7 +65,7 @@ public class GF30798_OCQ_OC_PropQ_Prop_Selected {
 	    driver.quit();
 	  }
 	  
-	  @Test
+//	  @Test
 	  public void testGoogleSearch() {
 	    driver.get("http://www.google.com");
 	    WebElement searchBox = driver.findElement(By.name("q"));
@@ -74,6 +74,8 @@ public class GF30798_OCQ_OC_PropQ_Prop_Selected {
 	    assertEquals("Google", driver.getTitle());
 	  }
 //end jt	  
+
+
 
 //  @Test
   public void testGF30798OCQOCPropQPropSelected() throws Exception {

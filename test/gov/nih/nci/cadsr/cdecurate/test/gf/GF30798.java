@@ -33,6 +33,7 @@ import com.thoughtworks.selenium.Selenium;
 public class GF30798 {
 //	public static final String baseUrl = "https://cdecurate-dev.nci.nih.gov";
 	public static final String baseUrl = "http://localhost:8080";
+	public static final String p = "Te$t1239";
 	
 	public static enum BROWSER_TYPE {
 		CHROME, FIREFOX, IE, SAFARI, OPERA
@@ -58,9 +59,9 @@ public class GF30798 {
 
 	@AfterClass
 	public static void createAndStopService() {
-		if (BTYPE == BROWSER_TYPE.CHROME) {
-			service.stop();
-		}
+//		if (BTYPE == BROWSER_TYPE.CHROME) {
+//			service.stop();
+//		}
 	}
 
 	@Before
@@ -86,15 +87,17 @@ public class GF30798 {
 		selenium = new WebDriverBackedSelenium(driver,
 				"http://localhost:8888");
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		
+		LogoutLogin();
 	}
 
 	@After
 	public void quitDriver() {
-		driver.quit();
+//		driver.quit();
 	}
 
-	// @Test
-	public void testGoogleSearch() {
+	//@Test
+	public void checkGoogleSearch() {
 		driver.get("http://www.google.com");
 		WebElement searchBox = driver.findElement(By.name("q"));
 		searchBox.sendKeys("webdriver");
@@ -102,38 +105,30 @@ public class GF30798 {
 		assertEquals("Google", driver.getTitle());
 	}
 
-	@Test
-	public void GAEJSRM_CORE() throws Exception {
-		selenium.open("/sr");
-		selenium.waitForPageToLoad("30000");
-		// JavascriptExecutor jse = (JavascriptExecutor) driver;
-		// jse.executeScript("document.getElementById('usernameField').focus();");
-		selenium.type("usernameField", "a");
-		selenium.type("passwordField", "test123");
-		// selenium.keyPress("passwordField", "13");
-		driver.findElement(By.id("passwordField")).sendKeys(Keys.ENTER);
-		Thread.sleep(5000);
-		String response = selenium.getText("xpath=//*");
-		System.out.println("GAEJSRM_CORE: response [" + response + "]");
-		Assert.assertTrue(response.contains("Service Registry Manager"));
-
-		// === opening protected page
-		selenium.open("/g/owasp/securedstart");
-		// selenium.waitForPageToLoad("30000");
-		Thread.sleep(5000);
-		Assert.assertTrue(selenium.getText("xpath=//*").contains(
-				"App Security Manager"));
+	  public void LogoutLogin() {
+	    driver.get(baseUrl + "/cdecurate");
+//	    driver.findElement(By.linkText("Logout")).click();
+	    driver.findElement(By.linkText("Login")).click();
+		driver.findElement(By.name("Username")).sendKeys("tanj");
+		driver.findElement(By.name("Password")).sendKeys(p+Keys.ENTER);	    
+	    driver.findElement(By.name("login")).click();
+	  }
+	  
+  public void waitForPopUp(long miliseconds) throws InterruptedException {
+    for (String handle : driver.getWindowHandles()) {
+        driver.switchTo().window(handle);
 	}
-
-//  @Test
+    Thread.sleep(miliseconds);
+  }
+  
+  @Test
   public void testGF30798OCQOCPropQPropSelected() throws Exception {
     driver.get(baseUrl + "/cdecurate/NCICurationServlet?reqType=login");
     driver.findElement(By.xpath("//td[@onclick=\"menuShow(this, event, 'no');\"]")).click();
     driver.findElement(By.xpath("(//dt[@id=''])[15]")).click();
     driver.findElement(By.linkText("Search")).click();
-    // ERROR: Caught exception [ERROR: Unsupported command [waitForPopUp | BlockSearch | 30000]]
-    // ERROR: Caught exception [ERROR: Unsupported command [selectWindow | name=BlockSearch | ]]
-    driver.findElement(By.name("keyword")).sendKeys("minor");
+    waitForPopUp(3000);
+    driver.findElement(By.name("keyword")).sendKeys("minor"+Keys.ENTER);
     driver.findElement(By.name("CK0")).click();
     driver.findElement(By.name("editSelectedBtn")).click();
     // ERROR: Caught exception [ERROR: Unsupported command [selectWindow | null | ]]
