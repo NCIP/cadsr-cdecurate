@@ -125,8 +125,8 @@ public class EVSTest1
 //            vAC = do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC, sRecordsDisplayed);
 //        // To search synonym you need to filter
 //        sKeyword = (String) session.getAttribute("creKeyword");
-        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
-                        intMetaLimit, true, -1, "", new HashSet<String>());
+//        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
+//                        intMetaLimit, true, -1, "", new HashSet<String>());
 //        DataManager.setAttribute(session, "vACSearch", vAC);
 //        evs.get_Result(req, res, vResult, "");
         
