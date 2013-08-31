@@ -4933,4 +4933,13 @@ public class SetACService implements Serializable
 		}
 		return vs;
 	}
+
+	//just for junit test
+	public Vector<String> getM_ReleaseWFS() {
+		return m_ReleaseWFS;
+	}
+
+	public void setM_ReleaseWFS(Vector<String> m_ReleaseWFS) {
+		this.m_ReleaseWFS = m_ReleaseWFS;
+	}
 }   //close the class
