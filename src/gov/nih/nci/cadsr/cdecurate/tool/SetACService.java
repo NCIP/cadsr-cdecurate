@@ -118,9 +118,9 @@ public class SetACService implements Serializable
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	UtilService m_util = new UtilService();
+	public UtilService m_util = new UtilService();
 	CurationServlet m_servlet;
-	Logger logger = Logger.getLogger(SetACService.class.getName());
+	public Logger logger = Logger.getLogger(SetACService.class.getName());
 	Vector<String> m_vRetWFS = new Vector<String>();
 	Vector<String> m_ReleaseWFS = new Vector<String>();
 	Vector<String> m_vRegStatus = new Vector<String>();
@@ -3472,8 +3472,15 @@ public class SetACService implements Serializable
 	 */
 	public String truncateTerm(String sValue)
 	{
-		if(sValue.length() > 0)
-			sValue = sValue.substring(0,30);
+		//GF32723 not related to ticket, just making codes more robust
+		try {
+			if(sValue != null && sValue.length() > 0)
+				sValue = sValue.substring(0,30);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return sValue;
 	}
 
@@ -4942,4 +4949,21 @@ public class SetACService implements Serializable
 	public void setM_ReleaseWFS(Vector<String> m_ReleaseWFS) {
 		this.m_ReleaseWFS = m_ReleaseWFS;
 	}
+	
+	public Vector<String> getM_vRegStatus() {
+		return m_vRegStatus;
+	}
+
+	public void setM_vRegStatus(Vector<String> m_vRegStatus) {
+		this.m_vRegStatus = m_vRegStatus;
+	}
+	
+	public Vector<String> getM_vRetWFS() {
+		return m_vRetWFS;
+	}
+
+	public void setM_vRetWFS(Vector<String> m_vRetWFS) {
+		this.m_vRetWFS = m_vRetWFS;
+	}
+
 }   //close the class
