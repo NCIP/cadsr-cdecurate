@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,7 @@ import org.junit.Test;
 import oracle.jdbc.pool.OracleDataSource;
 
 import gov.nih.nci.cadsr.cdecurate.test.CurationTestLogger;
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 /**
  * This class tests the use of the EVS API in the Curation Tool and verifies connectivity to the EVS servers.
@@ -97,7 +99,7 @@ public class EVSTest1
 		String sMetaName = "NCI Metathesaurus";
 		String sSearchIn = "Name";
 		
-    	if (vocabType.equals("PropType")) { // do concept prop search
+/*    	if (vocabType.equals("PropType")) { // do concept prop search
 			//GF32446 this cause Semantic_Type to not to be included
 			LocalNameList lnl = new LocalNameList();
 			lnl.addEntry(sPropIn);
@@ -116,9 +118,18 @@ public class EVSTest1
 					new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
 					100	  //cap the number of results returned (-1 resolves all)
 			);
-		}
+		}*/
 		
-		
+		//taken "out" from GetACSearch.java line 8274
+//        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
+//            vAC = do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC, sRecordsDisplayed);
+//        // To search synonym you need to filter
+//        sKeyword = (String) session.getAttribute("creKeyword");
+        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
+                        intMetaLimit, true, -1, "", new HashSet<String>());
+//        DataManager.setAttribute(session, "vACSearch", vAC);
+//        evs.get_Result(req, res, vResult, "");
+        
 		//should run doVocabSearch() in EVSSearch instead!!!
     }
     /**
