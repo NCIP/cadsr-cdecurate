@@ -696,18 +696,20 @@ public class SetACService implements Serializable
 				if(!DECHelper.isAlternateDefinitionExists(chosenDef, altSession)) {
 					altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796
 				}
-				//GF32723
+				//begin GF32723
 				String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);	//m_OC.getEVS_ORIGIN();
-				if(type == null || type.equals("")) type = "NCI Thesaurus";
-				String name= m_OC.getCONCEPT_IDENTIFIER();
-			
-				System.out.println("Alternate type" + type);
-				System.out.println("Alternate name is "+name);
+				if(m_OC != null) {
+					if(type == null || type.equals("")) type = "NCI Thesaurus";
+					String name= m_OC.getCONCEPT_IDENTIFIER();
 				
-				if(!altSession.addAlternateName(type,name,m_DEC,m_servlet.getConn())) {
-					System.out.println("************************ DEC SetACService: AC [" + m_DEC.getDEC_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
+					System.out.println("Alternate type" + type);
+					System.out.println("Alternate name is "+name);
+					
+					if(!altSession.addAlternateName(type,name,m_DEC,m_servlet.getConn())) {
+						System.out.println("************************ DEC SetACService: AC [" + m_DEC.getDEC_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
+					}
 				}
-				//GF32723
+				//end GF32723
 				m_DEC.setAlternates(altSession);
 
 				logger.info("At line 693 of SetACService.java");				
@@ -1170,12 +1172,14 @@ public class SetACService implements Serializable
 				//begin GF32723
 				String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);	//m_REPQ.getEVS_ORIGIN();	//Rep term qualifier can come from any terminology, that is why we are using qualifier only :)
 				if(type == null || type.equals("")) type = "NCI Thesaurus";
-				String name= m_REPQ.getCONCEPT_IDENTIFIER();
-			
-				System.out.println("Alternate type" + type);
-				System.out.println("Alternate name is "+name);
-				if(!altSession.addAlternateName(type,name,m_VD,m_servlet.getConn())) {
-					System.out.println("************************ VD SetACService: AC [" + m_VD.getVD_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
+				if(m_REPQ != null) {
+					String name= m_REPQ.getCONCEPT_IDENTIFIER();
+				
+					System.out.println("Alternate type" + type);
+					System.out.println("Alternate name is "+name);
+					if(!altSession.addAlternateName(type,name,m_VD,m_servlet.getConn())) {
+						System.out.println("************************ VD SetACService: AC [" + m_VD.getVD_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
+					}
 				}
 				//end GF32723
 				m_VD.setAlternates(altSession);
