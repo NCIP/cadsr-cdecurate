@@ -698,6 +698,7 @@ public class SetACService implements Serializable
 				}
 				//GF32723
 				String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);	//m_OC.getEVS_ORIGIN();
+				if(type == null || type.equals("")) type = "NCI Thesaurus";
 				String name= m_OC.getCONCEPT_IDENTIFIER();
 			
 				System.out.println("Alternate type" + type);
@@ -1168,6 +1169,7 @@ public class SetACService implements Serializable
 				
 				//begin GF32723
 				String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);	//m_REPQ.getEVS_ORIGIN();	//Rep term qualifier can come from any terminology, that is why we are using qualifier only :)
+				if(type == null || type.equals("")) type = "NCI Thesaurus";
 				String name= m_REPQ.getCONCEPT_IDENTIFIER();
 			
 				System.out.println("Alternate type" + type);
