@@ -375,8 +375,12 @@ onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return fa
 										Data Element Concept
 									</font>
 							     	<!-- the following 3 lines is just for test -->									
+	<%
+		String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);
+	%>
+	b7 <%= type %>
 									<!--
-									b6 [<%= userSelectedDefFinal %>]
+									[<%= userSelectedDefFinal %>]
 									-->
 									<% if (sMenuAction.equals("NewDECVersion")) { %>
 									Version

@@ -399,8 +399,13 @@
 </Script>
 	</head>
 	<body onLoad="setup();hideCloseButton(<%=isView%>);" onUnload="closeDep();">
+	
+	<%
+		String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);
+	%>
+	b7 <%= type %>
 	<!--
-	b6 [<%= userSelectedDefFinal %>]
+	[<%= userSelectedDefFinal %>]
 	-->
 
 		<form name="SearchActionForm" method="post" action="">

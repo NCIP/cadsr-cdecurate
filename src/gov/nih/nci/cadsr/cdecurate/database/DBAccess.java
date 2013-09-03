@@ -6,6 +6,7 @@
 package gov.nih.nci.cadsr.cdecurate.database;
 
 import gov.nih.nci.cadsr.cdecurate.tool.AC_Bean;
+import gov.nih.nci.cadsr.cdecurate.util.DesignationHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
 import gov.nih.nci.cadsr.cdecurate.util.Tree;
 import gov.nih.nci.cadsr.cdecurate.util.TreeNode;
@@ -1285,11 +1286,20 @@ public class DBAccess
             return false;
         }
 
-        // If it's new or changed be sure to record CSI changes also.
-        if (alt_.isNew())
-            insert(alt_);
-        else if (alt_.isChanged())
-            update(alt_);
+        //GF32723 check to make sure it does not exist in the database by name + type
+        try {
+			if(DesignationHelper.isAlternateNameExists(alt_, _conn)) {
+			    update(alt_);
+			} else
+			// If it's new or changed be sure to record CSI changes also.
+			if (alt_.isNew())
+			    insert(alt_);
+			else if (alt_.isChanged())
+			    update(alt_);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         saveCSI(alt_);
         return true;
