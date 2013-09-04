@@ -1,6 +1,5 @@
 package gov.nih.nci.cadsr.cdecurate.util;
 
-import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.common.Constants;
 
@@ -295,32 +294,6 @@ public class DECHelper {
 			s.close();
 		}
 		
-		return retVal;
-	}
-	
-	public static boolean isAlternateDefinitionExists(String altDef, AltNamesDefsSession altSession) throws Exception {
-		boolean retVal = false;
-		
-		if(altSession == null) {
-			throw new Exception("Alternate definition session can not be NULL or empty.");
-		}
-		if(altDef == null) {
-			throw new Exception("New alternate definition can not be NULL or empty.");
-		}
-		Alternates[] _alts = altSession.getAlternates();
-//		if(_alts == null) {
-//			throw new Exception("Existing alternate definition(s) can not be NULL or empty.");
-//		}
-
-		if(_alts != null) {
-			for (Alternates alt: _alts) {
-				String temp = alt.getName();
-				if (altDef.trim().equals(temp.trim())) {
-					retVal = true;
-				}
-	    	}
-		}
-    	
 		return retVal;
 	}
 	

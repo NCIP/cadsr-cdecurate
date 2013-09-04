@@ -10,7 +10,6 @@ import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
-import gov.nih.nci.cadsr.cdecurate.util.DECHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.persist.common.DBConstants;
@@ -693,7 +692,7 @@ public class SetACService implements Serializable
 				AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);
 
 			    //GF30796
-				if(!DECHelper.isAlternateDefinitionExists(chosenDef, altSession)) {
+				if(!AdministeredItemUtil.isAlternateDefinitionExists(chosenDef, altSession)) {
 					altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796
 				}
 				//begin GF32723
@@ -705,8 +704,10 @@ public class SetACService implements Serializable
 					System.out.println("Alternate type" + type);
 					System.out.println("Alternate name is "+name);
 					
-					if(!altSession.addAlternateName(type,name,m_DEC,m_servlet.getConn())) {
-						System.out.println("************************ DEC SetACService: AC [" + m_DEC.getDEC_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
+					if(!AdministeredItemUtil.isAlternateDesignationExists(type, name, altSession)) {
+						if(!altSession.addAlternateName(type,name,m_DEC,m_servlet.getConn())) {
+							System.out.println("************************ DEC SetACService: AC [" + m_DEC.getDEC_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
+						}
 					}
 				}
 				//end GF32723
@@ -1165,7 +1166,7 @@ public class SetACService implements Serializable
 				
 				AltNamesDefsSession	altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchVD);
 			    //GF30796
-				if(!DECHelper.isAlternateDefinitionExists(chosenDef, altSession)) {
+				if(!AdministeredItemUtil.isAlternateDefinitionExists(chosenDef, altSession)) {
 					altSession.addAlternateDefinition(chosenDef,m_VD, m_servlet.getConn());		//GF30796
 				}
 				
@@ -1177,8 +1178,10 @@ public class SetACService implements Serializable
 				
 					System.out.println("Alternate type" + type);
 					System.out.println("Alternate name is "+name);
-					if(!altSession.addAlternateName(type,name,m_VD,m_servlet.getConn())) {
-						System.out.println("************************ VD SetACService: AC [" + m_VD.getVD_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
+					if(!AdministeredItemUtil.isAlternateDesignationExists(type, name, altSession)) {
+						if(!altSession.addAlternateName(type,name,m_VD,m_servlet.getConn())) {
+							System.out.println("************************ VD SetACService: AC [" + m_VD.getVD_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
+						}
 					}
 				}
 				//end GF32723
