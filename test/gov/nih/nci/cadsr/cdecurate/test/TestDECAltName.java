@@ -10,6 +10,7 @@ import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.SetACService;
 import gov.nih.nci.cadsr.cdecurate.tool.UtilService;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DECHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
@@ -210,12 +211,12 @@ public class TestDECAltName
 		_alts[2].setName("Def 3");
 		AltNamesDefsSession altSession = new AltNamesDefsSession(_alts);
 
-		assertTrue(DECHelper.isAlternateDefinitionExists("Def 1", altSession));
-		assertTrue(DECHelper.isAlternateDefinitionExists("Def 3", altSession));
-		assertFalse(DECHelper.isAlternateDefinitionExists("Def 112", altSession));
-		assertFalse(DECHelper.isAlternateDefinitionExists("Def", altSession));
-		assertTrue(DECHelper.isAlternateDefinitionExists("Def 2", altSession));
-		assertTrue(DECHelper.isAlternateDefinitionExists("Def 3", altSession));	
+		assertTrue(AdministeredItemUtil.isAlternateDefinitionExists("Def 1", altSession));
+		assertTrue(AdministeredItemUtil.isAlternateDefinitionExists("Def 3", altSession));
+		assertFalse(AdministeredItemUtil.isAlternateDefinitionExists("Def 112", altSession));
+		assertFalse(AdministeredItemUtil.isAlternateDefinitionExists("Def", altSession));
+		assertTrue(AdministeredItemUtil.isAlternateDefinitionExists("Def 2", altSession));
+		assertTrue(AdministeredItemUtil.isAlternateDefinitionExists("Def 3", altSession));	
 	}
 		
 //  @Test
