@@ -1951,7 +1951,7 @@ public class EVSSearch implements Serializable {
 							sSemantic = this.getMetaSemantics(props);	//GF32446 - might not need this!!! see above
 							
 							//store to concept according to the number of defitions exist for a concept if already not stored
-							if (!sConSet.contains(sConID)) {	//JT b4 //GF29786 - comparing concepts based on EVS identifier and save it
+//							if (!sConSet.contains(sConID)) {	//JT b4 //GF29786 - comparing concepts based on EVS identifier and save it
 								vConList = this.storeConceptToBean(vConList,
 										definitions, dtsVocab, sConName, sDispName,
 										conCodeType, sConID, ilevel, sStatus,
@@ -1973,7 +1973,7 @@ public class EVSSearch implements Serializable {
 												ilevel, subConType, sConSet);
 									}
 								}
-							}
+//							}
 						}
 					}
 				} catch (Exception ee) {
@@ -2122,15 +2122,15 @@ public class EVSSearch implements Serializable {
 						//GF32446 this cause Semantic_Type to not to be included
 						LocalNameList lnl = new LocalNameList();
 						lnl.addEntry(sPropIn);
-//						nodeSet = nodeSet.restrictToMatchingProperties(	//JT b4
-//						lnl, //the Property Name to match
-//						null, //the Property Type to match (null matches all)
-//						termStr, //the text to match
-//						algorithm, //the match algorithm to use
-//						null );//the language to match (null matches all)
+						nodeSet = nodeSet.restrictToMatchingProperties(	//JT b4 GF32723
+						lnl, //the Property Name to match
+						null, //the Property Type to match (null matches all)
+						termStr, //the text to match
+						algorithm, //the match algorithm to use
+						null );//the language to match (null matches all)
 						//JT begin b4
-						nodeSet = nodeSet.restrictToMatchingDesignations(termStr, SearchDesignationOption.ALL,LBConstants.MatchAlgorithms.exactMatch.name(), null);
-						nodeSet = nodeSet.restrictToStatus(ActiveOption.ALL, null);
+//						nodeSet = nodeSet.restrictToMatchingDesignations(termStr, SearchDesignationOption.ALL,LBConstants.MatchAlgorithms.exactMatch.name(), null);
+//						nodeSet = nodeSet.restrictToStatus(ActiveOption.ALL, null);
 						//JT end b4
 						
 						logger.debug("EVSSearch:doConceptQuery() nodeSet retrieved from lexEVS.");	//GF29786 - geting the concept list from lexevs based on synonyms done (old way???)
@@ -3555,9 +3555,7 @@ public class EVSSearch implements Serializable {
 						eBean = this.getNCIDefinition(vList, conID, conName); // (EVS_Bean)vList.elementAt(0);   
 				}
 			}
-			
-			eBean = this.getNCIDefinition(vList, conID, conName); //GF32723
-			
+						
 		} catch (Exception e) {
 			logger.error("Error - getThesaurusConcept : " + e.toString(), e);
 			e.printStackTrace();
