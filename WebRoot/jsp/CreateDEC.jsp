@@ -378,7 +378,7 @@ onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return fa
 	<%
 		String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);
 	%>
-	b7 <%= type %>
+	b7a <%= type %>
 									<!--
 									[<%= userSelectedDefFinal %>]
 									-->

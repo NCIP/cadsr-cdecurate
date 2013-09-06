@@ -403,7 +403,7 @@
 	<%
 		String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);
 	%>
-	b7 <%= type %>
+	b7a <%= type %>
 	<!--
 	[<%= userSelectedDefFinal %>]
 	-->
