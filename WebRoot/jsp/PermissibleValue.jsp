@@ -210,7 +210,7 @@
 					<form name="PVForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=pvEdits">
 					    <% String displayErrorMessage = (String)session.getAttribute("displayErrorMessage");
 		                  if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
-		  	                <b><font  size="3">Not Authorized for Edits in this Context.</font></b></br></br>
+		  	                <b><font  size="3">Not Authorized for Edits in this Context.</font></b><br><br>
 	                    <%}%>
 						<jsp:include page="VDPVSTab.jsp" flush="true" />
 						<div style="margin-left: 0in; margin-right: 0in; border-left: 2px solid black; border-bottom: 2px solid black; border-right: 2px solid black; width: 100%; padding: 0.1in 0in 0.1in 0in">
@@ -1093,7 +1093,7 @@
 																	<div id="<%=pvCount%>ImgClose" style="display: <%if (viewType.equals("collapse")) {%>inline <% } else { %> none <% } %>">
 																		<a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgClose', '<%=pvCount%>ImgOpen', 'view', '<%=pvCount%>');"><img src="images/folderClosed.gif" border="0" alt="Expand"></a>
 																	</div>
-																	<div id="<%=pvCount%>ImgOpen" style="display: <%if (viewType.equals("expand")) {%>inline <% } else { %> none <% } %>"">
+																	<div id="<%=pvCount%>ImgOpen" style="display: <%if (viewType.equals("expand")) {%>inline <% } else { %> none <% } %>">
 																		<a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgOpen', '<%=pvCount%>ImgClose', 'view', '<%=pvCount%>');"><img src="images/folderOpen.gif" border="0" alt="Collapse"></a>
 																	</div>
 																 <%if (!isView){ %>	
