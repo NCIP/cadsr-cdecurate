@@ -1060,12 +1060,14 @@ public class AltNamesDefsSession implements Serializable
         // Copy the Vector - an array is much more efficient for such a short list.
         Vector vContext = (Vector) sess_.getAttribute("vWriteContextDE");
         Vector vContextID = (Vector) sess_.getAttribute("vWriteContextDE_ID");
-        _cacheContextNames = new String[vContext.size()];
-        _cacheContextIds = new String[_cacheContextNames.length];
-        for (int i = 0; i < _cacheContextNames.length; ++i)
-        {
-            _cacheContextNames[i] = (String) vContext.get(i);
-            _cacheContextIds[i] = (String) vContextID.get(i);
+        if(vContext != null) {	//GF30798 fix NPE during logout
+	        _cacheContextNames = new String[vContext.size()];
+	        _cacheContextIds = new String[_cacheContextNames.length];
+	        for (int i = 0; i < _cacheContextNames.length; ++i)
+	        {
+	            _cacheContextNames[i] = (String) vContext.get(i);
+	            _cacheContextIds[i] = (String) vContextID.get(i);
+	        }
         }
     }
 
