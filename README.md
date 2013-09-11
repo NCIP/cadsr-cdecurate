@@ -1,4 +1,4 @@
-Welcome to the caDSR CDE CDE Curation Tool Project!
+Welcome to the caDSR CDE Curation Tool Project!
 =====================================
 
 The CDE Curation Tool supports creation and editing of Data Element Concepts, Value Domains, and Data Elements and is intended for use by Context Administrators to annotate administered items with controlled terminology concepts and for help in naming and defining content
