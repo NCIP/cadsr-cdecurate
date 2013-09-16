@@ -124,9 +124,9 @@ public class SetACService implements Serializable
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	UtilService m_util = new UtilService();
+	public UtilService m_util = new UtilService();
 	CurationServlet m_servlet;
-	Logger logger = Logger.getLogger(SetACService.class.getName());
+	public Logger logger = Logger.getLogger(SetACService.class.getName());
 	Vector<String> m_vRetWFS = new Vector<String>();
 	Vector<String> m_ReleaseWFS = new Vector<String>();
 	Vector<String> m_vRegStatus = new Vector<String>();
@@ -683,9 +683,13 @@ public class SetACService implements Serializable
 			
 			//Check Definition against (constructed) chosen definition, add to Alt Def if not same, add Warning in vValidate vector.
 			System.out.println("req [" + req + "] req.getSession() [" + req.getSession() + "] noldDef [" + oldDef + "] ");
-			String chosenDef = constructChosenDefinition(req.getSession(), "DEC", oldDef);
+			String chosenDef = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
+			//GF30798 constructChosenDefinition(req.getSession(), "DEC", oldDef);
+			
+			//String chosenDef = constructChosenDefinition(req.getSession(), "DEC", oldDef);
+			
 			logger.debug("At line 680 of SetACService.java "+chosenDef);
-			if (chosenDef != null && !chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
+			if (chosenDef != null && !chosenDef.trim().equals("null") && !chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
 				String warningMessage = "Valid \n Note: Your chosen definition is being replaced by standard definition.  Your chosen definition is being added as an alternate definition if it does not exist already.";
 				UtilService.setValPageVector(vValidate, "Alternate Definition",chosenDef, false, 0, warningMessage, sOriginAction);
@@ -693,12 +697,43 @@ public class SetACService implements Serializable
 				//add Alt Def
 			
 				AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);
+
+			    //GF30796
+				if(!AdministeredItemUtil.isAlternateDefinitionExists(chosenDef, altSession)) {
+					altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796
+				}
+				//begin GF32723
+				String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);	//m_OC.getEVS_ORIGIN();
+				if(m_OC != null) {
+					if(type == null || type.equals("")) type = "NCI Thesaurus";
+					String name= m_OC.getCONCEPT_IDENTIFIER();
 				
-				altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());
-				
+					System.out.println("Alternate type" + type);
+					System.out.println("Alternate name is "+name);
+					
+					if(!AdministeredItemUtil.isAlternateDesignationExists(type, name, altSession)) {
+						if(!altSession.addAlternateName(type,name,m_DEC,m_servlet.getConn())) {
+							System.out.println("************************ DEC SetACService: AC [" + m_DEC.getDEC_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
+						}
+					}
+				}
+				//end GF32723
 				m_DEC.setAlternates(altSession);
+
 				logger.info("At line 693 of SetACService.java");				
 			}
+		/*	String ret="";
+			
+			 String sAC_ID=m_OC.getIDSEQ();
+	            String sContextID=m_DEC.getContextIDSEQ();
+	            String sContext=m_DEC.getContextName();
+	            String sValue=m_OC.getEVS_ORIGIN();
+	        
+	           
+	        	InsACService ins=new InsACService(req, res, m_servlet);
+	        	//ins.doAddRemoveAltNames(sAC_ID, sContextID, "INS");
+	         ret=ins.setDES("INS", sAC_ID, sContextID, sContext, "Prior Preferred Name", sValue, "ENGLISH", "");
+	          System.out.println("designation is"+ ret);*/
 			//validation for both edit and DEc
 			s = m_DEC.getDEC_CD_NAME();
 			if (s == null) s = "";
@@ -1125,18 +1160,38 @@ public class SetACService implements Serializable
 				}
 			}
 			//Check Definition against (constructed) chosen definition, add to Alt Def if not same, add Warning in vValidate vector.
-			String chosenDef = constructChosenDefinition(req.getSession(), "VD", oldDef);
-			
+			//GF32723
+			//String chosenDef = constructChosenDefinition(req.getSession(), "VD", oldDef);
+			String comp1 = "";
+			if(m_REP.getPREFERRED_DEFINITION() != null) comp1 = m_REP.getPREFERRED_DEFINITION()+"_";
+			String chosenDef = comp1 + m_REPQ.getPREFERRED_DEFINITION();
+			//GF32723
 			if (!chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning
 				String warningMessage = "Warning: Your chosen definitions are being replaced by standard definitions.  Your chosen definition is being added as an alternate definition if it does not exist already.";
 				UtilService.setValPageVector(vValidate, "Alternate Definition", chosenDef, false, 0, warningMessage, sOriginAction);
 				
-				//add Alt Def
-				
 				AltNamesDefsSession	altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchVD);
-			
-				altSession.addAlternateDefinition(chosenDef,m_VD, m_servlet.getConn());
+			    //GF30796
+				if(!AdministeredItemUtil.isAlternateDefinitionExists(chosenDef, altSession)) {
+					altSession.addAlternateDefinition(chosenDef,m_VD, m_servlet.getConn());		//GF30796
+				}
+				
+				//begin GF32723
+				String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);	//m_REPQ.getEVS_ORIGIN();	//Rep term qualifier can come from any terminology, that is why we are using qualifier only :)
+				if(type == null || type.equals("")) type = "NCI Thesaurus";
+				if(m_REPQ != null) {
+					String name= m_REPQ.getCONCEPT_IDENTIFIER();
+				
+					System.out.println("Alternate type" + type);
+					System.out.println("Alternate name is "+name);
+					if(!AdministeredItemUtil.isAlternateDesignationExists(type, name, altSession)) {
+						if(!altSession.addAlternateName(type,name,m_VD,m_servlet.getConn())) {
+							System.out.println("************************ VD SetACService: AC [" + m_VD.getVD_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
+						}
+					}
+				}
+				//end GF32723
 				m_VD.setAlternates(altSession);
 			}
 			
@@ -2826,11 +2881,17 @@ public class SetACService implements Serializable
         }
         else*/ if (sField.equals("Name"))
         {
+        	String decID = mDEC.getDEC_DEC_ID();
         	sValue = mDEC.getDEC_PREFERRED_NAME();
         	sValue = m_util.parsedStringSingleQuoteOracle(sValue);
-        	sSQL = "SELECT COUNT(*) FROM DATA_ELEMENT_CONCEPTS_VIEW DEC, CONTEXTS_VIEW CV" +
+        	/*sSQL = "SELECT COUNT(*) FROM DATA_ELEMENT_CONCEPTS_VIEW DEC, CONTEXTS_VIEW CV" +
         	" WHERE DEC.CONTE_IDSEQ = CV.CONTE_IDSEQ AND DEC.PREFERRED_NAME = '" + sValue + "'" +
-        	" AND DEC.VERSION = '" + sVersion + "' AND CV.NAME = '" + sContext + "'" + editSQL;
+        	" AND DEC.VERSION = '" + sVersion + "' AND CV.NAME = '" + sContext + "'" + editSQL;*/
+        	//GF32788
+        	sSQL="SELECT COUNT(*) FROM DATA_ELEMENT_CONCEPTS_VIEW DEC, CONTEXTS_VIEW CV" +
+            	" WHERE DEC.CONTE_IDSEQ = CV.CONTE_IDSEQ AND DEC.VERSION = '" + sVersion + "' AND CV.NAME = '" + sContext + "' AND DEC.DEC_ID = '" + decID+"'"  +editSQL;
+        	retValue="Combination of Object Class, Property and context exists with different short name";
+        	//GF32788
         }
         else if (sField.equals("Version"))
         {
@@ -3427,8 +3488,15 @@ public class SetACService implements Serializable
 	 */
 	public String truncateTerm(String sValue)
 	{
-		if(sValue.length() > 0)
-			sValue = sValue.substring(0,30);
+		//GF32723 not related to ticket, just making codes more robust
+		try {
+			if(sValue != null && sValue.length() > 0)
+				sValue = sValue.substring(0,30);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return sValue;
 	}
 
@@ -4888,4 +4956,30 @@ public class SetACService implements Serializable
 		}
 		return vs;
 	}
+
+	//just for junit test
+	public Vector<String> getM_ReleaseWFS() {
+		return m_ReleaseWFS;
+	}
+
+	public void setM_ReleaseWFS(Vector<String> m_ReleaseWFS) {
+		this.m_ReleaseWFS = m_ReleaseWFS;
+	}
+	
+	public Vector<String> getM_vRegStatus() {
+		return m_vRegStatus;
+	}
+
+	public void setM_vRegStatus(Vector<String> m_vRegStatus) {
+		this.m_vRegStatus = m_vRegStatus;
+	}
+	
+	public Vector<String> getM_vRetWFS() {
+		return m_vRetWFS;
+	}
+
+	public void setM_vRetWFS(Vector<String> m_vRetWFS) {
+		this.m_vRetWFS = m_vRetWFS;
+	}
+
 }   //close the class

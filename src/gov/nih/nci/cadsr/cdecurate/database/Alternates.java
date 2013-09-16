@@ -671,7 +671,7 @@ public class Alternates
 
         String text = _HTMLformat1;
         text = text.replace("{[NTITLE]}", (_instance == _INSTANCENAME) ? "Alternate Name" : "Alternate Definition");
-        text = text.replace("{[NAME]}", _name.trim().replaceAll("[\\n]", "<br/>"));
+        text = text.replace("{[NAME]}", _name.trim().replaceAll("[\\n]", "<br/>"));		//alt definition
         text = text.replace("{[TYPE]}", _type.replaceAll(" ", "&nbsp;"));
         text = text.replace("{[LANG]}", _language.replaceAll(" ", "&nbsp;"));
         text = text.replace("{[CONTEXT]}", _conteName.trim().replaceAll(" ", "&nbsp;"));
@@ -718,7 +718,7 @@ public class Alternates
         String text = _HTMLformat2;
         text = text.replace("{[NTITLE]}", (_instance == _INSTANCENAME) ? "Alternate Name" : "Alternate Definition");
         text = text.replace("{[INSTANCE]}", instance);
-        text = text.replace("{[NAME]}", _name.trim().replaceAll("[\\n]", "<br/>"));
+        text = text.replace("{[NAME]}", _name.trim().replaceAll("[\\n]", "<br/>"));		//alt definition
         text = text.replace("{[TYPE]}", _type.replaceAll(" ", "&nbsp;"));
         text = text.replace("{[LANG]}", _language.replaceAll(" ", "&nbsp;"));
         text = text.replace("{[CONTEXT]}", _conteName.trim().replaceAll(" ", "&nbsp;"));

@@ -228,11 +228,12 @@ L--%>
 %>
    }
 
-   function EnableButtons(checked, currentField)
+   function EnableButtons(checked, currentField, isAConcept)
    {
       if (opener.document == null)
         window.close();
       EnableCheckButtons(checked, currentField, "<%=StringEscapeUtils.escapeJavaScript(sMAction)%>")
+      opener.document.newDECForm.isAConcept.value = isAConcept;		//GF30798
    }
    
    function EnableButtonWithTxt(currentField)
@@ -570,7 +571,7 @@ L--%>
   %>
 				<tr>
 				 	<td width="5px" valign="top">
-						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);">
+						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this, false);">
 					</td>
 					<% if(sSelAC.equals("Rep Term") && temp.booleanValue()){ %>
 					<td width="5px" valign="top">
@@ -597,7 +598,7 @@ L--%>
 					<%    }else{%>
 				<tr>
 					<td width="5px" valign="top">
-						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);">
+						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this, true);">
 					</td>
 					<td width="150px" valign="top">
 						<a href="<%=showConceptInTree%>">

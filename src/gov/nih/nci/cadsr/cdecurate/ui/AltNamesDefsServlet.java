@@ -479,7 +479,7 @@ public class AltNamesDefsServlet
                 else if (form._action.equals(_actionAddName))
                 {
                     form._mode = _modeName;
-                    form.clearEdit();
+                    form.clearEdit();	//TBD GF30796 not sure if we need to fix this clear edit
                     jsp = doAlternates3(form, db);
                 }
                 else if (form._action.equals(_actionAddDef))

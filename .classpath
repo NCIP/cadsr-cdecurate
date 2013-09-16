@@ -1,59 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry excluding="gov/nih/nci/cadsr/cdecurate/test/SoundsLike.java|gov/nih/nci/cadsr/cdecurate/test/Util.java" kind="src" path="src"/>
-	<classpathentry kind="lib" path="lib/jasper-runtime.jar"/>
-	<classpathentry kind="lib" path="lib/jboss-system.jar"/>
-	<classpathentry kind="lib" path="lib/log4j-1.2.13.jar"/>
-	<classpathentry kind="lib" path="lib/servlet.jar"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/acegi-security-1.0.4.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/antlr-2.7.6.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/aopalliance-1.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/asm-attrs.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/asm.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/aspectjrt-1.6.8.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/aspectjweaver-1.6.8.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/axis.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/cadsrsentinelapi.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/caGrid-CQL-cql.1.0-1.2.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/castor-1.0.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/castor-1.2-xml.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/castor-1.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/castor-bean-serializer.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/castor-codegen-1.3.1.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/castor-codegen-anttask-1.1.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/castor-core-1.3.1.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/castor-xml-schema-1.3.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/cglib-2.1.3.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/cog-jglobus.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-beanutils-1.7.0.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-betwixt-0.8.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-chain-1.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-cli-1.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-codec-1.3.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-collections-3.2.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-dbcp-1.3.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-digester-1.8.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-discovery-0.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-fileupload-1.1.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-lang-2.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-logging-1.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-pool-1.3.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-validator-1.3.0.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/compass-2.2.0.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/ddlUtils-1.0-PATCHED.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/dlbadapter.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jakarta-regexp-1.4.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jaxrpc.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jettison-1.1.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexbig.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevs-client-framework.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevs-core.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevsapi60-beans.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/LexEVSSecurity.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-analyzers-2.4.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-core-2.4.0.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-queries-2.4.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-regex-2.4.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-snowball-2.4.0.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sdk-client-framework.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sdk-grid-remoting.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sdk-security.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/umlslicense.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/org.eclipse.emf.ecore_2.2.1.v200609210005.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/org.eclipse.emf.ecore.xmi_2.2.1.v200609210005.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/persistence-api-1.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/poi-3.7-20101029.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/poi-ooxml-3.7-20101029.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/poi-ooxml-schemas-3.7-20101029.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jettison-1.1.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexbig.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevsapi60-beans.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevs-client-framework.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevs-core.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/LexEVSSecurity.jar"/>
-	<classpathentry kind="lib" path="lib/ojdbc6.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sdk-client-framework.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sdk-grid-remoting.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sdk-security.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-2.5.6.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-aop-2.5.6.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-aspects-2.5.6.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-batch-core-2.1.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-batch-infrastructure-2.1.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-oxm-1.5.7.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-test-2.5.6.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-web-2.5.6.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-webmvc-2.5.6.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/umlslicense.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-system.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/servlet.jar"/>
+	<classpathentry kind="lib" path="testlib/easymock-2.3.jar"/>
 	<classpathentry kind="lib" path="testlib/log4jdbc4-1.2.jar"/>
-	<classpathentry kind="lib" path="testlib/sqlj/runtime12.jar"/>
-	<classpathentry kind="lib" path="testlib/sqlj/runtime12ee.jar"/>
-	<classpathentry kind="lib" path="testlib/junit/selenium-server-standalone-2.25.0.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.13.jar"/>
+	<classpathentry kind="lib" path="lib/ojdbc6.jar"/>
+	<classpathentry kind="lib" path="testlib/junit/selenium-server-standalone-2.35.0.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>

@@ -75,4 +75,4 @@ select count(*) from sbr.sc_contexts where lower(scl_name) like '%cabig%';
 
 select count(*) from sbr.SECURITY_CONTEXTS_LOV where lower(scl_name) like '%cabig%';
 
-select g.grp_name from SBR.USER_GROUPS where ua_name = 'GUEST';
+select grp_name from SBR.USER_GROUPS where ua_name = 'GUEST';

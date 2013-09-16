@@ -29,18 +29,29 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
+import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
 import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.LexGrid.LexBIG.Exceptions.LBException;
+import org.LexGrid.LexBIG.Exceptions.LBInvocationException;
+import org.LexGrid.LexBIG.Exceptions.LBParameterException;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
 import org.LexGrid.codingSchemes.CodingScheme;
+import org.junit.Test;
 
 import oracle.jdbc.pool.OracleDataSource;
+
+import gov.nih.nci.cadsr.cdecurate.test.CurationTestLogger;
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 /**
  * This class tests the use of the EVS API in the Curation Tool and verifies connectivity to the EVS servers.
@@ -81,6 +92,53 @@ public class EVSTest1
     {
     }
     
+//    @Test
+    public void runTest(LexBIGService evsService) throws Exception {
+    	String dtsVocab = "NCI Thesaurus";
+		CodedNodeSet nodeSet;
+		nodeSet = evsService.getNodeSet(dtsVocab, null, null);
+    	
+    	String vocabType = "PropType";
+    	String sPropIn = "FULL_SYN";
+    	String termStr = "name";
+    	String algorithm = "exactMatch";
+		ResolvedConceptReferenceList lstResult = null;
+		String sMetaName = "NCI Metathesaurus";
+		String sSearchIn = "Name";
+		
+/*    	if (vocabType.equals("PropType")) { // do concept prop search
+			//GF32446 this cause Semantic_Type to not to be included
+			LocalNameList lnl = new LocalNameList();
+			lnl.addEntry(sPropIn);
+			nodeSet = nodeSet.restrictToMatchingProperties(
+					lnl, //the Property Name to match
+					null, //the Property Type to match (null matches all)
+					termStr, //the text to match
+					algorithm, //the match algorithm to use
+					null );//the language to match (null matches all)   
+			
+    	}
+		if (!sSearchIn.equals("MetaCode") && !sMetaName.equals(dtsVocab)) {
+			lstResult = nodeSet.resolveToList(
+					null, //Sorts used to sort results (null means sort by match score)
+					null, //PropertyNames to resolve (null resolves all)
+					new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
+					100	  //cap the number of results returned (-1 resolves all)
+			);
+		}*/
+		
+		//taken "out" from GetACSearch.java line 8274
+//        else if (!sSearchIn.equals("Code") || !sSearchInEVS.equals("MetaCode"))
+//            vAC = do_ConceptSearch(sKeyword, "", sContext, sStatus, "", "", "", vAC, sRecordsDisplayed);
+//        // To search synonym you need to filter
+//        sKeyword = (String) session.getAttribute("creKeyword");
+//        vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
+//                        intMetaLimit, true, -1, "", new HashSet<String>());
+//        DataManager.setAttribute(session, "vACSearch", vAC);
+//        evs.get_Result(req, res, vResult, "");
+        
+		//should run doVocabSearch() in EVSSearch instead!!!
+    }
     /**
      * Control entry to run the tests. All output is written to logs as configured in the log4j.xml specified.
      * 
@@ -109,8 +167,15 @@ public class EVSTest1
             // Open a database connection to the caDSR.
             var.open();
 
+            GetACService acs = new GetACService();
+            String evsURL = var.getEvsURL(acs);
+            LexBIGService evsService = var.getEvsService(evsURL);
+            
             // Test the EVS Vocabularies.
-            var.testVocabs();
+//            var.testVocabs(evsURL, acs, evsService);
+            
+            // Run the real test
+            var.runTest(evsService);
             
             // Close the database connection.
             var.close();
@@ -294,21 +359,33 @@ public class EVSTest1
         return evsURL;
     }
     
+    public LexBIGService getEvsService(String evsURL) {
+        if (evsURL == null)
+        {
+            _logger.fatal("Missing EVS URL.");
+            return null;
+        }
+    	LexBIGService evsService = null;
+		try {
+			evsService = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}		
+    	
+		return evsService;
+    }
     /**
      * Test the Vocabularies and availability.
      *
      */
     @SuppressWarnings("unchecked")
-    private void testVocabs()
+    private void testVocabs(String evsURL, GetACService acs, LexBIGService evsService)
     {
         // Get the EVS URL for the API.
-        GetACService acs = new GetACService();
-        String evsURL = getEvsURL(acs);
-        if (evsURL == null)
-        {
-            _logger.fatal("Missing EVS URL.");
-            return;
-        }
+//        GetACService acs = new GetACService();
+//        String evsURL = getEvsURL(acs);
+//        LexBIGService evsService = getEvsService(evsURL);
 
         // Set the EVS URL for the tests.
         EVS_UserBean user = new EVS_UserBean();
@@ -373,7 +450,6 @@ public class EVSTest1
             ResolvedConceptReferenceList vals = null;
             
             try {
-            	LexBIGService evsService = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(evsURL, "EvsServiceInfo");		
             	CodingScheme cs = evsService.resolveCodingScheme(vocab, null);
             
             	// Check the connectivity by getting the root concepts.

@@ -794,7 +794,7 @@ public class EVS_Bean implements Serializable
     if (sFilterValue == null || sFilterValue.equals(""))
       return "";
 
-    String sRetValue = sFilterValue;
+    String sRetValue = sFilterValue;	//sFilterValue is the value but the full name of 2) Select EVS Vocabulary from the front end (cdecurate) e.g. Logical Observation Identifier Names and Codes instead of LOINC
     Hashtable eHash = eUser.getVocab_Attr();
     Vector vVocabs = eUser.getVocabNameList();
     if (vVocabs == null) vVocabs = new Vector();

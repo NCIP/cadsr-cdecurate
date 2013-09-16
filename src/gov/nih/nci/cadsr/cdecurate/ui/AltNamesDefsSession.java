@@ -13,6 +13,7 @@
 package gov.nih.nci.cadsr.cdecurate.ui;
 
 import java.io.Serializable;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -34,6 +35,7 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
 import gov.nih.nci.cadsr.cdecurate.util.Tree;
 import gov.nih.nci.cadsr.cdecurate.util.TreeNode;
+import gov.nih.nci.cadsr.common.Constants;
 
 /**
  * This class maps and manges the session data needed for processing Alternate Names and Definitions.
@@ -208,7 +210,16 @@ public class AltNamesDefsSession implements Serializable
         _showMC = true;
     }
 
-    /**
+    public AltNamesDefsSession(Alternates[] alts) {
+    	_alts = alts;
+	}
+
+	//GF30796
+    public Alternates[] getAlternates() {
+		return _alts;
+	}
+
+	/**
      * Clear the session edit buffer
      */
     public void clearEdit(int inst_)
@@ -426,7 +437,7 @@ public class AltNamesDefsSession implements Serializable
      * @return the alt name/def buffer
      * @throws Exception
      */
-    private static AltNamesDefsSession getSessionDataAC(HttpSession session_, String launch_) throws Exception
+    public static AltNamesDefsSession getSessionDataAC(HttpSession session_, String launch_) throws Exception
     {
         // VM Edit is special, don't show the manually curated definition.
         boolean showMC = true;
@@ -448,9 +459,10 @@ public class AltNamesDefsSession implements Serializable
 
         // Get the AC bean.
         AC_Bean ac = (AC_Bean) session_.getAttribute(beanName);
-        if (ac == null)
-            throw new Exception("Missing session Bean [" + beanName + "].");
-
+//        if (ac == null)
+//            throw new Exception("Missing session Bean [" + beanName + "].");
+        if(ac != null) {	//GF30796
+        
         // If it hasn't been used before, create a new buffer.
         altSess = ac.getAlternates();
         if (altSess == null)
@@ -467,8 +479,17 @@ public class AltNamesDefsSession implements Serializable
             }
         }
 
+        //GF30798
+//        if(ac != null && ac.getAlternates() != null && ac.getAlternates()._alts != null && ac.getAlternates()._alts[0] != null) {
+//        	String altDef = ac.getAlternates()._alts[0].getName();
+//        	session_.setAttribute(Constants.FINAL_ALT_DEF_STRING, altDef);
+//        	System.out.println("AltNamesDefsSession: getSessionDataAC() altDef = >>>" + altDef + "<<<");
+//        }
+        
         // Need to reset visible manually curated definitions.
         altSess._showMC = showMC;
+        }
+
         return altSess;
     }
 
@@ -748,8 +769,9 @@ public class AltNamesDefsSession implements Serializable
             altSess = getSessionDataAC(session, launch_);
             break;
         }
-        if (altSess == null)
-            throw new Exception("Unable to find or create a data buffer.");
+//        if (altSess == null)
+//            throw new Exception("Unable to find or create a data buffer.");
+      if (altSess != null) {	//GF30796
 
         // Update the display flag in the alternates.
         altSess.resetShowMC();
@@ -759,8 +781,17 @@ public class AltNamesDefsSession implements Serializable
         req_.setAttribute(_searchEVS, launch_);
         req_.setAttribute(_showClear, (altSess._enableClear) ? "Y" : "N");
 
+        //GF30798
+//		if(altSess != null && altSess._alts != null && altSess._alts[0] != null) {
+			//GF30796 need to check if it is already exists, if new add it
+//			session.setAttribute(Constants.FINAL_ALT_DEF_STRING, altDef);
+//		}
+
+        
         // Must do any initialization that needs the session.
         altSess.setContexts(session);
+      	} 
+      
         return altSess;
     }
 
@@ -1036,12 +1067,14 @@ public class AltNamesDefsSession implements Serializable
         // Copy the Vector - an array is much more efficient for such a short list.
         Vector vContext = (Vector) sess_.getAttribute("vWriteContextDE");
         Vector vContextID = (Vector) sess_.getAttribute("vWriteContextDE_ID");
-        _cacheContextNames = new String[vContext.size()];
-        _cacheContextIds = new String[_cacheContextNames.length];
-        for (int i = 0; i < _cacheContextNames.length; ++i)
-        {
-            _cacheContextNames[i] = (String) vContext.get(i);
-            _cacheContextIds[i] = (String) vContextID.get(i);
+        if(vContext != null) {	//GF30798 fix NPE during logout
+	        _cacheContextNames = new String[vContext.size()];
+	        _cacheContextIds = new String[_cacheContextNames.length];
+	        for (int i = 0; i < _cacheContextNames.length; ++i)
+	        {
+	            _cacheContextNames[i] = (String) vContext.get(i);
+	            _cacheContextIds[i] = (String) vContextID.get(i);
+	        }
         }
     }
 
@@ -1324,9 +1357,42 @@ public class AltNamesDefsSession implements Serializable
     {
         return _conteName[0];
     }
-    
+
     // This will add alternate definition if one with exact content does not exist.
     public boolean addAlternateDefinition(String def, AC_Bean acb, Connection conn) throws ToolException{
+    	boolean ret = false;
+    	boolean exists = false;
+    	if (_alts == null){
+    		DBAccess db = new DBAccess(conn);
+    		this.loadAlternates(db, _sortName);
+    	}
+    	
+        //GF30796 just making the codes more robust
+    	if(def != null && !def.trim().equals("")) {
+    		def = def.trim();
+	    	for (Alternates alt: _alts) {
+	    		if (alt.isDef()) {
+	    			String temp = alt.getName();
+	    			if (def.equals(temp)) {
+	    				exists = true;
+	    			}
+	    		}
+	    	}
+	    	
+	    	if (!exists) {
+	    		Alternates newAlt = new Alternates(Alternates._INSTANCEDEF, def, "System-generated", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
+	            
+	    		updateAlternatesList(newAlt, false);
+	    		ret = true;
+	    	}
+    	}
+    	
+    	return ret;
+    }
+    
+    //begin GF32723 added alternate name
+    //brand new method
+    public boolean addAlternateName(String type, String name, AC_Bean acb, Connection conn) throws ToolException{
     	boolean ret = false;
     	boolean exists = false;
     	if (_alts == null){
@@ -1337,19 +1403,72 @@ public class AltNamesDefsSession implements Serializable
     		
     		if (alt.isDef()) {
     			String temp = alt.getName();
-    			if (def.equals(temp))
+    			if (name.equals(temp))
     				exists = true;
     		}
     	}
     	
     	if (!exists) {
-    		Alternates newAlt = new Alternates(Alternates._INSTANCEDEF, def, "System-generated", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
-            
-    		updateAlternatesList(newAlt, false);
+//    		Alternates newAlt = new Alternates(Alternates._INSTANCENAME, name, "Prior Preferred Name", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
+    		Alternates newAlt = new Alternates(Alternates._INSTANCENAME, name, type, "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
+          	updateAlternatesList(newAlt, false);
+    	
     		
     	}
-    		
     	
+    	ret = true;
+    	   	
     	return ret;
     }
+
+    //brand new method
+//    public int insertAltName(String type, String name, AC_Bean acb, Connection conn) {
+//		// TODO Auto-generated method stub
+//	    CallableStatement cstmt = null;
+//	    
+//	    int rc  = 0;
+//	    
+//	    String insert = "begin insert into sbr.designations_view "
+//	                + "(ac_idseq, conte_idseq, name, detl_name, lae_name) "
+//	                + "values (?, ?, ?, ?, ?) return desig_idseq into ?; end;";
+//	    
+//	    System.out.println (acb.getIDSEQ());
+//	    System.out.println(acb.getContextIDSEQ());
+//	    System.out.println(name);
+//	    System.out.println(type);
+//	    
+//	        try
+//	        {
+//	        	     	
+//
+//	            cstmt = conn.prepareCall(insert);
+//	            cstmt.setString(1, acb.getIDSEQ());
+//	            cstmt.setString(2, acb.getContextIDSEQ());
+//	            cstmt.setString(3, name);
+//	            cstmt.setString(4, "LOINC_CODE");	//GF32723 TBD need to get this from somewhere
+//	            cstmt.setString(5, "ENGLISH");
+//	            cstmt.registerOutParameter(6, java.sql.Types.VARCHAR);
+//	            rc = cstmt.executeUpdate();
+//	         }
+//	        catch (SQLException ex)
+//	        {
+//	        System.out.println("caught exception while inserting to designations: " + ex.toString());
+//	      		}
+//	        
+//	        finally {
+//	        if (cstmt != null) {
+//	                try {
+//	                cstmt.close();
+//	               
+//	                } catch (SQLException e1) {
+//	                System.out.println("Exception is"+e1);
+//	              cstmt = null;
+//	            }
+//	        }
+//        }
+//        System.out.println(rc);
+//        return rc;
+//        
+//    }
+	//end GF32723
 }

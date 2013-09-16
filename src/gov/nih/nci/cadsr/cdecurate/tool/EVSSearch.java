@@ -56,6 +56,7 @@ import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.ActiveOption;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
 import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.LexBIG.Utility.ConvenienceMethods;
+import org.LexGrid.LexBIG.Utility.LBConstants;
 import org.LexGrid.LexBIG.Utility.Iterators.ResolvedConceptReferencesIterator;
 import org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService;
 import org.LexGrid.codingSchemes.CodingScheme;
@@ -67,6 +68,8 @@ import org.LexGrid.naming.Mappings;
 import org.LexGrid.naming.SupportedHierarchy;
 import org.LexGrid.naming.SupportedSource;
 import org.apache.log4j.Logger;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.SearchDesignationOption;
+import org.LexGrid.concepts.Entity;
 
 /**
  * EVSSearch class is for search action of the tool for all components.
@@ -1869,11 +1872,12 @@ public class EVSSearch implements Serializable {
 					//call method to do the search from EVS vocab
 					ResolvedConceptReferenceList lstResults = null;
 					//do not do vocab search if it is meta code search
-					if (!sSearchIn.equals("MetaCode")
-							&& !sMetaName.equals(vocabDisp))
-						lstResults = this.doConceptQuery(	//GF29786
+					if (!sSearchIn.equals("MetaCode") && !sMetaName.equals(vocabDisp)) {
+						//GF29786
+						lstResults = doConceptQuery(	//dtsVocab e.g. Logical Observation Identifier Names and Codes
 								vocabBean.getVocabAccess(), termStr, dtsVocab,
 								sSearchIn, vocabType, namePropIn, sSearchAC);
+					}
 					logger.debug("at line 1870 of EVSSearch.java" + lstResults +"dtsvocab is "+ dtsVocab);
 					//get the desc object from the list
 					if (lstResults != null) {
@@ -1887,9 +1891,9 @@ public class EVSSearch implements Serializable {
 							String vocabMetaType = "", vocabMetaCode = "";
 
 							ResolvedConceptReference rcr = new ResolvedConceptReference();
-//							rcr = (ResolvedConceptReference) lstResults.getResolvedConceptReference(i);
-							rcr = (ResolvedConceptReference) lstResults.enumerateResolvedConceptReference()	//GF32446 need to get to next element to get to "Semantic Type"
-				                    .nextElement();
+							rcr = (ResolvedConceptReference) lstResults.getResolvedConceptReference(i);
+//							rcr = (ResolvedConceptReference) lstResults.enumerateResolvedConceptReference().nextElement();	//GF32446 need to get to next element to get to "Semantic Type"
+
 
 							if (!rcr.getEntity().isIsActive()){
 								if (sIncludeRet != null
@@ -1954,7 +1958,7 @@ public class EVSSearch implements Serializable {
 							sSemantic = this.getMetaSemantics(props);	//GF32446 - might not need this!!! see above
 							
 							//store to concept according to the number of defitions exist for a concept if already not stored
-							if (!sConSet.contains(sConID)) {	//GF29786 - comparing concepts based on EVS identifier and save it
+//							if (!sConSet.contains(sConID)) {	//JT b4 //GF29786 - comparing concepts based on EVS identifier and save it
 								vConList = this.storeConceptToBean(vConList,
 										definitions, dtsVocab, sConName, sDispName,
 										conCodeType, sConID, ilevel, sStatus,
@@ -1976,7 +1980,7 @@ public class EVSSearch implements Serializable {
 												ilevel, subConType, sConSet);
 									}
 								}
-							}
+//							}
 						}
 					}
 				} catch (Exception ee) {
@@ -1986,7 +1990,9 @@ public class EVSSearch implements Serializable {
 				}
 		        logger.debug("sMetaName = [" + sMetaName + "] isMetaSearch = [" + isMetaSearch + "]");
 				//do the meta thesaurus search if meta name exists and if meta search is true
-				if (sMetaName != null && !sMetaName.equals("") && isMetaSearch && sMetaName.equalsIgnoreCase(dtsVocab))	{	//GF32446 - "Semantic Type" empty issue due to sMetaName is empty
+				if (sMetaName != null && !sMetaName.equals("") && isMetaSearch
+						&& sMetaName.equalsIgnoreCase(dtsVocab)		//GF32446 - "Semantic Type" empty issue due to sMetaName is empty
+						)	{
 			        logger.debug("doMetaSearch calling with termStr = [" + termStr + "] sSearchIn = [" + sSearchIn + "] sMetaSource = [" + sMetaSource + "] iMetaLimit = [" + iMetaLimit + "] sMetaName = [" + sMetaName + "]");
 					vConList = this.doMetaSearch(vConList, termStr, sSearchIn,
 							sMetaSource, iMetaLimit, sMetaName);
@@ -2063,7 +2069,7 @@ public class EVSSearch implements Serializable {
 	 * @param sPropIn
 	 * @return
 	 */
-	private ResolvedConceptReferenceList doConceptQuery(String vocabAccess, String termStr,
+	private ResolvedConceptReferenceList doConceptQuery(String vocabAccess, String termStr,	//JT needs to look into this EVS search!!!
 			String dtsVocab, String sSearchIn, String vocabType, String sPropIn, String sSearchAC) {
 		ResolvedConceptReferenceList lstResult = null;
 		List lstResult1 = null;
@@ -2082,7 +2088,7 @@ public class EVSSearch implements Serializable {
 
 			this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab, m_eUser);
 			
-			CodedNodeSet nodeSet = evsService.getNodeSet(dtsVocab, null, null);
+			CodedNodeSet nodeSet = evsService.getNodeSet(dtsVocab, null, null);	//dtsVocab example value = Logical Observation Identifier Names and Codes
 
 			if (sSearchIn.equals("ConCode")) {
 				
@@ -2123,12 +2129,16 @@ public class EVSSearch implements Serializable {
 						//GF32446 this cause Semantic_Type to not to be included
 						LocalNameList lnl = new LocalNameList();
 						lnl.addEntry(sPropIn);
-						nodeSet = nodeSet.restrictToMatchingProperties(
-								lnl, //the Property Name to match
-								null, //the Property Type to match (null matches all)
-								termStr, //the text to match
-								algorithm, //the match algorithm to use
-								null );//the language to match (null matches all)
+						nodeSet = nodeSet.restrictToMatchingProperties(	//JT b4 GF32723
+						lnl, //the Property Name to match
+						null, //the Property Type to match (null matches all)
+						termStr, //the text to match
+						algorithm, //the match algorithm to use
+						null );//the language to match (null matches all)
+						//JT begin b4
+//						nodeSet = nodeSet.restrictToMatchingDesignations(termStr, SearchDesignationOption.ALL,LBConstants.MatchAlgorithms.exactMatch.name(), null);
+//						nodeSet = nodeSet.restrictToStatus(ActiveOption.ALL, null);
+						//JT end b4
 						
 						logger.debug("EVSSearch:doConceptQuery() nodeSet retrieved from lexEVS.");	//GF29786 - geting the concept list from lexevs based on synonyms done (old way???)
 					}
@@ -2156,7 +2166,7 @@ public class EVSSearch implements Serializable {
 					lstResult = nodeSet.resolveToList(
 							null, //Sorts used to sort results (null means sort by match score)
 							null, //PropertyNames to resolve (null resolves all)
-							new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
+							null,	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
 							100	  //cap the number of results returned (-1 resolves all)
 					);
 					
@@ -2236,6 +2246,139 @@ public class EVSSearch implements Serializable {
 		return vCons;
 	}
 
+	private Vector<EVS_Bean> doMetaSearchOld(Vector<EVS_Bean> vList,
+			String termStr, String sSearchIn, String sMetaSource,
+			int iMetaLimit, String sVocab) {
+
+		ResolvedConceptReferenceList concepts = null;
+
+		if (vList == null)
+			vList = new Vector<EVS_Bean>();
+			try {
+				if (termStr == null || termStr.equals(""))
+					return vList;
+				List metaResults = null;
+				CodedNodeSet nodeSet = evsService.getNodeSet("NCI MetaThesaurus", null, null);
+				try {
+					if (sSearchIn.equalsIgnoreCase("MetaCode")) { //do meta code specific to vocabulary source
+						// In the NCI MetaThesaurus, fidning the 'source' of an 'Atom' is equivalent to finding the 
+						//'source' of a given Property of an Entity. Each CUI (which is equivalent to an Entity in 
+						//LexEVS) may contain several Presentation Properties (Atoms or AUI's of that CUI). 
+						//Each of these Presentation Properties is Qualified by a 'source-code' Qualifier, 
+						//which reflects the code of this Atom in its original source, and a 'source' qualifier, 
+						//which states the source itself that this Atom came from
+
+						//query.searchSourceByAtomCode(termStr, sMetaSource);
+
+						CodedNodeSet.PropertyType[] types = new CodedNodeSet.PropertyType[1];
+						types[0] = CodedNodeSet.PropertyType.PRESENTATION;
+
+						nodeSet = nodeSet.restrictToProperties(
+								Constructors.createLocalNameList("propertyType"), 
+								types, 
+								Constructors.createLocalNameList(sMetaSource), 
+								null, 
+								null);
+
+						nodeSet = nodeSet.restrictToMatchingProperties(
+								Constructors.createLocalNameList("value"), //the Property Name to match
+								null, //the Property Type to match (null matches all)
+								termStr, //the text to match
+								"contains", //the match algorithm to use
+								null );//the language to match (null matches all)
+
+					}
+					else if (sSearchIn.equalsIgnoreCase("ConCode")) //meta cui search
+						nodeSet = nodeSet.restrictToMatchingProperties(
+								Constructors.createLocalNameList("code"), //the Property Name to match
+								null, //the Property Type to match (null matches all)
+								termStr, //the text to match
+								"exactMatch", //the match algorithm to use
+								null //the language to match (null matches all)
+						);
+					else
+						//meta keyword search
+						nodeSet = nodeSet.restrictToMatchingDesignations(termStr, //the text to match 
+								CodedNodeSet.SearchDesignationOption.PREFERRED_ONLY,  //whether to search all designation, only Preferred or only Non-Preferred
+								"contains", //the match algorithm to use
+								null); //the language to match (null matches all)
+
+
+					concepts = nodeSet.resolveToList(
+							null, //Sorts used to sort results (null means sort by match score)
+							null, //PropertyNames to resolve (null resolves all)
+							null,  //PropertyTypess to resolve (null resolves all)
+							1000	  //cap the number of results returned (-1 resolves all)
+					);
+
+				} catch (Exception ex) {
+					logger.error("doMetaSearch evsSearch: " + ex.toString(), ex);
+				}
+				if (concepts != null && concepts.getResolvedConceptReferenceCount() > 0) {
+					String sConName = "";
+					String sConID = "";
+					String sCodeType = "";
+					String sSemantic = "";
+					String sCodeSrc = "";
+					int iLevel = 0;
+					for (int i = 0; i < concepts.getResolvedConceptReferenceCount(); i++) {
+						// Do this so only one result is returned on Meta code search (API is dupicating a result)
+						if (sSearchIn.equals("MetaCode") && i > 0)
+							break;
+						//get concept properties
+						ResolvedConceptReference rcr = concepts.getResolvedConceptReference(i);
+
+						if (rcr != null) {
+							Property[] props = rcr.getEntity().getProperty();
+							Presentation[] presentations = rcr.getEntity().getPresentation();
+							Definition[] definitions = rcr.getEntity().getDefinition();
+
+							sConName = rcr.getEntityDescription().getContent();
+							sConID = rcr.getCode();
+
+							sCodeType = this.getNCIMetaCodeType(sConID, "byID");
+
+							//get semantic types
+							sSemantic = this.getMetaSemantics(props);
+							//get preferred source code from atom collection
+							sCodeSrc = this.getPrefMetaCode(presentations);
+
+							//get definition attributes
+							String sDefSource = "";
+							String sDefinition = m_eUser.getDefDefaultValue();
+							//add sepeate record for each definition
+							if (definitions != null && definitions.length > 0) {
+								for (Definition defType: definitions) {
+									sDefinition = defType.getValue().getContent();
+									sDefSource = defType.getSource()[0].getContent();
+
+									EVS_Bean conBean = new EVS_Bean();
+									conBean.setEVSBean(sDefinition, sDefSource,
+											sConName, sConName, sCodeType, sConID,
+											sVocab, sVocab, iLevel, "", "", "", "",
+											sSemantic, "", "");
+									conBean.setPREF_VOCAB_CODE(sCodeSrc); //store pref code in the bean
+									vList.addElement(conBean); //add concept bean to vector
+								}
+							} else {
+								EVS_Bean conBean = new EVS_Bean();
+								conBean.setEVSBean(sDefinition, sDefSource,
+										sConName, sConName, sCodeType, sConID,
+										sVocab, sVocab, iLevel, "", "", "", "",
+										sSemantic, "", "");
+								conBean.setPREF_VOCAB_CODE(sCodeSrc); //store pref code in the bean
+								vList.addElement(conBean); //add concept bean to vector              
+							}
+						}
+					}
+				}
+			} catch (Exception ex) {
+				logger.error("doMetaSearch exception : " + ex.toString(), ex);
+			}
+			return vList;
+	}
+
+	
 	/**
 	 * @param vList
 	 * @param termStr
@@ -3338,7 +3481,7 @@ public class EVSSearch implements Serializable {
 				prefVocab = "";
 			if (dtsVocab.equals(prefVocab))
 				return eBean; //System.out.println(dtsVocab + " vocab match " + prefVocab);
-			//continue only if term is not from Thesaururs
+			//continue only if term is not from Thesaururs //Should come here for GF32723 ???
 			if (dtsVocab != null && !dtsVocab.equals(nciVocab)) {
 				if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
 				{
@@ -3355,7 +3498,7 @@ public class EVSSearch implements Serializable {
 								-1, "", new HashSet<String>());
 						if (vList != null && vList.size() > 0) {
 							eBean = this
-							.getNCIDefinition(vList, conID, conName); //get the right definition
+							.getNCIDefinition(vList, conID, conName); //get the right definition	//Should come here for GF32723
 							return eBean;
 						}
 						conID = "";
@@ -3402,7 +3545,7 @@ public class EVSSearch implements Serializable {
 				//call the search by concode method to get the Thes concept 
 				vList = new Vector<EVS_Bean>();
 				vList = this.doVocabSearch(vList, NCISrcCode, prefVocab,
-						"ConCode", "", "", "Exclude", "", 10, false, -1, "", new HashSet<String>());
+						"ConCode", "", "", "Exclude", "", 10, false, -1, "", new HashSet<String>());	//JT Should come here for GF32723
 				if (vList != null && vList.size() > 0)
 					eBean = this.getNCIDefinition(vList, NCISrcCode, conName); // (EVS_Bean)vList.elementAt(0);        
 				else {
@@ -3414,13 +3557,15 @@ public class EVSSearch implements Serializable {
 					conType = this.getNCIMetaCodeType(conID, "byID");
 					vList = new Vector<EVS_Bean>();
 					vList = this.doVocabSearch(vList, conID, prefVocab, "Name",
-							conType, "", "Exclude", "", 10, false, -1, "", new HashSet<String>());
+							conType, "", "Exclude", "", 10, false, -1, "", new HashSet<String>());		//Should come here for GF32723
 					if (vList != null && vList.size() > 0)
 						eBean = this.getNCIDefinition(vList, conID, conName); // (EVS_Bean)vList.elementAt(0);   
 				}
 			}
+						
 		} catch (Exception e) {
 			logger.error("Error - getThesaurusConcept : " + e.toString(), e);
+			e.printStackTrace();
 		}
 		return eBean;
 	}
@@ -3791,6 +3936,42 @@ public class EVSSearch implements Serializable {
 		}
 
 		return concepts;
+	}
+	
+	//codes courtesy of Tracy S
+	public int searchConceptsName(LexEVSApplicationService lbSvc, String vocabName, String vocabVersion) {
+        String searchTerm = "name";
+        
+        try {
+                CodingSchemeVersionOrTag cvt = new CodingSchemeVersionOrTag();
+                cvt.setVersion(vocabVersion);
+                CodedNodeSet nodes = lbSvc.getNodeSet(vocabName, cvt, null);
+                nodes = nodes.restrictToMatchingDesignations(searchTerm,
+                                SearchDesignationOption.ALL,
+                                LBConstants.MatchAlgorithms.exactMatch.name(), null);
+                nodes = nodes.restrictToStatus(ActiveOption.ALL, null);
+                ResolvedConceptReferenceList crl = nodes.resolveToList(null, null,
+                                null, 20);
+                Vector<String> definitions = new Vector<String>();
+                for(int i=0; i<crl.getResolvedConceptReferenceCount();i++){
+                        Entity concept = crl.getResolvedConceptReference(i).getEntity();
+                        Definition[] defs = concept.getDefinition();
+                        for (int j=0;j < defs.length; j++){
+                                Definition tempDef = defs[j];
+                                String defText = tempDef.getValue().getContent();
+                                definitions.add(concept.getEntityCode()+ " " + tempDef.getSource(0).getContent() + " " +   defText);
+                        }
+                }
+                
+                for (String def:definitions){
+                        System.out.println(def);
+                }
+                return crl.getResolvedConceptReferenceCount();
+        } catch (Exception ex) {
+                System.out.println("searchConcepts_name " + vocabName + " and "
+                                + vocabVersion + " throws Exception = " + ex);
+        }
+        return 0;
 	}
 	
 	private String getAlgorithm(String termStr) {

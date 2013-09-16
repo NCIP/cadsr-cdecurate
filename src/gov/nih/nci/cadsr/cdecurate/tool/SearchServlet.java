@@ -8,7 +8,9 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
+import gov.nih.nci.cadsr.cdecurate.util.DECHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolConstants;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
@@ -192,15 +194,17 @@ public class SearchServlet extends CurationServlet {
         }
         catch (Exception e)
         {
+        	e.printStackTrace();
             try
             {
                 // if error, forward to login page to re-enter username and password
                 logger.error("Servlet-doHomePage : " + e.toString(), e);
-                String msg = e.getMessage().substring(0, 12);
-                if (msg.equals("Io exception"))
-                    ForwardErrorJSP(m_classReq, m_classRes, "Io Exception. Session Terminated. Please log in again.");
-                else
-                    ForwardErrorJSP(m_classReq, m_classRes, "Could not validate the User Name and Password, please try again.");
+                String msg = e.getMessage();	//e.getMessage().substring(0, 12);	//GF30796 not related to the ticket but making the codes more robust
+//                if (msg.equals("Io exception"))
+//                    ForwardErrorJSP(m_classReq, m_classRes, "Io Exception. Session Terminated. Please log in again.");
+//                else
+//                    ForwardErrorJSP(m_classReq, m_classRes, "Could not validate the User Name and Password, please try again.");
+                ForwardErrorJSP(m_classReq, m_classRes, "Could not validate the User Name and Password, please try again. [" + msg + "]");
             }
             catch (Exception ee)
             {
@@ -680,6 +684,9 @@ public class SearchServlet extends CurationServlet {
     private void doOpenSearchPage() throws Exception
     {
         HttpSession session = m_classReq.getSession();
+		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
+        
         DataManager.setAttribute(session, "vStatMsg", new Vector());
         DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, "nothing");
         DataManager.setAttribute(session, "LastMenuButtonPressed", "Search");
@@ -1994,8 +2001,11 @@ public class SearchServlet extends CurationServlet {
         DataManager.setAttribute(session, "DDEAction", "nothing"); // reset from "CreateNewDEFComp"
         String searchAC = "DataElement";
         // sets the session attributes of the selection menu action and selected component
-        if (sMAction.equals("editDE") || sMAction.equals("editDEC") || sMAction.equals("editVD"))
+        if (sMAction.equals("editDE") || sMAction.equals("editDEC") || sMAction.equals("editVD")) {
             DataManager.setAttribute(session, "LastMenuButtonPressed", "Edit");
+    		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+    		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
+        }
         else if (sMAction.equals("NewDETemplate") || sMAction.equals("NewDEVersion")
                         || sMAction.equals("NewDECTemplate") || sMAction.equals("NewDECVersion")
                         || sMAction.equals("NewVDTemplate") || sMAction.equals("NewVDVersion"))
@@ -2007,8 +2017,11 @@ public class SearchServlet extends CurationServlet {
             if ((sMAction.equals("NewDETemplate")) || (sMAction.equals("NewDEVersion")) || (sMAction.equals("editDE")))
                 searchAC = "DataElement";
             else if ((sMAction.equals("NewDECTemplate")) || (sMAction.equals("NewDECVersion"))
-                            || (sMAction.equals("editDEC")))
+                            || (sMAction.equals("editDEC"))) {
                 searchAC = "DataElementConcept";
+        		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+        		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
+            }
             else if ((sMAction.equals("NewVDTemplate")) || (sMAction.equals("NewVDVersion"))
                             || (sMAction.equals("editVD")))
             {
@@ -2066,8 +2079,11 @@ public class SearchServlet extends CurationServlet {
         DataManager.setAttribute(session, "DDEAction", "nothing"); // reset from "CreateNewDEFComp"
         String searchAC = "DataElement";
         // sets the session attributes of the selection menu action and selected component
-        if (sMAction.equals("editDE") || sMAction.equals("editDEC") || sMAction.equals("editVD"))
+        if (sMAction.equals("editDE") || sMAction.equals("editDEC") || sMAction.equals("editVD")) {
             DataManager.setAttribute(session, "LastMenuButtonPressed", "Edit");
+    		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+    		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798            
+        }
         else if (sMAction.equals("NewDETemplate") || sMAction.equals("NewDEVersion")
                         || sMAction.equals("NewDECTemplate") || sMAction.equals("NewDECVersion")
                         || sMAction.equals("NewVDTemplate") || sMAction.equals("NewVDVersion"))
@@ -2079,8 +2095,11 @@ public class SearchServlet extends CurationServlet {
             if ((sMAction.equals("NewDETemplate")) || (sMAction.equals("NewDEVersion")) || (sMAction.equals("editDE")))
                 searchAC = "DataElement";
             else if ((sMAction.equals("NewDECTemplate")) || (sMAction.equals("NewDECVersion"))
-                            || (sMAction.equals("editDEC")))
+                            || (sMAction.equals("editDEC"))) {
                 searchAC = "DataElementConcept";
+        		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
+        		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
+            }
             else if ((sMAction.equals("NewVDTemplate")) || (sMAction.equals("NewVDVersion"))
                             || (sMAction.equals("editVD")))
             {
