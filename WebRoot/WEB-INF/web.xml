@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L-->
+
+<web-app id="WebApp_ID" version="2.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	
+    <display-name>cdecurate using struts 2</display-name>
+  <description>cdecurate</description>
+
+  <servlet>
+     <servlet-name>
+         NCICurationServlet
+     </servlet-name>
+     <servlet-class>
+         gov.nih.nci.cadsr.cdecurate.tool.NCICurationServlet
+     </servlet-class>
+	<init-param>
+      <param-name>jbossDataSource</param-name>
+      <param-value>jdbc/CDECurateDS</param-value>
+    </init-param>
+    <init-param>
+      <param-name>jbossAuthenticate</param-name>
+      <param-value>jdbc/caDSR</param-value>
+    </init-param>
+    <init-param>
+      <param-name>username</param-name>
+      <param-value>cdebrowser</param-value>
+    </init-param>
+    <init-param>
+      <param-name>password</param-name>
+      <param-value>cdeuser</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+
+  </servlet>
+  
+  <servlet-mapping>
+     <servlet-name>
+         NCICurationServlet
+     </servlet-name>
+     <url-pattern>
+         /NCICurationServlet
+     </url-pattern>
+  </servlet-mapping>
+  
+  <!--remove unnecessary servlet on April 16, 2013 
+  <servlet>
+    <servlet-name>
+      ViewServlet
+    </servlet-name>
+    <servlet-class>
+      gov.nih.nci.cadsr.cdecurate.tool.ViewServlet
+    </servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+     <servlet-name>
+         ViewServlet
+     </servlet-name>
+     <url-pattern>
+         /View
+     </url-pattern>
+  </servlet-mapping>
+  -->
+  
+  	<!-- filter>
+		<filter-name>struts2</filter-name>
+		<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>struts2</filter-name>
+		<url-pattern>/wireframe/*</url-pattern>
+	</filter-mapping -->
+	
+  <session-config>
+    <session-timeout>45</session-timeout>
+  </session-config>
+
+  <welcome-file-list>
+    <welcome-file>/jsp/index.jsp</welcome-file>
+  </welcome-file-list>
+
+  <!-- Application Tag Library Descriptor -->
+  <jsp-config> 
+  <taglib>
+    <taglib-uri>/WEB-INF/tld/curate.tld</taglib-uri>
+    <taglib-location>/WEB-INF/tld/curate.tld</taglib-location>
+  </taglib>
+    </jsp-config>
+
+  <login-config>
+    <auth-method>FORM</auth-method>
+    <form-login-config>
+    <form-login-page>/jsp/LoginE.jsp</form-login-page>
+    <form-error-page>/jsp/LoginE.jsp</form-error-page>
+    </form-login-config>
+  </login-config>
+
+</web-app>
+
