@@ -1,10 +1,3 @@
-/*L
- * Copyright ScenPro Inc, SAIC-F
- *
- * Distributed under the OSI-approved BSD 3-Clause License.
- * See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
- */
-
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
@@ -12,8 +5,10 @@ import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
 import gov.nih.nci.cadsr.cdecurate.util.DECHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.cdecurate.util.ErrorHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolConstants;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
+import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.common.TimeWatch;
 import gov.nih.nci.cadsr.persist.ac.Admin_Components_Mgr;
 import gov.nih.nci.cadsr.persist.exception.DBException;
@@ -204,7 +199,7 @@ public class SearchServlet extends CurationServlet {
 //                    ForwardErrorJSP(m_classReq, m_classRes, "Io Exception. Session Terminated. Please log in again.");
 //                else
 //                    ForwardErrorJSP(m_classReq, m_classRes, "Could not validate the User Name and Password, please try again.");
-                ForwardErrorJSP(m_classReq, m_classRes, "Could not validate the User Name and Password, please try again. [" + msg + "]");
+                ForwardErrorJSP(m_classReq, m_classRes, ErrorHelper.getLoginMessage() + " [" + msg + "]");	//GF32153
             }
             catch (Exception ee)
             {

@@ -1,10 +1,3 @@
-/*L
- * Copyright ScenPro Inc, SAIC-F
- *
- * Distributed under the OSI-approved BSD 3-Clause License.
- * See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
- */
-
 // Copyright (c) 2000 ScenPro, Inc.
 
 // $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/SetACService.java,v 1.65 2009-04-28 15:22:30 veerlah Exp $
@@ -1163,8 +1156,8 @@ public class SetACService implements Serializable
 			//GF32723
 			//String chosenDef = constructChosenDefinition(req.getSession(), "VD", oldDef);
 			String comp1 = "";
-			if(m_REP.getPREFERRED_DEFINITION() != null) comp1 = m_REP.getPREFERRED_DEFINITION()+"_";
-			String chosenDef = comp1 + m_REPQ.getPREFERRED_DEFINITION();
+			if(m_REP != null && m_REP.getPREFERRED_DEFINITION() != null) comp1 = m_REP.getPREFERRED_DEFINITION()+"_";
+			String chosenDef = comp1 + (m_REPQ != null ? m_REPQ.getPREFERRED_DEFINITION(): "");
 			//GF32723
 			if (!chosenDef.startsWith(s))  {//Using startsWith if PrefDef is truncated.
 				//add Warning

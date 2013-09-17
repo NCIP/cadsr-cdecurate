@@ -140,9 +140,9 @@ public class VMAction implements Serializable
                     	DataManager.setAttribute(data.getRequest().getSession(), "totalRecords", Integer.toString(totalRecords));
                     } else {
                     	//TBD - NPE
-//                    	if(data.getRequest() != null && data.getRequest().getSession() != null) {
+                    	if(data.getRequest() != null && data.getRequest().getSession() != null) {
                     		DataManager.setAttribute(data.getRequest().getSession(), "totalRecords", Integer.toString(g));
-//                    	}
+                    	}
                     }
 				} // END IF
 			}

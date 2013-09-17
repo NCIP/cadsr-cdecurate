@@ -1,17 +1,17 @@
-/*L
- * Copyright ScenPro Inc, SAIC-F
- *
- * Distributed under the OSI-approved BSD 3-Clause License.
- * See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
- */
-
 package gov.nih.nci.cadsr.common;
+
+import gov.nih.nci.cadsr.cdecurate.util.CurationToolProperties;
 
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * This class can be used to retrieve property values that dictates the settings of the application from the database, 
+ * as well as the property file. In case of the property file, it is a tier specific file from template.curationtool.properties.
+ *
+ */
 public class PropertyHelper {
 
 	private static org.apache.log4j.Logger _logger = org.apache.log4j.Logger.getLogger(PropertyHelper.class);
@@ -59,6 +59,14 @@ public class PropertyHelper {
 	
 	public static String getDatabaseURL() {
 		return Database.getString("jdbcurl");
+	}
+
+	public static String getPCSURL() {
+		return CurationToolProperties.getFactory().getProperty("curationtool.links.pcs.url");
+	}
+
+	public static String getPCSName() {
+		return CurationToolProperties.getFactory().getProperty("curationtool.links.pcs.name");
 	}
 	
     /**

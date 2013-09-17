@@ -1,10 +1,3 @@
-/*L
- * Copyright ScenPro Inc, SAIC-F
- *
- * Distributed under the OSI-approved BSD 3-Clause License.
- * See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
- */
-
 package gov.nih.nci.cadsr.common;
 
 public class Constants {
@@ -25,4 +18,7 @@ public class Constants {
 	public static final String USER_SELECTED_ALTERNATE_DEF_COMP4_COUNT = "userSelectedDef_Comp4_Count";
 	//GF32723
 	public static final String USER_SELECTED_VOCAB = "userSelectedDtsVocab";
+	//GF32153
+	public static final String ERR_LOGON_ISSUE = "Could not validate the User Name and Password, please try again.";
+	
 }

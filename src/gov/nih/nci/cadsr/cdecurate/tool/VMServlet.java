@@ -1,10 +1,3 @@
-/*L
- * Copyright ScenPro Inc, SAIC-F
- *
- * Distributed under the OSI-approved BSD 3-Clause License.
- * See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
- */
-
 // Copyright ScenPro, Inc 2007
 
 // $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/VMServlet.java,v 1.53 2009-04-02 21:59:55 veerlah Exp $
@@ -17,6 +10,7 @@ import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
+import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.persist.exception.DBException;
 import gov.nih.nci.cadsr.persist.vm.Value_Meanings_Mgr;
 import gov.nih.nci.cadsr.persist.vm.VmVO;
@@ -1039,8 +1033,19 @@ private String goBackToSearch()
       vm = new VM_Bean().copyVMBean(pv.getPV_VM());
     Vector vmCon = vm.getVM_CONCEPT_LIST();
     String[] sCons = req.getParameterValues("hiddenConVM");
-    if (sCons == null)
+    if (sCons == null) {
     	sCons = new String[0];
+    }
+    //begin GF32963 filter out any control characters e.g. ASCII 10 (newline)
+    for(int i=0; i<sCons.length; i++) {
+    	try {
+			sCons[i] = StringUtil.safeString(sCons[i]);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    //end GF32963 filter out any control characters e.g. ASCII 10 (newline)
     
     if (vmCon != null)  //sCons could be null, if they're all removed.
     {

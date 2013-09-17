@@ -1,10 +1,3 @@
-/*L
- * Copyright ScenPro Inc, SAIC-F
- *
- * Distributed under the OSI-approved BSD 3-Clause License.
- * See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
- */
-
 // Copyright (c) 2005 ScenPro, Inc.
 // $Header: /CVSNT/cdecurate/src/gov/nih/nci/cadsr/cdecurate/tool/CurationServlet.java,v 1.81 2007/04/30 14:29:11
 // lhebel Exp $
@@ -18,7 +11,9 @@ import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.cdecurate.util.ErrorHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
+import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.persist.ac.Admin_Components_Mgr;
 import gov.nih.nci.cadsr.persist.ac.Tool_Options_View_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.evs.Evs_Mgr;
@@ -332,7 +327,7 @@ public class CurationServlet
     		  userbean=null;
     		  logger.error("Failed credential validation, code is " + uc.getCheckCode());
     	      logger.error("Redirecting the user to Login Page");
-			  ForwardErrorJSP(req, res, "Could not validate the User Name and Password, please try again.");
+			  ForwardErrorJSP(req, res, ErrorHelper.getLoginMessage());		//GF32153
     	  }
       }
 
@@ -3815,7 +3810,7 @@ public class CurationServlet
             if (reqMsg != null && !reqMsg.equals(""))
                 errMsg = reqMsg;
             DataManager.setAttribute(session, "ErrorMessage", errMsg);
-            if ((errMsg).equals("Could not validate the User Name and Password, please try again."))
+            if ((errMsg).equals(ErrorHelper.getLoginMessage()))	//GF32153
                fullPage = "/jsp/ErrorPage.jsp";
             //ServletContext sc = this.getServletContext();
             RequestDispatcher rd = m_servletContext.getRequestDispatcher(fullPage);
