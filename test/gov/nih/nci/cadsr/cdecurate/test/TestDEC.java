@@ -49,7 +49,6 @@ import org.xml.sax.SAXException;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
-import gov.nih.nci.cadsr.cdecurate.test.TestDECAltName.MyHttpSession;
 import gov.nih.nci.cadsr.cdecurate.tool.AC_CSI_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.CSI_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.ConceptAction;
