@@ -214,17 +214,17 @@
     			txtVM = (vmDiv.innerText) ? vmDiv.innerText : vmDiv.textContent;
     	    }
     	}
-    	if (txtVM === null || txtVM === "") {
+    	/*if (txtVM === null || txtVM === "") {
 	    	alertMsg += "Please enter the text for Value Meaning. \n";
-        }
+        }*/
     	//check user entered description
     	var vmdDiv = document.getElementById("pvNewVMDEdit");
     	if (vmdDiv !== null && vmdDiv.style.display == "block")
     	{
 	    	var txtVMD = document.PVForm.pvNewVMD.value;
-	    	if (txtVMD === null || txtVMD === "") {
+	    	/*if (txtVMD === null || txtVMD === "") {
 	    		alertMsg += "Please enter the text for Value Meaning Description. \n";
-            }
+            }*/
     	}
     	//get vm pv if not exists
     	var txtPV = document.PVForm.pvNewValue.value;
@@ -272,9 +272,9 @@
     	if (vmDiv !== null && vmDiv !== undefined )
     	{
 	    	txtVM = vmDiv.value;
-	    	if (txtVM === null || txtVM === "") {
+	    /*	if (txtVM === null || txtVM === "") {
 	    		alertMsg += "Please enter the text for Value Meaning. \n";
-        	}
+        	}*/
     	}
     	
     	
@@ -283,9 +283,9 @@
     	if (vmdDiv !== null && vmdDiv !== undefined )
     	{
 	    	var txtVMD = vmdDiv.value;
-	    	if (txtVMD === null || txtVMD === "") {
+	    	/*if (txtVMD === null || txtVMD === "") {
 	    		alertMsg += "Please enter the text for Value Meaning Description. \n";
-            }
+            }*/
     	}
     	//get vm pv if not exists
     	if (valObj !== null && valObj[0]!== undefined){
