@@ -2,7 +2,7 @@
 How to Contribute
 =================
 
-We welcome community contributions to the caDSR CDE Browser project.
+We welcome community contributions to the caDSR CDECurate project.
 Your contributions back to this repository will allow the broader
 research community to benefit from your work and will allow your
 enhancements to be integrated with those of others.  There are a few
@@ -17,14 +17,16 @@ Getting Started
 
 * Fork the repository on GitHub to publish any proposed changes
 
-* Submit a ticket for your issue at [tracker] (https://gforge.nci.nih.gov/tracker/?group_id=33),
+* Submit a ticket for your issue at `tracker`_,
   assuming one does not already exist.
 
-  - Click [here] (https://gforge.nci.nih.gov/account/register.php) to get a new account.
+  - Click `here`_ to get a new account.
   - Clearly describe the issue including steps to reproduce when it is a bug.
   - Make sure you fill in the earliest version that you know has the issue.
 
 .. _`GitHub Account`: https://github.com/signup/free
+.. _`tracker`: https://gforge.nci.nih.gov/tracker/?group_id=33
+.. _`here`: https://gforge.nci.nih.gov/account/register.php
 
 --------------
 Making Changes
@@ -69,12 +71,13 @@ Submitting Changes
 .. If the project uses an issue tracker, use the next bullet.
    Otherwise, remove the next bullet.  Delete this note either way.
 
-* Update your [tracker] (https://gforge.nci.nih.gov/tracker/?group_id=33) ticket to mark that you have submitted
+* Update your `tracker`_ ticket to mark that you have submitted
   code and are ready for it to be reviewed.
 
   - Include a link to the pull request in the ticket
 
-.. _`BSD-3-Clause License`: http://opensource.org/licenses/BSD-3-Clause
+.. _`BSD 3-Clause License`: http://opensource.org/licenses/BSD-3-Clause
+.. _`tracker`: https://gforge.nci.nih.gov/tracker/?group_id=33
 
 --------------------
 Additional Resources
