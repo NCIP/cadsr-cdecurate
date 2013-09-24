@@ -241,6 +241,10 @@ public class ValueDomainServlet extends CurationServlet {
 	private void doEditVDActions() throws Exception
 	{
 		HttpSession session = m_classReq.getSession();
+		//begin GF7680
+		String workflowStatus = (String) m_classReq.getParameter("selStatus");
+		session.setAttribute("selStatus", workflowStatus);
+		//end GF7680
 		String sMenuAction = (String) m_classReq.getParameter("MenuAction");
 		if (sMenuAction != null)
 			DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);

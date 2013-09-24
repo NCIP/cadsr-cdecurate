@@ -12,6 +12,7 @@ L--%>
 
 <%@ page language="java" import="java.util.*"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.database.Alternates" %>
+<%@ page import="gov.nih.nci.cadsr.common.Constants" %>
 <html>
 	<head>
 		<title>
@@ -1094,6 +1095,14 @@ L--%>
 						      //   System.out.println(pvCount + " jsp " + vmCon.size() + " value " + sPVVal + " viewType " + viewType);
 						            //TODO - figure out this later; cannot use the type cast for vectors in jsp
 						           // Vector<EVS_Bean> vmCon = vm.getVM_CONCEPT_LIST();
+						            		
+									//begin GF7680
+						            String dispStyle = "inline";
+									String workflowStatus = (String)session.getAttribute("selStatus");
+									if(workflowStatus != null && workflowStatus.equals(Constants.WORKFLOW_STATUS_RELEASED) || inForm) {
+										dispStyle = "none";
+									}
+									//end GF7680
 						            %>
 															<tr id="<%=pvCount%>">
 																<td align="center" valign="top">
@@ -1104,17 +1113,17 @@ L--%>
 																		<a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgOpen', '<%=pvCount%>ImgClose', 'view', '<%=pvCount%>');"><img src="images/folderOpen.gif" border="0" alt="Collapse"></a>
 																	</div>
 																 <%if (!isView){ %>	
-																	<div id="<%=pvCount%>ImgEdit" style="display: inline">
-																		<% if (inForm) {%> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>');" onclick="return confirm('This element is used in a form. Any edits will put the form out of sync. Are you sure you want to edit?');"><img src="images/edit.gif" border="0" alt="Edit"></a>
-																		<% } else { %> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>');"><img src="images/edit.gif" border="0" alt="Edit"></a>
+																	<div id="<%=pvCount%>ImgEdit" style="display: <%=dispStyle%>">
+																		<% if (inForm) {%> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>');" onclick="return confirm('This element is used in a form. Any edits will put the form out of sync. Are you sure you want to edit?');"><img src="images/edit.gif" border="0" alt="Edit" style="display: <%=dispStyle%>"></a>
+																		<% } else { %> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>');"><img src="images/edit.gif" border="0" alt="Edit" style="display: <%=dispStyle%>"></a>
 																		<% } %>
 																		
 																	</div>
-																	<div id="<%=pvCount%>ImgSave" style="display: none">
+																	<div id="<%=pvCount%>ImgSave" style="display: <%=dispStyle%>">
 																		<a id="<%=pvCount%>ImgSaveLink" href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgSave', '<%=pvCount%>ImgEdit', 'save', '<%=pvCount%>');"><img src="images/save.gif" border="0" alt="Save"></a>
 																	</div>
-																	<div id="<%=pvCount%>ImgDelete" style="display: inline">
-																	 <a href="javascript:confirmRM('<%=pvCount%>', 'remove', 'the Permissible Value : <%=sPVValJ%>');"><img src="images/delete.gif" border="0" alt="Remove"></a>
+																	<div id="<%=pvCount%>ImgDelete" style="display: <%=dispStyle%>">
+																	 <a href="javascript:confirmRM('<%=pvCount%>', 'remove', 'the Permissible Value : <%=sPVValJ%>');"><img src="images/delete.gif" border="0" alt="Remove" style="display: <%=dispStyle%>"></a>
 																	</div>
 																	<div id="<%=pvCount%>ImgRestore" style="display: none">
 																		<a href="javascript:confirmRM('<%=pvCount%>', 'restore', 'restore');"><img src="images/restore.gif" border="0" alt="Restore"></a>
