@@ -12,10 +12,7 @@ You will find more details about the caDSR CDE Browser in the following links:
  * [Community Wiki] (https://wiki.nci.nih.gov/x/O4EI)
  * [Code Repository] (https://github.com/NCIP/cadsr-cdecurate)
  * [Issue Tracker] (https://gforge.nci.nih.gov/tracker/?group_id=33)
- * [Downloads] (http://gforge.nci.nih.gov/frs/?group_id=33)
+ * [Installation Package] (http://gforge.nci.nih.gov/frs/?group_id=33)
+ * [NCI Instance] (https://cdecurate.nci.nih.gov)
  
-An NCI hosted instance of caDSR CDE Curation Tool is publicly available at:
-
-[Production Instance] (https://cdecurate.nci.nih.gov)
-
 Please join us in further developing and improving the caDSR CDE Curation Tool project.
