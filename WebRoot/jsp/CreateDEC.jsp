@@ -1,10 +1,3 @@
-<%--L
-  Copyright ScenPro Inc, SAIC-F
-
-  Distributed under the OSI-approved BSD 3-Clause License.
-  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
-L--%>
-
 <!-- Copyright (c) 2006 ScenPro, Inc.
     $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/CreateDEC.jsp,v 1.11 2009-04-21 03:47:36 hegdes Exp $
     $Name: not supported by cvs2svn $
@@ -385,8 +378,8 @@ onHelp="showHelp('html/Help_Updates.html#newDECForm_refDocs',helpUrl); return fa
 	<%
 		String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);
 	%>
-	b7a <%= type %>
 									<!--
+									b7b <%= type %>
 									[<%= userSelectedDefFinal %>]
 									-->
 									<% if (sMenuAction.equals("NewDECVersion")) { %>
