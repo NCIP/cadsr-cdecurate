@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
+
 import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -28,6 +29,8 @@ import gov.nih.nci.cadsr.cdecurate.tool.AC_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.DEC_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.DE_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
+import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
+import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.PV_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.VD_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.VM_Bean;
@@ -1392,7 +1395,7 @@ public class AltNamesDefsSession implements Serializable
     
     //begin GF32723 added alternate name
     //brand new method
-    public boolean addAlternateName(String type, String name, AC_Bean acb, Connection conn) throws ToolException{
+    public boolean addAlternateName(String detl_type, String name, DEC_Bean m_DEC, Connection conn) throws ToolException{
     	boolean ret = false;
     	boolean exists = false;
     	if (_alts == null){
@@ -1409,66 +1412,66 @@ public class AltNamesDefsSession implements Serializable
     	}
     	
     	if (!exists) {
+    	    		
+    		System.out.println("REP term concept code is "+name);
+    		System.out.println("Rep term evs origin is "+detl_type);
+    		System.out.println("Rep ID is "+m_DEC.getDEC_OCL_IDSEQ());
+    		System.out.println("REp condr ideq is" +m_DEC.getDEC_OC_CONDR_IDSEQ());
+    		System.out.println("DEC Property ID is"+m_DEC.getDEC_PROPL_IDSEQ());
+    	    System.out.println("designation m_REPQ repterm is "+this.newIdseq());
+    	    System.out.println("context id is"+ m_DEC.getContextIDSEQ());
+    	    System.out.println("context is " + m_DEC.getContextName());
+    	    String context=m_DEC.getContextName();
+    	    if((context==null)||(context=="")) context="NCIP"; 
 //    		Alternates newAlt = new Alternates(Alternates._INSTANCENAME, name, "Prior Preferred Name", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
-    		Alternates newAlt = new Alternates(Alternates._INSTANCENAME, name, type, "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
+    		Alternates newAlt = new Alternates(Alternates._INSTANCENAME, name, detl_type, "ENGLISH", m_DEC.getDEC_OCL_IDSEQ(), this.newIdseq(), m_DEC.getContextIDSEQ(), context);
           	updateAlternatesList(newAlt, false);
+          	Alternates newAlt1 = new Alternates(Alternates._INSTANCENAME, name, detl_type, "ENGLISH", m_DEC.getDEC_PROPL_IDSEQ(), this.newIdseq(), m_DEC.getContextIDSEQ(), context);
+          	updateAlternatesList(newAlt1, false);
+          	ret = true;
     	
-    		
     	}
     	
-    	ret = true;
+    	//ret = false;
+    	   	
+    	return ret;
+    }
+    public boolean addAlternateName(String detl_type, String name, EVS_Bean m_REP,String sContext,String sConte_idseq, Connection conn) throws ToolException{
+    	boolean ret = false;
+    	boolean exists = false;
+    	if (_alts == null){
+    		DBAccess db = new DBAccess(conn);
+    		this.loadAlternates(db, _sortName);
+    	}
+    	for (Alternates alt: _alts) {
+    		
+    		if (alt.isDef()) {
+    			String temp = alt.getName();
+    			if (name.equals(temp))
+    				exists = true;
+    		}
+    	}
+    	
+    	if (!exists) {
+    		
+    		
+    		System.out.println("REP term concept code is "+name);
+    		System.out.println("Rep term evs origin is "+detl_type);
+    		System.out.println("Rep ID is "+m_REP.getIDSEQ());
+    		
+    	    System.out.println("designation m_REPQ repterm is "+this.newIdseq());
+    	    
+//    		
+    		Alternates newAlt = new Alternates(Alternates._INSTANCENAME, name, detl_type, "ENGLISH", m_REP.getIDSEQ(), this.newIdseq(), sConte_idseq, sContext);
+          	updateAlternatesList(newAlt, false);
+          	ret = true;
+    	
+    	}
+    	
+    	//ret = false;
     	   	
     	return ret;
     }
 
-    //brand new method
-//    public int insertAltName(String type, String name, AC_Bean acb, Connection conn) {
-//		// TODO Auto-generated method stub
-//	    CallableStatement cstmt = null;
-//	    
-//	    int rc  = 0;
-//	    
-//	    String insert = "begin insert into sbr.designations_view "
-//	                + "(ac_idseq, conte_idseq, name, detl_name, lae_name) "
-//	                + "values (?, ?, ?, ?, ?) return desig_idseq into ?; end;";
-//	    
-//	    System.out.println (acb.getIDSEQ());
-//	    System.out.println(acb.getContextIDSEQ());
-//	    System.out.println(name);
-//	    System.out.println(type);
-//	    
-//	        try
-//	        {
-//	        	     	
-//
-//	            cstmt = conn.prepareCall(insert);
-//	            cstmt.setString(1, acb.getIDSEQ());
-//	            cstmt.setString(2, acb.getContextIDSEQ());
-//	            cstmt.setString(3, name);
-//	            cstmt.setString(4, "LOINC_CODE");	//GF32723 TBD need to get this from somewhere
-//	            cstmt.setString(5, "ENGLISH");
-//	            cstmt.registerOutParameter(6, java.sql.Types.VARCHAR);
-//	            rc = cstmt.executeUpdate();
-//	         }
-//	        catch (SQLException ex)
-//	        {
-//	        System.out.println("caught exception while inserting to designations: " + ex.toString());
-//	      		}
-//	        
-//	        finally {
-//	        if (cstmt != null) {
-//	                try {
-//	                cstmt.close();
-//	               
-//	                } catch (SQLException e1) {
-//	                System.out.println("Exception is"+e1);
-//	              cstmt = null;
-//	            }
-//	        }
-//        }
-//        System.out.println(rc);
-//        return rc;
-//        
-//    }
-	//end GF32723
-}
+
+}   

@@ -12,12 +12,16 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.evs.security.SecurityToken;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1836,10 +1840,13 @@ public class EVSSearch implements Serializable {
 			String sMetaSource, int iMetaLimit, boolean isMetaSearch,
 			int ilevel, String subConType, HashSet<String> sConSet) {
 		try {
+			
+			System.out.println("Printing various parametes for doVocabSearch termstr is"+ termStr + "dtsVocab is"+ dtsVocab+"sSerachIn is"+sSearchIn+"namePropIn is"+namePropIn + "sSearchAC is "+ sSearchAC+"sIncludeRet is"+ sIncludeRet+"sMetaSouce is"+sMetaSource+"iMetaLimit is"+iMetaLimit+"iMetaSearch is"+ isMetaSearch+"iLevel is"+ ilevel+"subConType is"+subConType+"sConset is"+ sConSet);
 			//do not continue if empty string search.
 			if (termStr == null || termStr.equals(""))
 				return vConList;
 			//check if the concept name property exists for the vocab
+			System.out.println("printing sSearchIn" + sSearchIn);
 			if (vConList == null)
 				vConList = new Vector<EVS_Bean>();
 				ilevel += 1;
@@ -1856,7 +1863,7 @@ public class EVSSearch implements Serializable {
 				String namePropDisp = vocabBean.getPropNameDisp();
 				if (namePropDisp == null)
 					namePropDisp = "";
-				if (namePropIn == null || namePropIn.equals("")) //get the vocab specific prop to search in
+				if (namePropIn == null || namePropIn.equals("")) //get the vocab specific prop to search in 
 					namePropIn = vocabBean.getPropName();
 				String conCodeType = vocabBean.getVocabCodeType();
 				String sMetaName = vocabBean.getIncludeMeta();
@@ -1882,9 +1889,11 @@ public class EVSSearch implements Serializable {
 					//get the desc object from the list
 					if (lstResults != null) {
 						Hashtable hType = m_eUser.getMetaCodeType();
+						System.out.println("hType is  "+hType);
 						if (hType == null)
 							hType = new Hashtable();
-						skipConcept: for (int i = 0; i < lstResults.getResolvedConceptReferenceCount(); i++) {
+						System.out.println("test for ncit switching concept" +lstResults.getResolvedConceptReferenceCount());
+						skipConcept: for (int i = 0; i <lstResults.getResolvedConceptReferenceCount(); i++) {
 
 							String sFullSyn = "", sSemantic = "", sStatus = "Active"; //sPrefName = "", 
 							String sDispName = "";
@@ -2079,6 +2088,8 @@ public class EVSSearch implements Serializable {
 		termStr = cleanTerm(termStr);
 		
 		try {
+			
+			System.out.println("vocab type is" +vocabType+":"+"dts vocab is"+dtsVocab+"vocabAccess is" + vocabAccess+"term str is" + termStr+"sSesrchIn" +sSearchIn+"sPropIn is"+sPropIn+"sSearchAC is"+sSearchAC);
 			// check if valid dts vocab
 			dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 					EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "",
@@ -2128,7 +2139,10 @@ public class EVSSearch implements Serializable {
 					else if (vocabType.equals("PropType")) { // do concept prop search
 						//GF32446 this cause Semantic_Type to not to be included
 						LocalNameList lnl = new LocalNameList();
+						 sPropIn="UMLS_CUI";
+						 algorithm="contains";
 						lnl.addEntry(sPropIn);
+						System.out.println("lnl = [" + lnl + "] sPropIn = [" + sPropIn + "] termStr = ["+termStr+"] algorithm = ["+ algorithm + "]");
 						nodeSet = nodeSet.restrictToMatchingProperties(	//JT b4 GF32723
 						lnl, //the Property Name to match
 						null, //the Property Type to match (null matches all)
@@ -2148,11 +2162,18 @@ public class EVSSearch implements Serializable {
 			{
 				LocalNameList lnl = new LocalNameList();
 				Hashtable hType = m_eUser.getMetaCodeType();
+				 System.out.println("htype is   "+hType);
+
 				Iterator iter = hType.keySet().iterator();
 				while (iter.hasNext()){
 					String propName = (String) iter.next();
 					System.out.println("EVSSearch:doConceptQuery() propName [" + propName + "]");
 					lnl.addEntry(propName);
+				}
+				if(lnl != null && lnl.getEntryCount() == 0) {
+					lnl.addEntry("NCI_META_CUI");
+					lnl.addEntry("UMLS_CUI");
+					lnl.addEntry("UMLS_CUI");
 				}
 				
 				if (sSearchAC.equals("ParentConceptVM"))
@@ -2166,7 +2187,7 @@ public class EVSSearch implements Serializable {
 					lstResult = nodeSet.resolveToList(
 							null, //Sorts used to sort results (null means sort by match score)
 							null, //PropertyNames to resolve (null resolves all)
-							null,	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
+							new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
 							100	  //cap the number of results returned (-1 resolves all)
 					);
 					
@@ -2258,6 +2279,7 @@ public class EVSSearch implements Serializable {
 				if (termStr == null || termStr.equals(""))
 					return vList;
 				List metaResults = null;
+				System.out.println("sVocabulary is" + sVocab);
 				CodedNodeSet nodeSet = evsService.getNodeSet("NCI MetaThesaurus", null, null);
 				try {
 					if (sSearchIn.equalsIgnoreCase("MetaCode")) { //do meta code specific to vocabulary source
@@ -2557,8 +2579,13 @@ public class EVSSearch implements Serializable {
 	private String getNCIMetaCodeType(String conID, String ftrType)
 	throws Exception {
 		String sCodeType = "";
+		String sMCode="";
 		//get the hash table of meta code property types
 		Hashtable hType = m_eUser.getMetaCodeType();
+		
+		System.out.println("hType   "+hType);
+
+		System.out.println("hash table is "+hType);
 		if (hType == null)
 			hType = new Hashtable();
 		//define code type according to the con id
@@ -2568,7 +2595,7 @@ public class EVSSearch implements Serializable {
 			EVS_METACODE_Bean metaBean = (EVS_METACODE_Bean) hType.get(sKey);
 			if (metaBean == null)
 				metaBean = new EVS_METACODE_Bean();
-			String sMCode = metaBean.getMETACODE_TYPE();
+		    sMCode = metaBean.getMETACODE_TYPE();
 			String sCFilter = metaBean.getMETACODE_FILTER().toUpperCase(); //  (String)hType.get(sMCode);
 			if (sCFilter == null)
 				sCFilter = "";
@@ -2649,7 +2676,12 @@ public class EVSSearch implements Serializable {
 	private String getMetaVocabName(String sMetaName) {
 		String sVocab = "";
 		Vector vName = m_eUser.getVocabNameList();
+		
+		System.out.println("getVocabNmaeList is" + vName);
 		Hashtable eHash = (Hashtable) m_eUser.getVocab_Attr();
+		 Enumeration e=eHash.keys();
+		
+		System.out.println("hash table for vaocab_attr is "+ eHash);
 		//get the two vectors to check
 		for (int i = 0; i < vName.size(); i++) {
 			String sName = (String) vName.elementAt(i);
@@ -3477,6 +3509,10 @@ public class EVSSearch implements Serializable {
 			EVS_Bean metaBean = new EVS_Bean();
 			//get preferred vocab name
 			String prefVocab = m_eUser.getPrefVocab();
+			String user_selected_vocab=eBean.getEVS_DATABASE();
+			session.setAttribute(Constants.USER_SELECTED_VOCAB, user_selected_vocab);
+			String user_selected_con_code=eBean.getCONCEPT_IDENTIFIER();
+			session.setAttribute(Constants.USER_SELECTED_CON_CODE, user_selected_con_code);//GF32723 save front end EVS vocab
 			if (prefVocab == null)
 				prefVocab = "";
 			if (dtsVocab.equals(prefVocab))
@@ -3485,17 +3521,32 @@ public class EVSSearch implements Serializable {
 			if (dtsVocab != null && !dtsVocab.equals(nciVocab)) {
 				if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
 				{
-					conType = eBean.getMETA_CODE_TYPE();
+					//conType = eBean.getMETA_CODE_TYPE();
+					conType = eBean.getCONCEPT_IDENTIFIER();
+				
+					System.out.println("comes here if user selects vocabulary other than NCI metathesaurus");
 					logger.debug(conType + " evs " + eBean.getMETA_CODE_VAL()
 							+ " con " + eBean.getLONG_NAME());
 					//check if can be searched by meta type properlty (UMLS or NCI_META)
 					if (conType != null && !conType.equals("")) {
 						conType = this.getNCIMetaCodeType(conType, "byKey");
-						conID = eBean.getMETA_CODE_VAL();
+						//conID = eBean.getMETA_CODE_VAL();
+						conID = eBean.getCONCEPT_IDENTIFIER();
+						/*AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);
+						String detl_type=eBean.getEVS_DATABASE();
+						String detl_name=eBean.getCONCEPT_IDENTIFIER();
+						if(!AdministeredItemUtil.isAlternateDesignationExists(detl_type, detl_name, altSession)) {
+						if(!altSession.addAlternateName(detl_type,detl_name,eBean,m_servlet.getConn())) {
+							System.out.println("************************ DEC SetACService: AC [" + eBean.getLONG_NAME() + "] not able to add alternate name type[" + detl_type + "] name[" + detl_name + "] ************************");
+						}
+					}*/
+						//altSession.addAlternateName(detl_type,detl_name,eBean,m_servlet.getConn());
 						conName = eBean.getLONG_NAME();
-						vList = this.doVocabSearch(vList, conID, nciVocab,
+					vList = this.doVocabSearch(vList, conID, nciVocab,
 								"Name", conType, "", "Exclude", "", 10, false,
 								-1, "", new HashSet<String>());
+						//vList = this.doMetaSearchOld(vList, conID, "MetaCode", eDB, 10, metaName);
+					
 						if (vList != null && vList.size() > 0) {
 							eBean = this
 							.getNCIDefinition(vList, conID, conName); //get the right definition	//Should come here for GF32723
@@ -3529,6 +3580,7 @@ public class EVSSearch implements Serializable {
 					}
 				}
 				//get the thesaurus concept from nci source and code using atom property
+				else{
 				String NCISrcCode = "";
 				vList = new Vector<EVS_Bean>();
 				//get the code from matched meta bean
@@ -3562,7 +3614,7 @@ public class EVSSearch implements Serializable {
 						eBean = this.getNCIDefinition(vList, conID, conName); // (EVS_Bean)vList.elementAt(0);   
 				}
 			}
-						
+			}		
 		} catch (Exception e) {
 			logger.error("Error - getThesaurusConcept : " + e.toString(), e);
 			e.printStackTrace();

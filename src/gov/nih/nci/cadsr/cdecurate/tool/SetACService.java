@@ -561,9 +561,12 @@ public class SetACService implements Serializable
 			GetACService getAC, EVS_Bean m_OCQ, EVS_Bean m_PCQ)
 	//throws ServletException,IOException, Exception
 	{
+		
 		Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
 		try
 		{
+			AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);
+            InsACService ins=new InsACService(req, res, m_servlet);
 			////System.out.println("setValidatePageValuesDEC");
 			HttpSession session = req.getSession();
 			// GetACSearch getACSer = new GetACSearch(req, res, m_servlet);
@@ -633,7 +636,8 @@ public class SetACService implements Serializable
 			if (s == null) s = "";
 			strInValid = "";
 			UtilService.setValPageVector(vValidate, "Long Name", s, bMandatory, 255, strInValid, sOriginAction);
-
+			
+			
 			//checks uniuqe in the context and name differred for Released
 			if (!s.equals(""))
 			{
@@ -689,9 +693,8 @@ public class SetACService implements Serializable
 			
 				//add Alt Def
 			
-				AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);
-
-			    //GF30796
+				 //GF30796
+			}
 				if(!AdministeredItemUtil.isAlternateDefinitionExists(chosenDef, altSession)) {
 					altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796
 				}
@@ -700,33 +703,52 @@ public class SetACService implements Serializable
 				if(m_OC != null) {
 					if(type == null || type.equals("")) type = "NCI Thesaurus";
 					String name= m_OC.getCONCEPT_IDENTIFIER();
-				
+					System.out.println("conType = "+m_OC.getCONCEPT_IDENTIFIER());
+					System.out.println("conType = "+m_OC.getEVS_DATABASE());
+					System.out.println("conType = "+m_OC.getCONCEPT_NAME());
+					System.out.println("conType = "+m_OC.getIDSEQ());
+					System.out.println("conType = "+m_OC.getID());
+					String detl_type=(String)session.getAttribute(Constants.USER_SELECTED_VOCAB);
+					String detl_name=(String)session.getAttribute(Constants.USER_SELECTED_CON_CODE);
+					System.out.println("detl_type="+(String)session.getAttribute(Constants.USER_SELECTED_VOCAB));
+					System.out.println("detl_name="+(String)session.getAttribute(Constants.USER_SELECTED_CON_CODE));
+					
+					//String detl_name=m_OC.getCONCEPT_IDENTIFIER();
+					String prop_detl_type=(String)session.getAttribute(Constants.USER_SELECTED_VOCAB);
+					String prop_detl_name=(String)session.getAttribute(Constants.USER_SELECTED_CON_CODE);
+					System.out.println("prop_detl_type="+(String)session.getAttribute(Constants.USER_SELECTED_VOCAB));
+					System.out.println("prop_detl_type="+(String)session.getAttribute(Constants.USER_SELECTED_CON_CODE));
+					
+					//altSession.addAlternateName(detl_type,detl_name,m_DEC,m_servlet.getConn());
+					//altSession.addAlternateName(detl_type,detl_name,m_PC,m_servlet.getConn());
+					//altSession.addAlternateName(Prop_detl_type,prop_detl_name,prop_idseq,conte_idseq,Context,m_servlet.getConn());
+					
 					System.out.println("Alternate type" + type);
 					System.out.println("Alternate name is "+name);
 					
-					if(!AdministeredItemUtil.isAlternateDesignationExists(type, name, altSession)) {
-						if(!altSession.addAlternateName(type,name,m_DEC,m_servlet.getConn())) {
+					String sReturnCode="";
+					String desIDSEQ="";
+					if(!AdministeredItemUtil.isAlternateDesignationExists(detl_type, detl_name, altSession)) {
+						//if(!altSession.addAlternateName(detl_type,detl_name,m_DEC,m_servlet.getConn())) {
+						sReturnCode=ins.setDES("INS", m_DEC.getDEC_OCL_IDSEQ(), m_DEC.getContextIDSEQ(), m_DEC.getContextName(), detl_type, detl_name, "ENGLISH", desIDSEQ);
 							System.out.println("************************ DEC SetACService: AC [" + m_DEC.getDEC_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
-						}
+						
 					}
+					if(!AdministeredItemUtil.isAlternateDesignationExists(prop_detl_type, prop_detl_name, altSession)) {
+						//if(!altSession.addAlternateName(detl_type,detl_name,m_DEC,m_servlet.getConn())) {
+						sReturnCode=ins.setDES("INS", m_DEC.getDEC_PROPL_IDSEQ(), m_DEC.getContextIDSEQ(), m_DEC.getContextName(), prop_detl_type, prop_detl_name, "ENGLISH", desIDSEQ);
+							System.out.println("************************ DEC SetACService: AC [" + m_DEC.getDEC_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
+						
+					}
+				//	altSession.addAlternateName(type,name,m_DEC,m_servlet.getConn());
 				}
+				
 				//end GF32723
 				m_DEC.setAlternates(altSession);
 
 				logger.info("At line 693 of SetACService.java");				
-			}
-		/*	String ret="";
 			
-			 String sAC_ID=m_OC.getIDSEQ();
-	            String sContextID=m_DEC.getContextIDSEQ();
-	            String sContext=m_DEC.getContextName();
-	            String sValue=m_OC.getEVS_ORIGIN();
-	        
-	           
-	        	InsACService ins=new InsACService(req, res, m_servlet);
-	        	//ins.doAddRemoveAltNames(sAC_ID, sContextID, "INS");
-	         ret=ins.setDES("INS", sAC_ID, sContextID, sContext, "Prior Preferred Name", sValue, "ENGLISH", "");
-	          System.out.println("designation is"+ ret);*/
+		
 			//validation for both edit and DEc
 			s = m_DEC.getDEC_CD_NAME();
 			if (s == null) s = "";
@@ -1056,6 +1078,8 @@ public class SetACService implements Serializable
 		//Vector<String> vs = new Vector<String>();
 		try
 		{
+			InsACService ins=new InsACService(req, res, m_servlet);
+			AltNamesDefsSession	altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchVD);
 			//System.out.println("setValidatePageValuesVD");
 			HttpSession session = req.getSession();
 			//GetACSearch getACSer = new GetACSearch(req, res, m_servlet);
@@ -1164,29 +1188,36 @@ public class SetACService implements Serializable
 				String warningMessage = "Warning: Your chosen definitions are being replaced by standard definitions.  Your chosen definition is being added as an alternate definition if it does not exist already.";
 				UtilService.setValPageVector(vValidate, "Alternate Definition", chosenDef, false, 0, warningMessage, sOriginAction);
 				
-				AltNamesDefsSession	altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchVD);
+				
 			    //GF30796
 				if(!AdministeredItemUtil.isAlternateDefinitionExists(chosenDef, altSession)) {
 					altSession.addAlternateDefinition(chosenDef,m_VD, m_servlet.getConn());		//GF30796
 				}
+			}
 				
 				//begin GF32723
-				String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);	//m_REPQ.getEVS_ORIGIN();	//Rep term qualifier can come from any terminology, that is why we are using qualifier only :)
+				String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);     	//m_REPQ.getEVS_ORIGIN();	//Rep term qualifier can come from any terminology, that is why we are using qualifier only :)
 				if(type == null || type.equals("")) type = "NCI Thesaurus";
 				if(m_REPQ != null) {
-					String name= m_REPQ.getCONCEPT_IDENTIFIER();
+					String name= (String)session.getAttribute(Constants.USER_SELECTED_CON_CODE);
+					String sContext=m_VD.getContextName();
+					String conte_idseq=m_VD.getContextIDSEQ();
 				
 					System.out.println("Alternate type" + type);
 					System.out.println("Alternate name is "+name);
-					if(!AdministeredItemUtil.isAlternateDesignationExists(type, name, altSession)) {
-						if(!altSession.addAlternateName(type,name,m_VD,m_servlet.getConn())) {
-							System.out.println("************************ VD SetACService: AC [" + m_VD.getVD_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
-						}
-					}
+					
+					altSession.addAlternateName(type,name,m_REP,sContext,conte_idseq,m_servlet.getConn());
+					String desIDSEQ="";
+					String sReturnCode="";
+					/*if(!AdministeredItemUtil.isAlternateDesignationExists(type, name, altSession)) {
+						sReturnCode=ins.setDES("INS", m_REP.getIDSEQ(), m_VD.getContextIDSEQ(), m_VD.getContextName(), type, name, "ENGLISH", desIDSEQ);
+							//System.out.println("************************ VD SetACService: AC [" + m_VD.getVD_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
+						
+					}*/
 				}
 				//end GF32723
 				m_VD.setAlternates(altSession);
-			}
+			
 			
 			//same for both edit and new
 			s = m_VD.getVD_CD_NAME();
