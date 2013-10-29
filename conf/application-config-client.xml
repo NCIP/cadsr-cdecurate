@@ -32,11 +32,37 @@ L-->
       <bean id="DistributedProxyHelper" class="org.LexGrid.LexBIG.caCore.client.proxy.LexEVSProxyHelperImpl" singleton="false"/>
       <bean id="DataServiceProxyHelper" class="org.LexGrid.LexBIG.caCore.client.proxy.DataServiceProxyHelperImpl" singleton="false"/>
       
+      
+      <!-- 
+      <bean id="customerPointcut"
+        class="org.springframework.aop.support.NameMatchMethodPointcut">
+		<property name="mappedName" value="printName" />
+	</bean>
+	
+	      <bean id="customerAdvisor_Not_Used"
+		class="org.springframework.aop.support.DefaultPointcutAdvisor">
+		<property name="pointcut" ref="customerPointcut" />
+		<property name="advice" ref="hijackAroundMethodBeanAdvice" />
+	</bean>
+ 	-->
+ 
+      	<bean id="hijackAroundMethodBeanAdvice" class="com.mkyong.aop.HijackAroundMethod" />
+
+      <bean id="customerAdvisor"
+		class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+				<property name="patterns">
+					<list>
+						<value>.*invokeData.*</value>
+					</list>
+				</property>
+				<property name="advice" ref="hijackAroundMethodBeanAdvice" />
+	</bean>
+		
       <bean id="LexEVSApplicationService" class="org.springframework.aop.framework.ProxyFactoryBean">      
+			<property name="target" ref="AppService" />
             <property name="interceptorNames">
              <list>
-             <value>LexEVSInterceptor</value>
-             <value>AppService</value>
+			<value>customerAdvisor</value>
              </list>
              </property>
             <property name="interfaces" value="org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService"/>

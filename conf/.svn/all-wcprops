@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/cdecurate/!svn/ver/2033/trunk/conf
+END
+template.curationtool.properties
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/cdecurate/!svn/ver/1781/trunk/conf/template.curationtool.properties
+END
+xml-mapping.xml
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/cdecurate/!svn/ver/1989/trunk/conf/xml-mapping.xml
+END
+gov.nih.nci.evs.security.xsd
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/cdecurate/!svn/ver/511/trunk/conf/gov.nih.nci.evs.security.xsd
+END
+application-config-client.xml
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/cdecurate/!svn/ver/1735/trunk/conf/application-config-client.xml
+END
+template.cdecurate-jboss-log4j.xml
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/cdecurate/!svn/ver/1692/trunk/conf/template.cdecurate-jboss-log4j.xml
+END
+template.cdecurate-log4j-category.xml
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/cdecurate/!svn/ver/1691/trunk/conf/template.cdecurate-log4j-category.xml
+END
+gov.nih.nci.evs.domain.xsd
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/cdecurate/!svn/ver/943/trunk/conf/gov.nih.nci.evs.domain.xsd
+END
+unmarshaller-xml-mapping.xml
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/cdecurate/!svn/ver/1989/trunk/conf/unmarshaller-xml-mapping.xml
+END
+template.web.xml
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/cdecurate/!svn/ver/2033/trunk/conf/template.web.xml
+END
+template.cdecurate-log4j-appender.xml
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/cdecurate/!svn/ver/1690/trunk/conf/template.cdecurate-log4j-appender.xml
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/cdecurate/!svn/ver/1685/trunk/conf/readme.txt
+END
+template.update_load_tool_options_evs.sql
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/cdecurate/!svn/ver/398/trunk/conf/template.update_load_tool_options_evs.sql
+END
+mapping.dtd
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/cdecurate/!svn/ver/511/trunk/conf/mapping.dtd
+END
+lbconfig.props
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/cdecurate/!svn/ver/1732/trunk/conf/lbconfig.props
+END
+vocabulary.properties
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/cdecurate/!svn/ver/301/trunk/conf/vocabulary.properties
+END
+template.cdecurate-oracle-ds.xml
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/cdecurate/!svn/ver/954/trunk/conf/template.cdecurate-oracle-ds.xml
+END

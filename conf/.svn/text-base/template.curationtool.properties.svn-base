@@ -1,0 +1,4 @@
+curationtool.version=@appl.version@
+curationtool.help.url=@help.url@
+curationtool.links.pcs.name=@LINKS.PCS.NAME@
+curationtool.links.pcs.url=@LINKS.PCS.HOST.URL@
