@@ -33,7 +33,9 @@ import java.util.Vector;
 import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
 import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
 import org.LexGrid.codingSchemes.CodingScheme;
 import org.junit.Test;
 //import gov.nih.nci.evs.domain.DescLogicConcept;
@@ -157,7 +159,14 @@ public class EVSTest2
 //            var.runTest();
 			LexEVSHelper lexAPI = new LexEVSHelper();
 			lexAPI.getMetathesaurusMapping(evsService, "RID1543");
-            
+			CodedNodeSet nodeSet = lexAPI.getMatches();
+			ResolvedConceptReferenceList lstResult = nodeSet.resolveToList(
+					null, //Sorts used to sort results (null means sort by match score)
+					null, //PropertyNames to resolve (null resolves all)
+					new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
+					100	  //cap the number of results returned (-1 resolves all)
+			);
+			System.out.println("list size " + lstResult.getResolvedConceptReferenceCount());
             // Close the database connection.
             var.close();
 
