@@ -15,6 +15,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.cdecurate.util.LexEVSHelper;
 import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.evs.security.SecurityToken;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
@@ -2138,21 +2139,20 @@ public class EVSSearch implements Serializable {
 								null); //the language to match (null matches all)
 					else if (vocabType.equals("PropType")) { // do concept prop search
 						//GF32446 this cause Semantic_Type to not to be included
-						LocalNameList lnl = new LocalNameList();
-						 sPropIn="UMLS_CUI";
-						 algorithm="contains";
-						lnl.addEntry(sPropIn);
-						System.out.println("lnl = [" + lnl + "] sPropIn = [" + sPropIn + "] termStr = ["+termStr+"] algorithm = ["+ algorithm + "]");
-						nodeSet = nodeSet.restrictToMatchingProperties(	//JT b4 GF32723
-						lnl, //the Property Name to match
-						null, //the Property Type to match (null matches all)
-						termStr, //the text to match
-						algorithm, //the match algorithm to use
-						null );//the language to match (null matches all)
-						//JT begin b4
-//						nodeSet = nodeSet.restrictToMatchingDesignations(termStr, SearchDesignationOption.ALL,LBConstants.MatchAlgorithms.exactMatch.name(), null);
-//						nodeSet = nodeSet.restrictToStatus(ActiveOption.ALL, null);
-						//JT end b4
+//						LocalNameList lnl = new LocalNameList();
+//						 sPropIn="UMLS_CUI";
+//						 algorithm="contains";
+//						lnl.addEntry(sPropIn);
+//						System.out.println("lnl = [" + lnl + "] sPropIn = [" + sPropIn + "] termStr = ["+termStr+"] algorithm = ["+ algorithm + "]");
+//						nodeSet = nodeSet.restrictToMatchingProperties(	//JT b4 GF32723
+//						lnl, //the Property Name to match
+//						null, //the Property Type to match (null matches all)
+//						termStr, //the text to match
+//						algorithm, //the match algorithm to use
+//						null );//the language to match (null matches all)
+						LexEVSHelper lexAPI = new LexEVSHelper();
+						lexAPI.getMetathesaurusMapping(evsService, termStr);
+						nodeSet = lexAPI.getMatches();
 						
 						logger.debug("EVSSearch:doConceptQuery() nodeSet retrieved from lexEVS.");	//GF29786 - geting the concept list from lexevs based on synonyms done (old way???)
 					}
