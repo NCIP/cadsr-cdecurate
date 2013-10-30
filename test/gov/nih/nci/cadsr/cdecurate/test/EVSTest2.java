@@ -158,7 +158,8 @@ public class EVSTest2
             // Run the real test
 //            var.runTest();
 			LexEVSHelper lexAPI = new LexEVSHelper();
-			lexAPI.getMetathesaurusMapping(evsService, "RID1543");
+			String termStr = "RID1543";
+			lexAPI.getMetathesaurusMapping(evsService, termStr);
 			CodedNodeSet nodeSet = lexAPI.getMatches();
 			ResolvedConceptReferenceList lstResult = nodeSet.resolveToList(
 					null, //Sorts used to sort results (null means sort by match score)
@@ -166,7 +167,7 @@ public class EVSTest2
 					new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
 					100	  //cap the number of results returned (-1 resolves all)
 			);
-			System.out.println("list size " + lstResult.getResolvedConceptReferenceCount());
+			System.out.println("[" + termStr + "] query results list size " + lstResult.getResolvedConceptReferenceCount() + " resolved 1st concept = [" + lstResult.getResolvedConceptReference(0).getConceptCode() + "]");
             // Close the database connection.
             var.close();
 
