@@ -6,3 +6,12 @@ d
 p
 spy.log
 sql
+conf/spy.properties
+conf/template.cdecurate-oracle-ds.xml.p6spy
+b
+build.xml.p6spy
+c
+d
+p
+spy.log
+dist

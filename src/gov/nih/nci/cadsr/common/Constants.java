@@ -16,11 +16,14 @@ public class Constants {
 	public static final String USER_SELECTED_ALTERNATE_DEF_COMP2_COUNT = "userSelectedDef_Comp2_Count";
 	public static final String USER_SELECTED_ALTERNATE_DEF_COMP3_COUNT = "userSelectedDef_Comp3_Count";
 	public static final String USER_SELECTED_ALTERNATE_DEF_COMP4_COUNT = "userSelectedDef_Comp4_Count";
-        //GF7680 
-        public static final String WORKFLOW_STATUS_RELEASED = "RELEASED";
+    //GF7680 
+    public static final String WORKFLOW_STATUS_RELEASED = "RELEASED";
 	//GF32723
 	public static final String USER_SELECTED_VOCAB = "userSelectedDtsVocab";
 	public static final String USER_SELECTED_CON_CODE = "userSelectedConceptCode";
+	public static final String DTS_VOCAB_NCIT = "NCI Thesaurus";
+	public static final String DTS_VOCAB_NCI_META = "NCI MetaThesaurus";
+	
 	//GF32153
 	public static final String ERR_LOGON_ISSUE = "Could not validate the User Name and Password, please try again.";
 	
