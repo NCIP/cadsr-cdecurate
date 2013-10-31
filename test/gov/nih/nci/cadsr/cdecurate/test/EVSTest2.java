@@ -52,6 +52,7 @@ import org.junit.Test;
 	//update sbrext.tool_options_view_ext set Value = 'http://lexevsapi51.nci.nih.gov/lexevsapi51' where Tool_name = 'CURATION' and Property = 'EVS.URL'
 	update sbrext.tool_options_view_ext set Value = 'http://lexevsapi60.nci.nih.gov/lexevsapi60' where Tool_name = 'EVSAPI' and Property = 'URL'
 	//update sbrext.tool_options_view_ext set Value = 'http://lexevsapi60.nci.nih.gov/lexevsapi60' where Tool_name = 'CURATION' and Property = 'EVS.URL'
+	update sbrext.tool_options_view_ext set Value = 'http://lexevsapi60-dev.nci.nih.gov/lexevsapi60' where Tool_name = 'EVSAPI' and Property = 'URL'
 
 	select tool_name, property, VALUE from sbrext.tool_options_view_ext where Tool_name = 'CURATION' and Property like '%.INCLUDEMETA'
 	//e.g. TOOL_NAME=CURATION, PROPERTY=EVS.VOCAB.24.INCLUDEMETA, VALUE=NCI Metathesaurus

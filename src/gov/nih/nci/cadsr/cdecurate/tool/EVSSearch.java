@@ -2006,7 +2006,13 @@ public class EVSSearch implements Serializable {
 			        logger.debug("doMetaSearch calling with termStr = [" + termStr + "] sSearchIn = [" + sSearchIn + "] sMetaSource = [" + sMetaSource + "] iMetaLimit = [" + iMetaLimit + "] sMetaName = [" + sMetaName + "]");
 					vConList = this.doMetaSearch(vConList, termStr, sSearchIn,
 							sMetaSource, iMetaLimit, sMetaName);
-			        logger.info("doMetaSearch called");
+			        logger.info("doMetaSearch called for NCIt or NCI Meta");
+				} 
+				else 
+				if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
+					vConList = this.doMetaSearch(vConList, termStr, sSearchIn,
+							sMetaSource, iMetaLimit, sMetaName);					
+			        logger.info("doMetaSearch called for Non-NCIt and Non-NCI Meta [" + dtsVocab + "]");
 				}
 		} catch (Exception ee) {
 			logger.error("ERROR - EVSSearch-doVocabSearch : " + ee.toString(),
@@ -2220,7 +2226,7 @@ public class EVSSearch implements Serializable {
 					+ " :conceptNameSearch lstResults: " + ex.toString(), ex);
 		}
 		
-		if(lstResult != null) {
+		if(lstResult != null && lstResult.getResolvedConceptReferenceCount() > 0) {
 			System.out.println("[" + termStr + "] EVS query results list size " + lstResult.getResolvedConceptReferenceCount() + " resolved 1st concept = [" + lstResult.getResolvedConceptReference(0).getConceptCode() + "]");
 		} else {
 			System.out.println("[" + termStr + "] EVS query results list is NULL!");
@@ -3572,7 +3578,9 @@ public class EVSSearch implements Serializable {
 					}*/
 						//altSession.addAlternateName(detl_type,detl_name,eBean,m_servlet.getConn());
 						conName = eBean.getLONG_NAME();
-					vList = this.doVocabSearch(vList, conID, nciVocab,
+//						vList = this.doMetaSearch(vList, conID, "MetaCode", eDB, 10, metaName);
+						
+						vList = this.doVocabSearch(vList, conID, nciVocab,
 								"Name", conType, "", "Exclude", "", 10, false,
 								-1, "", new HashSet<String>());
 						//vList = this.doMetaSearchOld(vList, conID, "MetaCode", eDB, 10, metaName);

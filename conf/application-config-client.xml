@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--L
-  Copyright ScenPro Inc, SAIC-F
-
-  Distributed under the OSI-approved BSD 3-Clause License.
-  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
-L-->
-
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
       <bean id="EvsServiceInfo" class="java.util.HashMap" singleton="false">
@@ -14,7 +6,7 @@ L-->
                   <map>
                         <entry key="APPLICATION_SERVICE_BEAN" value-ref="LexEVSApplicationService"/>
                         <entry key="AUTHENTICATION_SERVICE_BEAN" value-ref="EvsAuthenticationProvider"/>
-                        <entry key="APPLICATION_SERVICE_URL" value="http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService"/>
+                        <entry key="APPLICATION_SERVICE_URL" value="http://lexevsapi60-dev.nci.nih.gov/lexevsapi60-dev/http/applicationService"/>
                         <entry key="APPLICATION_SERVICE_CONFIG" value-ref="LexEVSApplicationServiceConfig"/>
                   </map>
             </constructor-arg>
@@ -32,37 +24,11 @@ L-->
       <bean id="DistributedProxyHelper" class="org.LexGrid.LexBIG.caCore.client.proxy.LexEVSProxyHelperImpl" singleton="false"/>
       <bean id="DataServiceProxyHelper" class="org.LexGrid.LexBIG.caCore.client.proxy.DataServiceProxyHelperImpl" singleton="false"/>
       
-      
-      <!-- 
-      <bean id="customerPointcut"
-        class="org.springframework.aop.support.NameMatchMethodPointcut">
-		<property name="mappedName" value="printName" />
-	</bean>
-	
-	      <bean id="customerAdvisor_Not_Used"
-		class="org.springframework.aop.support.DefaultPointcutAdvisor">
-		<property name="pointcut" ref="customerPointcut" />
-		<property name="advice" ref="hijackAroundMethodBeanAdvice" />
-	</bean>
- 	-->
- 
-      	<bean id="hijackAroundMethodBeanAdvice" class="com.mkyong.aop.HijackAroundMethod" />
-
-      <bean id="customerAdvisor"
-		class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
-				<property name="patterns">
-					<list>
-						<value>.*invokeData.*</value>
-					</list>
-				</property>
-				<property name="advice" ref="hijackAroundMethodBeanAdvice" />
-	</bean>
-		
       <bean id="LexEVSApplicationService" class="org.springframework.aop.framework.ProxyFactoryBean">      
-			<property name="target" ref="AppService" />
             <property name="interceptorNames">
              <list>
-			<value>customerAdvisor</value>
+             <value>LexEVSInterceptor</value>
+             <value>AppService</value>
              </list>
              </property>
             <property name="interfaces" value="org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService"/>
@@ -72,7 +38,7 @@ L-->
       </bean>     
       
        <bean id="AppService" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean" singleton="false">
-            <property name="serviceUrl" value="http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService"/>
+            <property name="serviceUrl" value="http://lexevsapi60-dev.nci.nih.gov/lexevsapi60-dev/http/applicationService"/>
             <property name="serviceInterface" value="org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService"/>
             <property name="httpInvokerRequestExecutor">
                  <bean class="org.LexGrid.LexBIG.caCore.client.proxy.ProxyUnwrappingHttpInvokerRequestExecutor">
@@ -84,7 +50,7 @@ L-->
       <bean id="EvsAuthenticationProvider" class="org.acegisecurity.providers.rcp.RemoteAuthenticationProvider">
             <property name="remoteAuthenticationManager">
                   <bean class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-                      <property name="serviceUrl" value="http://lexevsapi60.nci.nih.gov/lexevsapi60/http/applicationService"/>
+                      <property name="serviceUrl" value="http://lexevsapi60-dev-dev.nci.nih.gov/lexevsapi60-dev/http/applicationService"/>
                       <property name="serviceInterface" value="org.acegisecurity.providers.rcp.RemoteAuthenticationManager"/>
                   </bean>
             </property>
