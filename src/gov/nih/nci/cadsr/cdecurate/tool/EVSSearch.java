@@ -3874,14 +3874,20 @@ public class EVSSearch implements Serializable {
 
 
 	public Vector<EVS_Bean> getThesaurusConceptBean(Vector vEvsBean){
+		System.out.println("getThesaurusConceptBean: called");
 		Vector<EVS_Bean>  vEvsBeann = new Vector<EVS_Bean>();
 		if (vEvsBean != null){  
 			for (int i = 0; i < vEvsBean.size(); i++) {
 				EVS_Bean eBean = (EVS_Bean) vEvsBean.elementAt(i);
 				eBean = this.getThesaurusConcept(eBean);
 				vEvsBeann.addElement(eBean);
+				System.out.println("getThesaurusConceptBean: add bean " + i);
 			}
+			System.out.println("getThesaurusConceptBean: vEvsBeann size is " + vEvsBeann.size() + " ");
+		} else {
+			System.out.println("getThesaurusConceptBean: vEvsBeann is empty!");
 		}
+		
 		return vEvsBeann;
 	}
 
