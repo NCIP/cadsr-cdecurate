@@ -1998,6 +1998,7 @@ public class EVSSearch implements Serializable {
 							"ERROR - EVSSearch-doVocabSearch - vocab result : "
 							+ ee.toString(), ee);
 				}
+				
 		        logger.debug("sMetaName = [" + sMetaName + "] isMetaSearch = [" + isMetaSearch + "]");
 				//do the meta thesaurus search if meta name exists and if meta search is true
 				if (sMetaName != null && !sMetaName.equals("") && isMetaSearch
@@ -2006,8 +2007,16 @@ public class EVSSearch implements Serializable {
 			        logger.debug("doMetaSearch calling with termStr = [" + termStr + "] sSearchIn = [" + sSearchIn + "] sMetaSource = [" + sMetaSource + "] iMetaLimit = [" + iMetaLimit + "] sMetaName = [" + sMetaName + "]");
 					vConList = this.doMetaSearch(vConList, termStr, sSearchIn,
 							sMetaSource, iMetaLimit, sMetaName);
-			        logger.info("doMetaSearch called");
+			        logger.info("doMetaSearch called for NCIt or NCI Meta");
+				} 
+				//begin GF32723
+				else 
+				if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
+					vConList = this.doMetaSearch(vConList, termStr, sSearchIn,
+							sMetaSource, iMetaLimit, sMetaName);					
+			        logger.info("doMetaSearch called for Non-NCIt and Non-NCI Meta [" + dtsVocab + "]");
 				}
+				//end GF32723				
 		} catch (Exception ee) {
 			logger.error("ERROR - EVSSearch-doVocabSearch : " + ee.toString(),
 					ee);
@@ -2139,20 +2148,20 @@ public class EVSSearch implements Serializable {
 								null); //the language to match (null matches all)
 					else if (vocabType.equals("PropType")) { // do concept prop search
 						//GF32446 this cause Semantic_Type to not to be included
-//						LocalNameList lnl = new LocalNameList();
-//						 sPropIn="UMLS_CUI";
-//						 algorithm="contains";
-//						lnl.addEntry(sPropIn);
-//						System.out.println("lnl = [" + lnl + "] sPropIn = [" + sPropIn + "] termStr = ["+termStr+"] algorithm = ["+ algorithm + "]");
-//						nodeSet = nodeSet.restrictToMatchingProperties(	//JT b4 GF32723
-//						lnl, //the Property Name to match
-//						null, //the Property Type to match (null matches all)
-//						termStr, //the text to match
-//						algorithm, //the match algorithm to use
-//						null );//the language to match (null matches all)
-						LexEVSHelper lexAPI = new LexEVSHelper();
-						lexAPI.getMetathesaurusMapping(evsService, termStr);
-						nodeSet = lexAPI.getMatches();
+						LocalNameList lnl = new LocalNameList();
+						 sPropIn="UMLS_CUI";
+						 algorithm="contains";
+						lnl.addEntry(sPropIn);
+						System.out.println("lnl = [" + lnl + "] sPropIn = [" + sPropIn + "] termStr = ["+termStr+"] algorithm = ["+ algorithm + "]");
+						nodeSet = nodeSet.restrictToMatchingProperties(	//JT b4 GF32723
+						lnl, //the Property Name to match
+						null, //the Property Type to match (null matches all)
+						termStr, //the text to match
+						algorithm, //the match algorithm to use
+						null );//the language to match (null matches all)
+//						LexEVSHelper lexAPI = new LexEVSHelper();
+//						lexAPI.getMetathesaurusMapping(evsService, termStr);
+//						nodeSet = lexAPI.getMatches();
 						
 						logger.debug("EVSSearch:doConceptQuery() nodeSet retrieved from lexEVS.");	//GF29786 - geting the concept list from lexevs based on synonyms done (old way???)
 					}
@@ -2176,7 +2185,7 @@ public class EVSSearch implements Serializable {
 //					lnl.addEntry("UMLS_CUI");
 //				}
 				
-				if (sSearchAC.equals("ParentConceptVM") && nodeSet != null)
+				if (nodeSet != null && sSearchAC.equals("ParentConceptVM"))
 				lstResult = nodeSet.resolveToList(
 						null, //Sorts used to sort results (null means sort by match score)
 						lnl, //PropertyNames to resolve (null resolves all)
@@ -2190,12 +2199,41 @@ public class EVSSearch implements Serializable {
 							new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
 							100	  //cap the number of results returned (-1 resolves all)
 					);
+					//begin GF32723
+//					if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
+//						LexEVSHelper lexAPI = new LexEVSHelper();
+//						lexAPI.getMetathesaurusMapping(evsService, termStr);
+//						nodeSet = lexAPI.getMatches();
+//						if(nodeSet != null) {
+//							lstResult = nodeSet.resolveToList(
+//									null, //Sorts used to sort results (null means sort by match score)
+//									null, //PropertyNames to resolve (null resolves all)
+//									new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
+//									100	  //cap the number of results returned (-1 resolves all)
+//							);
+//						}
+//					} else {
+//						lstResult = nodeSet.resolveToList(
+//								null, //Sorts used to sort results (null means sort by match score)
+//								null, //PropertyNames to resolve (null resolves all)
+//								new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
+//								100	  //cap the number of results returned (-1 resolves all)
+//						);
+//					}	
+					//end GF32723					
 				}
 			}
 		} catch (Exception ex) {
 			logger.error(evsService.toString()
 					+ " :conceptNameSearch lstResults: " + ex.toString(), ex);
 		}
+		
+		if(lstResult != null && lstResult.getResolvedConceptReferenceCount() > 0) {
+			logger.info("EVSSearch:doConceptQuery [" + termStr + "] EVS query results list size " + lstResult.getResolvedConceptReferenceCount() + " resolved 1st concept = [" + lstResult.getResolvedConceptReference(0).getConceptCode() + "]");
+		} else {
+			logger.info("EVSSearch:doConceptQuery [" + termStr + "] EVS query results list is NULL!");
+		}
+
 		return lstResult;
 	}
 
@@ -3517,7 +3555,7 @@ public class EVSSearch implements Serializable {
 				prefVocab = "";
 			if (dtsVocab.equals(prefVocab))
 				return eBean; //System.out.println(dtsVocab + " vocab match " + prefVocab);
-			//continue only if term is not from Thesaururs //Should come here for GF32723 ???
+			//continue only if term is not from Thesaururs //Should come here for GF32723
 			if (dtsVocab != null && !dtsVocab.equals(nciVocab)) {
 				if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
 				{
