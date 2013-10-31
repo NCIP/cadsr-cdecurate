@@ -2088,18 +2088,25 @@ public class EVSSearch implements Serializable {
 	 * @param sPropIn
 	 * @return
 	 */
-	private ResolvedConceptReferenceList doConceptQuery(String vocabAccess, String termStr,	//JT needs to look into this EVS search!!!
-			String dtsVocab, String sSearchIn, String vocabType, String sPropIn, String sSearchAC) {
+	private ResolvedConceptReferenceList doConceptQuery(
+			String vocabAccess,
+			String termStr, // JT needs to look into this EVS search!!!
+			String dtsVocab, String sSearchIn, String vocabType,
+			String sPropIn, String sSearchAC) {
 		ResolvedConceptReferenceList lstResult = null;
 		List lstResult1 = null;
-		List lstResult2= new ArrayList();
+		List lstResult2 = new ArrayList();
 
 		String algorithm = getAlgorithm(termStr);
 		termStr = cleanTerm(termStr);
-		
+
 		try {
-			
-			System.out.println("vocab type is" +vocabType+":"+"dts vocab is"+dtsVocab+"vocabAccess is" + vocabAccess+"term str is" + termStr+"sSesrchIn" +sSearchIn+"sPropIn is"+sPropIn+"sSearchAC is"+sSearchAC);
+
+			System.out.println("vocab type is" + vocabType + ":"
+					+ "dts vocab is" + dtsVocab + "vocabAccess is"
+					+ vocabAccess + "term str is" + termStr + "sSesrchIn"
+					+ sSearchIn + "sPropIn is" + sPropIn + "sSearchAC is"
+					+ sSearchAC);
 			// check if valid dts vocab
 			dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
 					EVSSearch.VOCAB_NULL, EVSSearch.VOCAB_NAME); // "",
@@ -2107,30 +2114,41 @@ public class EVSSearch implements Serializable {
 			if (dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
 				return lstResult;
 
-			this.registerSecurityToken((LexEVSApplicationService)evsService, dtsVocab, m_eUser);
-			
-			CodedNodeSet nodeSet = evsService.getNodeSet(dtsVocab, null, null);	//dtsVocab example value = Logical Observation Identifier Names and Codes
+			this.registerSecurityToken((LexEVSApplicationService) evsService,
+					dtsVocab, m_eUser);
+
+			CodedNodeSet nodeSet = evsService.getNodeSet(dtsVocab, null, null); // dtsVocab
+																				// example
+																				// value
+																				// =
+																				// Logical
+																				// Observation
+																				// Identifier
+																				// Names
+																				// and
+																				// Codes
 
 			if (sSearchIn.equals("ConCode")) {
-				
-				ConceptReferenceList crefs = ConvenienceMethods.
-                	createConceptReferenceList(new String[]{termStr}, "NCI Thesaurus");
+
+				ConceptReferenceList crefs = ConvenienceMethods
+						.createConceptReferenceList(new String[] { termStr },
+								"NCI Thesaurus");
 				nodeSet = nodeSet.restrictToCodes(crefs);
 
-			}
-			else if (sSearchIn.equals("subConcept"))
-				//query.getChildConcepts(dtsVocab, termStr);
+			} else if (sSearchIn.equals("subConcept"))
+				// query.getChildConcepts(dtsVocab, termStr);
 				try {
-								
-					HashMap<String, ResolvedConceptReference> hSubs = returnSubConcepts(termStr, dtsVocab);
+
+					HashMap<String, ResolvedConceptReference> hSubs = returnSubConcepts(
+							termStr, dtsVocab);
 
 					lstResult = new ResolvedConceptReferenceList();
 					Iterator<String> iter = hSubs.keySet().iterator();
 					while (iter.hasNext()) {
 						String code = iter.next();
-						ResolvedConceptReference ac = hSubs.get(code);													
-							if (code != null && !code.equals(termStr)) {
-								lstResult.addResolvedConceptReference(ac);	
+						ResolvedConceptReference ac = hSubs.get(code);
+						if (code != null && !code.equals(termStr)) {
+							lstResult.addResolvedConceptReference(ac);
 						}
 					}
 				} catch (IndexOutOfBoundsException e) {
@@ -2140,90 +2158,122 @@ public class EVSSearch implements Serializable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				else {
-					if (vocabType.equals("") || vocabType.equals("NameType")) // do concept name search
-						nodeSet = nodeSet.restrictToMatchingDesignations(termStr, //the text to match 
-								CodedNodeSet.SearchDesignationOption.PREFERRED_ONLY,  //whether to search all designation, only Preferred or only Non-Preferred
-								algorithm, //the match algorithm to use
-								null); //the language to match (null matches all)
-					else if (vocabType.equals("PropType")) { // do concept prop search
-						//GF32446 this cause Semantic_Type to not to be included
-						LocalNameList lnl = new LocalNameList();
-//						algorithm="contains";
-						lnl.addEntry("NCI_META_CUI");
-						lnl.addEntry("UMLS_CUI");
-						lnl.addEntry("UMLS_CUI");
-						System.out.println("lnl = [" + lnl + "] sPropIn = [" + sPropIn + "] termStr = ["+termStr+"] algorithm = ["+ algorithm + "]");
-						/* commented out - broke concepts results in NCIt/NCI Meta
-						*/
-						nodeSet = nodeSet.restrictToMatchingProperties(	//JT b4 GF32723
-						lnl, //the Property Name to match
-						null, //the Property Type to match (null matches all)
-						termStr, //the text to match
-						algorithm, //the match algorithm to use
-						null );//the language to match (null matches all)
-//						LexEVSHelper lexAPI = new LexEVSHelper();
-//						lexAPI.getMetathesaurusMapping(evsService, termStr);
-//						nodeSet = lexAPI.getMatches();
-						
-						logger.debug("EVSSearch:doConceptQuery() nodeSet retrieved from lexEVS.");	//GF29786 - geting the concept list from lexevs based on synonyms done (old way???)
-					}
+			else {
+				if (vocabType.equals("") || vocabType.equals("NameType")) // do
+																			// concept
+																			// name
+																			// search
+					nodeSet = nodeSet
+							.restrictToMatchingDesignations(
+									termStr, // the text to match
+									CodedNodeSet.SearchDesignationOption.PREFERRED_ONLY, // whether
+																							// to
+																							// search
+																							// all
+																							// designation,
+																							// only
+																							// Preferred
+																							// or
+																							// only
+																							// Non-Preferred
+									algorithm, // the match algorithm to use
+									null); // the language to match (null
+											// matches all)
+				else if (vocabType.equals("PropType")) { // do concept prop
+															// search
+					// GF32446 this cause Semantic_Type to not to be included
+					LocalNameList lnl = new LocalNameList();
+					// sPropIn="UMLS_CUI";
+					// algorithm="contains";
+					lnl.addEntry(sPropIn);
+					// System.out.println("lnl = [" + lnl + "] sPropIn = [" +
+					// sPropIn + "] termStr = ["+termStr+"] algorithm = ["+
+					// algorithm + "]");
+					nodeSet = nodeSet.restrictToMatchingProperties( // JT b4
+																	// GF32723
+							lnl, // the Property Name to match
+							null, // the Property Type to match (null matches
+									// all)
+							termStr, // the text to match
+							algorithm, // the match algorithm to use
+							null);// the language to match (null matches all)
+					// LexEVSHelper lexAPI = new LexEVSHelper();
+					// lexAPI.getMetathesaurusMapping(evsService, termStr);
+					// nodeSet = lexAPI.getMatches();
+
+					logger.debug("EVSSearch:doConceptQuery() nodeSet retrieved from lexEVS."); // GF29786
+																								// -
+																								// geting
+																								// the
+																								// concept
+																								// list
+																								// from
+																								// lexevs
+																								// based
+																								// on
+																								// synonyms
+																								// done
+																								// (old
+																								// way???)
 				}
+			}
 			// call the evs to get resutls
-			if(!sSearchIn.equals("subConcept"))
-			{
+			if (!sSearchIn.equals("subConcept")) {
 				LocalNameList lnl = new LocalNameList();
 				Hashtable hType = m_eUser.getMetaCodeType();
-				 System.out.println("htype is   "+hType);
+				System.out.println("htype is   " + hType);
 
 				Iterator iter = hType.keySet().iterator();
-				while (iter.hasNext()){
+				while (iter.hasNext()) {
 					String propName = (String) iter.next();
-					System.out.println("EVSSearch:doConceptQuery() propName [" + propName + "]");
+					System.out.println("EVSSearch:doConceptQuery() propName ["
+							+ propName + "]");
 					lnl.addEntry(propName);
 				}
-//				if(lnl != null && lnl.getEntryCount() == 0) {
-//					lnl.addEntry("NCI_META_CUI");
-//					lnl.addEntry("UMLS_CUI");
-//					lnl.addEntry("UMLS_CUI");
-//				}
-				
-				if (nodeSet != null && sSearchAC.equals("ParentConceptVM"))
-				lstResult = nodeSet.resolveToList(
-						null, //Sorts used to sort results (null means sort by match score)
-						lnl, //PropertyNames to resolve (null resolves all)
-						new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)  //PropertyTypess to resolve (null resolves all)
-						100	  //cap the number of results returned (-1 resolves all)
-				);
-				else if(nodeSet != null) {
-					lstResult = nodeSet.resolveToList(
-							null, //Sorts used to sort results (null means sort by match score)
-							null, //PropertyNames to resolve (null resolves all)
-							null,	//new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//broke concepts results in NCIt/NCI Meta 
-							100	  //cap the number of results returned (-1 resolves all)
-					);
-					//begin GF32723
-//					if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
-//						LexEVSHelper lexAPI = new LexEVSHelper();
-//						lexAPI.getMetathesaurusMapping(evsService, termStr);
-//						nodeSet = lexAPI.getMatches();
-//						if(nodeSet != null) {
-//							lstResult = nodeSet.resolveToList(
-//									null, //Sorts used to sort results (null means sort by match score)
-//									null, //PropertyNames to resolve (null resolves all)
-//									new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
-//									100	  //cap the number of results returned (-1 resolves all)
-//							);
-//						}
-//					} else {
-//						lstResult = nodeSet.resolveToList(
-//								null, //Sorts used to sort results (null means sort by match score)
-//								null, //PropertyNames to resolve (null resolves all)
-//								new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
-//								100	  //cap the number of results returned (-1 resolves all)
-//						);
-//					}	
-					//end GF32723					
+				// if(lnl != null && lnl.getEntryCount() == 0) {
+				// lnl.addEntry("NCI_META_CUI");
+				// lnl.addEntry("UMLS_CUI");
+				// lnl.addEntry("UMLS_CUI");
+				// }
+
+				if (sSearchAC.equals("ParentConceptVM") && nodeSet != null)
+					lstResult = nodeSet.resolveToList(null, // Sorts used to
+															// sort results
+															// (null means sort
+															// by match score)
+							lnl, // PropertyNames to resolve (null resolves all)
+							new CodedNodeSet.PropertyType[] {
+									PropertyType.DEFINITION,
+									PropertyType.PRESENTATION }, // PropertyTypess
+																	// to
+																	// resolve
+																	// (null
+																	// resolves
+																	// all)
+																	// //PropertyTypess
+																	// to
+																	// resolve
+																	// (null
+																	// resolves
+																	// all)
+							100 // cap the number of results returned (-1
+								// resolves all)
+							);
+				else if (nodeSet != null) {
+					lstResult = nodeSet.resolveToList(null, // Sorts used to
+															// sort results
+															// (null means sort
+															// by match score)
+							null, // PropertyNames to resolve (null resolves
+									// all)
+							null, // JT b4 new CodedNodeSet.PropertyType[]
+									// {PropertyType.DEFINITION,
+									// PropertyType.PRESENTATION},
+									// //PropertyTypess to resolve (null
+									// resolves all)
+							100 // cap the number of results returned (-1
+								// resolves all)
+							);
 				}
 			}
 		} catch (Exception ex) {
@@ -2231,15 +2281,22 @@ public class EVSSearch implements Serializable {
 					+ " :conceptNameSearch lstResults: " + ex.toString(), ex);
 		}
 		
-		if(lstResult != null && lstResult.getResolvedConceptReferenceCount() > 0) {
-			logger.info("EVSSearch:doConceptQuery [" + termStr + "] EVS query results list size " + lstResult.getResolvedConceptReferenceCount() + " resolved 1st concept = [" + lstResult.getResolvedConceptReference(0).getConceptCode() + "]");
+		if (lstResult != null
+				&& lstResult.getResolvedConceptReferenceCount() > 0) {
+			logger.info("EVSSearch:doConceptQuery [" + termStr
+					+ "] EVS query results list size "
+					+ lstResult.getResolvedConceptReferenceCount()
+					+ " resolved 1st concept = ["
+					+ lstResult.getResolvedConceptReference(0).getConceptCode()
+					+ "]");
 		} else {
-			logger.info("EVSSearch:doConceptQuery [" + termStr + "] EVS query results list is NULL!");
+			logger.info("EVSSearch:doConceptQuery [" + termStr
+					+ "] EVS query results list is NULL!");
 		}
-
+		
 		return lstResult;
 	}
-
+	
 	/**
 	 * @param vCons
 	 * @param vProp
