@@ -2006,13 +2006,7 @@ public class EVSSearch implements Serializable {
 			        logger.debug("doMetaSearch calling with termStr = [" + termStr + "] sSearchIn = [" + sSearchIn + "] sMetaSource = [" + sMetaSource + "] iMetaLimit = [" + iMetaLimit + "] sMetaName = [" + sMetaName + "]");
 					vConList = this.doMetaSearch(vConList, termStr, sSearchIn,
 							sMetaSource, iMetaLimit, sMetaName);
-			        logger.info("doMetaSearch called for NCIt or NCI Meta");
-				} 
-				else 
-				if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
-					vConList = this.doMetaSearch(vConList, termStr, sSearchIn,
-							sMetaSource, iMetaLimit, sMetaName);					
-			        logger.info("doMetaSearch called for Non-NCIt and Non-NCI Meta [" + dtsVocab + "]");
+			        logger.info("doMetaSearch called");
 				}
 		} catch (Exception ee) {
 			logger.error("ERROR - EVSSearch-doVocabSearch : " + ee.toString(),
@@ -2145,27 +2139,20 @@ public class EVSSearch implements Serializable {
 								null); //the language to match (null matches all)
 					else if (vocabType.equals("PropType")) { // do concept prop search
 						//GF32446 this cause Semantic_Type to not to be included
-						LocalNameList lnl = new LocalNameList();
-						 sPropIn="UMLS_CUI";
-						 algorithm="contains";
-						lnl.addEntry(sPropIn);
-						System.out.println("lnl = [" + lnl + "] sPropIn = [" + sPropIn + "] termStr = ["+termStr+"] algorithm = ["+ algorithm + "]");
-						nodeSet = nodeSet.restrictToMatchingProperties(	//GF32723
-						lnl, //the Property Name to match
-						null, //the Property Type to match (null matches all)
-						termStr, //the text to match
-						algorithm, //the match algorithm to use
-						null );//the language to match (null matches all)
-						//GF32723
-//						LexEVSHelper lexAPI = new LexEVSHelper();
-//						lexAPI.getMetathesaurusMapping(evsService, termStr);
-//						nodeSet = lexAPI.getMatches();
-//						lstResult = nodeSet.resolveToList(
-//								null, //Sorts used to sort results (null means sort by match score)
-//								null, //PropertyNames to resolve (null resolves all)
-//								new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
-//								100	  //cap the number of results returned (-1 resolves all)
-//						);
+//						LocalNameList lnl = new LocalNameList();
+//						 sPropIn="UMLS_CUI";
+//						 algorithm="contains";
+//						lnl.addEntry(sPropIn);
+//						System.out.println("lnl = [" + lnl + "] sPropIn = [" + sPropIn + "] termStr = ["+termStr+"] algorithm = ["+ algorithm + "]");
+//						nodeSet = nodeSet.restrictToMatchingProperties(	//JT b4 GF32723
+//						lnl, //the Property Name to match
+//						null, //the Property Type to match (null matches all)
+//						termStr, //the text to match
+//						algorithm, //the match algorithm to use
+//						null );//the language to match (null matches all)
+						LexEVSHelper lexAPI = new LexEVSHelper();
+						lexAPI.getMetathesaurusMapping(evsService, termStr);
+						nodeSet = lexAPI.getMatches();
 						
 						logger.debug("EVSSearch:doConceptQuery() nodeSet retrieved from lexEVS.");	//GF29786 - geting the concept list from lexevs based on synonyms done (old way???)
 					}
@@ -2183,55 +2170,32 @@ public class EVSSearch implements Serializable {
 					System.out.println("EVSSearch:doConceptQuery() propName [" + propName + "]");
 					lnl.addEntry(propName);
 				}
-				if(lnl != null && lnl.getEntryCount() == 0) {
-					lnl.addEntry("NCI_META_CUI");
-					lnl.addEntry("UMLS_CUI");
-					lnl.addEntry("UMLS_CUI");
-				}
+//				if(lnl != null && lnl.getEntryCount() == 0) {
+//					lnl.addEntry("NCI_META_CUI");
+//					lnl.addEntry("UMLS_CUI");
+//					lnl.addEntry("UMLS_CUI");
+//				}
 				
-				if (sSearchAC.equals("ParentConceptVM"))
+				if (sSearchAC.equals("ParentConceptVM") && nodeSet != null)
 				lstResult = nodeSet.resolveToList(
 						null, //Sorts used to sort results (null means sort by match score)
 						lnl, //PropertyNames to resolve (null resolves all)
 						new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)  //PropertyTypess to resolve (null resolves all)
 						100	  //cap the number of results returned (-1 resolves all)
 				);
-				else {
-					//GF32723
-					if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
-						LexEVSHelper lexAPI = new LexEVSHelper();
-						lexAPI.getMetathesaurusMapping(evsService, termStr);
-						nodeSet = lexAPI.getMatches();
-						if(nodeSet != null) {
-							lstResult = nodeSet.resolveToList(
-									null, //Sorts used to sort results (null means sort by match score)
-									null, //PropertyNames to resolve (null resolves all)
-									new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
-									100	  //cap the number of results returned (-1 resolves all)
-							);
-						}
-					} else {
-						lstResult = nodeSet.resolveToList(
-								null, //Sorts used to sort results (null means sort by match score)
-								null, //PropertyNames to resolve (null resolves all)
-								new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
-								100	  //cap the number of results returned (-1 resolves all)
-						);
-					}
+				else if(nodeSet != null) {
+					lstResult = nodeSet.resolveToList(
+							null, //Sorts used to sort results (null means sort by match score)
+							null, //PropertyNames to resolve (null resolves all)
+							new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
+							100	  //cap the number of results returned (-1 resolves all)
+					);
 				}
-					
 			}
 		} catch (Exception ex) {
 			logger.error(evsService.toString()
 					+ " :conceptNameSearch lstResults: " + ex.toString(), ex);
 		}
-		
-		if(lstResult != null && lstResult.getResolvedConceptReferenceCount() > 0) {
-			System.out.println("[" + termStr + "] EVS query results list size " + lstResult.getResolvedConceptReferenceCount() + " resolved 1st concept = [" + lstResult.getResolvedConceptReference(0).getConceptCode() + "]");
-		} else {
-			System.out.println("[" + termStr + "] EVS query results list is NULL!");
-		}
-		
 		return lstResult;
 	}
 
@@ -3578,9 +3542,7 @@ public class EVSSearch implements Serializable {
 					}*/
 						//altSession.addAlternateName(detl_type,detl_name,eBean,m_servlet.getConn());
 						conName = eBean.getLONG_NAME();
-//						vList = this.doMetaSearch(vList, conID, "MetaCode", eDB, 10, metaName);
-						
-						vList = this.doVocabSearch(vList, conID, nciVocab,
+					vList = this.doVocabSearch(vList, conID, nciVocab,
 								"Name", conType, "", "Exclude", "", 10, false,
 								-1, "", new HashSet<String>());
 						//vList = this.doMetaSearchOld(vList, conID, "MetaCode", eDB, 10, metaName);
