@@ -2149,10 +2149,13 @@ public class EVSSearch implements Serializable {
 					else if (vocabType.equals("PropType")) { // do concept prop search
 						//GF32446 this cause Semantic_Type to not to be included
 						LocalNameList lnl = new LocalNameList();
-						 sPropIn="UMLS_CUI";
-						 algorithm="contains";
-						lnl.addEntry(sPropIn);
+//						algorithm="contains";
+						lnl.addEntry("NCI_META_CUI");
+						lnl.addEntry("UMLS_CUI");
+						lnl.addEntry("UMLS_CUI");
 						System.out.println("lnl = [" + lnl + "] sPropIn = [" + sPropIn + "] termStr = ["+termStr+"] algorithm = ["+ algorithm + "]");
+						/* commented out - broke concepts results in NCIt/NCI Meta
+						*/
 						nodeSet = nodeSet.restrictToMatchingProperties(	//JT b4 GF32723
 						lnl, //the Property Name to match
 						null, //the Property Type to match (null matches all)
@@ -2196,7 +2199,7 @@ public class EVSSearch implements Serializable {
 					lstResult = nodeSet.resolveToList(
 							null, //Sorts used to sort results (null means sort by match score)
 							null, //PropertyNames to resolve (null resolves all)
-							new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
+							null,	//new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//broke concepts results in NCIt/NCI Meta 
 							100	  //cap the number of results returned (-1 resolves all)
 					);
 					//begin GF32723
@@ -3577,12 +3580,12 @@ public class EVSSearch implements Serializable {
 						if(!altSession.addAlternateName(detl_type,detl_name,eBean,m_servlet.getConn())) {
 							System.out.println("************************ DEC SetACService: AC [" + eBean.getLONG_NAME() + "] not able to add alternate name type[" + detl_type + "] name[" + detl_name + "] ************************");
 						}
-					}*/
-						//altSession.addAlternateName(detl_type,detl_name,eBean,m_servlet.getConn());
-						conName = eBean.getLONG_NAME();
-					vList = this.doVocabSearch(vList, conID, nciVocab,
-								"Name", conType, "", "Exclude", "", 10, false,
-								-1, "", new HashSet<String>());
+						}*/
+							//altSession.addAlternateName(detl_type,detl_name,eBean,m_servlet.getConn());
+							conName = eBean.getLONG_NAME();
+						vList = this.doVocabSearch(vList, conID, nciVocab,
+									"Name", conType, "", "Exclude", "", 10, false,
+									-1, "", new HashSet<String>());
 						//vList = this.doMetaSearchOld(vList, conID, "MetaCode", eDB, 10, metaName);
 					
 						if (vList != null && vList.size() > 0) {
@@ -3618,7 +3621,7 @@ public class EVSSearch implements Serializable {
 					}
 				}
 				//get the thesaurus concept from nci source and code using atom property
-				else{
+//				else{ //broke concepts results in NCIt/NCI Meta
 				String NCISrcCode = "";
 				vList = new Vector<EVS_Bean>();
 				//get the code from matched meta bean
@@ -3652,7 +3655,7 @@ public class EVSSearch implements Serializable {
 						eBean = this.getNCIDefinition(vList, conID, conName); // (EVS_Bean)vList.elementAt(0);   
 				}
 			}
-			}		
+//			}	//broke concepts results in NCIt/NCI Meta	
 		} catch (Exception e) {
 			logger.error("Error - getThesaurusConcept : " + e.toString(), e);
 			e.printStackTrace();
