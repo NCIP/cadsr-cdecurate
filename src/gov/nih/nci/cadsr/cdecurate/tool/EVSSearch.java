@@ -1880,7 +1880,9 @@ public class EVSSearch implements Serializable {
 					//call method to do the search from EVS vocab
 					ResolvedConceptReferenceList lstResults = null;
 					//do not do vocab search if it is meta code search
-					if (!sSearchIn.equals("MetaCode") && !sMetaName.equals(vocabDisp)) {
+					if (!sSearchIn.equals("MetaCode") && !sMetaName.equals(vocabDisp)
+						//&& dtsVocab != null && (dtsVocab.equals(Constants.DTS_VOCAB_NCIT) || dtsVocab.equals(Constants.DTS_VOCAB_NCI_META))
+						) {
 						//GF29786
 						lstResults = doConceptQuery(	//dtsVocab e.g. Logical Observation Identifier Names and Codes
 								vocabBean.getVocabAccess(), termStr, dtsVocab,
@@ -2276,6 +2278,21 @@ public class EVSSearch implements Serializable {
 							);
 				}
 			}
+//			else
+			//begin GF32723
+			if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
+				LexEVSHelper lexAPI = new LexEVSHelper();
+				lexAPI.getMetathesaurusMapping(evsService, termStr);
+				CodedNodeSet nodeSet1 = lexAPI.getMatches();
+				lstResult = nodeSet1.resolveToList(
+						null, //Sorts used to sort results (null means sort by match score)
+						null, //PropertyNames to resolve (null resolves all)
+						new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
+						100	  //cap the number of results returned (-1 resolves all)
+				);
+			}
+			//end GF32723					
+
 		} catch (Exception ex) {
 			logger.error(evsService.toString()
 					+ " :conceptNameSearch lstResults: " + ex.toString(), ex);
@@ -3640,11 +3657,13 @@ public class EVSSearch implements Serializable {
 						}*/
 							//altSession.addAlternateName(detl_type,detl_name,eBean,m_servlet.getConn());
 							conName = eBean.getLONG_NAME();
-						vList = this.doVocabSearch(vList, conID, nciVocab,
+						vList = this.doVocabSearch(vList, conID, 
+								dtsVocab,			//GF32723 James: nciVocab might not be correct, should be dtsVocab (Radlex)!??	
+								//nciVocab,			//GF32723 James: however, commented out this breaks the concept results in NCI MetaThesaurus!!! :(
 									"Name", conType, "", "Exclude", "", 10, false,
 									-1, "", new HashSet<String>());
-						//vList = this.doMetaSearchOld(vList, conID, "MetaCode", eDB, 10, metaName);
-					
+//						vList = this.doMetaSearchOld(vList, conID, "MetaCode", eDB, 10, metaName);
+						
 						if (vList != null && vList.size() > 0) {
 							eBean = this
 							.getNCIDefinition(vList, conID, conName); //get the right definition	//Should come here for GF32723
@@ -3729,7 +3748,7 @@ public class EVSSearch implements Serializable {
 	 */
 	private EVS_Bean getNCIDefinition(Vector vList, String sID, String sName) {
 		EVS_Bean eBean = getDefinition(vList);
-		//update the status message
+		//GF32723 update the status message
 		m_servlet.storeStatusMsg("The selected Concept [" + sName + " : " + sID
 				+ "] will be replaced by the matching NCI Thesaurus Concept ["
 				+ eBean.getCONCEPT_NAME() + " : "

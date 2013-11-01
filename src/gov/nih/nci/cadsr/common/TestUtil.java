@@ -9,7 +9,10 @@ package gov.nih.nci.cadsr.common;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.Enumeration;
 import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
@@ -88,5 +91,22 @@ public class TestUtil {
 	    }
 	    return conn;
 	}
-
+	
+	public static void dumpAllHttpRequests(HttpServletRequest request) {
+		System.out.println("To out-put All the request-attributes received from request - ");
+	
+		Enumeration enAttr = request.getAttributeNames(); 
+		while(enAttr.hasMoreElements()){
+		 String attributeName = (String)enAttr.nextElement();
+		 System.out.println("TTTTTTTTTTTTT Attribute Name - "+attributeName+", Value - "+(request.getAttribute(attributeName)).toString());
+		}
+	
+		System.out.println("To out-put All the request parameters received from request - ");
+	
+		Enumeration enParams = request.getParameterNames(); 
+		while(enParams.hasMoreElements()){
+		 String paramName = (String)enParams.nextElement();
+		 System.out.println("TTTTTTTTTTTTT Parameter Name - "+paramName+", Value - "+request.getParameter(paramName));
+		}
+	}
 }
