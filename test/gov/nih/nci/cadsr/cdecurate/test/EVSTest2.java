@@ -195,7 +195,7 @@ public class EVSTest2
 		String termStr = "MTHU029981";
 		lexAPI.getMetathesaurusMapping(evsService, termStr);
 		CodedNodeSet nodeSet = lexAPI.getMatches();
-		String sMetaSource = "LNC215";	//LOINC name + version combo
+		String sMetaSource = "LNC";	//LOINC name + version combo
 		CodedNodeSet.PropertyType[] types = new CodedNodeSet.PropertyType[1];
 		types[0] = CodedNodeSet.PropertyType.PRESENTATION;
 		
