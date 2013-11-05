@@ -8,12 +8,12 @@
 <datasources>
     <local-tx-datasource>
         <jndi-name>jdbc/CDECurateDS</jndi-name>
-        <connection-url>p6spy:jdbc:oracle:thin:@dev-db-host:1551:DSRDEV</connection-url>
+        <connection-url>p6spy:jdbc:oracle:thin:@cbiodb540.nci.nih.gov:1551:DSRDEV</connection-url>
         <driver-class>com.p6spy.engine.spy.P6SpyDriver</driver-class>
         <exception-sorter-class-name>org.jboss.resource.adapter.jdbc.vendor.OracleExceptionSorter</exception-sorter-class-name>
         <check-valid-connection-sql>select 1 from dual</check-valid-connection-sql>
         <blocking-timeout-millis>10000</blocking-timeout-millis>
-        <track-statements>true</track-statements>
+        <track-statements>false</track-statements>
         <idle-timeout-minutes>6</idle-timeout-minutes>
         <max-pool-size>85</max-pool-size>
         <min-pool-size>1</min-pool-size>
