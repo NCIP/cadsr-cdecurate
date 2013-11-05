@@ -2552,6 +2552,9 @@ public class EVSSearch implements Serializable {
 						CodedNodeSet.PropertyType[] types = new CodedNodeSet.PropertyType[1];
 						types[0] = CodedNodeSet.PropertyType.PRESENTATION;
 
+						if(sMetaSource != null && sMetaSource.equals("LNC215")) {
+							sMetaSource = "LNC236";	//GF32723 TBD this is just a quick hack!
+						}
 						nodeSet = nodeSet.restrictToProperties(
 								null, //Constructors.createLocalNameList("propertyType"),	//GF32446
 								types, 

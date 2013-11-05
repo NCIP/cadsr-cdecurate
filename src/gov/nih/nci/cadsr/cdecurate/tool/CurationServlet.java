@@ -4167,6 +4167,7 @@ public class CurationServlet
   }
 
   public Vector getMatchingThesarusconcept(Vector beanList, String type){
+	  System.out.println("CurationServlet:getMatchingThesarusconcept type is " + type);
 	  HttpSession session = m_classReq.getSession();
 	  InsACService ins = new InsACService(m_classReq, m_classRes, this);
 	  EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
@@ -4176,7 +4177,11 @@ public class CurationServlet
     	 ocStatusBean = ins.evsBeanCheckDB(beanList, defaultContext, "", type);
         // get its matching thesaurus concept
          if (ocStatusBean != null && !ocStatusBean.isEvsBeanExists()){
+    	  	System.out.println("CurationServlet:getMatchingThesarusconcept ocStatusBean populated");        	 
     	    beanList = evs.getThesaurusConceptBean(beanList);
+    	  	System.out.println("CurationServlet:getMatchingThesarusconcept beanList retrieved after calling evs.getThesaurusConceptBean");        	 
+         } else {
+       	  	System.out.println("CurationServlet:getMatchingThesarusconcept ocStatusBean is null");        	 
          }
      }catch(Exception e){
     	 logger.error("Error in getMatchingThesarusconcept" + e);
