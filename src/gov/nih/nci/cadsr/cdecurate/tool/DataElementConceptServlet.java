@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import gov.nih.nci.cadsr.common.Constants;
-
+import gov.nih.nci.cadsr.common.TestUtil;
 import oracle.net.aso.e;
 
 public class DataElementConceptServlet extends CurationServlet {
@@ -1009,11 +1009,15 @@ public class DataElementConceptServlet extends CurationServlet {
 			//begin of GF30798
 			String isAConcept = (String) m_classReq.getParameter("isAConcept");
 			session.setAttribute(isAConcept, isAConcept);
+			System.out.println("*************** isAConcept set to " + isAConcept + " ***************");
 			String userSelectedDef = (String) m_classReq.getParameter("userSelectedDef");
 			session.setAttribute(userSelectedDef, userSelectedDef);
 			//(isAConcept != null && isAConcept.trim().equals("false"))	//GF30798
 			//end of GF30798
 			
+			//GF32723
+			TestUtil.dumpAllHttpRequests(m_classReq); 
+
 			String sSelRow = "";
 			boolean selectedOCQualifiers = false;
 			boolean selectedPropQualifiers =  false;
@@ -1179,7 +1183,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					// evs search results
 				{
 					if (sComp.equals("ObjectClass"))
-						m_DEC = this.addOCConcepts(nameAction, m_DEC, blockBean, "Primary");
+						m_DEC = this.addOCConcepts(nameAction, m_DEC, blockBean, "Primary");	//GF32723 1
 					else
 						m_DEC = this.addPropConcepts(nameAction, m_DEC, blockBean, "Primary");
 				}
@@ -1214,12 +1218,12 @@ public class DataElementConceptServlet extends CurationServlet {
 			if ( sComp.equals("ObjectClass") || sComp.equals("ObjectQualifier")){
 				vObjectClass = (Vector) session.getAttribute("vObjectClass");
 				for (int i=0; i<vObjectClass.size();i++){
-					EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
+					EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);	//GF32723 2
 					logger.debug("At line 1186 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
 				}
 				if (vObjectClass != null && vObjectClass.size()>0){ 
-					logger.debug("at line 1189 of DECServlet.java"+vObjectClass.size());
-					vObjectClass = this.getMatchingThesarusconcept(vObjectClass, "Object Class");	//get the matching concept from EVS based on the caDSR's CDR (object class)
+					logger.debug("at line 1189 of DECServlet.java"+vObjectClass.size());	//GF32723 3
+					vObjectClass = this.getMatchingThesarusconcept(vObjectClass, "Object Class");	//GF32723 4 should get NCIt code here e.g. C12434 (Blood); get the matching concept from EVS based on the caDSR's CDR (object class)
 					for (int i=0; i<vObjectClass.size();i++){
 						EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
 						logger.debug("At line 1193 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER()+"**"+vObjectClass.size());
@@ -1244,13 +1248,17 @@ public class DataElementConceptServlet extends CurationServlet {
 						statusBean.setEvsBeanIDSEQ(blockBean.getIDSEQ());
 						session.setAttribute("ocStatusBean", statusBean);
 					}else{
-						m_DEC.setDEC_OCL_IDSEQ("");   
+						m_DEC.setDEC_OCL_IDSEQ("");  //GF32723 5 
 					}
 				}
-				DataManager.setAttribute(session, "vObjectClass", vObjectClass);	//save EVS VO in session
+				DataManager.setAttribute(session, "vObjectClass", vObjectClass);	//GF32723 6 save EVS VO in session e.g. C12434 (Blood)
 				for (int i=0; i<vObjectClass.size();i++){
 					EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
-					logger.debug("At line 1220 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
+					//begin GF32723
+		            EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
+		            eBean = evs.getThesaurusConcept(eBean);
+		            //end GF32723
+		            logger.debug("At line 1220 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
 				}
 			}
 			if (sComp.equals("Property") || sComp.equals("PropertyClass") || sComp.equals("PropertyQualifier")){
@@ -1294,9 +1302,10 @@ public class DataElementConceptServlet extends CurationServlet {
 			// rebuild new name if not appending
 			EVS_Bean nullEVS = null; 
 			if (nameAction.equals("newName"))
-				m_DEC = (DEC_Bean) this.getACNames(nullEVS, "Search", m_DEC);
+				m_DEC = (DEC_Bean) this.getACNames(nullEVS, "Search", m_DEC);	//GF32723 7
 			else if (nameAction.equals("blockName"))
 				m_DEC = (DEC_Bean) this.getACNames(nullEVS, "blockName", m_DEC);
+
 			DataManager.setAttribute(session, "m_DEC", m_DEC);	//set the user's selection + data from EVS in the DEC in session (for submission later on)
 		}
 		catch (Exception e)
@@ -1408,7 +1417,7 @@ public class DataElementConceptServlet extends CurationServlet {
 				eUser = new EVS_UserBean();
 			eBean.setCON_AC_SUBMIT_ACTION("INS");
 			eBean.setCONTE_IDSEQ(decBean.getDEC_CONTE_IDSEQ());
-			String eDB = eBean.getEVS_DATABASE();
+			String eDB = eBean.getEVS_DATABASE();	//GF32723 e.g. "NCI Metathesaurus" for meta search 
 			logger.debug("At line 1278 of DECServlet.java "+eDB);
 			if (eDB != null && eBean.getEVS_ORIGIN() != null && eDB.equalsIgnoreCase("caDSR"))
 			{
@@ -1428,19 +1437,19 @@ public class DataElementConceptServlet extends CurationServlet {
 
 			// add to the vector and store it in the session, reset if primary and alredy existed, add otehrwise
 			if (ocType.equals("Primary") && vObjectClass.size() > 0)
-				vObjectClass.setElementAt(eBean, 0);
+				vObjectClass.setElementAt(eBean, 0);	//GF32723 if NCIt code like C12434 (Blood) is found
 			else
 				vObjectClass.addElement(eBean);
 			for (int i=0; i<vObjectClass.size();i++){
-				EVS_Bean Bean =(EVS_Bean)vObjectClass.get(i);
+				EVS_Bean Bean =(EVS_Bean)vObjectClass.get(i);	//GF32723
 				logger.debug("At line 1394 of DECServlet.java "+Bean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
 			}
-			DataManager.setAttribute(session, "vObjectClass", vObjectClass);
+			DataManager.setAttribute(session, "vObjectClass", vObjectClass);	//GF32723 not empty, contains UMLS code
 			DataManager.setAttribute(session, "newObjectClass", "true");
 			// DataManager.setAttribute(session, "selObjQRow", sSelRow);
 			// add to name if appending
 			if (nameAction.equals("appendName"))
-				decBean = (DEC_Bean) this.getACNames(eBean, "Search", decBean);
+				decBean = (DEC_Bean) this.getACNames(eBean, "Search", decBean);		//GF32723 skipped!
 			return decBean;
 			} // end addOCConcepts
 
@@ -2292,7 +2301,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					vObjectClass = (Vector)session.getAttribute("vObjectClass");
 					logger.debug("at line 2225 of DECServlet.java"+vObjectClass.size());
 					if (vObjectClass != null && vObjectClass.size()>0){
-						vObjectClass = this.getMatchingThesarusconcept(vObjectClass, "Object Class");
+//						vObjectClass = this.getMatchingThesarusconcept(vObjectClass, "Object Class");
 //						//begin of GF30798
 //						for (int i=0; i<vObjectClass.size();i++){
 //							EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
@@ -2308,7 +2317,7 @@ public class DataElementConceptServlet extends CurationServlet {
 				if (sComp.equals("Property") || sComp.equals("PropertyClass") || sComp.equals("PropertyQualifier")){
 					vProperty = (Vector)session.getAttribute("vProperty");
 					if (vProperty != null && vProperty.size()>0){
-						vProperty = this.getMatchingThesarusconcept(vProperty, "Property");
+//						vProperty = this.getMatchingThesarusconcept(vProperty, "Property");
 						m_DEC = this.updatePropAttribues(vProperty, m_DEC);
 						
 						this.checkChosenConcepts(session,null, null, vProperty, "Prop", (String)session.getAttribute("userSelectedDef"));
