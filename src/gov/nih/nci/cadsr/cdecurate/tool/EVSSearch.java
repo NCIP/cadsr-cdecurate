@@ -2553,7 +2553,7 @@ public class EVSSearch implements Serializable {
 						types[0] = CodedNodeSet.PropertyType.PRESENTATION;
 
 						if(sMetaSource != null && sMetaSource.equals("LNC215")) {
-							sMetaSource = "LNC236";	//GF32723 TBD this is just a quick hack!
+							sMetaSource = "LNC";	//GF32723 TBD this is just a quick hack!
 						}
 						nodeSet = nodeSet.restrictToProperties(
 								null, //Constructors.createLocalNameList("propertyType"),	//GF32446
@@ -2562,18 +2562,27 @@ public class EVSSearch implements Serializable {
 								null, 
 								null);
 
-//Given by Tracy - not sure how this helps, commented out
+//Given by EVS team - not sure how this helps, commented out
 //						ConceptReferenceList crl = new ConceptReferenceList();
 //                        crl.addConceptReference(ConvenienceMethods.createConceptReference(termStr, "NCI MetaThesaurus"));
 //                        nodeSet = nodeSet.restrictToCodes(crl);
-                        
-						nodeSet = nodeSet.restrictToMatchingProperties(
-								Constructors.createLocalNameList("value"), //the Property Name to match
-								null, //the Property Type to match (null matches all)
-								termStr, //the text to match
-								"nonLeadingWildcardLiteralSubString", //the match algorithm to use
-								null );//the language to match (null matches all)
 
+//GF32723 Incorrect as reviewed by EVS team
+//						nodeSet = nodeSet.restrictToMatchingProperties(
+//								Constructors.createLocalNameList("value"), //the Property Name to match
+//								null, //the Property Type to match (null matches all)
+//								termStr, //the text to match
+//								"nonLeadingWildcardLiteralSubString", //the match algorithm to use
+//								null );//the language to match (null matches all)
+
+//GF32723 suggested by EVS team						
+						nodeSet = nodeSet.restrictToMatchingProperties(
+					              null, //the Property Name to match
+					              types, //the Property Type to match (null matches all)
+					              termStr, //the text to match
+					              "nonLeadingWildcardLiteralSubString", //the match algorithm to use
+					              null );//the language to match (null matches all)
+						
 					}
 					else if (sSearchIn.equalsIgnoreCase("ConCode")) //meta cui search
 						nodeSet = nodeSet.restrictToMatchingProperties(
