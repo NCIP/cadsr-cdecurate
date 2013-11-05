@@ -36,6 +36,7 @@ import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
+import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.codingSchemes.CodingScheme;
 import org.junit.Test;
 //import gov.nih.nci.evs.domain.DescLogicConcept;
@@ -61,6 +62,8 @@ import org.junit.Test;
  * Setup -
  * 1. Add two arguments in Run/Debug configuration i.e.
  * [full path]log4j.xml EVSTest1.xml
+ * e.g.
+ * C:\Users\ag\demo\cadsr-cdecurate\test\log4j.xml C:\Users\ag\demo\cadsr-cdecurate\test\EVSTest1.xml
  * 2. Add the directory of the test (where EVSTest1.xml/log4j.xml are) into the classpath e.g.
  * [YOUR PROJECT DIR]/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test
  * 3. Add the directory of the conf (where application-config-client.xml) into the classpath e.g.
@@ -158,17 +161,9 @@ public class EVSTest2
             
             // Run the real test
 //            var.runTest();
-			LexEVSHelper lexAPI = new LexEVSHelper();
-			String termStr = "RID1543";
-			lexAPI.getMetathesaurusMapping(evsService, termStr);
-			CodedNodeSet nodeSet = lexAPI.getMatches();
-			ResolvedConceptReferenceList lstResult = nodeSet.resolveToList(
-					null, //Sorts used to sort results (null means sort by match score)
-					null, //PropertyNames to resolve (null resolves all)
-					new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
-					100	  //cap the number of results returned (-1 resolves all)
-			);
-			System.out.println("[" + termStr + "] query results list size " + lstResult.getResolvedConceptReferenceCount() + " resolved 1st concept = [" + lstResult.getResolvedConceptReference(0).getConceptCode() + "]");
+//            var.runTest1();	//GF32723 Non-context switching test
+            var.runTest2();	//GF32723 LOINC code "Blood" test
+
             // Close the database connection.
             var.close();
 
@@ -180,6 +175,40 @@ public class EVSTest2
         }
     }
 
+    public void runTest1() throws Exception {
+		LexEVSHelper lexAPI = new LexEVSHelper();
+		String termStr = "RID1543";
+		lexAPI.getMetathesaurusMapping(evsService, termStr);
+		CodedNodeSet nodeSet = lexAPI.getMatches();
+		ResolvedConceptReferenceList lstResult = nodeSet.resolveToList(
+				null, //Sorts used to sort results (null means sort by match score)
+				null, //PropertyNames to resolve (null resolves all)
+				new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
+				100	  //cap the number of results returned (-1 resolves all)
+		);
+		System.out.println("[" + termStr + "] query results list size " + lstResult.getResolvedConceptReferenceCount() + " resolved 1st concept = [" + lstResult.getResolvedConceptReference(0).getConceptCode() + "]");
+		System.out.println("runTest1 done");
+    }
+
+    public void runTest2() throws Exception {
+		LexEVSHelper lexAPI = new LexEVSHelper();
+		String termStr = "MTHU029981";
+		lexAPI.getMetathesaurusMapping(evsService, termStr);
+		CodedNodeSet nodeSet = lexAPI.getMatches();
+		String sMetaSource = "LNC215";	//LOINC name + version combo
+		CodedNodeSet.PropertyType[] types = new CodedNodeSet.PropertyType[1];
+		types[0] = CodedNodeSet.PropertyType.PRESENTATION;
+		
+		nodeSet = nodeSet.restrictToProperties(
+				null, //Constructors.createLocalNameList("propertyType"),	//GF32446
+				types, 
+				Constructors.createLocalNameList(sMetaSource),
+				null, 
+				null);
+		System.out.println("runTest2 done");
+    }
+
+    
     /**
      * Load the properties from the XML file specified.
      * 
