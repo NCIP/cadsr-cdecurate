@@ -2280,17 +2280,19 @@ public class EVSSearch implements Serializable {
 			}
 //			else
 			//begin GF32723
-			if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
-				LexEVSHelper lexAPI = new LexEVSHelper();
-				lexAPI.getMetathesaurusMapping(evsService, termStr);
-				CodedNodeSet nodeSet1 = lexAPI.getMatches();
-				lstResult = nodeSet1.resolveToList(
-						null, //Sorts used to sort results (null means sort by match score)
-						null, //PropertyNames to resolve (null resolves all)
-						new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
-						100	  //cap the number of results returned (-1 resolves all)
-				);
-			}
+//			if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
+//				LexEVSHelper lexAPI = new LexEVSHelper();
+//				lexAPI.getMetathesaurusMapping(evsService, termStr);
+//				CodedNodeSet nodeSet1 = lexAPI.getMatches();
+//				if(nodeSet1 != null) {
+//					lstResult = nodeSet1.resolveToList(
+//							null, //Sorts used to sort results (null means sort by match score)
+//							null, //PropertyNames to resolve (null resolves all)
+//							new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},	//JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
+//							100	  //cap the number of results returned (-1 resolves all)
+//					);
+//				}
+//			}
 			//end GF32723					
 
 		} catch (Exception ex) {
@@ -2552,9 +2554,6 @@ public class EVSSearch implements Serializable {
 						CodedNodeSet.PropertyType[] types = new CodedNodeSet.PropertyType[1];
 						types[0] = CodedNodeSet.PropertyType.PRESENTATION;
 
-						if(sMetaSource != null && sMetaSource.equals("LNC215")) {
-							sMetaSource = "LNC";	//GF32723 TBD this is just a quick hack!
-						}
 						nodeSet = nodeSet.restrictToProperties(
 								null, //Constructors.createLocalNameList("propertyType"),	//GF32446
 								types, 
@@ -2697,6 +2696,85 @@ public class EVSSearch implements Serializable {
 			return vList;
 	}
     
+	private Vector<EVS_Bean> doMetaSearchForNonNCItNonNCIm(Vector<EVS_Bean> vList,
+			String termStr, String sSearchIn, String sMetaSource,
+			int iMetaLimit, String sVocab) throws Exception {
+		LexEVSHelper lexAPI = new LexEVSHelper();
+//		String termStr = "MTHU029981";
+//		String sMetaSource = "LNC";     
+		lexAPI.getMetathesaurusMapping(evsService, termStr, sMetaSource);
+		CodedNodeSet nodeSet = lexAPI.getMatches();
+		ResolvedConceptReferenceList concepts = nodeSet.resolveToList(
+				null, //Sorts used to sort results (null means sort by match score)
+				null, //PropertyNames to resolve (null resolves all)
+				new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},        //JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION}, //PropertyTypess to resolve (null resolves all)
+				100         //cap the number of results returned (-1 resolves all)
+				);
+		
+		if (concepts != null && concepts.getResolvedConceptReferenceCount() > 0) {
+			String sConName = "";
+			String sConID = "";
+			String sCodeType = "";
+			String sSemantic = "";
+			String sCodeSrc = "";
+			int iLevel = 0;
+			for (int i = 0; i < concepts.getResolvedConceptReferenceCount(); i++) {
+				// Do this so only one result is returned on Meta code search (API is dupicating a result)
+				if (sSearchIn.equals("MetaCode") && i > 0)
+					break;
+				//get concept properties
+//				ResolvedConceptReference rcr = concepts.getResolvedConceptReference(i);
+				ResolvedConceptReference rcr = (ResolvedConceptReference) concepts.enumerateResolvedConceptReference()	//GF32446 need to get to next element to get to "Semantic Type"
+	                    .nextElement();
+
+				if (rcr != null) {
+					Property[] props = rcr.getEntity().getProperty();
+					Presentation[] presentations = rcr.getEntity().getPresentation();
+					Definition[] definitions = rcr.getEntity().getDefinition();
+
+					sConName = rcr.getEntityDescription().getContent();
+					sConID = rcr.getCode();
+
+					sCodeType = this.getNCIMetaCodeType(sConID, "byID");
+
+					//get semantic types
+					sSemantic = this.getMetaSemantics(props);	//GF32446
+					//get preferred source code from atom collection
+					sCodeSrc = this.getPrefMetaCode(presentations);
+
+					//get definition attributes
+					String sDefSource = "";
+					String sDefinition = m_eUser.getDefDefaultValue();
+					//add sepeate record for each definition
+					if (definitions != null && definitions.length > 0) {
+						for (Definition defType: definitions) {
+							sDefinition = defType.getValue().getContent();
+							sDefSource = defType.getSource()[0].getContent();
+
+							EVS_Bean conBean = new EVS_Bean();
+							conBean.setEVSBean(sDefinition, sDefSource,
+									sConName, sConName, sCodeType, sConID,
+									sVocab, sVocab, iLevel, "", "", "", "",
+									sSemantic, "", "");
+							conBean.setPREF_VOCAB_CODE(sCodeSrc); //store pref code in the bean
+							vList.addElement(conBean); //add concept bean to vector
+						}
+					} else {
+						EVS_Bean conBean = new EVS_Bean();
+						conBean.setEVSBean(sDefinition, sDefSource,
+								sConName, sConName, sCodeType, sConID,
+								sVocab, sVocab, iLevel, "", "", "", "",
+								sSemantic, "", "");
+						conBean.setPREF_VOCAB_CODE(sCodeSrc); //store pref code in the bean
+						vList.addElement(conBean); //add concept bean to vector              
+					}
+				}
+			}
+		}
+		
+		return vList;
+	}
+	
 	/**
 	 * @param conID
 	 * @param ftrType
@@ -3667,14 +3745,20 @@ public class EVSSearch implements Serializable {
 							System.out.println("************************ DEC SetACService: AC [" + eBean.getLONG_NAME() + "] not able to add alternate name type[" + detl_type + "] name[" + detl_name + "] ************************");
 						}
 						}*/
-							//altSession.addAlternateName(detl_type,detl_name,eBean,m_servlet.getConn());
-							conName = eBean.getLONG_NAME();
-						vList = this.doVocabSearch(vList, conID, 
-								dtsVocab,			//GF32723 James: nciVocab might not be correct, should be dtsVocab (Radlex)!??	
-								//nciVocab,			//GF32723 James: however, commented out this breaks the concept results in NCI MetaThesaurus!!! :(
-									"Name", conType, "", "Exclude", "", 10, false,
-									-1, "", new HashSet<String>());
-//						vList = this.doMetaSearchOld(vList, conID, "MetaCode", eDB, 10, metaName);
+						//altSession.addAlternateName(detl_type,detl_name,eBean,m_servlet.getConn());
+						conName = eBean.getLONG_NAME();
+						
+						//begin GF32723
+						if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
+							vList = this.doMetaSearchForNonNCItNonNCIm(vList, conID, "MetaCode", eDB, 10, metaName);
+						} else {
+						//end GF32723
+							vList = this.doVocabSearch(vList, conID, 
+	//								dtsVocab,			//GF32723 James: nciVocab might not be correct, should be dtsVocab (Radlex)!??	
+									nciVocab,			//GF32723 James: however, commented out this breaks the concept results in NCI MetaThesaurus!!! :(
+										"Name", conType, "", "Exclude", "", 10, false,
+										-1, "", new HashSet<String>());
+						}
 						
 						if (vList != null && vList.size() > 0) {
 							eBean = this
