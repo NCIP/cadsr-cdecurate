@@ -110,15 +110,20 @@ public class LexEVSHelper {
 
 			nodeSet = nodeSet.restrictToProperties(null, types, null, null,
 					qualifierList);
+			System.out.println("getMetathesaurusMapping: original source = [" + source + "] to be submitted to EVS");
 			if(source != null) {
-				if(source.equals("LOINC")) {
+				if(source.equals("LOINC") || source.equals("LNC215")) {
 					source = "LNC";
 				}
 				else
 				if(source.equals("Radlex")) {
 					source = "RADLEX";
 				}
-					
+				else 
+				if(source.equals("SNOMED")) {
+					source = "SNOMEDCT";
+				}
+				System.out.println("getMetathesaurusMapping: IMPORTANT !!! modified source = [" + source + "] to be submitted to EVS ...");					
 
 				nodeSet = nodeSet.restrictToProperties(null, types, Constructors.createLocalNameList(source), null,
 					null);

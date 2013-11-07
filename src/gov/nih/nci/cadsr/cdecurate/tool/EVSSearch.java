@@ -149,7 +149,7 @@ public class EVSSearch implements Serializable {
 			if (m_eUser.getEVSConURL() != null
 					&& !m_eUser.getEVSConURL().equals(""))
 				evsService = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(m_eUser.getEVSConURL(), "EvsServiceInfo");	
-				
+				System.out.println("EVS URL initialized = [" + m_eUser.getEVSConURL() + "].");
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("EVS Service not obtained from the URL");
@@ -2701,15 +2701,19 @@ public class EVSSearch implements Serializable {
 			int iMetaLimit, String sVocab) throws Exception {
 		LexEVSHelper lexAPI = new LexEVSHelper();
 //		String termStr = "MTHU029981";
-//		String sMetaSource = "LNC";     
+//		String sMetaSource = "LNC";   
+		System.out.println("$$$$$$$$$$ EVS URL = [" + m_eUser.getEVSConURL() + "] $$$$$$$$$$$");
 		lexAPI.getMetathesaurusMapping(evsService, termStr, sMetaSource);
 		CodedNodeSet nodeSet = lexAPI.getMatches();
-		ResolvedConceptReferenceList concepts = nodeSet.resolveToList(
-				null, //Sorts used to sort results (null means sort by match score)
-				null, //PropertyNames to resolve (null resolves all)
-				new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},        //JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION}, //PropertyTypess to resolve (null resolves all)
-				100         //cap the number of results returned (-1 resolves all)
-				);
+		ResolvedConceptReferenceList concepts = null;
+		if(nodeSet != null) {
+			concepts = nodeSet.resolveToList(
+					null, //Sorts used to sort results (null means sort by match score)
+					null, //PropertyNames to resolve (null resolves all)
+					new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},        //JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION}, //PropertyTypess to resolve (null resolves all)
+					100         //cap the number of results returned (-1 resolves all)
+					);
+		}
 		
 		String suffix = " termStr [" + termStr + "] sMetaSource [" + sMetaSource + "].";
 		if (concepts != null && concepts.getResolvedConceptReferenceCount() == 1) {		//GF32723 consider only 1-to-1 mapping, otherwise ignore it (user selected concept will prevail)
