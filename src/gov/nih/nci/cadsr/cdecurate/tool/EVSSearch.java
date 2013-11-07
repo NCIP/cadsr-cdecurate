@@ -2016,7 +2016,7 @@ public class EVSSearch implements Serializable {
 				if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
 					vConList = this.doMetaSearch(vConList, termStr, sSearchIn,
 							sMetaSource, iMetaLimit, sMetaName);					
-			        logger.info("doMetaSearch called for Non-NCIt and Non-NCI Meta [" + dtsVocab + "]");
+			        logger.info("doMetaSearch called for Non-NCIt and Non-NCI Meta [" + dtsVocab + "] sMetaName [" + sMetaName + "]");
 				}
 				//end GF32723				
 		} catch (Exception ee) {
@@ -3763,6 +3763,7 @@ public class EVSSearch implements Serializable {
 						if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
 							System.out.println("calling doMetaSearchForNonNCItNonNCIm() eDB = [" + eDB + "]");
 							vList = this.doMetaSearchForNonNCItNonNCIm(vList, conID, "MetaCode", eDB, 10, metaName);
+					        logger.info("getThesaurusConcept:doMetaSearchForNonNCItNonNCIm() called for dtsVocab [" + dtsVocab + "] eDB [" + eDB + "] metaName [" + metaName + "]");
 						} else {
 						//end GF32723
 							vList = this.doVocabSearch(vList, conID, 
