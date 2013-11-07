@@ -902,8 +902,8 @@ public class EVS_Bean implements Serializable
    //   if (database != null && database.equals("NCI_Thesaurus")) database = "NCI Thesaurus";
    //   else if(database != null && database.equals("MGED_Ontology")) database = "MGED";
       this.setEVS_ORIGIN(dtsVocab);
-      if (dbVocab == null || dbVocab.equals("")) dbVocab = dtsVocab; //add database origin format here.
-      this.setEVS_DATABASE(dbVocab);
+      if (dbVocab == null || dbVocab.equals("")) dbVocab = dtsVocab; //add database origin format here.	//GF32723 this logic might be faulty!
+      this.setEVS_DATABASE(dbVocab);	//GF32723
       this.setDEC_USING("");
       this.setLEVEL(iLevel);
       this.setCONDR_IDSEQ(condr_idseq);
