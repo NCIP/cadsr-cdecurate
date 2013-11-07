@@ -113,7 +113,12 @@ public class LexEVSHelper {
 			if(source != null) {
 				if(source.equals("LOINC")) {
 					source = "LNC";
-				}     
+				}
+				else
+				if(source.equals("Radlex")) {
+					source = "RADLEX";
+				}
+					
 
 				nodeSet = nodeSet.restrictToProperties(null, types, Constructors.createLocalNameList(source), null,
 					null);
