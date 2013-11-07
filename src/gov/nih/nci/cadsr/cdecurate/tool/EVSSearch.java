@@ -2711,7 +2711,8 @@ public class EVSSearch implements Serializable {
 				100         //cap the number of results returned (-1 resolves all)
 				);
 		
-		if (concepts != null && concepts.getResolvedConceptReferenceCount() > 0) {
+		String suffix = " termStr [" + termStr + "] sMetaSource [" + sMetaSource + "].";
+		if (concepts != null && concepts.getResolvedConceptReferenceCount() == 1) {		//GF32723 consider only 1-to-1 mapping, otherwise ignore it (user selected concept will prevail)
 			String sConName = "";
 			String sConID = "";
 			String sCodeType = "";
@@ -2754,7 +2755,9 @@ public class EVSSearch implements Serializable {
 							EVS_Bean conBean = new EVS_Bean();
 							conBean.setEVSBean(sDefinition, sDefSource,
 									sConName, sConName, sCodeType, sConID,
-									sVocab, sVocab, iLevel, "", "", "", "",
+									sVocab, 
+									sVocab,	//GF32723 needs to be the vocab name that lexEVS understands! 
+									iLevel, "", "", "", "",
 									sSemantic, "", "");
 							conBean.setPREF_VOCAB_CODE(sCodeSrc); //store pref code in the bean
 							vList.addElement(conBean); //add concept bean to vector
@@ -2763,13 +2766,21 @@ public class EVSSearch implements Serializable {
 						EVS_Bean conBean = new EVS_Bean();
 						conBean.setEVSBean(sDefinition, sDefSource,
 								sConName, sConName, sCodeType, sConID,
-								sVocab, sVocab, iLevel, "", "", "", "",
+								sVocab, 
+								sVocab, //GF32723 needs to be the vocab name that lexEVS understands!
+								iLevel, "", "", "", "",
 								sSemantic, "", "");
 						conBean.setPREF_VOCAB_CODE(sCodeSrc); //store pref code in the bean
 						vList.addElement(conBean); //add concept bean to vector              
 					}
 				}
 			}
+			System.out.println("doMetaSearchForNonNCItNonNCIm: EVS match 1 results " + suffix);
+		} if(concepts != null && concepts.getResolvedConceptReferenceCount() > 1) {
+			//GF32723 consider only 1-to-1 mapping, otherwise ignore it (user selected concept will prevail)
+			System.out.println("doMetaSearchForNonNCItNonNCIm: EVS match ignored due to > 1 results count. User selection prevails " + suffix);
+		} else {
+			System.out.println("doMetaSearchForNonNCItNonNCIm: EVS does not return any match " + suffix);
 		}
 		
 		return vList;
@@ -3750,6 +3761,7 @@ public class EVSSearch implements Serializable {
 						
 						//begin GF32723
 						if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
+							System.out.println("calling doMetaSearchForNonNCItNonNCIm() eDB = [" + eDB + "]");
 							vList = this.doMetaSearchForNonNCItNonNCIm(vList, conID, "MetaCode", eDB, 10, metaName);
 						} else {
 						//end GF32723
