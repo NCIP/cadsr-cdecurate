@@ -18,4 +18,6 @@ Update sbrext.tool_options_view_ext set VALUE = 'UMLS SemNet' where TOOL_NAME = 
 Update sbrext.tool_options_view_ext set VALUE = 'VANDF' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.38.DISPLAY';
 Update sbrext.tool_options_view_ext set VALUE = 'ZFIN' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.40.DISPLAY';
 
+commit;
+
 select tool_name, property, VALUE from sbrext.tool_options_view_ext where Tool_name = 'CURATION' and Property like 'EVS.VOCAB.%.DISPLAY';
