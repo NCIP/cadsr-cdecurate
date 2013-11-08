@@ -68,22 +68,23 @@ public class LexEVSHelper {
 					qualifierList);
 			System.out.println("getMetathesaurusMapping: original source = [" + source + "] to be submitted to EVS for term [" + term + "]");
 			if(source != null) {
-				if(source.equals("LOINC") || source.equals("LNC215")) {
-					source = "LNC";
-				}
-				else
-				if(source.equals("Radlex")) {
-					source = "RADLEX";
-				}
-				else 
-				if(source.equals("SNOMED")) {
-					source = "SNOMEDCT";
-				}
-				else
-				if(source.equals("OBI")) {
-					source = "";	//GF32723 it is not a source but standalone vocabulary
-				}
-				System.out.println("getMetathesaurusMapping: IMPORTANT !!! modified source = [" + source + "] for term [" + term + "] to be submitted to EVS ...");
+//				if(source.equals("LOINC") || source.equals("LNC215")) {
+//					source = "LNC";
+//				}
+//				else
+//				if(source.equals("Radlex")) {
+//					source = "RADLEX";
+//				}
+//				else 
+//				if(source.equals("SNOMED")) {
+//					source = "SNOMEDCT";
+//				}
+//				else
+//				if(source.equals("OBI")) {
+//					source = "";	//GF32723 it is not a source but standalone vocabulary
+//				}
+//				System.out.println("getMetathesaurusMapping: IMPORTANT !!! modified source = [" + source + "] for term [" + term + "] to be submitted to EVS ...");
+				System.out.println("1 getMetathesaurusMapping: source modification for EVS disabled");
 
 				nodeSet = nodeSet.restrictToProperties(null, types, Constructors.createLocalNameList(source), null,
 					null);
