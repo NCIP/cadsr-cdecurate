@@ -33,11 +33,18 @@ import java.util.Vector;
 import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
 import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Core.ResolvedConceptReference;
+import org.LexGrid.LexBIG.Exceptions.LBException;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
 import org.LexGrid.LexBIG.LexBIGService.CodedNodeSet.PropertyType;
 import org.LexGrid.LexBIG.Utility.Constructors;
 import org.LexGrid.codingSchemes.CodingScheme;
+import org.LexGrid.commonTypes.EntityDescription;
+import org.LexGrid.commonTypes.Property;
+import org.LexGrid.commonTypes.Source;
+import org.LexGrid.concepts.Definition;
+import org.LexGrid.concepts.Entity;
+import org.LexGrid.concepts.Presentation;
 import org.junit.Test;
 //import gov.nih.nci.evs.domain.DescLogicConcept;
 
@@ -64,6 +71,7 @@ import org.junit.Test;
  * [full path]log4j.xml EVSTest1.xml
  * e.g.
  * C:\Users\ag\demo\cadsr-cdecurate\test\log4j.xml C:\Users\ag\demo\cadsr-cdecurate\test\EVSTest1.xml
+ * /Users/macbook/cadsr-cdecurate/test/log4j.xml /Users/macbook/cadsr-cdecurate/test/EVSTest1.xml
  * 2. Add the directory of the test (where EVSTest1.xml/log4j.xml are) into the classpath e.g.
  * [YOUR PROJECT DIR]/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test
  * 3. Add the directory of the conf (where application-config-client.xml) into the classpath e.g.
@@ -186,7 +194,7 @@ public class EVSTest2
 				new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},        //JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION}, //PropertyTypess to resolve (null resolves all)
 				100         //cap the number of results returned (-1 resolves all)
 				);
-		displayResults(termStr, lstResult);
+		displayResults("RADLEX", termStr, lstResult);
 		System.out.println("runTest1 done");
 	}
 
@@ -202,16 +210,61 @@ public class EVSTest2
 				new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},        //JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION}, //PropertyTypess to resolve (null resolves all)
 				100         //cap the number of results returned (-1 resolves all)
 				);
-		displayResults(termStr, lstResult);
+		displayResults(sMetaSource, termStr, lstResult);
 		System.out.println("runTest2 done");
 	}
 
-	private void displayResults(String termStr, ResolvedConceptReferenceList lstResult) {
+	private void displayResults(String dtsVocab, String termStr, ResolvedConceptReferenceList lstResult) {
 		if(lstResult != null && lstResult.getResolvedConceptReferenceCount() > 0) {
 			System.out.println("*** SUCCESS *** [" + termStr + "] query results list size " + lstResult.getResolvedConceptReferenceCount() + " resolved 1st concept = [" + lstResult.getResolvedConceptReference(0).getConceptCode() + "]");
+			ResolvedConceptReferenceList lstResult1 = null;
+            System.out.println("....... Meta concept: "+ termStr);
+			LexEVSHelper lexAPI = new LexEVSHelper();
+			try {
+				lstResult1 = lexAPI.doMetaConceptQuery(evsService, termStr);
+				if(lstResult1 != null) {
+					Entity concept1 = lstResult1.getResolvedConceptReference(0).getEntity();
+			        displayConcept(concept1);
+				} else {
+					System.out.println("*** Meta concept [" + termStr + "] not found! ***");
+				}
+			} catch (LBException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			//=== Reference: https://wiki.nci.nih.gov/display/LexEVS/LexEVS+API+Code+Examples#LexEVSAPICodeExamples-ConceptResolution
+			//codes are unique in NCIt, so you will only get one entity in the list
+            System.out.println("=======> Found NCIt concept:");
+	        Entity concept = lstResult.getResolvedConceptReference(0).getEntity();
+	        displayConcept(concept);
 		} else {
 			System.out.println("*** FAILED ***");
 		}
+	}
+	
+	private void displayConcept(Entity concept) {
+        Definition[] defs = concept.getDefinition();
+        for (Definition def : defs) {
+            //Each definition in NCIt will only have one source.
+            Source[] sources = def.getSource();
+            Source defSource = sources[0];
+            String source = defSource.getContent();
+            System.out.println("Definition source "+ source);
+        }
+        EntityDescription desc = concept.getEntityDescription();
+        System.out.println("EntityDescription "+ desc.getContent());
+        Presentation[] ps = concept.getPresentation();
+        for (Presentation p : ps) {
+        	Source[] ss = p.getSource();
+	        for (Source s : ss) {
+	        	System.out.println("Presentation source "+ s.getContent());
+	        }
+        }
+        Property[] props = concept.getAllProperties();
+        for (Property p : props) {
+            System.out.println("Property ["+ p.getPropertyName() + "]");
+        }
 	}
 
 	/**
