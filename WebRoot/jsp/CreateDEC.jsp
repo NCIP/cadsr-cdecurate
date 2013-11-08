@@ -129,6 +129,9 @@ String propCDR = "";
     if (sContext == null) sContext = "";
     String sContID = m_DEC.getDEC_CONTE_IDSEQ();
     if (sContID == null) sContID = "";
+   
+    String sVocab = m_DEC.getDEC_OC_EVS_CUI_ORIGEN();
+    String sConCode=m_DEC.getDEC_OC_CONCEPT_CODE();
 
     String sDefinition = m_DEC.getDEC_PREFERRED_DEFINITION();
     if (sDefinition == null) sDefinition = "";
@@ -1371,6 +1374,10 @@ onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContact',helpUrl); retur
 			</table>
 			<input type="hidden" name="isAConcept" value="false"> <!-- GF30798 -->
 			<input type="hidden" name="userSelectedDef" value="nothing"> <!-- GF30798 -->
+			<input type="hidden" name="userSelectedVocabOC" value="nothing"> <!-- GF32723 -->
+			<input type="hidden" name="userSelectedConCodeOC" value="nothing"> <!-- GF32723 -->
+			<input type="hidden" name="userSelectedVocabPROP" value="nothing"> <!-- GF32723 -->
+			<input type="hidden" name="userSelectedConCodePROP" value="nothing"> <!-- GF32723 -->
 			<input type="hidden" name="pageAction" value="nothing">
 			<input type="hidden" name="openToTree" value="">
 			<input type="hidden" name="DECAction" value="NewDEC">
