@@ -699,7 +699,7 @@ public class SetACService implements Serializable
 					altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796
 				}
 				//begin GF32723
-				String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);	//m_OC.getEVS_ORIGIN();
+				String type= req.getParameter("userSelectedVocab");	//m_OC.getEVS_ORIGIN();
 				if(m_OC != null) {
 					if(type == null || type.equals("")) type = "NCI Thesaurus";
 					String name= m_OC.getCONCEPT_IDENTIFIER();
@@ -707,24 +707,13 @@ public class SetACService implements Serializable
 					System.out.println("conType = "+m_OC.getEVS_DATABASE());
 					System.out.println("conType = "+m_OC.getCONCEPT_NAME());
 					System.out.println("conType = "+m_OC.getIDSEQ());
-					System.out.println("conType = "+m_OC.getID());
-					String detl_type=(String)session.getAttribute(Constants.USER_SELECTED_VOCAB);
-					String detl_name=(String)session.getAttribute(Constants.USER_SELECTED_CON_CODE);
-					System.out.println("detl_type="+(String)session.getAttribute(Constants.USER_SELECTED_VOCAB));
-					System.out.println("detl_name="+(String)session.getAttribute(Constants.USER_SELECTED_CON_CODE));
 					
-					//String detl_name=m_OC.getCONCEPT_IDENTIFIER();
-					String prop_detl_type=(String)session.getAttribute(Constants.USER_SELECTED_VOCAB);
-					String prop_detl_name=(String)session.getAttribute(Constants.USER_SELECTED_CON_CODE);
-					System.out.println("prop_detl_type="+(String)session.getAttribute(Constants.USER_SELECTED_VOCAB));
-					System.out.println("prop_detl_type="+(String)session.getAttribute(Constants.USER_SELECTED_CON_CODE));
-					
-					//altSession.addAlternateName(detl_type,detl_name,m_DEC,m_servlet.getConn());
-					//altSession.addAlternateName(detl_type,detl_name,m_PC,m_servlet.getConn());
-					//altSession.addAlternateName(Prop_detl_type,prop_detl_name,prop_idseq,conte_idseq,Context,m_servlet.getConn());
-					
-					System.out.println("Alternate type" + type);
-					System.out.println("Alternate name is "+name);
+					String detl_type=(String) session.getAttribute("userSelectedVocabOC");
+					if(detl_type!= null && detl_type.equals("RADLEX")) detl_type="RadLex";
+					String detl_name=(String) session.getAttribute("userSelectedConCodeOC");
+					System.out.println("detl_type="+req.getParameter("userSelectedVocabOC"));
+					System.out.println("detl_name="+req.getParameter("userSelectedConCodeOC"));
+										
 					
 					String sReturnCode="";
 					String desIDSEQ="";
@@ -734,6 +723,10 @@ public class SetACService implements Serializable
 							System.out.println("************************ DEC SetACService: AC [" + m_DEC.getDEC_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
 						
 					}
+					String prop_detl_type=(String) session.getAttribute("userSelectedVocabPROP");
+					String prop_detl_name=(String) session.getAttribute("userSelectedConCodePROP");
+					System.out.println("detl_type="+req.getParameter("userSelectedVocabOC"));
+					System.out.println("detl_name="+req.getParameter("userSelectedConCodeOC"));
 					if(!AdministeredItemUtil.isAlternateDesignationExists(prop_detl_type, prop_detl_name, altSession)) {
 						//if(!altSession.addAlternateName(detl_type,detl_name,m_DEC,m_servlet.getConn())) {
 						sReturnCode=ins.setDES("INS", m_DEC.getDEC_PROPL_IDSEQ(), m_DEC.getContextIDSEQ(), m_DEC.getContextName(), prop_detl_type, prop_detl_name, "ENGLISH", desIDSEQ);
@@ -1196,24 +1189,24 @@ public class SetACService implements Serializable
 			}
 				
 				//begin GF32723
-				String type= (String)session.getAttribute(Constants.USER_SELECTED_VOCAB);     	//m_REPQ.getEVS_ORIGIN();	//Rep term qualifier can come from any terminology, that is why we are using qualifier only :)
+				String type= (String) session.getAttribute("userSelectedVocabREP");    	//m_REPQ.getEVS_ORIGIN();	//Rep term qualifier can come from any terminology, that is why we are using qualifier only :)
 				if(type == null || type.equals("")) type = "NCI Thesaurus";
 				if(m_REPQ != null) {
-					String name= (String)session.getAttribute(Constants.USER_SELECTED_CON_CODE);
+					String name= (String) session.getAttribute("userSelectedConCodeREP");
 					String sContext=m_VD.getContextName();
 					String conte_idseq=m_VD.getContextIDSEQ();
 				
 					System.out.println("Alternate type" + type);
 					System.out.println("Alternate name is "+name);
 					
-					altSession.addAlternateName(type,name,m_REP,sContext,conte_idseq,m_servlet.getConn());
+					//altSession.addAlternateName(type,name,m_REP,sContext,conte_idseq,m_servlet.getConn());
 					String desIDSEQ="";
 					String sReturnCode="";
-					/*if(!AdministeredItemUtil.isAlternateDesignationExists(type, name, altSession)) {
-						sReturnCode=ins.setDES("INS", m_REP.getIDSEQ(), m_VD.getContextIDSEQ(), m_VD.getContextName(), type, name, "ENGLISH", desIDSEQ);
+					if(!AdministeredItemUtil.isAlternateDesignationExists(type, name, altSession)) {
+						sReturnCode=ins.setDES("INS", "EA999EED-D594-3BF1-E040-BB8921B62488", m_VD.getContextIDSEQ(), m_VD.getContextName(), "RadLex", "RID1543", "ENGLISH", desIDSEQ);
 							//System.out.println("************************ VD SetACService: AC [" + m_VD.getVD_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
 						
-					}*/
+					}
 				}
 				//end GF32723
 				m_VD.setAlternates(altSession);
@@ -1381,7 +1374,7 @@ public class SetACService implements Serializable
 	 * @throws ServletException  If servlet exception Occurred
 	 * @throws Exception
 	 */
-	/*  public void setValidatePageValuesPV(HttpServletRequest req, HttpServletResponse res,
+	  public void setValidatePageValuesPV(HttpServletRequest req, HttpServletResponse res,
         PV_Bean m_PV, GetACService getAC) //throws ServletException,IOException, Exception
   {
     Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
@@ -1440,7 +1433,7 @@ public class SetACService implements Serializable
       //validate these only if not block edit
       if (pvAction == null || !(pvAction.equals("editPV") && s.equals("")))
         this.addDatesToValidatePage(sB, sE, "N/A", "N/A", vValidate, "");
-      else
+     /* else
         this.addEditPVDatesToValidatePage(req, sB, sE, vValidate);
 
       s = m_PV.getPV_BEGIN_DATE();
@@ -1449,7 +1442,7 @@ public class SetACService implements Serializable
 
       s = m_PV.getPV_END_DATE();
       if (s == null) s = "";
-      setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", "");
+      setValPageVector(vValidate, "Effective End Date", s, bNotMandatory, iNoLengthLimit, "", "");*/
 
     }
     catch (Exception e)
@@ -1467,7 +1460,7 @@ public class SetACService implements Serializable
     Vector<String> vValString = this.makeStringVector(vValidate);
     req.setAttribute("vValidate", vValString);
    }  // end of setValidatePageValuesPV
-	 */
+	 
 	/**
 	 * add the validate message the validation vector
 	 * @param sType String selected pref name type

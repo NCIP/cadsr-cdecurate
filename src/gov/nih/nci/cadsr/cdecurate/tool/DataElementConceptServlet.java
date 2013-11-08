@@ -1015,7 +1015,18 @@ public class DataElementConceptServlet extends CurationServlet {
 			//(isAConcept != null && isAConcept.trim().equals("false"))	//GF30798
 			//end of GF30798
 			
-			//GF32723
+			// start of GF32723
+			//String userSelectedVocabOC = (String) m_classReq.getParameter("userSelectedVocabOC");
+			//session.setAttribute(userSelectedVocabOC, userSelectedVocabOC);
+			//System.out.println("*************** userSelectedVocab is " + userSelectedVocabOC + " ***************");
+			//String userSelectedConCodeOC = (String) m_classReq.getParameter("userSelectedConCodeOC");
+			//session.setAttribute(userSelectedConCodeOC, userSelectedConCodeOC);
+			//String userSelectedVocabPROP = (String) m_classReq.getParameter("userSelectedVocabPROP");
+			//session.setAttribute(userSelectedVocabPROP, userSelectedVocabPROP);
+			//System.out.println("*************** userSelectedVocab is " + userSelectedVocabPROP + " ***************");
+			//String userSelectedConCodePROP = (String) m_classReq.getParameter("userSelectedConCodePROP");
+			//session.setAttribute(userSelectedConCodePROP, userSelectedConCodePROP);
+			//end of GF32723
 			TestUtil.dumpAllHttpRequests(m_classReq); 
 
 			String sSelRow = "";
@@ -1218,7 +1229,15 @@ public class DataElementConceptServlet extends CurationServlet {
 			if ( sComp.equals("ObjectClass") || sComp.equals("ObjectQualifier")){
 				vObjectClass = (Vector) session.getAttribute("vObjectClass");
 				for (int i=0; i<vObjectClass.size();i++){
-					EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);	//GF32723 2
+					EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
+					System.out.println("testing OC Bean"+eBean.getEVS_DATABASE()+"and the OC_CON_CODE is"+eBean.getCONCEPT_IDENTIFIER());//GF32723 2
+					
+					String user_selected_vocab=eBean.getEVS_DATABASE();
+					session.setAttribute("userSelectedVocabOC", user_selected_vocab);
+					String user_selected_con_code=eBean.getCONCEPT_IDENTIFIER();
+					session.setAttribute("userSelectedConCodeOC", user_selected_con_code);//GF32723 save front end EVS vocab
+					
+					
 					logger.debug("At line 1186 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
 				}
 				if (vObjectClass != null && vObjectClass.size()>0){ 
@@ -1256,13 +1275,25 @@ public class DataElementConceptServlet extends CurationServlet {
 					EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
 					//begin GF32723
 		            EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
+		           
 		            eBean = evs.getThesaurusConcept(eBean);
+		            
 		            //end GF32723
 		            logger.debug("At line 1220 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
 				}
 			}
 			if (sComp.equals("Property") || sComp.equals("PropertyClass") || sComp.equals("PropertyQualifier")){
 				vProperty = (Vector) session.getAttribute("vProperty");
+				for (int i=0; i<vProperty.size();i++){
+					EVS_Bean eBean =(EVS_Bean)vProperty.get(i);
+					System.out.println("testing OC Bean"+eBean.getEVS_DATABASE()+"and the OC_CON_CODE is"+eBean.getCONCEPT_IDENTIFIER());//GF32723 2
+					
+					String user_selected_vocab_prop=eBean.getEVS_DATABASE();
+					session.setAttribute("userSelectedVocabPROP", user_selected_vocab_prop);
+					String user_selected_con_code_prop=eBean.getCONCEPT_IDENTIFIER();
+					session.setAttribute("userSelectedConCodePROP", user_selected_con_code_prop);//GF32723 save front end EVS vocab
+				}
+				
 				if (vProperty != null && vProperty.size()>0){  		    	   
 					vProperty  = this.getMatchingThesarusconcept(vProperty, "Property");
 					logger.debug("At line 1127 of DECServlet.java "+Arrays.asList(vProperty));
