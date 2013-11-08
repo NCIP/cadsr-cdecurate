@@ -918,7 +918,7 @@ public final class EVS_UserBean implements Serializable
 
       //get vocab names
       Vector<String> vocabname = new Vector<String>();
-      vList = getAC.getToolOptionData("CURATION", "EVS.VOCAB.%.EVSNAME", "");  //
+      vList = getAC.getToolOptionData("CURATION", "EVS.VOCAB.%.EVSNAME", "");  //GF32723 the full name of the vocabularies
       if (vList != null && vList.size() > 0)
       {
         for (int i=0; i<vList.size(); i++)
@@ -930,7 +930,7 @@ public final class EVS_UserBean implements Serializable
 
       //get vocab display
       Vector<String> vocabdisp = new Vector<String>();
-      vList = getAC.getToolOptionData("CURATION", "EVS.VOCAB.%.DISPLAY", "");  //
+      vList = getAC.getToolOptionData("CURATION", "EVS.VOCAB.%.DISPLAY", "");  //GF32723 the name used by LexEVS API via EVSSearch
       if (vList != null && vList.size() > 0)
       {
         for (int i=0; i<vList.size(); i++)
