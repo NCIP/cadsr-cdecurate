@@ -65,6 +65,9 @@ import org.junit.Test;
         select tool_name, property, VALUE from sbrext.tool_options_view_ext where Tool_name = 'CURATION' and Property like '%.INCLUDEMETA'
         //e.g. TOOL_NAME=CURATION, PROPERTY=EVS.VOCAB.24.INCLUDEMETA, VALUE=NCI Metathesaurus
         insert into sbrext.tool_options_view_ext (Tool_name, Property, Value) Values('CURATION', 'EVS.VOCAB.25.INCLUDEMETA', 'NCI Thesaurus')
+        
+        //The vocabularies/source names for NCIm to NCIt lookup (submitted to LexEVS API):
+        select tool_name, property, VALUE from sbrext.tool_options_view_ext where Tool_name = 'CURATION' and Property like 'EVS.VOCAB.%.DISPLAY'
  *
  * Setup -
  * 1. Add two arguments in Run/Debug configuration i.e.
