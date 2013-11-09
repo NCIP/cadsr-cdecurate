@@ -1014,8 +1014,9 @@ public class DataElementConceptServlet extends CurationServlet {
 			session.setAttribute(userSelectedDef, userSelectedDef);
 			//(isAConcept != null && isAConcept.trim().equals("false"))	//GF30798
 			//end of GF30798
-			
-			// start of GF32723
+			//begin of GF32723
+			String userSelectedVocab = (String) m_classReq.getParameter("userSelectedVocab");
+			session.setAttribute(userSelectedVocab, userSelectedVocab);
 			//String userSelectedVocabOC = (String) m_classReq.getParameter("userSelectedVocabOC");
 			//session.setAttribute(userSelectedVocabOC, userSelectedVocabOC);
 			//System.out.println("*************** userSelectedVocab is " + userSelectedVocabOC + " ***************");
