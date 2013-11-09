@@ -2702,8 +2702,11 @@ public class EVSSearch implements Serializable {
 		LexEVSHelper lexAPI = new LexEVSHelper();
 //		String termStr = "MTHU029981";
 //		String sMetaSource = "LNC";   
+		HttpSession session = m_classReq.getSession();
 		System.out.println("$$$$$$$$$$ EVS URL = [" + m_eUser.getEVSConURL() + "] $$$$$$$$$$$");
+		sMetaSource = (String) session.getAttribute("userSelectedVocab");	//GF32723 get it from the UI instead 
 		lexAPI.getMetathesaurusMapping(evsService, termStr, sMetaSource);
+		
 		CodedNodeSet nodeSet = lexAPI.getMatches();
 		ResolvedConceptReferenceList concepts = null;
 		if(nodeSet != null) {
