@@ -209,6 +209,12 @@ L--%>
    
   function doVocabChange()
   {
+    //begin GF32723
+      var idx = document.searchParmsForm.listContextFilterVocab.selectedIndex;
+      opener.document.newDECForm.userSelectedVocab.value = document.searchParmsForm.listContextFilterVocab[idx].text;	//TBD global is bad!
+      //alert(userSelectedVocab);
+    //end GF32723
+  
     hourglass();
     window.status = "Refreshing the page, it may take a minute, please wait....."
     document.searchParmsForm.actSelect.value = "doVocabChange";

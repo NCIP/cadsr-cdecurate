@@ -1374,6 +1374,7 @@ onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selContact',helpUrl); retur
 			</table>
 			<input type="hidden" name="isAConcept" value="false"> <!-- GF30798 -->
 			<input type="hidden" name="userSelectedDef" value="nothing"> <!-- GF30798 -->
+			<input type="hidden" name="userSelectedVocab" value="nothing"> <!-- GF32723 -->
 			<input type="hidden" name="userSelectedVocabOC" value="nothing"> <!-- GF32723 -->
 			<input type="hidden" name="userSelectedConCodeOC" value="nothing"> <!-- GF32723 -->
 			<input type="hidden" name="userSelectedVocabPROP" value="nothing"> <!-- GF32723 -->
