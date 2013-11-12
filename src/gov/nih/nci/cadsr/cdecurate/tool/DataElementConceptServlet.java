@@ -1015,6 +1015,7 @@ public class DataElementConceptServlet extends CurationServlet {
 			//(isAConcept != null && isAConcept.trim().equals("false"))	//GF30798
 			//end of GF30798
 			//begin of GF32723
+			DataManager.setAttribute(session, "vStatMsg", null);  //reset the status message (avoiding the duplicates in the warning dialog)
 			String userSelectedVocab = (String) m_classReq.getParameter("userSelectedVocab");
 			session.setAttribute(userSelectedVocab, userSelectedVocab);
 			//String userSelectedVocabOC = (String) m_classReq.getParameter("userSelectedVocabOC");
@@ -2333,7 +2334,7 @@ public class DataElementConceptServlet extends CurationServlet {
 					vObjectClass = (Vector)session.getAttribute("vObjectClass");
 					logger.debug("at line 2225 of DECServlet.java"+vObjectClass.size());
 					if (vObjectClass != null && vObjectClass.size()>0){
-//						vObjectClass = this.getMatchingThesarusconcept(vObjectClass, "Object Class");
+//						vObjectClass = this.getMatchingThesarusconcept(vObjectClass, "Object Class");	//GF32723 reverted back to avoid duplicate switching warnings
 //						//begin of GF30798
 //						for (int i=0; i<vObjectClass.size();i++){
 //							EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
@@ -2349,7 +2350,7 @@ public class DataElementConceptServlet extends CurationServlet {
 				if (sComp.equals("Property") || sComp.equals("PropertyClass") || sComp.equals("PropertyQualifier")){
 					vProperty = (Vector)session.getAttribute("vProperty");
 					if (vProperty != null && vProperty.size()>0){
-//						vProperty = this.getMatchingThesarusconcept(vProperty, "Property");
+//						vProperty = this.getMatchingThesarusconcept(vProperty, "Property");		//GF32723 reverted back to avoid duplicate switching warnings
 						m_DEC = this.updatePropAttribues(vProperty, m_DEC);
 						
 						this.checkChosenConcepts(session,null, null, vProperty, "Prop", (String)session.getAttribute("userSelectedDef"));

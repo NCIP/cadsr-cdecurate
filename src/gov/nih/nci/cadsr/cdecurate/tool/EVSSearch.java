@@ -2704,9 +2704,12 @@ public class EVSSearch implements Serializable {
 //		String sMetaSource = "LNC";   
 		HttpSession session = m_classReq.getSession();
 		System.out.println("$$$$$$$$$$ EVS URL = [" + m_eUser.getEVSConURL() + "] $$$$$$$$$$$");
-		sMetaSource = (String) session.getAttribute("userSelectedVocab");	//GF32723 get it from the UI instead 
-		lexAPI.getMetathesaurusMapping(evsService, termStr, sMetaSource);
-		
+		//begin GF32723
+		//=== get it from the UI instead
+		String lookupVocabName = (String)m_classReq.getParameter("userSelectedVocab");
+		if(lookupVocabName == null) lookupVocabName = (String) session.getAttribute("userSelectedVocab");
+		//end GF32723
+		lexAPI.getMetathesaurusMapping(evsService, termStr, lookupVocabName);
 		CodedNodeSet nodeSet = lexAPI.getMatches();
 		ResolvedConceptReferenceList concepts = null;
 		if(nodeSet != null) {
@@ -2763,7 +2766,7 @@ public class EVSSearch implements Serializable {
 							conBean.setEVSBean(sDefinition, sDefSource,
 									sConName, sConName, sCodeType, sConID,
 									sVocab, 
-									sVocab,	//GF32723 needs to be the vocab name that lexEVS understands! 
+									sMetaSource,	//sVocab,	//GF32723 needs to be the vocab name that lexEVS understands! 
 									iLevel, "", "", "", "",
 									sSemantic, "", "");
 							conBean.setPREF_VOCAB_CODE(sCodeSrc); //store pref code in the bean
@@ -2774,7 +2777,7 @@ public class EVSSearch implements Serializable {
 						conBean.setEVSBean(sDefinition, sDefSource,
 								sConName, sConName, sCodeType, sConID,
 								sVocab, 
-								sVocab, //GF32723 needs to be the vocab name that lexEVS understands!
+								sMetaSource,	//sVocab, //GF32723 needs to be the vocab name that lexEVS understands!
 								iLevel, "", "", "", "",
 								sSemantic, "", "");
 						conBean.setPREF_VOCAB_CODE(sCodeSrc); //store pref code in the bean
