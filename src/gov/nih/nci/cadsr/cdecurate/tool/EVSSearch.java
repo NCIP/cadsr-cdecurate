@@ -2186,7 +2186,7 @@ public class EVSSearch implements Serializable {
 					// GF32446 this cause Semantic_Type to not to be included
 					LocalNameList lnl = new LocalNameList();
 					// sPropIn="UMLS_CUI";
-					// algorithm="contains";
+					//algorithm="contains";
 					lnl.addEntry(sPropIn);
 					// System.out.println("lnl = [" + lnl + "] sPropIn = [" +
 					// sPropIn + "] termStr = ["+termStr+"] algorithm = ["+
@@ -3770,14 +3770,18 @@ public class EVSSearch implements Serializable {
 						conName = eBean.getLONG_NAME();
 						
 						//begin GF32723
-						if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
+						String isAConcept = (String)session.getAttribute("isAConcept");
+						String userSelectedVocab = (String) m_classReq.getParameter("userSelectedVocab");
+//						if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
+						if(isAConcept != null && isAConcept.equals("true") &&
+								userSelectedVocab != null && !userSelectedVocab.equals("") && !userSelectedVocab.equals("nothing") && !userSelectedVocab.equals("NCI Metathesaurus") && !userSelectedVocab.equals(Constants.DTS_VOCAB_NCIT) && !userSelectedVocab.equals(Constants.DTS_VOCAB_NCI_META)) {
 							System.out.println("calling doMetaSearchForNonNCItNonNCIm() eDB = [" + eDB + "]");
 							vList = this.doMetaSearchForNonNCItNonNCIm(vList, conID, "MetaCode", eDB, 10, metaName);
 					        logger.info("getThesaurusConcept:doMetaSearchForNonNCItNonNCIm() called for dtsVocab [" + dtsVocab + "] eDB [" + eDB + "] metaName [" + metaName + "]");
 						} else {
 						//end GF32723
 							vList = this.doVocabSearch(vList, conID, 
-	//								dtsVocab,			//GF32723 James: nciVocab might not be correct, should be dtsVocab (Radlex)!??	
+//									dtsVocab,			//GF32723 James: nciVocab might not be correct, should be dtsVocab (Radlex)!??	
 									nciVocab,			//GF32723 James: however, commented out this breaks the concept results in NCI MetaThesaurus!!! :(
 										"Name", conType, "", "Exclude", "", 10, false,
 										-1, "", new HashSet<String>());
