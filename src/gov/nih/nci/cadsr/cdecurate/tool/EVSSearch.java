@@ -3721,145 +3721,150 @@ public class EVSSearch implements Serializable {
 	 * @return return the EVS_Bean
 	 */
 	public EVS_Bean getThesaurusConcept(EVS_Bean eBean) {
-		try {
-			HttpSession session = m_classReq.getSession();
-			String conID = ""; // eBean.getCONCEPT_IDENTIFIER();
-			String conName = "";
-			String conType = ""; // eBean.getNCI_CC_TYPE();
-			String eDB = eBean.getEVS_DATABASE();
-			String metaName = m_eUser.getMetaDispName();
-			String nciVocab = this.getMetaVocabName(metaName);
-			String dtsVocab = eBean.getVocabAttr(m_eUser, eDB,
-					EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME); // "vocabDBOrigin", "vocabName");
-			Vector<EVS_Bean> vList = new Vector<EVS_Bean>();
-			EVS_Bean metaBean = new EVS_Bean();
-			//get preferred vocab name
-			String prefVocab = m_eUser.getPrefVocab();
-			String user_selected_vocab=eBean.getEVS_DATABASE();
-			session.setAttribute(Constants.USER_SELECTED_VOCAB, user_selected_vocab);
-			String user_selected_con_code=eBean.getCONCEPT_IDENTIFIER();
-			session.setAttribute(Constants.USER_SELECTED_CON_CODE, user_selected_con_code);//GF32723 save front end EVS vocab
-			if (prefVocab == null)
-				prefVocab = "";
-			if (dtsVocab.equals(prefVocab))
-				return eBean; //System.out.println(dtsVocab + " vocab match " + prefVocab);
-			//continue only if term is not from Thesaururs //Should come here for GF32723
-			if (dtsVocab != null && !dtsVocab.equals(nciVocab)) {
-				if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
-				{
-					//conType = eBean.getMETA_CODE_TYPE();
-					conType = eBean.getCONCEPT_IDENTIFIER();
-				
-					System.out.println("comes here if user selects vocabulary other than NCI metathesaurus");
-					logger.debug(conType + " evs " + eBean.getMETA_CODE_VAL()
-							+ " con " + eBean.getLONG_NAME());
-					//check if can be searched by meta type properlty (UMLS or NCI_META)
-					if (conType != null && !conType.equals("")) {
-						conType = this.getNCIMetaCodeType(conType, "byKey");
-						//conID = eBean.getMETA_CODE_VAL();
-						conID = eBean.getCONCEPT_IDENTIFIER();
-						/*AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);
-						String detl_type=eBean.getEVS_DATABASE();
-						String detl_name=eBean.getCONCEPT_IDENTIFIER();
-						if(!AdministeredItemUtil.isAlternateDesignationExists(detl_type, detl_name, altSession)) {
-						if(!altSession.addAlternateName(detl_type,detl_name,eBean,m_servlet.getConn())) {
-							System.out.println("************************ DEC SetACService: AC [" + eBean.getLONG_NAME() + "] not able to add alternate name type[" + detl_type + "] name[" + detl_name + "] ************************");
-						}
-						}*/
-						//altSession.addAlternateName(detl_type,detl_name,eBean,m_servlet.getConn());
-						conName = eBean.getLONG_NAME();
-						
-						//begin GF32723
-						String isAConcept = (String)session.getAttribute("isAConcept");
-						String userSelectedVocab = (String) m_classReq.getParameter("userSelectedVocab");
-//						if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
-						if(isAConcept != null && isAConcept.equals("true") &&
-								userSelectedVocab != null && !userSelectedVocab.equals("") && !userSelectedVocab.equals("nothing") && !userSelectedVocab.equals("NCI Metathesaurus") && !userSelectedVocab.equals(Constants.DTS_VOCAB_NCIT) && !userSelectedVocab.equals(Constants.DTS_VOCAB_NCI_META)) {
-							System.out.println("calling doMetaSearchForNonNCItNonNCIm() eDB = [" + eDB + "]");
-							vList = this.doMetaSearchForNonNCItNonNCIm(vList, conID, "MetaCode", eDB, 10, metaName);
-					        logger.info("getThesaurusConcept:doMetaSearchForNonNCItNonNCIm() called for dtsVocab [" + dtsVocab + "] eDB [" + eDB + "] metaName [" + metaName + "]");
-						} else {
-						//end GF32723
-							vList = this.doVocabSearch(vList, conID, 
-//									dtsVocab,			//GF32723 James: nciVocab might not be correct, should be dtsVocab (Radlex)!??	
-									nciVocab,			//GF32723 James: however, commented out this breaks the concept results in NCI MetaThesaurus!!! :(
-										"Name", conType, "", "Exclude", "", 10, false,
-										-1, "", new HashSet<String>());
-						}
-						
-						if (vList != null && vList.size() > 0) {
-							eBean = this
-							.getNCIDefinition(vList, conID, conName); //get the right definition	//Should come here for GF32723
-							return eBean;
-						}
-						conID = "";
-					}
-					if (conID == null || conID.equals("")) {
-						Hashtable vhash = m_eUser.getVocab_Attr();
-						if (vhash == null)
-							return eBean;
-						//get the vocab source
-						EVS_UserBean eUser = (EVS_UserBean) vhash.get(dtsVocab);
-						if (eUser == null)
-							return eBean;
-						String vSource = eUser.getVocabMetaSource();
-						if (vSource == null || vSource.equals(""))
-							return eBean;
-						//get its equivalent meta code
-						conID = eBean.getCONCEPT_IDENTIFIER();
-						vList = new Vector<EVS_Bean>();
-						vList = this.doMetaSearch(vList, conID, "MetaCode",
-								vSource, 10, metaName);
-						//no matching found in meta, return the original concept
-						if (vList == null || vList.size() < 1) {
-							return eBean;
-						}
-						metaBean = (EVS_Bean) vList.elementAt(0);
-						//reset the concept id to empty value
-						conID = "";
-					}
-				}
-				//get the thesaurus concept from nci source and code using atom property
-//				else{ //broke concepts results in NCIt/NCI Meta
-				String NCISrcCode = "";
-				vList = new Vector<EVS_Bean>();
-				//get the code from matched meta bean
-				if (metaBean != null && metaBean.getPREF_VOCAB_CODE() != null
-						&& !metaBean.getPREF_VOCAB_CODE().equals("")) {
-					NCISrcCode = metaBean.getPREF_VOCAB_CODE();
-					conName = metaBean.getCONCEPT_NAME();
-				}
-				//get the code from the searched metabean
-				else {
-					NCISrcCode = eBean.getPREF_VOCAB_CODE();
-					conName = eBean.getCONCEPT_NAME();
-				}
-				//call the search by concode method to get the Thes concept 
-				vList = new Vector<EVS_Bean>();
-				vList = this.doVocabSearch(vList, NCISrcCode, prefVocab,
-						"ConCode", "", "", "Exclude", "", 10, false, -1, "", new HashSet<String>());	//JT Should come here for GF32723
-				if (vList != null && vList.size() > 0)
-					eBean = this.getNCIDefinition(vList, NCISrcCode, conName); // (EVS_Bean)vList.elementAt(0);        
-				else {
-					//call method to use cui property to search
-					if (conID == null || conID.equals(""))
-						conID = eBean.getCONCEPT_IDENTIFIER(); //go back to original id if not found
-					conName = eBean.getCONCEPT_NAME();
-					//now get the meta concept        
-					conType = this.getNCIMetaCodeType(conID, "byID");
-					vList = new Vector<EVS_Bean>();
-					vList = this.doVocabSearch(vList, conID, prefVocab, "Name",
-							conType, "", "Exclude", "", 10, false, -1, "", new HashSet<String>());		//Should come here for GF32723
-					if (vList != null && vList.size() > 0)
-						eBean = this.getNCIDefinition(vList, conID, conName); // (EVS_Bean)vList.elementAt(0);   
-				}
-			}
-//			}	//broke concepts results in NCIt/NCI Meta	
-		} catch (Exception e) {
-			logger.error("Error - getThesaurusConcept : " + e.toString(), e);
-			e.printStackTrace();
-		}
-		return eBean;
+        try {
+               HttpSession session = m_classReq.getSession();
+               String conID = ""; // eBean.getCONCEPT_IDENTIFIER();
+               String conName = "";
+               String conType = ""; // eBean.getNCI_CC_TYPE();
+               String eDB = eBean.getEVS_DATABASE();
+               //GF32723
+               if(eDB == null || eDB.trim().equals("")) {
+                     eDB = (String) m_classReq.getParameter("userSelectedVocab");                     
+               }
+               String metaName = m_eUser.getMetaDispName();
+               String nciVocab = this.getMetaVocabName(metaName);
+               String dtsVocab = eBean.getVocabAttr(m_eUser, eDB,
+              EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME); // "vocabDBOrigin", "vocabName");
+               Vector<EVS_Bean> vList = new Vector<EVS_Bean>();
+               EVS_Bean metaBean = new EVS_Bean();
+              
+               //get preferred vocab name
+               String prefVocab = m_eUser.getPrefVocab();
+               String user_selected_vocab=eBean.getEVS_DATABASE();
+               //GF32723
+               if(dtsVocab != null && dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {    //e.g. "NCI MetaThesaurus"
+                     dtsVocab="MetaValue";
+               }
+               session.setAttribute(Constants.USER_SELECTED_VOCAB, user_selected_vocab);
+               String user_selected_con_code=eBean.getCONCEPT_IDENTIFIER();
+               session.setAttribute(Constants.USER_SELECTED_CON_CODE, user_selected_con_code);//GF32723 save front end EVS vocab
+               if (prefVocab == null)
+                     prefVocab = "";
+               if (dtsVocab.equals(prefVocab))
+                     return eBean; //System.out.println(dtsVocab + " vocab match " + prefVocab);
+               //continue only if term is not from Thesaururs //Should come here for GF32723
+               if (dtsVocab != null && !dtsVocab.equals(nciVocab)) {
+                     if (!dtsVocab.equals(EVSSearch.META_VALUE)) // "MetaValue"))
+                     {
+                            //conType = eBean.getMETA_CODE_TYPE();
+                            conType = eBean.getCONCEPT_IDENTIFIER();
+                    
+                            System.out.println("comes here if user selects vocabulary other than NCI metathesaurus");
+                            logger.debug(conType + " evs " + eBean.getMETA_CODE_VAL()
+                                          + " con " + eBean.getLONG_NAME());
+                            //check if can be searched by meta type properlty (UMLS or NCI_META)
+                            if (conType != null && !conType.equals("")) {
+                                   conType = this.getNCIMetaCodeType(conType, "byKey");
+                                   //conID = eBean.getMETA_CODE_VAL();
+                                   conID = eBean.getCONCEPT_IDENTIFIER();
+                                   /*AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);
+                                   String detl_type=eBean.getEVS_DATABASE();
+                                   String detl_name=eBean.getCONCEPT_IDENTIFIER();
+                                   if(!AdministeredItemUtil.isAlternateDesignationExists(detl_type, detl_name, altSession)) {
+                                   if(!altSession.addAlternateName(detl_type,detl_name,eBean,m_servlet.getConn())) {
+                                          System.out.println("************************ DEC SetACService: AC [" + eBean.getLONG_NAME() + "] not able to add alternate name type[" + detl_type + "] name[" + detl_name + "] ************************");
+                                   }
+                                   }*/
+                                   //altSession.addAlternateName(detl_type,detl_name,eBean,m_servlet.getConn());
+                                   conName = eBean.getLONG_NAME();
+                                  
+                                   //begin GF32723
+                                   if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {   //e.g. RadLex vocab for instance
+                                          System.out.println("calling doMetaSearchForNonNCItNonNCIm() eDB = [" + eDB + "]");
+                                          vList = this.doMetaSearchForNonNCItNonNCIm(vList, conID, "MetaCode", eDB, 10, metaName);
+                                    logger.info("getThesaurusConcept:doMetaSearchForNonNCItNonNCIm() called for dtsVocab [" + dtsVocab + "] eDB [" + eDB + "] metaName [" + metaName + "]");
+                                   } else {
+                                   //end GF32723
+                                          vList = this.doVocabSearch(vList, conID,
+ //                                                     dtsVocab,                  //GF32723 James: nciVocab might not be correct, should be dtsVocab (Radlex)!??
+                                                        nciVocab,                  //GF32723 James: however, commented out this breaks the concept results in NCI MetaThesaurus!!! :(
+                                                               "Name", conType, "", "Exclude", "", 10, false,
+                                                               -1, "", new HashSet<String>());
+                                   }
+                                  
+                                   if (vList != null && vList.size() > 0) {
+                                          eBean = this
+                                          .getNCIDefinition(vList, conID, conName); //get the right definition    //Should come here for GF32723
+                                          return eBean;
+                                   }
+                                   conID = "";
+                            }
+                            if (conID == null || conID.equals("")) {
+                                   Hashtable vhash = m_eUser.getVocab_Attr();
+                                   if (vhash == null)
+                                          return eBean;
+                                   //get the vocab source
+                                   EVS_UserBean eUser = (EVS_UserBean) vhash.get(dtsVocab);
+                                   if (eUser == null)
+                                          return eBean;
+                                   String vSource = eUser.getVocabMetaSource();
+                                   if (vSource == null || vSource.equals(""))
+                                          return eBean;
+                                   //get its equivalent meta code
+                                   conID = eBean.getCONCEPT_IDENTIFIER();
+                                   vList = new Vector<EVS_Bean>();
+                                   vList = this.doMetaSearch(vList, conID, "MetaCode",
+                                                 vSource, 10, metaName);
+                                   //no matching found in meta, return the original concept
+                                   if (vList == null || vList.size() < 1) {
+                                          return eBean;
+                                   }
+                                   metaBean = (EVS_Bean) vList.elementAt(0);
+                                   //reset the concept id to empty value
+                                   conID = "";
+                            }
+                     }
+                     //get the thesaurus concept from nci source and code using atom property
+//                   else{ //broke concepts results in NCIt/NCI Meta
+                     String NCISrcCode = "";
+                     vList = new Vector<EVS_Bean>();
+                     //get the code from matched meta bean
+                     if (metaBean != null && metaBean.getPREF_VOCAB_CODE() != null
+                                   && !metaBean.getPREF_VOCAB_CODE().equals("")) {
+                            NCISrcCode = metaBean.getPREF_VOCAB_CODE();
+                            conName = metaBean.getCONCEPT_NAME();
+                     }
+                     //get the code from the searched metabean
+                     else {
+                            NCISrcCode = eBean.getPREF_VOCAB_CODE();
+                            conName = eBean.getCONCEPT_NAME();
+                     }
+                     //call the search by concode method to get the Thes concept
+                     vList = new Vector<EVS_Bean>();
+                     vList = this.doVocabSearch(vList, NCISrcCode, prefVocab,
+                                   "ConCode", "", "", "Exclude", "", 10, false, -1, "", new HashSet<String>());  //JT Should come here for GF32723
+                     if (vList != null && vList.size() > 0)
+                            eBean = this.getNCIDefinition(vList, NCISrcCode, conName); // (EVS_Bean)vList.elementAt(0);       
+                     else {
+                            //call method to use cui property to search
+                            if (conID == null || conID.equals(""))
+                                   conID = eBean.getCONCEPT_IDENTIFIER(); //go back to original id if not found
+                            conName = eBean.getCONCEPT_NAME();
+                            //now get the meta concept       
+                            conType = this.getNCIMetaCodeType(conID, "byID");
+                            vList = new Vector<EVS_Bean>();
+                            vList = this.doVocabSearch(vList, conID, prefVocab, "Name",
+                                          conType, "", "Exclude", "", 10, false, -1, "", new HashSet<String>());        //Should come here for GF32723
+                            if (vList != null && vList.size() > 0)
+                                   eBean = this.getNCIDefinition(vList, conID, conName); // (EVS_Bean)vList.elementAt(0);  
+                     }
+               }
+//             }      //broke concepts results in NCIt/NCI Meta      
+        } catch (Exception e) {
+               logger.error("Error - getThesaurusConcept : " + e.toString(), e);
+               e.printStackTrace();
+        }
+        return eBean;
 	}
 
 	/**
