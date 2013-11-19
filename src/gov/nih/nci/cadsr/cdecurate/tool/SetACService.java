@@ -3870,7 +3870,7 @@ public class SetACService implements Serializable
 				sID = "";
 			else
 				sID = (String)req.getParameter("selContext");
-			if ((sID != null) || (!sID.equals("")))
+			if (sID != null && !sID.equals(""))	//Fixed potential NPE (not related to GF32723) if ((sID != null) || (!sID.equals("")))
 			{
 				sName = m_util.getNameByID((Vector)session.getAttribute("vContext"), (Vector)session.getAttribute("vContext_ID"), sID);
 				m_DEC.setDEC_CONTE_IDSEQ(sID);

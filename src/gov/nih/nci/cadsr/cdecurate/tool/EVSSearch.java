@@ -2013,7 +2013,7 @@ public class EVSSearch implements Serializable {
 				} 
 				//begin GF32723
 				else 
-				if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {	//e.g. RadLex vocab for instance
+				if(isOtherVocabulary(dtsVocab)) {	//e.g. RadLex vocab for instance
 					vConList = this.doMetaSearch(vConList, termStr, sSearchIn,
 							sMetaSource, iMetaLimit, sMetaName);					
 			        logger.info("doMetaSearch called for Non-NCIt and Non-NCI Meta [" + dtsVocab + "] sMetaName [" + sMetaName + "]");
@@ -2026,6 +2026,24 @@ public class EVSSearch implements Serializable {
 		return vConList;
 	}
 
+	/**
+	 * Check if it is not NCIt or NCIm vocab.
+	 * 
+	 * @param dtsVocab
+	 * @return
+	 */
+	private boolean isOtherVocabulary(String dtsVocab) {
+		boolean others = false;
+		
+		if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)
+				&& !dtsVocab.equals("nothing")	//"nothing" is NCIt
+		) {
+			others = true;
+		}
+		
+		return others;
+	}
+	
 	/**
 	 * gets the display name of the concepts
 	 * @param dtsVocab STring vocabulary name
@@ -3779,7 +3797,7 @@ public class EVSSearch implements Serializable {
                                    conName = eBean.getLONG_NAME();
                                   
                                    //begin GF32723
-                                   if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)) {   //e.g. RadLex vocab for instance
+                                   if(isOtherVocabulary(dtsVocab)) {   //e.g. RadLex vocab for instance
                                           System.out.println("calling doMetaSearchForNonNCItNonNCIm() eDB = [" + eDB + "]");
                                           vList = this.doMetaSearchForNonNCItNonNCIm(vList, conID, "MetaCode", eDB, 10, metaName);
                                     logger.info("getThesaurusConcept:doMetaSearchForNonNCItNonNCIm() called for dtsVocab [" + dtsVocab + "] eDB [" + eDB + "] metaName [" + metaName + "]");
