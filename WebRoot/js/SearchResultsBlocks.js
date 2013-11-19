@@ -114,6 +114,11 @@
 	  //alert(editDefinition);
       opener.document.newDECForm.userSelectedDef.value = editDefinition;	//set the correct selected definition!!!
       //end GF30798
+        
+      //GF32723
+      //alert("editName = [" + editName + "]");
+      opener.document.newDECForm.conceptName.value = toTitleCase(editName);
+        
       opener.SubmitValidate("UseSelection");
       window.close();
     }
@@ -125,6 +130,13 @@
       window.close();
     }
   }
+
+//TBD - should be in a common js file
+function toTitleCase(str)
+{
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
   //stores the selected row in the hidden array and submits the form to refresh
   function submitOpener()
   {
@@ -882,7 +894,9 @@ function createNames(acType)
 	// stored the selected row values for permissible values on SearchForCreate action
    function StoreSelectedRow(addRow, rowNo)
    {
-      selRow = rowNo;
+      //alert("StoreSelectedRow entered");
+
+       selRow = rowNo;
       rowNo = rowNo.substring(2, rowNo.length);
       var dCount = 0;
       //add or remove the row number in the hidden field
@@ -907,6 +921,9 @@ function createNames(acType)
       editName = conArray[rowNo].conName;  //  document.searchResultsForm.hiddenName[rowNo].value;   //truncated concept name used for parent concept 
 	    if (editName.length > 30)
         editName = editName.substring(0,30);
+
+       //alert("editName = [" + editName + "]");
+
       editLevel = conArray[rowNo].conLevel;  // document.searchResultsForm.hiddenName[rowNo].text;
     //  editLongName = document.searchResultsForm.hiddenName[rowNo].value;  //?
     //  editNameType = document.searchResultsForm.hiddenName[rowNo].text;   //?

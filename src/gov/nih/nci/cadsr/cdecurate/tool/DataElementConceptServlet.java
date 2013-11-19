@@ -1015,6 +1015,8 @@ public class DataElementConceptServlet extends CurationServlet {
 			//(isAConcept != null && isAConcept.trim().equals("false"))	//GF30798
 			//end of GF30798
 			//begin of GF32723
+			String conceptName = (String) m_classReq.getParameter("conceptName");
+			session.setAttribute("conceptName", conceptName);	//set it to the name picked by the user instead
 			DataManager.setAttribute(session, "vStatMsg", null);  //reset the status message (avoiding the duplicates in the warning dialog)
 			String userSelectedVocab = (String) m_classReq.getParameter("userSelectedVocab");
 			session.setAttribute(userSelectedVocab, userSelectedVocab);
@@ -1340,7 +1342,19 @@ public class DataElementConceptServlet extends CurationServlet {
 			else if (nameAction.equals("blockName"))
 				m_DEC = (DEC_Bean) this.getACNames(nullEVS, "blockName", m_DEC);
 
+		
+			//GF32723 patch up work - long name can not be empty/missing
+//			if(m_DEC.getDEC_LONG_NAME() == null || m_DEC.getDEC_LONG_NAME().equals("")) {
+//				String conceptName = (String) m_classReq.getParameter("conceptName");
+//				session.setAttribute("conceptName", conceptName);	//set it to the name picked by the user instead
+//				m_DEC.setDEC_OCL_NAME(conceptName);
+//				m_DEC = this.updateOCAttribues(vObjectClass, m_DEC);
+//				m_DEC = this.updatePropAttribues(vProperty, m_DEC);
+//			}
+			
+			
 			DataManager.setAttribute(session, "m_DEC", m_DEC);	//set the user's selection + data from EVS in the DEC in session (for submission later on)
+			logger.info("DataElementConceptServlet:doDECUseSelection() DEC_Bean = " + m_DEC);
 		}
 		catch (Exception e)
 		{

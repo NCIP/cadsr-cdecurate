@@ -234,6 +234,8 @@ L--%>
         window.close();
       EnableCheckButtons(checked, currentField, "<%=StringEscapeUtils.escapeJavaScript(sMAction)%>")
       opener.document.newDECForm.isAConcept.value = isAConcept;		//GF30798
+      //alert("SearchResultsBlocks EnableButtons called!");
+      //opener.document.newDECForm.conceptName.value = "TEST CONCEPT NAME";		//GF32723
    }
    
    function EnableButtonWithTxt(currentField)

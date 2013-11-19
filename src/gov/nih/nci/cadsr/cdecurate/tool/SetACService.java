@@ -4077,6 +4077,8 @@ public class SetACService implements Serializable
 		{
 			logger.error("Error - setDECValueFromPage " + e.toString(), e);
 		}
+		
+		logger.debug("SetACService:setDECValueFromPage() DEC_Bean = " + m_DEC);
 	} // end of setDECValueFromPage
 
 	/**
