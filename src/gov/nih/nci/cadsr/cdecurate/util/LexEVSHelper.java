@@ -223,7 +223,7 @@ public class LexEVSHelper {
 	 * @param dtsVocab
 	 * @return
 	 */
-	private boolean isOtherVocabulary(String dtsVocab) {
+	public static boolean isOtherVocabulary(String dtsVocab) {
 		boolean others = false;
 		
 		if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)
