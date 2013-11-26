@@ -216,5 +216,23 @@ public class LexEVSHelper {
 		
 		return lstResult;
 	}
+	
+	/**
+	 * Check if it is not NCIt or NCIm vocab.
+	 * 
+	 * @param dtsVocab
+	 * @return
+	 */
+	private boolean isOtherVocabulary(String dtsVocab) {
+		boolean others = false;
+		
+		if(dtsVocab != null && !dtsVocab.equals(Constants.DTS_VOCAB_NCIT) && !dtsVocab.equals(Constants.DTS_VOCAB_NCI_META)
+				&& !dtsVocab.equals("nothing")	//"nothing" is NCIt
+		) {
+			others = true;
+		}
+		
+		return others;
+	}
 
 }
