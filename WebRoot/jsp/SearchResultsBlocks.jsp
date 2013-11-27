@@ -214,6 +214,7 @@ L--%>
      
   function ShowSelection()
   {
+    window.console && console.log("GF32723 1 in ShowSelection()");
      if (opener.document == null)
         window.close();
       ShowUseSelection("<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");

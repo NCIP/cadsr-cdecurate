@@ -154,7 +154,9 @@ function toTitleCase(str)
       
  function ShowUseSelection(vCompAction)
  {
-    if(vCompAction == "BEDisplay") vCompAction = "searchForCreate";
+     window.console && console.log("GF32723 2 in SearchResultsBlocks.js ShowUseSelection()");
+
+     if(vCompAction == "BEDisplay") vCompAction = "searchForCreate";
     var LongName = "";
     var PrefName  = "";
     if (vCompAction == "searchForCreate")
