@@ -2747,11 +2747,10 @@ public class EVSSearch implements Serializable {
 //        String sMetaSource = "LNC";   
         HttpSession session = m_classReq.getSession();
         System.out.println("$$$$$$$$$$ EVS URL = [" + m_eUser.getEVSConURL() + "] $$$$$$$$$$$");
-        //begin GF32723
         //=== get it from the UI instead
         String lookupVocabName = (String)m_classReq.getParameter("userSelectedVocab");
         if(lookupVocabName == null) lookupVocabName = (String) session.getAttribute("userSelectedVocab");
-        //end GF32723
+        DataManager.setAttribute(session, "evsDone", false);
         lexAPI.getMetathesaurusMapping(evsService, termStr, lookupVocabName);
         CodedNodeSet nodeSet = lexAPI.getMatches();
         ResolvedConceptReferenceList concepts = null;
@@ -2829,6 +2828,8 @@ public class EVSSearch implements Serializable {
                         }
                 }
                 System.out.println("doMetaSearchForNonNCItNonNCIm: EVS match 1 results " + suffix);
+                
+                DataManager.setAttribute(session, "evsDone", true);
         } if(concepts != null && concepts.getResolvedConceptReferenceCount() > 1) {
                 //GF32723 consider only 1-to-1 mapping, otherwise ignore it (user selected concept will prevail)
                 System.out.println("doMetaSearchForNonNCItNonNCIm: EVS match ignored due to > 1 results count. User selection prevails " + suffix);
