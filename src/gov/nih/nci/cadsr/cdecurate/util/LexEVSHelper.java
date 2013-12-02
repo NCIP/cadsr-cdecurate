@@ -33,7 +33,8 @@ public class LexEVSHelper {
 	public final static String THES_SCHEME = /*properties.getProperty("THES_SCHEME");*/ "NCI_Thesaurus";
 	private static LexBIGService lbSvc = null;
 	private CodedNodeSet matches;
-
+	//GF32723 assumption is on search window at a time for a single user (no concurrent search)
+	public static boolean evsLookupDone;
 
 	public CodedNodeSet getMatches() {
 		return matches;
@@ -43,6 +44,7 @@ public class LexEVSHelper {
 		if (lbSvc == null) {
 			throw new Exception("LexBIGService can not be NULL or empty.");
 		}
+		evsLookupDone = false;	//just started :)
 		LexEVSHelper.lbSvc = lbSvc;
 
 		long count = 0;
@@ -108,6 +110,7 @@ public class LexEVSHelper {
 				System.out.println("found count " + count);
 			}
 
+			evsLookupDone = true;
 		} catch (LBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -234,5 +237,10 @@ public class LexEVSHelper {
 		
 		return others;
 	}
+	
+	public boolean isLookupPending() {
+		return evsLookupDone;
+	}
+	
 
 }

@@ -20,6 +20,8 @@ var propCTerm2 = "";
 
 //var prevCSCSI = "";
 
+window.console && console.log("CreateDEC.js DOJO version used = [" + dojo.version.toString() + "]");
+
  function removeAllText(thisBlock)
  {
 	//someodd reason it requires all three to function properly in disabling the character typing and removing them all if meant to delete
@@ -462,6 +464,7 @@ function TrimDefinition(type)
        if (origin == "refresh") origin = "refreshCreateDEC";
        document.newDECForm.pageAction.value = origin;
        window.status = "Submitting data, it may take a minute, please wait.....";
+       window.console && console.log("GF32723 CreateDEC.js " + window.status);
        document.newDECForm.Message.style.visibility="visible";
 	   //disable the buttons
 	   document.newDECForm.btnValidate.disabled = true;
@@ -470,6 +473,11 @@ function TrimDefinition(type)
 	   		document.newDECForm.btnBack.disabled = true;
 	   document.newDECForm.btnAltName.disabled = true;
 	   document.newDECForm.btnRefDoc.disabled = true;
+	   
+	   //GF32723
+	   
+	   
+	   
 	   //submit the form
        document.newDECForm.submit();
     }

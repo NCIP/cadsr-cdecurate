@@ -24,7 +24,11 @@
    var sPCCCode = "";
    var sSelectedParent = "";
    var detailWindow = null;
-  
+
+
+//   dojo && window.console && console.log("DOJO version used = [" + dojo.version.toString() + "]");
+
+   
   
    //  checks the status message everytime page opens and alerts the  message
    function displayStatus(vStatusMessage, vSubmitAction)
