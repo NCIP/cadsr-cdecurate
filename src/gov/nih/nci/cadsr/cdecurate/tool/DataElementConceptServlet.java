@@ -1017,7 +1017,7 @@ public class DataElementConceptServlet extends CurationServlet {
 			//begin of GF32723
 			String conceptName = (String) m_classReq.getParameter("conceptName");
 			session.setAttribute("conceptName", conceptName);	//set it to the name picked by the user instead
-			DataManager.setAttribute(session, "evsDone", null);  //reset evsDone flag (avoiding the sync issue with search window)
+//	        session.setAttribute(Constants.DEC_EVS_LOOKUP_FLAG, false);
 			DataManager.setAttribute(session, "vStatMsg", null);  //reset the status message (avoiding the duplicates in the warning dialog)
 			String userSelectedVocab = (String) m_classReq.getParameter("userSelectedVocab");
 			session.setAttribute(userSelectedVocab, userSelectedVocab);

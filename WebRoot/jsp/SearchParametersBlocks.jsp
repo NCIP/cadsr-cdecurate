@@ -211,8 +211,9 @@ L--%>
   {
     //begin GF32723
       var idx = document.searchParmsForm.listContextFilterVocab.selectedIndex;
-      opener.document.newDECForm.userSelectedVocab.value = document.searchParmsForm.listContextFilterVocab[idx].text;	//TBD global is bad!
-      //alert(userSelectedVocab);
+      opener.document.newDECForm.userSelectedVocab.value = document.searchParmsForm.listContextFilterVocab[idx].text;
+      window.userSelectedVocab = opener.document.newDECForm.userSelectedVocab.value; //TODO global is bad we know!
+      window.console && console.log('SearchParametersBlocks.jsp doVocabChange:userSelectedVocab = [' + window.userSelectedVocab + ']');
     //end GF32723
   
     hourglass();

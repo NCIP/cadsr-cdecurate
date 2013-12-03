@@ -236,7 +236,12 @@ L--%>
       EnableCheckButtons(checked, currentField, "<%=StringEscapeUtils.escapeJavaScript(sMAction)%>")
       opener.document.newDECForm.isAConcept.value = isAConcept;		//GF30798
       //alert("SearchResultsBlocks EnableButtons called!");
-      //opener.document.newDECForm.conceptName.value = "TEST CONCEPT NAME";		//GF32723
+      //opener.document.newDECForm.conceptName.value = "TEST CONCEPT NAME";
+      //begin GF32723
+      var userVocab = document.searchParmsForm.listContextFilterVocab[document.searchParmsForm.listContextFilterVocab.selectedIndex].text;  //window.userSelectedVocab
+      opener.document.newDECForm.value = userVocab;
+      window.console && console.log('SearchResultsBlocks.jsp EnableButtons opener.document.newDECForm.value = [' + opener.document.newDECForm.value + ']');
+    //end GF32723
    }
    
    function EnableButtonWithTxt(currentField)

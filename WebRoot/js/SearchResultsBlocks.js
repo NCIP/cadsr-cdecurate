@@ -109,7 +109,7 @@
   	 	nvpVal.value = nvpRow.value;
   	 	
     //continue with the submission
-    if(opener.document.newDECForm != null)
+    if(opener.document.newDECForm)  // != null)  //GF32723
     {
       var source = opener.document.newDECForm.DECAction.value;
       opener.document.newDECForm.sCompBlocks.value = sComp;
@@ -124,7 +124,7 @@
       opener.document.newDECForm.conceptName.value = toTitleCase(editName);
         
       opener.SubmitValidate("UseSelection");
-      window.close();
+      //window.close();     //GF32723 do not close it
     }
     else if(opener.document.createVDForm != null)
     {
@@ -144,6 +144,7 @@ function toTitleCase(str)
   //stores the selected row in the hidden array and submits the form to refresh
   function submitOpener()
   {
+//    alert('in submitOpener');
     //first check the concept status and return if not valid
     var useStatus = checkValidStatus(editStatus);
     if (useStatus != "valid") 
@@ -166,8 +167,9 @@ function toTitleCase(str)
     if (vCompAction == "searchForCreate")
     { 
       var blName = editName + "\n &nbsp;&nbsp;" + sCCodeDB + "\n &nbsp;&nbsp;" + sCCode;
+      window.console && console.log('SearchResultsBlocks.js ShowUseSelection() opener.document.newDECForm [' + opener.document.newDECForm + ']');
       //building blocks from DEC page
-      if (opener.document.newDECForm != null && 
+      if (opener.document.newDECForm && // != null && //GF32723
           (sComp == "ObjectClass" || sComp == "PropertyClass" || sComp == "Property" || 
            sComp == "ObjectQualifier" || sComp == "PropertyQualifier"))
         useSelectionBuildBlocks();
@@ -489,7 +491,7 @@ function createNames(acType)
   var rep = "";
   var repLN = "";
 	//get the values of the building blocks
-	if (acType == "DataElementConcept" && opener.document.newDECForm != null)
+	if (acType == "DataElementConcept" && opener.document.newDECForm)   // != null) //GF32723
 	{
     var objQual = ""; //opener.document.newDECForm.selObjectQualifierPN.value;
     if(objQual == null) objQual = "";
@@ -581,7 +583,7 @@ function createNames(acType)
 		   PrefName = PrefName.slice(0, PrefName.length - 1);
          }
 	//fill the long name and preferred name fields of the opener document
-	if (acType == "DataElementConcept" && opener.document.newDECForm != null)
+	if (acType == "DataElementConcept" && opener.document.newDECForm)   // != null) //GF32723
 	{
          var source = opener.document.newDECForm.DECAction.value;
 	   if (source == "NewDEC")
@@ -652,7 +654,7 @@ function createNames(acType)
       var PrefName = "";
   
 	//get the values of the building blocks
-	if (acType == "DataElementConcept" && opener.document.newDECForm != null)
+	if (acType == "DataElementConcept" && opener.document.newDECForm)   // != null) //GF32723
 	{
 	  LongName = opener.document.newDECForm.txtLongName.value ;
     PrefName = opener.document.newDECForm.txtPreferredName.value;

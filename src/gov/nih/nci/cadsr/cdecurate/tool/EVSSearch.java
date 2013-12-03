@@ -2750,8 +2750,9 @@ public class EVSSearch implements Serializable {
         //=== get it from the UI instead
         String lookupVocabName = (String)m_classReq.getParameter("userSelectedVocab");
         if(lookupVocabName == null) lookupVocabName = (String) session.getAttribute("userSelectedVocab");
-        DataManager.setAttribute(session, "evsDone", false);
+        session.setAttribute(Constants.DEC_EVS_LOOKUP_FLAG, String.valueOf(false));
         lexAPI.getMetathesaurusMapping(evsService, termStr, lookupVocabName);
+        session.setAttribute(Constants.DEC_EVS_LOOKUP_FLAG, String.valueOf(lexAPI.isEVSLookupDone()));
         CodedNodeSet nodeSet = lexAPI.getMatches();
         ResolvedConceptReferenceList concepts = null;
         if(nodeSet != null) {

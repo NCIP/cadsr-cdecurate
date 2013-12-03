@@ -194,15 +194,24 @@ function openAltNameViewWindow()
 	}
  }
  
- function closeDep() 
- {
-    if (searchWindow && !searchWindow.closed) // && searchWindow.open
-      searchWindow.close();
-    if(altWindow && !altWindow.closed)  // && altWindow.open
-      altWindow.close();
-    if(statusWindow && !statusWindow.closed)  // && statusWindow.open
-      statusWindow.close();
- }
+function closeDep()
+{
+    window.console && console.log('CreateDEC.js closeDep()');
+
+    if (searchWindow && !searchWindow.closed) {// && searchWindow.open
+        window.console && console.log('CreateDEC.js closing searchWindow ...');
+        searchWindow.close();
+        //window.console && console.log('CreateDEC.js closing of searchWindow prevented (GF32723)');
+    }
+    if(altWindow && !altWindow.closed) {  // && altWindow.open
+        window.console && console.log('CreateDEC.js closing altWindow ...');
+        altWindow.close();
+    }
+    if(statusWindow && !statusWindow.closed) { // && statusWindow.open
+        window.console && console.log('CreateDEC.js closing statusWindow ...');
+        statusWindow.close();
+    }
+}
 
  //allow only one of the comp to change for block edit
  function isNameChangeOK(vAction, thisBlock)
@@ -455,32 +464,65 @@ function TrimDefinition(type)
       isValid = isNameTypeValid(); 
 	if (isValid == "valid")
 	{
-       hourglass();
+        //hourglass();  //GF32723
        //keep the blocks selection list selected
        selectBlocksList();
        //keep the cscsi selection list selected
        selectMultiSelectList();
-       
+
        if (origin == "refresh") origin = "refreshCreateDEC";
        document.newDECForm.pageAction.value = origin;
        window.status = "Submitting data, it may take a minute, please wait.....";
        window.console && console.log("GF32723 CreateDEC.js " + window.status);
-       document.newDECForm.Message.style.visibility="visible";
+       //document.newDECForm.Message.style.visibility="visible";  //GF32723
 	   //disable the buttons
 	   document.newDECForm.btnValidate.disabled = true;
 	   document.newDECForm.btnClear.disabled = true;
-	   if (document.newDECForm.btnBack != null) 
+	   if (document.newDECForm.btnBack != null)
 	   		document.newDECForm.btnBack.disabled = true;
 	   document.newDECForm.btnAltName.disabled = true;
 	   document.newDECForm.btnRefDoc.disabled = true;
-	   
-	   //GF32723
-	   
-	   
-	   
-	   //submit the form
-       document.newDECForm.submit();
+
+	   //begin GF32723
+        function dojoCheckEVSStatus() {
+            window.console && console.log('dojoCheckEVSStatus called');
+            dojo.xhrGet({
+                // The URL to request
+                url: "jsp/CheckEVSStatus.jsp",
+                // The method that handles the request's successful result
+                // Handle the response any way you'd like!
+                load: function(result) {
+                    window.console && console.log("10 The flag is: " + result.trim());
+                    if(result.indexOf("true") > -1) {
+                        clearInterval(timer);
+                        window.console && console.log("20 The flag is cleared!");
+                    }
+                }
+            });
+        }
+        var timer;
+        //alert(document.newDECForm && document.newDECForm.userSelectedVocab && document.newDECForm.userSelectedVocab.value);
+        var userSelectedVocabName = document.newDECForm.userSelectedVocab.value;    //document.searchParmsForm.listContextFilterVocab[document.searchParmsForm.listContextFilterVocab.selectedIndex].text;
+        window.console && console.log('CreateDEC.js SubmitValidate(origin) userSelectedVocabName is [' + userSelectedVocabName + ']');
+        if(userSelectedVocabName !== 'nothing') {
+            window.console && console.log('calling dojoCheckEVSStatus ...');
+            timer = setInterval(dojoCheckEVSStatus, 5000);
+//            dojoCheckEVSStatus();
+        } else {
+            window.console && console.log('CreateDEC.js SubmitValidate(origin) dojoCheckEVSStatus skipped as vocab is ['+ userSelectedVocabName + ']');
+        }
+
+	    //submit the form
+        window.console && console.log('CreateDEC.js SubmitValidate(origin) submitting form to DataElementConceptServlet.java doDECUseSelection() ...');
+        document.newDECForm.submit();
+        window.console && console.log('CreateDEC.js SubmitValidate(origin) form submitted');
+        //end GF32723
     }
+  }
+
+  function showWaitMessage() {
+      hourglass();  //GF32723
+      document.newDECForm.Message.style.visibility="visible";  //GF32723
   }
 
   //alerts if preferred name type was not selected

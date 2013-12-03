@@ -27,5 +27,4 @@ public class Constants {
 	
 	//GF32153
 	public static final String ERR_LOGON_ISSUE = "Could not validate the User Name and Password, please try again.";
-	
 }

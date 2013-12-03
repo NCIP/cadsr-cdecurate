@@ -238,7 +238,7 @@ public class LexEVSHelper {
 		return others;
 	}
 	
-	public boolean isLookupPending() {
+	public boolean isEVSLookupDone() {
 		return evsLookupDone;
 	}
 	

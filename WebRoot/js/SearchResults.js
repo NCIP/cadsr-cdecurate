@@ -257,7 +257,7 @@
         opener.document.createVDForm.selConceptualDomainText.value = editLongName;    
       }
 		}
-		else if (opener.document.newDECForm != null)
+        else if (opener.document.newDECForm) //else if (opener.document.newDECForm != null)    //GF32723
 		{
 			opener.document.newDECForm.selConceptualDomain[0].value = editID;
             editLongName = editLongName + " - " + editUsedby;
