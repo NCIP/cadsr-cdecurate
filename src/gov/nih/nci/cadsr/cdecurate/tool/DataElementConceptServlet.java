@@ -1015,11 +1015,12 @@ public class DataElementConceptServlet extends CurationServlet {
 			//(isAConcept != null && isAConcept.trim().equals("false"))	//GF30798
 			//end of GF30798
 			//begin of GF32723
-			String conceptName = (String) m_classReq.getParameter("conceptName");
-			session.setAttribute("conceptName", conceptName);	//set it to the name picked by the user instead
+//			String conceptName = (String) m_classReq.getParameter("conceptName");
+//			session.setAttribute("conceptName", conceptName);	//set it to the name picked by the user instead
 //	        session.setAttribute(Constants.DEC_EVS_LOOKUP_FLAG, false);
 			DataManager.setAttribute(session, "vStatMsg", null);  //reset the status message (avoiding the duplicates in the warning dialog)
 			String userSelectedVocab = (String) m_classReq.getParameter("userSelectedVocab");
+			if(userSelectedVocab == null) userSelectedVocab = "nothing";
 			session.setAttribute(userSelectedVocab, userSelectedVocab);
 			//String userSelectedVocabOC = (String) m_classReq.getParameter("userSelectedVocabOC");
 			//session.setAttribute(userSelectedVocabOC, userSelectedVocabOC);
