@@ -502,7 +502,12 @@ function TrimDefinition(type)
         }
         var timer;
         //alert(document.newDECForm && document.newDECForm.userSelectedVocab && document.newDECForm.userSelectedVocab.value);
-        var userSelectedVocabName = document.newDECForm.userSelectedVocab.value;    //document.searchParmsForm.listContextFilterVocab[document.searchParmsForm.listContextFilterVocab.selectedIndex].text;
+        var userSelectedVocabName;
+        if(document.newDECForm.userSelectedVocab === undefined)  {
+            userSelectedVocabName = "nothing";
+        } else {
+            userSelectedVocabName = document.newDECForm.userSelectedVocab.value;    //document.searchParmsForm.listContextFilterVocab[document.searchParmsForm.listContextFilterVocab.selectedIndex].text;
+        }
         window.console && console.log('CreateDEC.js SubmitValidate(origin) userSelectedVocabName is [' + userSelectedVocabName + ']');
         if(userSelectedVocabName !== 'nothing') {
             window.console && console.log('calling dojoCheckEVSStatus ...');

@@ -121,7 +121,7 @@
         
       //GF32723
       //alert("editName = [" + editName + "]");
-      opener.document.newDECForm.conceptName.value = toTitleCase(editName);
+      //opener.document.newDECForm.conceptName.value = toTitleCase(editName);
         
       opener.SubmitValidate("UseSelection");
       //window.close();     //GF32723 do not close it

@@ -17,6 +17,16 @@
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.*"%>
 		<%@ page session="true"%>
+        <!-- GF32723 load Dojo -->
+        <%--<script src="//ajax.googleapis.com/ajax/libs/dojo/1.8.5/dojo/dojo.js" data-dojo-config="async: true"></script>--%>
+        <script src="js/dojo/dojo/dojo.js" data-dojo-config="async: true"></script>
+        <script>
+        <%--require(["dojo"], function(dojo){--%>
+        <%--dojo.ready(function(){--%>
+        window.console && console.log("CreateDEC.jsp DOJO version used = [" + dojo.version.toString() + "]");
+        <%--});--%>
+        <%--});--%>
+        </script>
 		<script language="JavaScript" src="js/date.js"></script>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/AddNewListOption.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/CreateDEC.js"></SCRIPT>
