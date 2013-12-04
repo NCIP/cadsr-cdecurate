@@ -6153,7 +6153,7 @@ public class InsACService implements Serializable {
 			if (conIdseq != null || conIdseq.equals("")) {
 				ConBean conBean = new ConBean();
 				conBean.setCon_IDSEQ(ocBean.getIDSEQ());
-				conBean.setConcept_value(ocBean.getNVP_CONCEPT_VALUE());
+				conBean.setConcept_value(ocBean.getNVP_CONCEPT_VALUE());	//GF32723 concept value is null??? :o
 				conBean.setDisplay_order(0);
 				conBeanList.add(conBean);
 			}
@@ -6406,7 +6406,7 @@ public class InsACService implements Serializable {
 				statusBean.setAllConceptsExists(false);	//GF30681
 				break;
 			}else {
-				logger.debug("conIdseq at Line 6204 of InsACService.java"+conIdseq);
+				logger.debug("InsACService.java evsBeanCheckDB() CONCEPT FOUND! conIdseq at Line 6204 of InsACService.java"+conIdseq);
 			}
         }
 	    

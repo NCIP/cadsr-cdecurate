@@ -4176,7 +4176,9 @@ public class CurationServlet
      try{
     	 ocStatusBean = ins.evsBeanCheckDB(beanList, defaultContext, "", type);
         // get its matching thesaurus concept
-         if (ocStatusBean != null && !ocStatusBean.isEvsBeanExists()){
+         if (ocStatusBean != null 
+        		 //&& !ocStatusBean.isEvsBeanExists()	//GF32723 not sure why do we need to check this, skipped the check for now to activate context switching check
+            ){
     	  	System.out.println("CurationServlet:getMatchingThesarusconcept ocStatusBean populated");        	 
     	    beanList = evs.getThesaurusConceptBean(beanList);
     	  	System.out.println("CurationServlet:getMatchingThesarusconcept beanList retrieved after calling evs.getThesaurusConceptBean");        	 

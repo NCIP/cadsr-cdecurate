@@ -92,13 +92,13 @@ public class TestUtil {
 	    return conn;
 	}
 	
-	public static void dumpAllHttpRequests(HttpServletRequest request) {
+	public static void dumpAllHttpRequests(String marker, HttpServletRequest request) {
 		System.out.println("To out-put All the request-attributes received from request - ");
 	
 		Enumeration enAttr = request.getAttributeNames(); 
 		while(enAttr.hasMoreElements()){
 		 String attributeName = (String)enAttr.nextElement();
-		 System.out.println("TTTTTTTTTTTTT Attribute Name - "+attributeName+", Value - "+(request.getAttribute(attributeName)).toString());
+		 System.out.println(marker + " Attribute Name - "+attributeName+", Value - "+(request.getAttribute(attributeName)).toString());
 		}
 	
 		System.out.println("To out-put All the request parameters received from request - ");
@@ -106,7 +106,7 @@ public class TestUtil {
 		Enumeration enParams = request.getParameterNames(); 
 		while(enParams.hasMoreElements()){
 		 String paramName = (String)enParams.nextElement();
-		 System.out.println("TTTTTTTTTTTTT Parameter Name - "+paramName+", Value - "+request.getParameter(paramName));
+		 System.out.println(marker + " Parameter Name - "+paramName+", Value - "+request.getParameter(paramName));
 		}
 	}
 }
