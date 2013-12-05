@@ -1643,8 +1643,14 @@ String temp =
 				<% } %>
 			</table>
 
+            <input type="hidden" name="conceptName" value=""> <!-- GF32723 -->
 			<input type="hidden" name="isAConcept" value="false"> <!-- GF30798 -->
 			<input type="hidden" name="userSelectedDef" value="nothing"> <!-- GF30798 -->
+			<input type="hidden" name="userSelectedVocab" value="nothing"> <!-- GF32723 -->
+			<input type="hidden" name="userSelectedVocabOC" value="nothing"> <!-- GF32723 -->
+			<input type="hidden" name="userSelectedConCodeOC" value="nothing"> <!-- GF32723 -->
+			<input type="hidden" name="userSelectedVocabPROP" value="nothing"> <!-- GF32723 -->
+			<input type="hidden" name="userSelectedConCodePROP" value="nothing"> <!-- GF32723 -->
 			<input type="hidden" name="pageAction" value="nothing">
 			<input type="hidden" name="decIDSEQ" value="<%=sDECIDSEQ%>">
 			<input type="hidden" name="regStatusIDSEQ" value="<%=sRegStatusIDSEQ%>"> <!-- GF32398 -->
