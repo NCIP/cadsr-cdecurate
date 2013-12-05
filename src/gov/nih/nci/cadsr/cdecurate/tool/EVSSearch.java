@@ -3829,6 +3829,10 @@ public class EVSSearch implements Serializable {
                                       
                                        if (vList != null && vList.size() > 0) {
                                               eBean = this.getNCIDefinition(vList, conID, conName); //get the right definition    //Should come here for GF32723
+                                              //GF32723 last fix for context switching - do the magic swap ;) !
+                                              if(LexEVSHelper.isOtherVocabulary(eBean.getEVS_DATABASE())) {
+                                            	  eBean.setEVS_DATABASE(Constants.DTS_VOCAB_NCIT);
+                                              }
                                               return eBean;
                                        }
                                        conID = "";
