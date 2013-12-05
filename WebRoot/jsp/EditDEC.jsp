@@ -427,6 +427,15 @@
 			<input type="hidden" name="itemType" value="">
 		</form>
 		<form name=newDECForm method="POST" action="../../cdecurate/NCICurationServlet?reqType=editDEC">
+			<input type="hidden" name="conceptName" value=""> <!-- GF32723 -->
+			<input type="hidden" name="isAConcept" value="false"> <!-- GF30798 -->
+			<input type="hidden" name="userSelectedDef" value="nothing"> <!-- GF30798 -->
+			<input type="hidden" name="userSelectedVocab" value="nothing"> <!-- GF32723 -->
+			<input type="hidden" name="userSelectedVocabOC" value="nothing"> <!-- GF32723 -->
+			<input type="hidden" name="userSelectedConCodeOC" value="nothing"> <!-- GF32723 -->
+			<input type="hidden" name="userSelectedVocabPROP" value="nothing"> <!-- GF32723 -->
+			<input type="hidden" name="userSelectedConCodePROP" value="nothing"> <!-- GF32723 -->
+		
 		    <%String displayErrorMessage = (String)session.getAttribute("displayErrorMessage");
 		    if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
 		  	 <b><font  size="3">Not Authorized for Edits in this Context.</font></b></br></br>
@@ -1643,14 +1652,6 @@ String temp =
 				<% } %>
 			</table>
 
-            <input type="hidden" name="conceptName" value=""> <!-- GF32723 -->
-			<input type="hidden" name="isAConcept" value="false"> <!-- GF30798 -->
-			<input type="hidden" name="userSelectedDef" value="nothing"> <!-- GF30798 -->
-			<input type="hidden" name="userSelectedVocab" value="nothing"> <!-- GF32723 -->
-			<input type="hidden" name="userSelectedVocabOC" value="nothing"> <!-- GF32723 -->
-			<input type="hidden" name="userSelectedConCodeOC" value="nothing"> <!-- GF32723 -->
-			<input type="hidden" name="userSelectedVocabPROP" value="nothing"> <!-- GF32723 -->
-			<input type="hidden" name="userSelectedConCodePROP" value="nothing"> <!-- GF32723 -->
 			<input type="hidden" name="pageAction" value="nothing">
 			<input type="hidden" name="decIDSEQ" value="<%=sDECIDSEQ%>">
 			<input type="hidden" name="regStatusIDSEQ" value="<%=sRegStatusIDSEQ%>"> <!-- GF32398 -->
@@ -1697,7 +1698,8 @@ String temp =
 			<input type="hidden" name="nameTypeChange" value="<%=nameTypeChange%>">
 
 			<input type="hidden" name="PropDefinition" value="">
-			<input type="hidden" name="ObjDefinition" value="">
+			<input type="hidden" name="ObjDefinition" value="">			
+			
 			<select name="selCSCSIHidden" size="1" style="visibility:hidden;" multiple></select>
 			<select name="selACCSIHidden" size="1" style="visibility:hidden;" multiple></select>
 			<select name="selCSNAMEHidden" size="1" style="visibility:hidden;" multiple></select>

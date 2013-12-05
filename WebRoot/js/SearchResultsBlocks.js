@@ -930,7 +930,8 @@ function createNames(acType)
 	    if (editName.length > 30)
         editName = editName.substring(0,30);
 
-       //alert("editName = [" + editName + "]");
+     window.console && console.log("SearchResultsBlocks.js StoreSelectedRow() editName = [" + editName + "] (GF32723)");
+     //alert("SearchResultsBlocks.js StoreSelectedRow() editName = [" + editName + "]");
 
       editLevel = conArray[rowNo].conLevel;  // document.searchResultsForm.hiddenName[rowNo].text;
     //  editLongName = document.searchResultsForm.hiddenName[rowNo].value;  //?

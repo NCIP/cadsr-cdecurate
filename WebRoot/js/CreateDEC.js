@@ -201,16 +201,16 @@ function closeDep()
     window.console && console.log('CreateDEC.js closeDep()');
 
     if (searchWindow && !searchWindow.closed) {// && searchWindow.open
-        window.console && console.log('CreateDEC.js closing searchWindow ...');
+        window.console && console.log('CreateDEC.js closing searchWindow (GF32723) ...');
         searchWindow.close();
         //window.console && console.log('CreateDEC.js closing of searchWindow prevented (GF32723)');
     }
     if(altWindow && !altWindow.closed) {  // && altWindow.open
-        window.console && console.log('CreateDEC.js closing altWindow ...');
+        window.console && console.log('CreateDEC.js closing altWindow (GF32723) ...');
         altWindow.close();
     }
     if(statusWindow && !statusWindow.closed) { // && statusWindow.open
-        window.console && console.log('CreateDEC.js closing statusWindow ...');
+        window.console && console.log('CreateDEC.js closing statusWindow (GF32723) ...');
         statusWindow.close();
     }
 }
@@ -487,6 +487,7 @@ function SubmitValidate(origin)
 
         //begin GF32723
         function dojoCheckEVSStatus() {
+            showWaitMessage(); //GF32723
             window.console && console.log('dojoCheckEVSStatus called');
             dojo.xhrGet({
                 // The URL to request
@@ -547,6 +548,8 @@ function refreshCreateDEC(timer) {
 }
 
 function showWaitMessage() {
+    window.console && console.log('CreateDEC.js showWaitMessage() called!');
+    //alert('showWaitMessage called!');
     hourglass();  //GF32723
     document.newDECForm.Message.style.visibility="visible";  //GF32723
 }

@@ -170,6 +170,8 @@ L--%>
 
    function getSearchComponent()
    {
+     window.console && console.log('SearchResultsBlocks.jsp getSearchComponent() called (GF32723)');
+
      var type = "";
       sComp = opener.document.SearchActionForm.searchComp.value;
       if (sComp == "ParentConceptVM")
@@ -210,12 +212,18 @@ L--%>
 	      	opener.appendConcept('<%=sName%>', '<%=sID%>', '<%=sDB%>', '<%=sName%>', '<%=sDesc%>');
 	      	window.close();
       <% } %>
-   }
+
+    window.console && console.log('SearchResultsBlocks.jsp getSearchComponent() sComp = ['+ sComp + '] (GF32723)');
+
+    }
      
   function ShowSelection()
   {
-   	document.searchResultsForm.Message.style.visibility="visible";	//GF32723
-  
+    //begin GF32723
+    document.searchResultsForm.Message.style.visibility="visible";
+    hourglass();
+    //end GF32723
+
     window.console && console.log("GF32723 1 in ShowSelection()");
      if (opener.document == null)
         window.close();
