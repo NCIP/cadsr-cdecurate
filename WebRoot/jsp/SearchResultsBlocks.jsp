@@ -214,6 +214,8 @@ L--%>
      
   function ShowSelection()
   {
+   	document.searchResultsForm.Message.style.visibility="visible";	//GF32723
+  
     window.console && console.log("GF32723 1 in ShowSelection()");
      if (opener.document == null)
         window.close();
@@ -371,7 +373,7 @@ L--%>
 						&nbsp;&nbsp;
 						<input type="button" name="btnSubmitToEVS" value="Suggest to EVS" onclick="javascript:NewTermSuggested();">
 						&nbsp;&nbsp;
-						<img name="Message" src="images/SearchMessage.gif" width="180px" height="25" alt="WaitMessage" style="visibility:hidden;" align="top">
+						<img id="evsCheckMessage" name="Message" src="images/SearchMessage.gif" width="180px" height="25" alt="WaitMessage" style="visibility:hidden;" align="top">
 					</td>
 				</tr>
 			</table>
