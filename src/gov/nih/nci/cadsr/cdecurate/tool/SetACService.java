@@ -1202,11 +1202,11 @@ public class SetACService implements Serializable
 					//altSession.addAlternateName(type,name,m_REP,sContext,conte_idseq,m_servlet.getConn());
 					String desIDSEQ="";
 					String sReturnCode="";
-					if(!AdministeredItemUtil.isAlternateDesignationExists(type, name, altSession)) {
-						sReturnCode=ins.setDES("INS", "EA999EED-D594-3BF1-E040-BB8921B62488", m_VD.getContextIDSEQ(), m_VD.getContextName(), "RadLex", "RID1543", "ENGLISH", desIDSEQ);
+					//if(!AdministeredItemUtil.isAlternateDesignationExists(type, name, altSession)) {
+						//sReturnCode=ins.setDES("INS", "m_VD.getVD_REP_IDSEQ", m_VD.getContextIDSEQ(), m_VD.getContextName(), "type", "name", "ENGLISH", desIDSEQ);
 							//System.out.println("************************ VD SetACService: AC [" + m_VD.getVD_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
 						
-					}
+					//}
 				}
 				//end GF32723
 				m_VD.setAlternates(altSession);
