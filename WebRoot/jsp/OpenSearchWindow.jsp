@@ -28,7 +28,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<script>
 history.forward();
 </script>
-		<%
+<%
   String sMenuAction2 = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
   String sSelAC2 = "";
   String sSearchAC2 = "";
