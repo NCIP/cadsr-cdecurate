@@ -1642,7 +1642,9 @@ String temp =
 				</tr>
 				<% } %>
 			</table>
-
+            <input type="hidden" name="skipStandardConcept" value=""> <!-- GF33087 -->
+            <input type="hidden" name="conceptName" value=""> <!-- GF33087 -->
+            <input type="hidden" name="conceptID" value=""> <!-- GF33087 -->
 			<input type="hidden" name="isAConcept" value="false"> <!-- GF30798 -->
 			<input type="hidden" name="userSelectedDef" value="nothing"> <!-- GF30798 -->
 			<input type="hidden" name="pageAction" value="nothing">

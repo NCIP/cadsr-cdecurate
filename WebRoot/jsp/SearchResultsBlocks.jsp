@@ -22,6 +22,27 @@ L--%>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<link href="css/popupMenus.css" rel="stylesheet" type="text/css">
+        <!-- GF33087 load Dojo -->
+        <link href="js/dojo/dijit/themes/claro/claro.css" rel="stylesheet" type="text/css">
+        <style type="text/css">
+        .dijitDialog {
+        width: 300px;
+        }
+        .dialogConfirmButtons {
+        border-top: 1px solid #ccc;
+        padding-top: 3px;
+
+        }
+        </style>
+        <%--<script src="//ajax.googleapis.com/ajax/libs/dojo/1.8.5/dojo/dojo.js" data-dojo-config="async: true"></script>--%>
+        <script src="js/dojo/dojo/dojo.js" data-dojo-config="async: true"></script>
+        <script>
+        <%--require(["dojo"], function(dojo){--%>
+        <%--dojo.ready(function(){--%>
+        window.console && console.log("CreateDEC.jsp DOJO version used = [" + dojo.version.toString() + "]");
+        <%--});--%>
+        <%--});--%>
+        </script>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/SearchResultsBlocks.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/popupMenus.js"></SCRIPT>
@@ -214,11 +235,29 @@ L--%>
      
   function ShowSelection()
   {
+    //begin GF33087
+    if(getEVSMatchedCount() > 0) {
+        if(confirm('Click "OK" to proceed with replacing selected concept xxxxxx with NCIt concept xxxxx. Click "Cancel" to use the non-NCIt concept.')) {
+            alert('You have chosen Ok');
+        } else {
+            alert('You have chosen Cancel');
+        }
+    }
+    //end GF33087
+
     window.console && console.log("GF32723 1 in ShowSelection()");
      if (opener.document == null)
         window.close();
       ShowUseSelection("<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
   }
+
+   function getEVSMatchedCount() {
+        //=== call the backend
+
+        //=== parse the count
+
+        return 1;
+   }
 
    function reSetAttribute()
    {
@@ -229,19 +268,27 @@ L--%>
 %>
    }
 
-   function EnableButtons(checked, currentField, isAConcept)
+   function EnableButtons(checked, currentField, isAConcept, conceptName, conceptID)
    {
       if (opener.document == null)
         window.close();
-      EnableCheckButtons(checked, currentField, "<%=StringEscapeUtils.escapeJavaScript(sMAction)%>")
-      opener.document.newDECForm.isAConcept.value = isAConcept;		//GF30798
-      //alert("SearchResultsBlocks EnableButtons called!");
-      //opener.document.newDECForm.conceptName.value = "TEST CONCEPT NAME";
-      //begin GF32723
-      var userVocab = document.searchParmsForm.listContextFilterVocab[document.searchParmsForm.listContextFilterVocab.selectedIndex].text;  //window.userSelectedVocab
-      opener.document.newDECForm.value = userVocab;
-      window.console && console.log('SearchResultsBlocks.jsp EnableButtons opener.document.newDECForm.value = [' + opener.document.newDECForm.value + ']');
-    //end GF32723
+
+        EnableCheckButtons(checked, currentField, "<%=StringEscapeUtils.escapeJavaScript(sMAction)%>")
+        opener.document.newDECForm.isAConcept.value = isAConcept;		//GF30798
+        //alert("SearchResultsBlocks EnableButtons called!");
+        //begin GF33087
+        opener.document.newDECForm.conceptName.value = conceptName? conceptName: '';
+        opener.document.newDECForm.conceptID.value = conceptID? conceptID: '';
+        var tempStr = 'SearchResultsBlocks.jsp EnableButtons conceptName [' + opener.document.newDECForm.conceptName.value + '] conceptID [' + opener.document.newDECForm.conceptID.value + ']';
+        window.console && console.log(tempStr);
+        alert(tempStr);
+        //end GF33087
+
+        //begin GF32723
+        var userVocab = document.searchParmsForm.listContextFilterVocab[document.searchParmsForm.listContextFilterVocab.selectedIndex].text;  //window.userSelectedVocab
+        opener.document.newDECForm.value = userVocab;
+        window.console && console.log('SearchResultsBlocks.jsp EnableButtons opener.document.newDECForm.value = [' + opener.document.newDECForm.value + ']');
+        //end GF32723
    }
    
    function EnableButtonWithTxt(currentField)
@@ -541,18 +588,19 @@ L--%>
    // String strVocab = "";
     if (results != null)
     {
+      EVS_Bean eBean = null;    //GF33087
       int j = 0;
       for (int i = 0; i < results.size(); i+=k)
       {
       	int nvp = 0;
         if (vSearchRes.size() > j)
         {
-          EVS_Bean eBean = (EVS_Bean)vSearchRes.get(j);
+          eBean = (EVS_Bean)vSearchRes.get(j);  //GF33087
           if (eBean == null) eBean = new EVS_Bean();
           String strVocab = eBean.getEVS_DATABASE();  
           vName = eBean.getVocabAttr(uBean, strVocab, EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME);  // "vocabDBOrigin", "vocabName");
           nvp = eBean.getNAME_VALUE_PAIR_IND();
-   // System.out.println(eBean.getCONCEPT_NAME() + " nvp " + nvp);
+          // System.out.println(eBean.getCONCEPT_NAME() + " nvp " + nvp);
         }
          String ckName = ("CK" + j);
          strResult = (String)results.get(i);
@@ -579,7 +627,7 @@ L--%>
   %>
 				<tr>
 				 	<td width="5px" valign="top">
-						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this, false);">
+						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this, false, '<%= eBean.getCONCEPT_NAME() %>', '<%= eBean.getCONCEPT_IDENTIFIER() %>');">
 					</td>
 					<% if(sSelAC.equals("Rep Term") && temp.booleanValue()){ %>
 					<td width="5px" valign="top">
@@ -606,7 +654,7 @@ L--%>
 					<%    }else{%>
 				<tr>
 					<td width="5px" valign="top">
-						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this, true);">
+						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this, true, '<%= eBean.getCONCEPT_NAME() %>', '<%= eBean.getCONCEPT_IDENTIFIER() %>');">
 					</td>
 					<td width="150px" valign="top">
 						<a href="<%=showConceptInTree%>">

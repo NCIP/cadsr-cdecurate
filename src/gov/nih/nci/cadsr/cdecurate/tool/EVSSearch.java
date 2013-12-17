@@ -4188,11 +4188,12 @@ public class EVSSearch implements Serializable {
     		System.out.println("getThesaurusConceptBean: called");
     		Vector<EVS_Bean>  vEvsBeann = new Vector<EVS_Bean>();
     		if (vEvsBean != null){  
-				String vocabName=(String)m_classReq.getParameter("userSelectedVocab");
+				String vocabName = (String)m_classReq.getParameter("userSelectedVocab");
+				String skipStandardConcept = (String)m_classReq.getParameter("skipStandardConcept");
     			for (int i = 0; i < vEvsBean.size(); i++) {
     				EVS_Bean eBean = (EVS_Bean) vEvsBean.elementAt(i);
     				//begin GF32723
-    				if(LexEVSHelper.isOtherVocabulary(vocabName)) {
+    				if(LexEVSHelper.isOtherVocabulary(vocabName) && (skipStandardConcept == null || (skipStandardConcept != null && !skipStandardConcept.equals("true")))) {
     	    			System.out.println("getThesaurusConceptBean: is other vocab = [" + vocabName + "]");
     					eBean = this.getThesaurusConceptForNonNCItNonNCIm(eBean);
     	    			System.out.println("getThesaurusConceptBean: for other vocab done, eBean [" + eBean + "]");
