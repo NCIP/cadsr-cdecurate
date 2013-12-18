@@ -8,9 +8,14 @@
     String evsDone =
     //"true";
     (String)session.getAttribute(Constants.DEC_EVS_LOOKUP_FLAG);
+    String evsMatchedCount =
+    (String)session.getAttribute(Constants.DEC_EVS_MATCHED_COUNT);
     System.out.print("CheckEVSStatus invoked ...");
 %>
-    <%= evsDone %>
+{
+    'status': <%= evsDone %>,
+    'matchedCount': <%= evsMatchedCount %>
+}
 <%
-    System.out.print("1 CheckEVSStatus evsDone = [" + evsDone + "] done.");
+    System.out.print("2 CheckEVSStatus evsDone = [" + evsDone + "] evsMatchedCount [" + evsMatchedCount + "] done.");
 %>

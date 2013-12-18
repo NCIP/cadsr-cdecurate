@@ -2831,6 +2831,19 @@ public class EVSSearch implements Serializable {
                 System.out.println("doMetaSearchForNonNCItNonNCIm: EVS match 1 results " + suffix);
                 
                 DataManager.setAttribute(session, "evsDone", true);
+                //begin GF33087
+                long count = -1;
+                try {
+                	count = concepts.getResolvedConceptReferenceCount();
+					if(count > 0) {
+					    DataManager.setAttribute(session, Constants.DEC_EVS_MATCHED_COUNT, count);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+				    DataManager.setAttribute(session, Constants.DEC_EVS_MATCHED_COUNT, 0);
+				}
+                //end GF33087
         } if(concepts != null && concepts.getResolvedConceptReferenceCount() > 1) {
                 //GF32723 consider only 1-to-1 mapping, otherwise ignore it (user selected concept will prevail)
                 System.out.println("doMetaSearchForNonNCItNonNCIm: EVS match ignored due to > 1 results count. User selection prevails " + suffix);
@@ -4193,7 +4206,7 @@ public class EVSSearch implements Serializable {
     			for (int i = 0; i < vEvsBean.size(); i++) {
     				EVS_Bean eBean = (EVS_Bean) vEvsBean.elementAt(i);
     				//begin GF32723
-    				if(LexEVSHelper.isOtherVocabulary(vocabName) && (skipStandardConcept == null || (skipStandardConcept != null && !skipStandardConcept.equals("true")))) {
+    				if(LexEVSHelper.isOtherVocabulary(vocabName) && (skipStandardConcept == null || (skipStandardConcept != null && !skipStandardConcept.equals("true")))) {	//GF33087
     	    			System.out.println("getThesaurusConceptBean: is other vocab = [" + vocabName + "]");
     					eBean = this.getThesaurusConceptForNonNCItNonNCIm(eBean);
     	    			System.out.println("getThesaurusConceptBean: for other vocab done, eBean [" + eBean + "]");

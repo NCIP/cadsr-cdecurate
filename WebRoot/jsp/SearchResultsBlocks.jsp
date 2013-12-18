@@ -235,16 +235,6 @@
 
         function ShowSelection()
         {
-        //begin GF33087
-        if(getEVSMatchedCount() > 0) {
-        if(confirm('Click "OK" to proceed with replacing selected concept with NCIt concept. Click "Cancel" to use the non-NCIt concept.')) {
-        alert('You have chosen Ok');
-        } else {
-        alert('You have chosen Cancel');
-        }
-        }
-        //end GF33087
-
         window.console && console.log("GF32723 1 in ShowSelection()");
         if (opener.document == null)
         window.close();
@@ -281,7 +271,7 @@
         opener.document.newDECForm.conceptID.value = conceptID? conceptID: '';
         var tempStr = 'SearchResultsBlocks.jsp EnableButtons conceptName [' + opener.document.newDECForm.conceptName.value + '] conceptID [' + opener.document.newDECForm.conceptID.value + ']';
         window.console && console.log(tempStr);
-        alert(tempStr);
+        //alert(tempStr);
         //end GF33087
 
         //begin GF32723

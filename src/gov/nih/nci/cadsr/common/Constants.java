@@ -24,6 +24,8 @@ public class Constants {
 	public static final String DTS_VOCAB_NCIT = "NCI Thesaurus";
 	public static final String DTS_VOCAB_NCI_META = "NCI MetaThesaurus";
 	public static final String DEC_EVS_LOOKUP_FLAG = "EVS_LOOKUP_FLAG";
+	//GF33087
+	public static final String DEC_EVS_MATCHED_COUNT = "DEC_EVS_MATCHED_COUNT";
 	
 	//GF32153
 	public static final String ERR_LOGON_ISSUE = "Could not validate the User Name and Password, please try again.";
