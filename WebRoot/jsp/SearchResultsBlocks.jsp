@@ -234,28 +234,28 @@
             <% } %>
         }
 
-    function ShowSelection()
-    {
-        //begin GF33087
-        App.wait();
-        var idx = document.searchParmsForm.listContextFilterVocab.selectedIndex;
-        var userSelectedVocabName = document.searchParmsForm.listContextFilterVocab[idx].text;
+        function ShowSelection() {
+            //begin GF33087
+            /*
+            App.wait();
+            var idx = document.searchParmsForm.listContextFilterVocab.selectedIndex;
+            var userSelectedVocabName = document.searchParmsForm.listContextFilterVocab[idx].text;
 
-        if(userSelectedVocabName === undefined)  {
-            userSelectedVocabName = "nothing";
-        }
-        //prefetch matched count check, if any
-        timer = setInterval(dojoGetEVSNCItTermMatchedCount(userSelectedVocabName), 5000);
+            if(userSelectedVocabName === undefined) {
+                userSelectedVocabName = "nothing";
+            }
+            //prefetch matched count check, if any
+            timer = setInterval(dojoGetEVSNCItTermMatchedCount(userSelectedVocabName), 5000);
 
-        //alert('matched count = ' + getEVSMatchedCount());
-        window.console && console.log("GF32723 1 in ShowSelection()");
-        App.resume();
-        return;
-        //end GF33087
+            //alert('matched count = ' + getEVSMatchedCount());
+            window.console && console.log("GF32723 1 in ShowSelection()");
+            */
+            //end GF33087
 
 
-        if (opener.document == null)
-            window.close();
+            if (opener.document == null)
+                window.close();
+
             ShowUseSelection("<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
         }
 
@@ -287,7 +287,12 @@
                             window.console && console.log('SearchResultsBlocks.jsp dojoGetEVSNCItTermMatchedCount: User had chosen Cancel (skipStandardConcept set to ' + skipStandardConcept + ')');
                         }
                         window.console && console.log("SearchResultsBlocks.jsp dojoGetEVSNCItTermMatchedCount: invoking submitAfterConfirmation() ...");
-                        submitAfterConfirmation(userSelectedVocabName, skipStandardConcept);
+                        doEVSCheckAfterConfirmation(userSelectedVocabName, skipStandardConcept);
+
+                        if (opener.document == null)
+                            window.close();
+
+                        ShowUseSelection("<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
                     } else {
                         window.console && console.log("SearchResultsBlocks.jsp results.status is not true, nothing is done");
                     }
@@ -296,7 +301,7 @@
         }
 
         /** This function handles the submission to the backend after the user's selection (Ok or Cancel) */
-        function submitAfterConfirmation(userSelectedVocabName, skipStandardConcept) {
+        function doEVSCheckAfterConfirmation(userSelectedVocabName, skipStandardConcept) {
             if(userSelectedVocabName !== 'nothing') {
                 window.console && console.log('SearchResultsBlocks.jsp calling dojoCheckEVSStatus with skipStandardConcept = [' + skipStandardConcept + '] ...');
                 timer = setInterval(dojoCheckEVSStatus(skipStandardConcept), 5000);
