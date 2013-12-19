@@ -25,6 +25,7 @@ L--%>
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/SearchParameters.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
+        <SCRIPT LANGUAGE="JavaScript" SRC="js/app.js"></SCRIPT>
 		<%
 					Session_Data sessionData = (Session_Data) session
 					.getAttribute(Session_Data.CURATION_SESSION_ATTR);

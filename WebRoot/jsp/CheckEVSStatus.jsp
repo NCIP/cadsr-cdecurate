@@ -8,8 +8,8 @@
     String evsDone =
     //"true";
     (String)session.getAttribute(Constants.DEC_EVS_LOOKUP_FLAG);
-    String evsMatchedCount =
-    (String)session.getAttribute(Constants.DEC_EVS_MATCHED_COUNT);
+    Integer evsMatchedCount =
+    (Integer)session.getAttribute(Constants.DEC_EVS_MATCHED_COUNT);
     System.out.print("CheckEVSStatus invoked ...");
 %>
 {

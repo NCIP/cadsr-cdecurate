@@ -201,7 +201,7 @@ function closeDep()
     if (searchWindow && !searchWindow.closed) {// && searchWindow.open
         window.console && console.log('CreateDEC.js closing searchWindow ...');
         searchWindow.close();
-        //window.console && console.log('CreateDEC.js closing of searchWindow prevented (GF32723)');
+//        window.console && console.log('CreateDEC.js closing of searchWindow prevented (GF33087)');
     }
     if(altWindow && !altWindow.closed) {  // && altWindow.open
         window.console && console.log('CreateDEC.js closing altWindow ...');
@@ -377,11 +377,12 @@ function TrimDefinition(type)
 
   function SubmitDEC()
   {
-     hourglass();
+     App.wait();
      document.newDECForm.pageAction.value = "submit"
      document.newDECForm.Message.style.visibility="visible";
      window.status = "submitting data, it may take a minute, please wait....."
      document.newDECForm.submit();
+     App.resume();
   }
   
   //contact edits
@@ -464,7 +465,7 @@ function TrimDefinition(type)
       isValid = isNameTypeValid(); 
 	if (isValid == "valid")
 	{
-        //hourglass();  //GF32723
+        showWaitMessage();  //hourglass();  //GF32723
        //keep the blocks selection list selected
        selectBlocksList();
        //keep the cscsi selection list selected
@@ -493,64 +494,22 @@ function TrimDefinition(type)
             userSelectedVocabName = document.newDECForm.userSelectedVocab.value;    //document.searchParmsForm.listContextFilterVocab[document.searchParmsForm.listContextFilterVocab.selectedIndex].text;
         }
         window.console && console.log('CreateDEC.js SubmitValidate(origin) userSelectedVocabName is [' + userSelectedVocabName + ']');
-
-        //begin GF33087 prefetch matched count check, if any
-        timer = setInterval(dojoGetEVSNCItTermMatchedCount(userSelectedVocabName), 5000);
-
-
-        //end GF33087
-
+        if(userSelectedVocabName !== 'nothing') {
+            window.console && console.log('calling dojoCheckEVSStatus ...');
+            timer = setInterval(dojoCheckEVSStatus, 5000);
+//            dojoCheckEVSStatus();
+        } else {
+            window.console && console.log('CreateDEC.js SubmitValidate(origin) dojoCheckEVSStatus skipped as vocab is ['+ userSelectedVocabName + ']');
+        }
         //end GF32723
     }
   }
 
-    //begin GF33087
-    function dojoGetEVSNCItTermMatchedCount(userSelectedVocabName) {
-        window.console && console.log('dojoGetEVSNCItTermMatchedCount called');
-        dojo.xhrGet({
-            // The URL to request
-            url: "jsp/CheckEVSStatus.jsp", handleAs:"json",
-            // The method that handles the request's successful result
-            // Handle the response any way you'd like!
-            load: function(result) {
-                window.console && console.log("dojoGetEVSNCItTermMatchedCount: The flag is [" + result.status + "]");
-                if(result && result.status && result.status === "true") {
-                    clearInterval(timer);
-                    window.console && console.log("dojoGetEVSNCItTermMatchedCount: The flag is cleared!");
-                    //=== set skip flag if required
-                    if(result.matchedCount && result.matchedCount !== 1) {  //if 0 or > 1, just use user's selection
-                        userSelectedVocabName = 'nothing';  //piggyback on 'nothing' for skipping standard term replacement
-                    }
-                    if(confirm('Click "OK" to proceed with replacing selected concept with NCIt concept. Click "Cancel" to use the non-NCIt concept.')) {
-                        skipStandardConcept = false;
-                        window.console && console.log('dojoGetEVSNCItTermMatchedCount: User had chosen Ok (skipStandardConcept set to ' + skipStandardConcept + ')');
-                    } else {
-                        skipStandardConcept = true;
-                        window.console && console.log('dojoGetEVSNCItTermMatchedCount: User had chosen Cancel (skipStandardConcept set to ' + skipStandardConcept + ')');
-                    }
-                    //end GF33087
-                    window.console && console.log("dojoGetEVSNCItTermMatchedCount: invoking submitAfterConfirmation() ...");
-                    submitAfterConfirmation(userSelectedVocabName, skipStandardConcept);
-                }
-            }
-        });
-    }
-    //end GF33087
-
-  /** This function handles the submission to the backend after the user's selection (Ok or Cancel) */
-  function submitAfterConfirmation(userSelectedVocabName, skipStandardConcept) {
-      if(userSelectedVocabName !== 'nothing') {
-          window.console && console.log('calling dojoCheckEVSStatus with skipStandardConcept = [' + skipStandardConcept + '] ...');
-          timer = setInterval(dojoCheckEVSStatus(skipStandardConcept), 5000);
-          //dojoCheckEVSStatus();
-      } else {
-          window.console && console.log('CreateDEC.js SubmitValidate(origin) dojoCheckEVSStatus skipped as vocab is ['+ userSelectedVocabName + ']');
-      }
-
-      //submit the form
-      window.console && console.log('CreateDEC.js SubmitValidate(origin) submitting form to DataElementConceptServlet.java doDECUseSelection() ...');
-      document.newDECForm.submit();
-      window.console && console.log('CreateDEC.js SubmitValidate(origin) form submitted');
+  function submitNewDECForm() {
+    //submit the form
+    window.console && console.log('CreateDEC.js SubmitValidate(origin) submitting form to DataElementConceptServlet.java doDECUseSelection() ...');
+    document.newDECForm.submit();
+    window.console && console.log('CreateDEC.js SubmitValidate(origin) form submitted');
   }
 
     function dojoCheckEVSStatus(skipStandardConcept) {
@@ -563,6 +522,8 @@ function TrimDefinition(type)
             load: function(result) {
                 window.console && console.log("dojoCheckEVSStatus: The flag is [" + result.status + "]");
                 if(result && result.status && result.status === "true") {
+                    submitNewDECForm();
+
                     clearInterval(timer);
                     window.console && console.log("dojoCheckEVSStatus: The flag is cleared!");
                 }

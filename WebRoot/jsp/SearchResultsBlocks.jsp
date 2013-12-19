@@ -46,6 +46,7 @@
         <SCRIPT LANGUAGE="JavaScript" SRC="js/SearchResultsBlocks.js"></SCRIPT>
         <SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
         <SCRIPT LANGUAGE="JavaScript" SRC="js/popupMenus.js"></SCRIPT>
+        <SCRIPT LANGUAGE="JavaScript" SRC="js/app.js"></SCRIPT>
             <%
    //displayable result vector
 //System.out.println(" search results ");
@@ -233,21 +234,78 @@
             <% } %>
         }
 
-        function ShowSelection()
-        {
+    function ShowSelection()
+    {
+        //begin GF33087
+        App.wait();
+        var idx = document.searchParmsForm.listContextFilterVocab.selectedIndex;
+        var userSelectedVocabName = document.searchParmsForm.listContextFilterVocab[idx].text;
+
+        if(userSelectedVocabName === undefined)  {
+            userSelectedVocabName = "nothing";
+        }
+        //prefetch matched count check, if any
+        timer = setInterval(dojoGetEVSNCItTermMatchedCount(userSelectedVocabName), 5000);
+
+        //alert('matched count = ' + getEVSMatchedCount());
         window.console && console.log("GF32723 1 in ShowSelection()");
+        App.resume();
+        return;
+        //end GF33087
+
+
         if (opener.document == null)
-        window.close();
-        ShowUseSelection("<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
+            window.close();
+            ShowUseSelection("<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
         }
 
         function getEVSMatchedCount() {
-        //=== call the backend
-
-        //=== parse the count
-
-        return 1;
+            return 1;
         }
+
+        function dojoGetEVSNCItTermMatchedCount(userSelectedVocabName) {
+            window.console && console.log('SearchResultsBlocks.jsp dojoGetEVSNCItTermMatchedCount called');
+            dojo.xhrGet({
+                // The URL to request
+                url: "jsp/CheckEVSStatus.jsp", handleAs:"json",
+                // The method that handles the request's successful result
+                // Handle the response any way you'd like!
+                load: function(result) {
+                    window.console && console.log("SearchResultsBlocks.jsp dojoGetEVSNCItTermMatchedCount: The flag is [" + result.status + "]");
+                    if(result && result.status) {
+                        clearInterval(timer);
+                        window.console && console.log("SearchResultsBlocks.jsp dojoGetEVSNCItTermMatchedCount: The flag is cleared!");
+                        //=== set skip flag if required
+                        if(result.matchedCount && result.matchedCount !== 1) {  //if 0 or > 1, just use user's selection
+                            userSelectedVocabName = 'nothing';  //piggyback on 'nothing' for skipping standard term replacement
+                        }
+                        if(confirm('Click "OK" to proceed with replacing selected concept with NCIt concept. Click "Cancel" to use the non-NCIt concept.')) {
+                            skipStandardConcept = false;
+                            window.console && console.log('SearchResultsBlocks.jsp dojoGetEVSNCItTermMatchedCount: User had chosen Ok (skipStandardConcept set to ' + skipStandardConcept + ')');
+                        } else {
+                            skipStandardConcept = true;
+                            window.console && console.log('SearchResultsBlocks.jsp dojoGetEVSNCItTermMatchedCount: User had chosen Cancel (skipStandardConcept set to ' + skipStandardConcept + ')');
+                        }
+                        window.console && console.log("SearchResultsBlocks.jsp dojoGetEVSNCItTermMatchedCount: invoking submitAfterConfirmation() ...");
+                        submitAfterConfirmation(userSelectedVocabName, skipStandardConcept);
+                    } else {
+                        window.console && console.log("SearchResultsBlocks.jsp results.status is not true, nothing is done");
+                    }
+                }
+            });
+        }
+
+        /** This function handles the submission to the backend after the user's selection (Ok or Cancel) */
+        function submitAfterConfirmation(userSelectedVocabName, skipStandardConcept) {
+            if(userSelectedVocabName !== 'nothing') {
+                window.console && console.log('SearchResultsBlocks.jsp calling dojoCheckEVSStatus with skipStandardConcept = [' + skipStandardConcept + '] ...');
+                timer = setInterval(dojoCheckEVSStatus(skipStandardConcept), 5000);
+                //dojoCheckEVSStatus();
+            } else {
+                window.console && console.log('SearchResultsBlocks.jsp dojoCheckEVSStatus skipped as vocab is ['+ userSelectedVocabName + ']');
+            }
+        }
+        //end GF33087
 
         function reSetAttribute()
         {
@@ -398,7 +456,7 @@
         <table border="0">
         <tr align="left">
         <td>
-        <input type="button" name="editSelectedBtn" value="Link Concept" onClick="ShowSelection();" disabled>
+        <input type="button" name="editSelectedBtn" value="Link Concept" onClick="this.disabled=true;ShowSelection();" disabled>
         &nbsp;&nbsp;
         <input type="button" name="btnSubConcepts" value="Get Subconcepts" onmouseover="controlsubmenu2(event,'divAssACMenu',null,null,null)" onmouseout="closeall()" disabled>
         &nbsp;&nbsp;
