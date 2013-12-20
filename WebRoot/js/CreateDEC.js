@@ -89,7 +89,7 @@ function MM_callJS(jsStr) { //v2.0
 //  opens a window for large status messages
 function displayStatusWindow()
 {
-  9  if (statusWindow && !statusWindow.closed)
+    if (statusWindow && !statusWindow.closed)
         statusWindow.close()
     var windowW = (screen.width/2) - 230;
     statusWindow = window.open("jsp/OpenStatusWindow.jsp", "statusWindow", "width=475,height=545,top=0,left=" + windowW + ",resizable=yes,scrollbars=yes")      
@@ -484,8 +484,8 @@ function TrimDefinition(type)
 	   document.newDECForm.btnAltName.disabled = true;
 	   document.newDECForm.btnRefDoc.disabled = true;
 
-        //begin GF32723
-        var timer;
+        //begin GF33087
+        //var timer;    //global, bad I know
         //alert(document.newDECForm && document.newDECForm.userSelectedVocab && document.newDECForm.userSelectedVocab.value);
         var userSelectedVocabName;
         if(document.newDECForm.userSelectedVocab === undefined)  {
@@ -496,28 +496,19 @@ function TrimDefinition(type)
         window.console && console.log('CreateDEC.js SubmitValidate(origin) userSelectedVocabName is [' + userSelectedVocabName + ']');
         if(userSelectedVocabName !== 'nothing') {
             window.console && console.log('calling dojoCheckEVSStatus ...');
-            timer = setInterval(dojoCheckEVSStatus, 5000);
-//            dojoCheckEVSStatus();
+            timer = setInterval(dojoGetEVSNCItTermMatchedCount, 5000);
+            //dojoCheckEVSStatus();
+            window.console && console.log('CreateDEC.js about to call dojoSubmitNewDECForm() ...');
+            dojoSubmitNewDECForm();
+            window.console && console.log('CreateDEC.js dojoSubmitNewDECForm() called (submitted)');
         } else {
             window.console && console.log('CreateDEC.js SubmitValidate(origin) dojoCheckEVSStatus skipped as vocab is ['+ userSelectedVocabName + ']');
+            window.console && console.log('CreateDEC.js about to call submitNewDECForm() ...');
+            submitNewDECForm();
+            window.console && console.log('CreateDEC.js submitNewDECForm() called (submitted)');
+            searchWindow.close();
         }
-        //end GF32723
-
-        alert('CreateDEC.js about to call submitNewDECForm() ...');
-
-        submitNewDECForm();
-
-        alert('CreateDEC.js submitNewDECForm() called (submitted)');
-
-        //begin GF33087
-        App.wait();
-        //prefetch matched count check, if any
-        timer = setInterval(dojoGetEVSNCItTermMatchedCount(userSelectedVocabName), 5000);
-        submitNewDECForm();
-        App.resume();
         //end GF33087
-
-
     }
   }
     
@@ -525,8 +516,9 @@ function TrimDefinition(type)
         return 1;
     }
 
+    /** This should be the first call to the backend to check if there is any match, if if the second call is required for LexEVS term lookup and replacement */
     function dojoGetEVSNCItTermMatchedCount(userSelectedVocabName) {
-        window.console && console.log('SearchResultsBlocks.jsp dojoGetEVSNCItTermMatchedCount called');
+        window.console && console.log('CreateDEC.js dojoGetEVSNCItTermMatchedCount called');
         dojo.xhrGet({
             // The URL to request
             url: "jsp/CheckEVSStatus.jsp", handleAs:"json",
@@ -534,7 +526,7 @@ function TrimDefinition(type)
             // Handle the response any way you'd like!
             load: function(result) {
                 window.console && console.log("CreateDEC.js dojoGetEVSNCItTermMatchedCount: The flag is [" + result.status + "]");
-                if(result && result.status) {
+                if(result && result.status && result.status === true) {
                     clearInterval(timer);
                     window.console && console.log("CreateDEC.js dojoGetEVSNCItTermMatchedCount: The flag is cleared!");
                     //=== set skip flag if required
@@ -548,13 +540,17 @@ function TrimDefinition(type)
                         skipStandardConcept = true;
                         window.console && console.log('CreateDEC.js dojoGetEVSNCItTermMatchedCount: User had chosen Cancel (skipStandardConcept set to ' + skipStandardConcept + ')');
                     }
+
                     window.console && console.log("CreateDEC.js dojoGetEVSNCItTermMatchedCount: invoking submitAfterConfirmation() ...");
                     doEVSCheckAfterConfirmation(userSelectedVocabName, skipStandardConcept);
-    
-                    if (opener.document == null)
+
+                    submitNewDECForm();
+
+                    //if (opener.document == null)
                         window.close();
-    
+
                     ShowUseSelection("<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
+
                 } else {
                     window.console && console.log("CreateDEC.js results.status is not true, nothing is done");
                 }
@@ -572,6 +568,24 @@ function TrimDefinition(type)
             window.console && console.log('CreateDEC.js dojoCheckEVSStatus skipped as vocab is ['+ userSelectedVocabName + ']');
         }
     }
+
+    function dojoSubmitNewDECForm() {
+        //submit the form behind the scene
+        window.console && console.log('CreateDEC.js dojoSubmitNewDECForm() submitting form to DataElementConceptServlet.java doDECUseSelection() ...');
+        dojo.xhrPost({
+            // The URL to request
+            url: 'NCICurationServlet?reqType=newDECfromForm',
+            // The method that handles the request's successful result
+            // Handle the response any way you'd like!
+            load: function(result) {
+                window.console && console.log("dojoSubmitNewDECForm: Submitted");
+//                if(result && result.status && result.status === true) {
+//                }
+            }
+        });
+
+        window.console && console.log('CreateDEC.js dojoSubmitNewDECForm() form submitted');
+    }
     //end GF33087
 
   function submitNewDECForm() {
@@ -581,6 +595,7 @@ function TrimDefinition(type)
     window.console && console.log('CreateDEC.js submitNewDECForm() form submitted');
   }
 
+    /** This should be the second call to the backend for LexEVS term lookup and replacement */
     function dojoCheckEVSStatus(skipStandardConcept) {
         window.console && console.log('dojoCheckEVSStatus called, skipStandardConcept is [' + skipStandardConcept + ']');
         dojo.xhrGet({
@@ -590,11 +605,14 @@ function TrimDefinition(type)
             // Handle the response any way you'd like!
             load: function(result) {
                 window.console && console.log("dojoCheckEVSStatus: The flag is [" + result.status + "]");
-                if(result && result.status && result.status === "true") {
-                    submitNewDECForm();
-
-                    clearInterval(timer);
+                if(result && result.status && result.status === true) {
+//                    timer = setInterval(dojoGetEVSNCItTermMatchedCount(userSelectedVocabName), 5000);
+//                    alert('CreateDEC.js dojoCheckEVSStatus: about to call submitNewDECForm() ...');
+//                    submitNewDECForm();
+//                    alert('CreateDEC.js dojoCheckEVSStatus: submitNewDECForm() called (submitted)');
+                    clearTimeout(timer);
                     window.console && console.log("dojoCheckEVSStatus: The flag is cleared!");
+                    searchWindow.close();
                 }
             }
         });
@@ -603,6 +621,9 @@ function TrimDefinition(type)
   function showWaitMessage() {
       hourglass();  //GF32723
       document.newDECForm.Message.style.visibility="visible";  //GF32723
+//      if(document.searchResultsForm !== undefined) {
+//          document.searchResultsForm.Message.style.visibility="visible";  //GF33087
+//      }
   }
 
   //alerts if preferred name type was not selected

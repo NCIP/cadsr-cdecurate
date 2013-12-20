@@ -390,7 +390,7 @@
         <table border="0">
         <tr align="left">
         <td>
-        <input type="button" name="editSelectedBtn" value="Link Concept" onClick="this.disabled=true;ShowSelection();" disabled>
+        <input type="button" name="editSelectedBtn" value="Link Concept" onClick="this.disabled=true;parent.Message.style.visibility='visible';ShowSelection();" disabled>
         &nbsp;&nbsp;
         <input type="button" name="btnSubConcepts" value="Get Subconcepts" onmouseover="controlsubmenu2(event,'divAssACMenu',null,null,null)" onmouseout="closeall()" disabled>
         &nbsp;&nbsp;
