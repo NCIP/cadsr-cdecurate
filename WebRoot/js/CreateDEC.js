@@ -89,7 +89,7 @@ function MM_callJS(jsStr) { //v2.0
 //  opens a window for large status messages
 function displayStatusWindow()
 {
-    if (statusWindow && !statusWindow.closed)
+  9  if (statusWindow && !statusWindow.closed)
         statusWindow.close()
     var windowW = (screen.width/2) - 230;
     statusWindow = window.open("jsp/OpenStatusWindow.jsp", "statusWindow", "width=475,height=545,top=0,left=" + windowW + ",resizable=yes,scrollbars=yes")      
@@ -484,7 +484,7 @@ function TrimDefinition(type)
 	   document.newDECForm.btnAltName.disabled = true;
 	   document.newDECForm.btnRefDoc.disabled = true;
 
-	   //begin GF32723
+        //begin GF32723
         var timer;
         //alert(document.newDECForm && document.newDECForm.userSelectedVocab && document.newDECForm.userSelectedVocab.value);
         var userSelectedVocabName;
@@ -502,14 +502,83 @@ function TrimDefinition(type)
             window.console && console.log('CreateDEC.js SubmitValidate(origin) dojoCheckEVSStatus skipped as vocab is ['+ userSelectedVocabName + ']');
         }
         //end GF32723
+
+        alert('CreateDEC.js about to call submitNewDECForm() ...');
+
+        submitNewDECForm();
+
+        alert('CreateDEC.js submitNewDECForm() called (submitted)');
+
+        //begin GF33087
+        App.wait();
+        //prefetch matched count check, if any
+        timer = setInterval(dojoGetEVSNCItTermMatchedCount(userSelectedVocabName), 5000);
+        submitNewDECForm();
+        App.resume();
+        //end GF33087
+
+
     }
   }
+    
+    function getEVSMatchedCount() {
+        return 1;
+    }
+
+    function dojoGetEVSNCItTermMatchedCount(userSelectedVocabName) {
+        window.console && console.log('SearchResultsBlocks.jsp dojoGetEVSNCItTermMatchedCount called');
+        dojo.xhrGet({
+            // The URL to request
+            url: "jsp/CheckEVSStatus.jsp", handleAs:"json",
+            // The method that handles the request's successful result
+            // Handle the response any way you'd like!
+            load: function(result) {
+                window.console && console.log("CreateDEC.js dojoGetEVSNCItTermMatchedCount: The flag is [" + result.status + "]");
+                if(result && result.status) {
+                    clearInterval(timer);
+                    window.console && console.log("CreateDEC.js dojoGetEVSNCItTermMatchedCount: The flag is cleared!");
+                    //=== set skip flag if required
+                    if(result.matchedCount && result.matchedCount !== 1) {  //if 0 or > 1, just use user's selection
+                        userSelectedVocabName = 'nothing';  //piggyback on 'nothing' for skipping standard term replacement
+                    }
+                    if(confirm('Click "OK" to proceed with replacing selected concept with NCIt concept. Click "Cancel" to use the non-NCIt concept.')) {
+                        skipStandardConcept = false;
+                        window.console && console.log('CreateDEC.js dojoGetEVSNCItTermMatchedCount: User had chosen Ok (skipStandardConcept set to ' + skipStandardConcept + ')');
+                    } else {
+                        skipStandardConcept = true;
+                        window.console && console.log('CreateDEC.js dojoGetEVSNCItTermMatchedCount: User had chosen Cancel (skipStandardConcept set to ' + skipStandardConcept + ')');
+                    }
+                    window.console && console.log("CreateDEC.js dojoGetEVSNCItTermMatchedCount: invoking submitAfterConfirmation() ...");
+                    doEVSCheckAfterConfirmation(userSelectedVocabName, skipStandardConcept);
+    
+                    if (opener.document == null)
+                        window.close();
+    
+                    ShowUseSelection("<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
+                } else {
+                    window.console && console.log("CreateDEC.js results.status is not true, nothing is done");
+                }
+            }
+        });
+    }
+
+    /** This function handles the submission to the backend after the user's selection (Ok or Cancel) */
+    function doEVSCheckAfterConfirmation(userSelectedVocabName, skipStandardConcept) {
+        if(userSelectedVocabName !== 'nothing') {
+            window.console && console.log('CreateDEC.js calling dojoCheckEVSStatus with skipStandardConcept = [' + skipStandardConcept + '] ...');
+            timer = setInterval(dojoCheckEVSStatus(skipStandardConcept), 5000);
+            //dojoCheckEVSStatus();
+        } else {
+            window.console && console.log('CreateDEC.js dojoCheckEVSStatus skipped as vocab is ['+ userSelectedVocabName + ']');
+        }
+    }
+    //end GF33087
 
   function submitNewDECForm() {
     //submit the form
-    window.console && console.log('CreateDEC.js SubmitValidate(origin) submitting form to DataElementConceptServlet.java doDECUseSelection() ...');
+    window.console && console.log('CreateDEC.js submitNewDECForm() submitting form to DataElementConceptServlet.java doDECUseSelection() ...');
     document.newDECForm.submit();
-    window.console && console.log('CreateDEC.js SubmitValidate(origin) form submitted');
+    window.console && console.log('CreateDEC.js submitNewDECForm() form submitted');
   }
 
     function dojoCheckEVSStatus(skipStandardConcept) {
