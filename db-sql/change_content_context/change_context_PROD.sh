@@ -15,60 +15,61 @@ export HOST=@"(description=(address_list=(address=(protocol=TCP)(host=ncidb-dsr-
 #------------- Please change according to the request before executing the script -------------
 export FROM_CONTEXT=CTEP
 export TO_CONTEXT=COG
-export FROM_DATE=2010-02-04
-export TO_DATE=2012-03-16
 
-#------------- One generally DO NOT need to change anything beyond this line -------------
 export DATE_TIME=$(date)
 export CHANGE_NOTE="'Changed from $FROM_CONTEXT to $TO_CONTEXT for $CREATOR by script $DATE_TIME'"
 #echo $CHANGE_NOTE
 #exit
 
+export FROM_DATE=2010-02-04
+export TO_DATE=2012-03-16
 export CREATOR=HARTLEYG
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_all_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR $CHANGE_NOTE
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+export FROM_DATE=2010-03-19
+export TO_DATE=2013-10-22
 export CREATOR=WATSONB
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_all_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR $CHANGE_NOTE
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
 export CREATOR=GEORGIEB
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_all_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR $CHANGE_NOTE
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
 export CREATOR=MATTHEWK
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_all_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR $CHANGE_NOTE
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
 export CREATOR=SIDDIQIF
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_all_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR $CHANGE_NOTE
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
 export CREATOR=MARTINC
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_all_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR $CHANGE_NOTE
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
 export CREATOR=STEWARDN
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_all_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR $CHANGE_NOTE
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
 export CREATOR=BEELEST
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_all_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR $CHANGE_NOTE
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
 export CREATOR=HASENAUB
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_all_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR $CHANGE_NOTE
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
 export CREATOR=CORRALC
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_all_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR $CHANGE_NOTE
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
 export CREATOR=TSANE
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_all_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR $CHANGE_NOTE
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
 export CREATOR=SUBRAMAS
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_all_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR $CHANGE_NOTE
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
 export CREATOR=JONGS
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_all_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR $CHANGE_NOTE
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
 export CREATOR=WONGW
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_all_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR $CHANGE_NOTE
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
 export CREATOR=REEDK
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_all_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR $CHANGE_NOTE
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
 export CREATOR=DONOVANN
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @change_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
+$SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_all_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR $CHANGE_NOTE
 $SQLPLUS_PATHsqlplus $user/$pwd$HOST @check_user_ac_context.sql $FROM_CONTEXT $TO_CONTEXT $FROM_DATE $TO_DATE $CREATOR
