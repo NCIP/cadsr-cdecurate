@@ -494,7 +494,7 @@ function TrimDefinition(type)
             userSelectedVocabName = document.newDECForm.userSelectedVocab.value;    //document.searchParmsForm.listContextFilterVocab[document.searchParmsForm.listContextFilterVocab.selectedIndex].text;
         }
         window.console && console.log('CreateDEC.js SubmitValidate(origin) userSelectedVocabName is [' + userSelectedVocabName + ']');
-        if(userSelectedVocabName !== 'nothing') {
+        if(userSelectedVocabName !== 'nothing' && isAConcept() === 'true') {
             window.console && console.log('calling dojoCheckEVSStatus ...');
             timer = setInterval(dojoGetEVSNCItTermMatchedCount, 5000);
             //dojoCheckEVSStatus();
@@ -504,17 +504,25 @@ function TrimDefinition(type)
         } else {
             window.console && console.log('CreateDEC.js SubmitValidate(origin) dojoCheckEVSStatus skipped as vocab is ['+ userSelectedVocabName + ']');
             window.console && console.log('CreateDEC.js about to call submitNewDECForm() ...');
-            submitNewDECForm();
+            submitNewDECForm(true);
             window.console && console.log('CreateDEC.js submitNewDECForm() called (submitted)');
             searchWindow.close();
         }
         //end GF33087
     }
   }
+
+  function isAConcept() {
+      var flag = document.newDECForm.isAConcept.value;
+      window.console && console.log("CreateDEC.js isAConcept = [" + flag + "]");
+      //alert("Is a concept = [" + flag + "]");
+
+      return flag;
+  }
     
-    function getEVSMatchedCount() {
-        return 1;
-    }
+//    function getEVSMatchedCount() {
+//        return 1;
+//    }
 
     /** This should be the first call to the backend to check if there is any match, if if the second call is required for LexEVS term lookup and replacement */
     function dojoGetEVSNCItTermMatchedCount(userSelectedVocabName) {
@@ -544,12 +552,12 @@ function TrimDefinition(type)
                     window.console && console.log("CreateDEC.js dojoGetEVSNCItTermMatchedCount: invoking submitAfterConfirmation() ...");
                     doEVSCheckAfterConfirmation(userSelectedVocabName, skipStandardConcept);
 
-                    submitNewDECForm();
+                    submitNewDECForm(skipStandardConcept);
 
                     //if (opener.document == null)
                         window.close();
 
-                    ShowUseSelection("<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
+//                    ShowUseSelection("<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
 
                 } else {
                     window.console && console.log("CreateDEC.js results.status is not true, nothing is done");
@@ -570,25 +578,47 @@ function TrimDefinition(type)
     }
 
     function dojoSubmitNewDECForm() {
+        var temp;
         //submit the form behind the scene
-        window.console && console.log('CreateDEC.js dojoSubmitNewDECForm() submitting form to DataElementConceptServlet.java doDECUseSelection() ...');
+        temp = 'CreateDEC.js dojoSubmitNewDECForm() submitting form to DataElementConceptServlet.java doDECUseSelection() ...';
+        //alert(temp)
+        window.console && console.log(temp);
         dojo.xhrPost({
+            sync: true,
+            // Need to serialize the form, otherwise it will post blank!!!
+            form: dojo.byId("newDECForm"),
             // The URL to request
             url: 'NCICurationServlet?reqType=newDECfromForm',
             // The method that handles the request's successful result
             // Handle the response any way you'd like!
             load: function(result) {
-                window.console && console.log("dojoSubmitNewDECForm: Submitted");
-//                if(result && result.status && result.status === true) {
-//                }
+                window.console && console.log("dojoSubmitNewDECForm: loaded");
+                temp = 'CreateDEC.js dojoSubmitNewDECForm: loaded = [' + result + ']';
+                //alert(temp);
+                window.console && console.log(temp);
+                if(result && result.indexOf("</html>") > -1) {     //this check does not mean much
+                }
+            },
+            error: function(error, ioargs) {
+                // error is a Javascript Error() object, but also contains
+                // some other data filled in by Dojo
+                var content = error.responseText;   // response as text
+                var status = error.status;          // status code
+                temp = 'CreateDEC.js dojoSubmitNewDECForm: error content = [' + error.responseText + '] error status = [' + status + "]";
+                alert("Not able to submit a request for EVS NCIt standard term check, please try again.");
+                window.console && console.log(temp);
             }
         });
-
-        window.console && console.log('CreateDEC.js dojoSubmitNewDECForm() form submitted');
+        temp = 'CreateDEC.js dojoSubmitNewDECForm() form submitted';
+        //alert(temp)
+        window.console && console.log(temp);
     }
     //end GF33087
 
-  function submitNewDECForm() {
+  function submitNewDECForm(skipStandardConcept) {
+    if(skipStandardConcept) {
+        document.newDECForm.skipStandardConcept.value = skipStandardConcept;
+    }
     //submit the form
     window.console && console.log('CreateDEC.js submitNewDECForm() submitting form to DataElementConceptServlet.java doDECUseSelection() ...');
     document.newDECForm.submit();

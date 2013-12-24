@@ -20,6 +20,7 @@ import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DECHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.cdecurate.util.LexEVSHelper;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -1006,7 +1007,13 @@ public class DataElementConceptServlet extends CurationServlet {
 		try
 		{
 			HttpSession session = m_classReq.getSession();
-			//begin of GF30798
+	    	//begin of GF33087
+			String skipStandardConcept = (String)m_classReq.getParameter("skipStandardConcept");
+			session.setAttribute(Constants.DEC_SKIP_STANDARD_TERM, skipStandardConcept);
+			System.out.println("DataElementConceptServlet doDECUseSelection: skipStandardConcept = [" + skipStandardConcept + "]");
+	    	//end of GF33087
+
+	    	//begin of GF30798
 			String isAConcept = (String) m_classReq.getParameter("isAConcept");
 			session.setAttribute(isAConcept, isAConcept);
 			System.out.println("*************** isAConcept set to " + isAConcept + " ***************");

@@ -4202,7 +4202,8 @@ public class EVSSearch implements Serializable {
     		Vector<EVS_Bean>  vEvsBeann = new Vector<EVS_Bean>();
     		if (vEvsBean != null){  
 				String vocabName = (String)m_classReq.getParameter("userSelectedVocab");
-				String skipStandardConcept = (String)m_classReq.getParameter("skipStandardConcept");
+                HttpSession session = m_classReq.getSession();
+                String skipStandardConcept = (String) session.getAttribute(Constants.DEC_SKIP_STANDARD_TERM);
     			for (int i = 0; i < vEvsBean.size(); i++) {
     				EVS_Bean eBean = (EVS_Bean) vEvsBean.elementAt(i);
     				//begin GF32723
