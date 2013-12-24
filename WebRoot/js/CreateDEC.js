@@ -199,9 +199,9 @@ function closeDep()
     window.console && console.log('CreateDEC.js closeDep()');
 
     if (searchWindow && !searchWindow.closed) {// && searchWindow.open
-        window.console && console.log('CreateDEC.js closing searchWindow ...');
-        searchWindow.close();
-//        window.console && console.log('CreateDEC.js closing of searchWindow prevented (GF33087)');
+//        window.console && console.log('CreateDEC.js closing searchWindow ...');
+//        searchWindow.close();
+        window.console && console.log('CreateDEC.js closing of searchWindow prevented (GF33087)');
     }
     if(altWindow && !altWindow.closed) {  // && altWindow.open
         window.console && console.log('CreateDEC.js closing altWindow ...');
@@ -533,10 +533,15 @@ function TrimDefinition(type)
             // The method that handles the request's successful result
             // Handle the response any way you'd like!
             load: function(result) {
-                window.console && console.log("CreateDEC.js dojoGetEVSNCItTermMatchedCount: The flag is [" + result.status + "]");
                 if(result && result.status && result.status === true) {
+                    window.console && console.log("CreateDEC.js dojoGetEVSNCItTermMatchedCount: The flag is [" + result.status + "]");
                     clearInterval(timer);
                     window.console && console.log("CreateDEC.js dojoGetEVSNCItTermMatchedCount: The flag is cleared!");
+
+                    window.console && console.log("CreateDEC.js closign searchWindow ...");
+                    searchWindow.close();
+                    window.console && console.log("CreateDEC.js searchWindow closed");
+
                     //=== set skip flag if required
                     if(result.matchedCount && result.matchedCount !== 1) {  //if 0 or > 1, just use user's selection
                         userSelectedVocabName = 'nothing';  //piggyback on 'nothing' for skipping standard term replacement
@@ -554,7 +559,7 @@ function TrimDefinition(type)
 
                     submitNewDECForm(skipStandardConcept);
 
-                    //if (opener.document == null)
+                    if (opener.document == null)
                         window.close();
 
 //                    ShowUseSelection("<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
@@ -634,15 +639,19 @@ function TrimDefinition(type)
             // The method that handles the request's successful result
             // Handle the response any way you'd like!
             load: function(result) {
-                window.console && console.log("dojoCheckEVSStatus: The flag is [" + result.status + "]");
                 if(result && result.status && result.status === true) {
+                    window.console && console.log("dojoCheckEVSStatus: The flag is [" + result.status + "]");
 //                    timer = setInterval(dojoGetEVSNCItTermMatchedCount(userSelectedVocabName), 5000);
 //                    alert('CreateDEC.js dojoCheckEVSStatus: about to call submitNewDECForm() ...');
 //                    submitNewDECForm();
 //                    alert('CreateDEC.js dojoCheckEVSStatus: submitNewDECForm() called (submitted)');
                     clearTimeout(timer);
                     window.console && console.log("dojoCheckEVSStatus: The flag is cleared!");
-                    searchWindow.close();
+
+                    //=== should already be closed by now
+//                    if(searchWindow !== undefined) {    //cause "object Error" if close without checking for existence
+//                        searchWindow.close();
+//                    }
                 }
             }
         });
