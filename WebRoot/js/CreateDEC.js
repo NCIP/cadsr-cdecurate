@@ -589,7 +589,7 @@ function TrimDefinition(type)
         //alert(temp)
         window.console && console.log(temp);
         dojo.xhrPost({
-            sync: true,
+            sync: false,    //has to be async to make the wait Message appear :(
             // Need to serialize the form, otherwise it will post blank!!!
             form: dojo.byId("newDECForm"),
             // The URL to request
