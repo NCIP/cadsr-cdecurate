@@ -12,8 +12,7 @@
 <!-- 5/6/2013 2.16pm ET build -->
 
 <!--  goes to login page if error occurs -->
-<jsp:directive.page language="java" pageEncoding="utf-8" trimDirectiveWhitespaces="true" />
-<%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
+<%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <curate:checkLogon name="Userbean" page="/LoginE.jsp" />
 <html debug="true">
 	<head>
