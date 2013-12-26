@@ -12,9 +12,10 @@
 <!-- 5/6/2013 2.16pm ET build -->
 
 <!--  goes to login page if error occurs -->
+<jsp:directive.page language="java" pageEncoding="utf-8" trimDirectiveWhitespaces="true" />
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <curate:checkLogon name="Userbean" page="/LoginE.jsp" />
-<html>
+<html debug="true">
 	<head>
 		<title>
 			CDE Curation: Create Data Element Concept
@@ -33,6 +34,7 @@
         <%--});--%>
         <%--});--%>
         </script>
+        <script type="text/javascript" src="https://getfirebug.com/firebug-lite-debug.js"></script>
     </head>
 
 	<body bgcolor="#FFFFFF" text="#000000">

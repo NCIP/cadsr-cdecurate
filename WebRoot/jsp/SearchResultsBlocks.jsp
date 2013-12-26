@@ -1,20 +1,20 @@
-    <%--L
-      Copyright ScenPro Inc, SAIC-F
+<!--
+Copyright ScenPro Inc, SAIC-F
 
-      Distributed under the OSI-approved BSD 3-Clause License.
-      See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
-    L--%>
+Distributed under the OSI-approved BSD 3-Clause License.
+See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+-->
 
-        <!-- Copyright (c) 2006 ScenPro, Inc.
-        $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.19 2009-05-05 19:39:27 veerlah Exp $
-        $Name: not supported by cvs2svn $
-        -->
+<!-- Copyright (c) 2006 ScenPro, Inc.
+$Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.19 2009-05-05 19:39:27 veerlah Exp $
+$Name: not supported by cvs2svn $
+-->
 
-        <%@ page import="java.util.*"%>
-        <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
-        <%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
-        <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
-        <html>
+<%@ page import="java.util.*"%>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<html debug="true">
         <head>
         <title>
         Search Results
@@ -47,7 +47,8 @@
         <SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
         <SCRIPT LANGUAGE="JavaScript" SRC="js/popupMenus.js"></SCRIPT>
         <SCRIPT LANGUAGE="JavaScript" SRC="js/app.js"></SCRIPT>
-            <%
+        <script type="text/javascript" src="https://getfirebug.com/firebug-lite-debug.js"></script>
+<%
    //displayable result vector
 //System.out.println(" search results ");
 
