@@ -633,18 +633,24 @@ function TrimDefinition(type)
     /** This should be the second call to the backend for LexEVS term lookup and replacement */
     function dojoCheckEVSStatus(skipStandardConcept) {
         window.console && console.log('dojoCheckEVSStatus called, skipStandardConcept is [' + skipStandardConcept + ']');
+        window.console && console.log('1 dojoCheckEVSStatus dojo = [' + dojo + '] skipStandardConcept [' + skipStandardConcept + ']');
+        if(skipStandardConcept === undefined) skipStandardConcept = false;
+        window.console && console.log('2 dojoCheckEVSStatus dojo = [' + dojo + '] skipStandardConcept [' + skipStandardConcept + ']');
         dojo.xhrGet({
             // The URL to request
             url: "jsp/CheckEVSStatus.jsp?skipStandardConcept=" + skipStandardConcept, handleAs:"json",
             // The method that handles the request's successful result
             // Handle the response any way you'd like!
             load: function(result) {
+                window.console && console.log('dojoCheckEVSStatus result = [' + result + ']');
+                window.console && console.dir && console.dir(result);
                 if(result && result.status && result.status === true) {
                     window.console && console.log("dojoCheckEVSStatus: The flag is [" + result.status + "]");
 //                    timer = setInterval(dojoGetEVSNCItTermMatchedCount(userSelectedVocabName), 5000);
 //                    alert('CreateDEC.js dojoCheckEVSStatus: about to call submitNewDECForm() ...');
 //                    submitNewDECForm();
 //                    alert('CreateDEC.js dojoCheckEVSStatus: submitNewDECForm() called (submitted)');
+                    window.console && console.log('dojoCheckEVSStatus timer = [' + timer + ']');
                     clearTimeout(timer);
                     window.console && console.log("dojoCheckEVSStatus: The flag is cleared!");
 
