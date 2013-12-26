@@ -631,10 +631,10 @@ function TrimDefinition(type)
   }
 
 //=== uncomment the following just for jslint.com
-'use strict';
-var window;
-var console;
-var timer;
+//'use strict';
+//var window;
+//var console;
+//var timer;
 
 /** This should be the second call to the backend for LexEVS term lookup and replacement */
 function dojoCheckEVSStatus(skipStandardConcept) {
