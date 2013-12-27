@@ -1008,6 +1008,10 @@ public class DataElementConceptServlet extends CurationServlet {
 		{
 			HttpSession session = m_classReq.getSession();
 	    	//begin of GF33087
+			//=== clear previous session's count first (ASSUMPTION: one user one session only!!!)
+            DataManager.setAttribute(session, "evsDone", null);
+		    DataManager.setAttribute(session, Constants.DEC_EVS_MATCHED_COUNT, null);
+
 			String skipStandardConcept = (String)m_classReq.getParameter("skipStandardConcept");
 			session.setAttribute(Constants.DEC_SKIP_STANDARD_TERM, skipStandardConcept);
 			System.out.println("DataElementConceptServlet doDECUseSelection: skipStandardConcept = [" + skipStandardConcept + "]");

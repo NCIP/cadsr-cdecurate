@@ -47,7 +47,7 @@ $Name: not supported by cvs2svn $
         <SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
         <SCRIPT LANGUAGE="JavaScript" SRC="js/popupMenus.js"></SCRIPT>
         <SCRIPT LANGUAGE="JavaScript" SRC="js/app.js"></SCRIPT>
-        <script type="text/javascript" src="https://getfirebug.com/firebug-lite-debug.js"></script>
+        <%--<script type="text/javascript" src="https://getfirebug.com/firebug-lite-debug.js"></script>--%>
 <%
    //displayable result vector
 //System.out.println(" search results ");
