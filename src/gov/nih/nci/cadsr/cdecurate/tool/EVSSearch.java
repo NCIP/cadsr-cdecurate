@@ -2813,6 +2813,7 @@ public class EVSSearch implements Serializable {
                                                                 iLevel, "", "", "", "",
                                                                 sSemantic, "", "");
                                                 conBean.setPREF_VOCAB_CODE(sCodeSrc); //store pref code in the bean
+                                                conBean.setEVS_DATABASE(Constants.DTS_VOCAB_NCIT);	//GF33087
                                                 vList.addElement(conBean); //add concept bean to vector
                                         }
                                 } else {
@@ -2824,6 +2825,7 @@ public class EVSSearch implements Serializable {
                                                         iLevel, "", "", "", "",
                                                         sSemantic, "", "");
                                         conBean.setPREF_VOCAB_CODE(sCodeSrc); //store pref code in the bean
+                                        conBean.setEVS_DATABASE(Constants.DTS_VOCAB_NCIT);	//GF33087
                                         vList.addElement(conBean); //add concept bean to vector              
                                 }
                         }

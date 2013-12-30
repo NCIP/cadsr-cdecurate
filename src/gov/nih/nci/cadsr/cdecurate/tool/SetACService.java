@@ -709,7 +709,7 @@ public class SetACService implements Serializable
 					System.out.println("conType = "+m_OC.getIDSEQ());
 					
 					String detl_type=(String) session.getAttribute("userSelectedVocabOC");
-					if(detl_type!= null && detl_type.equals("RADLEX")) detl_type="RadLex";
+					if(detl_type!= null && detl_type.equals("RADLEX")) detl_type="RadLex";	//GF32723 only at times, thus is hard to make this right without hard-coding
 					String detl_name=(String) session.getAttribute("userSelectedConCodeOC");
 					System.out.println("detl_type="+req.getParameter("userSelectedVocabOC"));
 					System.out.println("detl_name="+req.getParameter("userSelectedConCodeOC"));
@@ -1203,9 +1203,9 @@ public class SetACService implements Serializable
 					String desIDSEQ="";
 					String sReturnCode="";
 					if(!AdministeredItemUtil.isAlternateDesignationExists(type, name, altSession)) {
-						sReturnCode=ins.setDES("INS", "EA999EED-D594-3BF1-E040-BB8921B62488", m_VD.getContextIDSEQ(), m_VD.getContextName(), "RadLex", "RID1543", "ENGLISH", desIDSEQ);
-							//System.out.println("************************ VD SetACService: AC [" + m_VD.getVD_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
-						
+						//sReturnCode=ins.setDES("INS", "EA999EED-D594-3BF1-E040-BB8921B62488", m_VD.getContextIDSEQ(), m_VD.getContextName(), "RadLex", "RID1543", "ENGLISH", desIDSEQ);
+						sReturnCode=ins.setDES("INS", m_VD.getVD_REP_IDSEQ(), m_VD.getContextIDSEQ(), m_VD.getContextName(), type, name, "ENGLISH", desIDSEQ);
+						//System.out.println("************************ VD SetACService: AC [" + m_VD.getVD_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
 					}
 				}
 				//end GF32723

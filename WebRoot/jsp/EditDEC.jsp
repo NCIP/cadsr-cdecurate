@@ -426,7 +426,7 @@
 			<input type="hidden" name="acID" value="<%=sDECIDSEQ%>">
 			<input type="hidden" name="itemType" value="">
 		</form>
-		<form name=newDECForm method="POST" action="../../cdecurate/NCICurationServlet?reqType=editDEC">
+		<form id=newDECForm name=newDECForm method="POST" action="../../cdecurate/NCICurationServlet?reqType=editDEC">    <!-- GF33087 added the form id for DOJO -->
 		    <%String displayErrorMessage = (String)session.getAttribute("displayErrorMessage");
 		    if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
 		  	 <b><font  size="3">Not Authorized for Edits in this Context.</font></b></br></br>
@@ -1643,11 +1643,16 @@ String temp =
 				<% } %>
 			</table>
             <input type="hidden" name="skipStandardConcept" value=""> <!-- GF33087 -->
-            <input type="hidden" name="conceptName" value=""> <!-- GF33087 -->
+            <input type="hidden" name="conceptName" value=""> <!-- GF32723 / GF33087 -->
             <input type="hidden" name="conceptID" value=""> <!-- GF33087 -->
-			<input type="hidden" name="isAConcept" value="false"> <!-- GF30798 -->
-			<input type="hidden" name="userSelectedDef" value="nothing"> <!-- GF30798 -->
-			<input type="hidden" name="pageAction" value="nothing">
+            <input type="hidden" name="isAConcept" value="false"> <!-- GF30798 -->
+            <input type="hidden" name="userSelectedDef" value="nothing"> <!-- GF30798 -->
+            <input type="hidden" name="userSelectedVocab" value="nothing"> <!-- GF32723 -->
+            <input type="hidden" name="userSelectedVocabOC" value="nothing"> <!-- GF32723 -->
+            <input type="hidden" name="userSelectedConCodeOC" value="nothing"> <!-- GF32723 -->
+            <input type="hidden" name="userSelectedVocabPROP" value="nothing"> <!-- GF32723 -->
+            <input type="hidden" name="userSelectedConCodePROP" value="nothing"> <!-- GF32723 -->
+            <input type="hidden" name="pageAction" value="nothing">
 			<input type="hidden" name="decIDSEQ" value="<%=sDECIDSEQ%>">
 			<input type="hidden" name="regStatusIDSEQ" value="<%=sRegStatusIDSEQ%>"> <!-- GF32398 -->
 			<input type="hidden" name="openToTree" value="">

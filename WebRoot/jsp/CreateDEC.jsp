@@ -347,7 +347,7 @@ String propCDR = "";
 			<input type="hidden" name="itemType" value="">
 			<input type="hidden" name="closeWindow" value="">
 		</form>
-		<form id=newDECForm name=newDECForm method="POST" action="../../cdecurate/NCICurationServlet?reqType=newDECfromForm">
+		<form id=newDECForm name=newDECForm method="POST" action="../../cdecurate/NCICurationServlet?reqType=newDECfromForm"> <!-- GF33087 added the form id for DOJO -->
 			<table width="100%" border="0">
 				<tr>
 					<td height="26" align="left" valign="top">

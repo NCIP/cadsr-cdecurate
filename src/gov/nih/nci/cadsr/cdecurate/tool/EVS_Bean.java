@@ -14,7 +14,9 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.util.*;
 import java.io.Serializable;
+
 import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.*;
 
 /**
