@@ -21,8 +21,18 @@ L--%>
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<script>
-history.forward();
-</script>
+        history.forward();
+        </script>
+        <!-- GF32723 load Dojo -->
+        <%--<script src="//ajax.googleapis.com/ajax/libs/dojo/1.8.5/dojo/dojo.js" data-dojo-config="async: true"></script>--%>
+        <script src="js/dojo/dojo/dojo.js" data-dojo-config="async: true"></script>
+        <script>
+        <%--require(["dojo"], function(dojo){--%>
+        <%--dojo.ready(function(){--%>
+        window.console && console.log("CreateDEC.jsp DOJO version used = [" + dojo.version.toString() + "]");
+        <%--});--%>
+        <%--});--%>
+        </script>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.Session_Data"%>
 	</head>
 
