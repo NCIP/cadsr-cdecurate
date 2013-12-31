@@ -1,0 +1,2875 @@
+$ ./change_context_PROD_muliple_users.sh
+input parameters in the order specified:
+old_context to new_context from_date(format YYYY-MM-DD) end_date (format YYYY-MM-DD) curator_id
+Purging old backup ...
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:18:44 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+
+Table dropped.
+
+
+Table dropped.
+
+
+Table dropped.
+
+
+Table dropped.
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+Backup purged! About to execute the real stuff ...
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:18:45 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+
+Table created.
+
+
+  COUNT(*)
+----------
+     52583
+
+
+Table created.
+
+
+  COUNT(*)
+----------
+     67141
+
+
+Table created.
+
+
+  COUNT(*)
+----------
+     17313
+
+
+Table created.
+
+
+  COUNT(*)
+----------
+    971081
+
+old   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: dec.change_note = dec.change_note || ' &6'
+new   4: dec.change_note = dec.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --dec.change_note = '&6'
+new   5: --dec.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   8: and (upper(dec.created_by) = 'HARTLEYG' or lower(dec.created_by) = 'HARTLEYG')
+old   9: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(dec.date_created) >= to_date('2010-02-04', 'YYYY-MM-DD')
+old  10: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(dec.date_created) <= to_date('2012-03-16', 'YYYY-MM-DD')
+dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."DATA_ELEMENT_CONCEPTS"."CONTE_IDSEQ") to NULL
+
+
+old   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: de.change_note = de.change_note || ' &6'
+new   4: de.change_note = de.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --de.change_note = '&6'
+new   5: --de.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   8: and (upper(de.created_by) = 'HARTLEYG' or lower(de.created_by) = 'HARTLEYG')
+old   9: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(de.date_created) >= to_date('2010-02-04', 'YYYY-MM-DD')
+old  10: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(de.date_created) <= to_date('2012-03-16', 'YYYY-MM-DD')
+de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."DATA_ELEMENTS"."CONTE_IDSEQ") to NULL
+
+
+old   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: vd.change_note = vd.change_note || ' &6'
+new   4: vd.change_note = vd.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --vd.change_note = '&6'
+new   5: --vd.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   8: and (upper(vd.created_by) = 'HARTLEYG' or lower(vd.created_by) = 'HARTLEYG')
+old   9: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(vd.date_created) >= to_date('2010-02-04', 'YYYY-MM-DD')
+old  10: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(vd.date_created) <= to_date('2012-03-16', 'YYYY-MM-DD')
+vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."VALUE_DOMAINS"."CONTE_IDSEQ") to NULL
+
+
+old   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: ac.change_note = ac.change_note || ' &6'
+new   4: ac.change_note = ac.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --ac.change_note = '&6'
+new   5: --ac.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old  16: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new  16: and (upper(ac.created_by) = 'HARTLEYG' or lower(ac.created_by) = 'HARTLEYG')
+old  17: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new  17: and trunc(ac.date_created) >= to_date('2010-02-04', 'YYYY-MM-DD')
+old  18: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  18: and trunc(ac.date_created) <= to_date('2012-03-16', 'YYYY-MM-DD')
+ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."ADMINISTERED_COMPONENTS"."CONTE_IDSEQ") to
+NULL
+
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:19:14 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+old   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   4: and (upper(dec.created_by) = 'HARTLEYG' or lower(dec.created_by) = 'HARTLEYG')
+old   5: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(dec.date_created) >= to_date('2010-02-04', 'YYYY-MM-DD')
+old   6: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(dec.date_created) <= to_date('2012-03-16', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   4: and (upper(de.created_by) = 'HARTLEYG' or lower(de.created_by) = 'HARTLEYG')
+old   5: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(de.date_created) >= to_date('2010-02-04', 'YYYY-MM-DD')
+old   6: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(de.date_created) <= to_date('2012-03-16', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   4: and (upper(vd.created_by) = 'HARTLEYG' or lower(vd.created_by) = 'HARTLEYG')
+old   5: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(vd.date_created) >= to_date('2010-02-04', 'YYYY-MM-DD')
+old   6: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(vd.date_created) <= to_date('2012-03-16', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new   4: and (upper(ac.created_by) = 'HARTLEYG' or lower(ac.created_by) = 'HARTLEYG')
+old   5: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(ac.date_created) >= to_date('2010-02-04', 'YYYY-MM-DD')
+old   6: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(ac.date_created) <= to_date('2012-03-16', 'YYYY-MM-DD')
+
+no rows selected
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:19:15 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+CREATE TABLE SBR.DEC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     52583
+
+CREATE TABLE SBR.DE_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     67141
+
+CREATE TABLE SBR.VD_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     17313
+
+CREATE TABLE SBR.AC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+    971081
+
+old   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: dec.change_note = dec.change_note || ' &6'
+new   4: dec.change_note = dec.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --dec.change_note = '&6'
+new   5: --dec.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   8: and (upper(dec.created_by) = 'WATSONB' or lower(dec.created_by) = 'WATSONB')
+old   9: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: de.change_note = de.change_note || ' &6'
+new   4: de.change_note = de.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --de.change_note = '&6'
+new   5: --de.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   8: and (upper(de.created_by) = 'WATSONB' or lower(de.created_by) = 'WATSONB')
+old   9: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: vd.change_note = vd.change_note || ' &6'
+new   4: vd.change_note = vd.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --vd.change_note = '&6'
+new   5: --vd.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   8: and (upper(vd.created_by) = 'WATSONB' or lower(vd.created_by) = 'WATSONB')
+old   9: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: ac.change_note = ac.change_note || ' &6'
+new   4: ac.change_note = ac.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --ac.change_note = '&6'
+new   5: --ac.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old  16: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new  16: and (upper(ac.created_by) = 'WATSONB' or lower(ac.created_by) = 'WATSONB')
+old  17: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new  17: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  18: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  18: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:19:24 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+old   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   4: and (upper(dec.created_by) = 'WATSONB' or lower(dec.created_by) = 'WATSONB')
+old   5: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   4: and (upper(de.created_by) = 'WATSONB' or lower(de.created_by) = 'WATSONB')
+old   5: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   4: and (upper(vd.created_by) = 'WATSONB' or lower(vd.created_by) = 'WATSONB')
+old   5: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new   4: and (upper(ac.created_by) = 'WATSONB' or lower(ac.created_by) = 'WATSONB')
+old   5: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:19:24 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+CREATE TABLE SBR.DEC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     52583
+
+CREATE TABLE SBR.DE_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     67141
+
+CREATE TABLE SBR.VD_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     17313
+
+CREATE TABLE SBR.AC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+    971081
+
+old   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: dec.change_note = dec.change_note || ' &6'
+new   4: dec.change_note = dec.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --dec.change_note = '&6'
+new   5: --dec.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   8: and (upper(dec.created_by) = 'GEORGIEB' or lower(dec.created_by) = 'GEORGIEB')
+old   9: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."DATA_ELEMENT_CONCEPTS"."CONTE_IDSEQ") to NULL
+
+
+old   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: de.change_note = de.change_note || ' &6'
+new   4: de.change_note = de.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --de.change_note = '&6'
+new   5: --de.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   8: and (upper(de.created_by) = 'GEORGIEB' or lower(de.created_by) = 'GEORGIEB')
+old   9: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."DATA_ELEMENTS"."CONTE_IDSEQ") to NULL
+
+
+old   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: vd.change_note = vd.change_note || ' &6'
+new   4: vd.change_note = vd.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --vd.change_note = '&6'
+new   5: --vd.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   8: and (upper(vd.created_by) = 'GEORGIEB' or lower(vd.created_by) = 'GEORGIEB')
+old   9: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."VALUE_DOMAINS"."CONTE_IDSEQ") to NULL
+
+
+old   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: ac.change_note = ac.change_note || ' &6'
+new   4: ac.change_note = ac.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --ac.change_note = '&6'
+new   5: --ac.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old  16: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new  16: and (upper(ac.created_by) = 'GEORGIEB' or lower(ac.created_by) = 'GEORGIEB')
+old  17: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new  17: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  18: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  18: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."ADMINISTERED_COMPONENTS"."CONTE_IDSEQ") to
+NULL
+
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:19:34 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+old   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   4: and (upper(dec.created_by) = 'GEORGIEB' or lower(dec.created_by) = 'GEORGIEB')
+old   5: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   4: and (upper(de.created_by) = 'GEORGIEB' or lower(de.created_by) = 'GEORGIEB')
+old   5: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   4: and (upper(vd.created_by) = 'GEORGIEB' or lower(vd.created_by) = 'GEORGIEB')
+old   5: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new   4: and (upper(ac.created_by) = 'GEORGIEB' or lower(ac.created_by) = 'GEORGIEB')
+old   5: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:19:34 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+CREATE TABLE SBR.DEC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     52583
+
+CREATE TABLE SBR.DE_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     67141
+
+CREATE TABLE SBR.VD_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     17313
+
+CREATE TABLE SBR.AC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+    971081
+
+old   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: dec.change_note = dec.change_note || ' &6'
+new   4: dec.change_note = dec.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --dec.change_note = '&6'
+new   5: --dec.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   8: and (upper(dec.created_by) = 'MATTHEWK' or lower(dec.created_by) = 'MATTHEWK')
+old   9: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: de.change_note = de.change_note || ' &6'
+new   4: de.change_note = de.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --de.change_note = '&6'
+new   5: --de.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   8: and (upper(de.created_by) = 'MATTHEWK' or lower(de.created_by) = 'MATTHEWK')
+old   9: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: vd.change_note = vd.change_note || ' &6'
+new   4: vd.change_note = vd.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --vd.change_note = '&6'
+new   5: --vd.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   8: and (upper(vd.created_by) = 'MATTHEWK' or lower(vd.created_by) = 'MATTHEWK')
+old   9: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: ac.change_note = ac.change_note || ' &6'
+new   4: ac.change_note = ac.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --ac.change_note = '&6'
+new   5: --ac.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old  16: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new  16: and (upper(ac.created_by) = 'MATTHEWK' or lower(ac.created_by) = 'MATTHEWK')
+old  17: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new  17: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  18: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  18: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:19:42 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+old   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   4: and (upper(dec.created_by) = 'MATTHEWK' or lower(dec.created_by) = 'MATTHEWK')
+old   5: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   4: and (upper(de.created_by) = 'MATTHEWK' or lower(de.created_by) = 'MATTHEWK')
+old   5: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   4: and (upper(vd.created_by) = 'MATTHEWK' or lower(vd.created_by) = 'MATTHEWK')
+old   5: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new   4: and (upper(ac.created_by) = 'MATTHEWK' or lower(ac.created_by) = 'MATTHEWK')
+old   5: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:19:43 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+CREATE TABLE SBR.DEC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     52583
+
+CREATE TABLE SBR.DE_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     67141
+
+CREATE TABLE SBR.VD_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     17313
+
+CREATE TABLE SBR.AC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+    971081
+
+old   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: dec.change_note = dec.change_note || ' &6'
+new   4: dec.change_note = dec.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --dec.change_note = '&6'
+new   5: --dec.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   8: and (upper(dec.created_by) = 'SIDDIQIF' or lower(dec.created_by) = 'SIDDIQIF')
+old   9: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: de.change_note = de.change_note || ' &6'
+new   4: de.change_note = de.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --de.change_note = '&6'
+new   5: --de.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   8: and (upper(de.created_by) = 'SIDDIQIF' or lower(de.created_by) = 'SIDDIQIF')
+old   9: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: vd.change_note = vd.change_note || ' &6'
+new   4: vd.change_note = vd.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --vd.change_note = '&6'
+new   5: --vd.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   8: and (upper(vd.created_by) = 'SIDDIQIF' or lower(vd.created_by) = 'SIDDIQIF')
+old   9: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: ac.change_note = ac.change_note || ' &6'
+new   4: ac.change_note = ac.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --ac.change_note = '&6'
+new   5: --ac.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old  16: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new  16: and (upper(ac.created_by) = 'SIDDIQIF' or lower(ac.created_by) = 'SIDDIQIF')
+old  17: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new  17: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  18: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  18: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:19:50 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+old   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   4: and (upper(dec.created_by) = 'SIDDIQIF' or lower(dec.created_by) = 'SIDDIQIF')
+old   5: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   4: and (upper(de.created_by) = 'SIDDIQIF' or lower(de.created_by) = 'SIDDIQIF')
+old   5: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   4: and (upper(vd.created_by) = 'SIDDIQIF' or lower(vd.created_by) = 'SIDDIQIF')
+old   5: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new   4: and (upper(ac.created_by) = 'SIDDIQIF' or lower(ac.created_by) = 'SIDDIQIF')
+old   5: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:19:51 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+CREATE TABLE SBR.DEC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     52583
+
+CREATE TABLE SBR.DE_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     67141
+
+CREATE TABLE SBR.VD_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     17313
+
+CREATE TABLE SBR.AC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+    971081
+
+old   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: dec.change_note = dec.change_note || ' &6'
+new   4: dec.change_note = dec.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --dec.change_note = '&6'
+new   5: --dec.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   8: and (upper(dec.created_by) = 'MARTINC' or lower(dec.created_by) = 'MARTINC')
+old   9: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: de.change_note = de.change_note || ' &6'
+new   4: de.change_note = de.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --de.change_note = '&6'
+new   5: --de.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   8: and (upper(de.created_by) = 'MARTINC' or lower(de.created_by) = 'MARTINC')
+old   9: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: vd.change_note = vd.change_note || ' &6'
+new   4: vd.change_note = vd.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --vd.change_note = '&6'
+new   5: --vd.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   8: and (upper(vd.created_by) = 'MARTINC' or lower(vd.created_by) = 'MARTINC')
+old   9: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: ac.change_note = ac.change_note || ' &6'
+new   4: ac.change_note = ac.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --ac.change_note = '&6'
+new   5: --ac.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old  16: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new  16: and (upper(ac.created_by) = 'MARTINC' or lower(ac.created_by) = 'MARTINC')
+old  17: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new  17: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  18: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  18: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:19:58 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+old   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   4: and (upper(dec.created_by) = 'MARTINC' or lower(dec.created_by) = 'MARTINC')
+old   5: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   4: and (upper(de.created_by) = 'MARTINC' or lower(de.created_by) = 'MARTINC')
+old   5: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   4: and (upper(vd.created_by) = 'MARTINC' or lower(vd.created_by) = 'MARTINC')
+old   5: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new   4: and (upper(ac.created_by) = 'MARTINC' or lower(ac.created_by) = 'MARTINC')
+old   5: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:19:59 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+CREATE TABLE SBR.DEC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     52583
+
+CREATE TABLE SBR.DE_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     67141
+
+CREATE TABLE SBR.VD_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     17313
+
+CREATE TABLE SBR.AC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+    971081
+
+old   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: dec.change_note = dec.change_note || ' &6'
+new   4: dec.change_note = dec.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --dec.change_note = '&6'
+new   5: --dec.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   8: and (upper(dec.created_by) = 'STEWARDN' or lower(dec.created_by) = 'STEWARDN')
+old   9: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."DATA_ELEMENT_CONCEPTS"."CONTE_IDSEQ") to NULL
+
+
+old   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: de.change_note = de.change_note || ' &6'
+new   4: de.change_note = de.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --de.change_note = '&6'
+new   5: --de.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   8: and (upper(de.created_by) = 'STEWARDN' or lower(de.created_by) = 'STEWARDN')
+old   9: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."DATA_ELEMENTS"."CONTE_IDSEQ") to NULL
+
+
+old   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: vd.change_note = vd.change_note || ' &6'
+new   4: vd.change_note = vd.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --vd.change_note = '&6'
+new   5: --vd.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   8: and (upper(vd.created_by) = 'STEWARDN' or lower(vd.created_by) = 'STEWARDN')
+old   9: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."VALUE_DOMAINS"."CONTE_IDSEQ") to NULL
+
+
+old   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: ac.change_note = ac.change_note || ' &6'
+new   4: ac.change_note = ac.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --ac.change_note = '&6'
+new   5: --ac.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old  16: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new  16: and (upper(ac.created_by) = 'STEWARDN' or lower(ac.created_by) = 'STEWARDN')
+old  17: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new  17: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  18: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  18: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."ADMINISTERED_COMPONENTS"."CONTE_IDSEQ") to
+NULL
+
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:20:07 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+old   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   4: and (upper(dec.created_by) = 'STEWARDN' or lower(dec.created_by) = 'STEWARDN')
+old   5: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   4: and (upper(de.created_by) = 'STEWARDN' or lower(de.created_by) = 'STEWARDN')
+old   5: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   4: and (upper(vd.created_by) = 'STEWARDN' or lower(vd.created_by) = 'STEWARDN')
+old   5: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new   4: and (upper(ac.created_by) = 'STEWARDN' or lower(ac.created_by) = 'STEWARDN')
+old   5: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:20:07 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+CREATE TABLE SBR.DEC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     52583
+
+CREATE TABLE SBR.DE_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     67141
+
+CREATE TABLE SBR.VD_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     17313
+
+CREATE TABLE SBR.AC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+    971081
+
+old   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: dec.change_note = dec.change_note || ' &6'
+new   4: dec.change_note = dec.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --dec.change_note = '&6'
+new   5: --dec.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   8: and (upper(dec.created_by) = 'BEELEST' or lower(dec.created_by) = 'BEELEST')
+old   9: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."DATA_ELEMENT_CONCEPTS"."CONTE_IDSEQ") to NULL
+
+
+old   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: de.change_note = de.change_note || ' &6'
+new   4: de.change_note = de.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --de.change_note = '&6'
+new   5: --de.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   8: and (upper(de.created_by) = 'BEELEST' or lower(de.created_by) = 'BEELEST')
+old   9: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."DATA_ELEMENTS"."CONTE_IDSEQ") to NULL
+
+
+old   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: vd.change_note = vd.change_note || ' &6'
+new   4: vd.change_note = vd.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --vd.change_note = '&6'
+new   5: --vd.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   8: and (upper(vd.created_by) = 'BEELEST' or lower(vd.created_by) = 'BEELEST')
+old   9: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."VALUE_DOMAINS"."CONTE_IDSEQ") to NULL
+
+
+old   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: ac.change_note = ac.change_note || ' &6'
+new   4: ac.change_note = ac.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --ac.change_note = '&6'
+new   5: --ac.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old  16: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new  16: and (upper(ac.created_by) = 'BEELEST' or lower(ac.created_by) = 'BEELEST')
+old  17: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new  17: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  18: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  18: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."ADMINISTERED_COMPONENTS"."CONTE_IDSEQ") to
+NULL
+
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:20:15 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+old   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   4: and (upper(dec.created_by) = 'BEELEST' or lower(dec.created_by) = 'BEELEST')
+old   5: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   4: and (upper(de.created_by) = 'BEELEST' or lower(de.created_by) = 'BEELEST')
+old   5: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   4: and (upper(vd.created_by) = 'BEELEST' or lower(vd.created_by) = 'BEELEST')
+old   5: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new   4: and (upper(ac.created_by) = 'BEELEST' or lower(ac.created_by) = 'BEELEST')
+old   5: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:20:15 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+CREATE TABLE SBR.DEC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     52583
+
+CREATE TABLE SBR.DE_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     67141
+
+CREATE TABLE SBR.VD_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     17313
+
+CREATE TABLE SBR.AC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+    971081
+
+old   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: dec.change_note = dec.change_note || ' &6'
+new   4: dec.change_note = dec.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --dec.change_note = '&6'
+new   5: --dec.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   8: and (upper(dec.created_by) = 'HASENAUB' or lower(dec.created_by) = 'HASENAUB')
+old   9: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."DATA_ELEMENT_CONCEPTS"."CONTE_IDSEQ") to NULL
+
+
+old   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: de.change_note = de.change_note || ' &6'
+new   4: de.change_note = de.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --de.change_note = '&6'
+new   5: --de.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   8: and (upper(de.created_by) = 'HASENAUB' or lower(de.created_by) = 'HASENAUB')
+old   9: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."DATA_ELEMENTS"."CONTE_IDSEQ") to NULL
+
+
+old   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: vd.change_note = vd.change_note || ' &6'
+new   4: vd.change_note = vd.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --vd.change_note = '&6'
+new   5: --vd.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   8: and (upper(vd.created_by) = 'HASENAUB' or lower(vd.created_by) = 'HASENAUB')
+old   9: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: ac.change_note = ac.change_note || ' &6'
+new   4: ac.change_note = ac.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --ac.change_note = '&6'
+new   5: --ac.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old  16: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new  16: and (upper(ac.created_by) = 'HASENAUB' or lower(ac.created_by) = 'HASENAUB')
+old  17: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new  17: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  18: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  18: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."ADMINISTERED_COMPONENTS"."CONTE_IDSEQ") to
+NULL
+
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:20:22 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+old   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   4: and (upper(dec.created_by) = 'HASENAUB' or lower(dec.created_by) = 'HASENAUB')
+old   5: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   4: and (upper(de.created_by) = 'HASENAUB' or lower(de.created_by) = 'HASENAUB')
+old   5: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   4: and (upper(vd.created_by) = 'HASENAUB' or lower(vd.created_by) = 'HASENAUB')
+old   5: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new   4: and (upper(ac.created_by) = 'HASENAUB' or lower(ac.created_by) = 'HASENAUB')
+old   5: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:20:23 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+CREATE TABLE SBR.DEC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     52583
+
+CREATE TABLE SBR.DE_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     67141
+
+CREATE TABLE SBR.VD_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     17313
+
+CREATE TABLE SBR.AC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+    971081
+
+old   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: dec.change_note = dec.change_note || ' &6'
+new   4: dec.change_note = dec.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --dec.change_note = '&6'
+new   5: --dec.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   8: and (upper(dec.created_by) = 'CORRALC' or lower(dec.created_by) = 'CORRALC')
+old   9: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: de.change_note = de.change_note || ' &6'
+new   4: de.change_note = de.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --de.change_note = '&6'
+new   5: --de.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   8: and (upper(de.created_by) = 'CORRALC' or lower(de.created_by) = 'CORRALC')
+old   9: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: vd.change_note = vd.change_note || ' &6'
+new   4: vd.change_note = vd.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --vd.change_note = '&6'
+new   5: --vd.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   8: and (upper(vd.created_by) = 'CORRALC' or lower(vd.created_by) = 'CORRALC')
+old   9: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: ac.change_note = ac.change_note || ' &6'
+new   4: ac.change_note = ac.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --ac.change_note = '&6'
+new   5: --ac.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old  16: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new  16: and (upper(ac.created_by) = 'CORRALC' or lower(ac.created_by) = 'CORRALC')
+old  17: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new  17: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  18: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  18: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:20:30 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+old   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   4: and (upper(dec.created_by) = 'CORRALC' or lower(dec.created_by) = 'CORRALC')
+old   5: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   4: and (upper(de.created_by) = 'CORRALC' or lower(de.created_by) = 'CORRALC')
+old   5: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   4: and (upper(vd.created_by) = 'CORRALC' or lower(vd.created_by) = 'CORRALC')
+old   5: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new   4: and (upper(ac.created_by) = 'CORRALC' or lower(ac.created_by) = 'CORRALC')
+old   5: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:20:30 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+CREATE TABLE SBR.DEC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     52583
+
+CREATE TABLE SBR.DE_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     67141
+
+CREATE TABLE SBR.VD_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     17313
+
+CREATE TABLE SBR.AC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+    971081
+
+old   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: dec.change_note = dec.change_note || ' &6'
+new   4: dec.change_note = dec.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --dec.change_note = '&6'
+new   5: --dec.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   8: and (upper(dec.created_by) = 'TSANE' or lower(dec.created_by) = 'TSANE')
+old   9: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: de.change_note = de.change_note || ' &6'
+new   4: de.change_note = de.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --de.change_note = '&6'
+new   5: --de.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   8: and (upper(de.created_by) = 'TSANE' or lower(de.created_by) = 'TSANE')
+old   9: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: vd.change_note = vd.change_note || ' &6'
+new   4: vd.change_note = vd.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --vd.change_note = '&6'
+new   5: --vd.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   8: and (upper(vd.created_by) = 'TSANE' or lower(vd.created_by) = 'TSANE')
+old   9: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: ac.change_note = ac.change_note || ' &6'
+new   4: ac.change_note = ac.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --ac.change_note = '&6'
+new   5: --ac.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old  16: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new  16: and (upper(ac.created_by) = 'TSANE' or lower(ac.created_by) = 'TSANE')
+old  17: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new  17: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  18: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  18: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:20:38 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+old   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   4: and (upper(dec.created_by) = 'TSANE' or lower(dec.created_by) = 'TSANE')
+old   5: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   4: and (upper(de.created_by) = 'TSANE' or lower(de.created_by) = 'TSANE')
+old   5: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   4: and (upper(vd.created_by) = 'TSANE' or lower(vd.created_by) = 'TSANE')
+old   5: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new   4: and (upper(ac.created_by) = 'TSANE' or lower(ac.created_by) = 'TSANE')
+old   5: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:20:38 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+CREATE TABLE SBR.DEC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     52583
+
+CREATE TABLE SBR.DE_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     67141
+
+CREATE TABLE SBR.VD_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     17313
+
+CREATE TABLE SBR.AC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+    971081
+
+old   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: dec.change_note = dec.change_note || ' &6'
+new   4: dec.change_note = dec.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --dec.change_note = '&6'
+new   5: --dec.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   8: and (upper(dec.created_by) = 'SUBRAMAS' or lower(dec.created_by) = 'SUBRAMAS')
+old   9: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: de.change_note = de.change_note || ' &6'
+new   4: de.change_note = de.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --de.change_note = '&6'
+new   5: --de.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   8: and (upper(de.created_by) = 'SUBRAMAS' or lower(de.created_by) = 'SUBRAMAS')
+old   9: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: vd.change_note = vd.change_note || ' &6'
+new   4: vd.change_note = vd.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --vd.change_note = '&6'
+new   5: --vd.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   8: and (upper(vd.created_by) = 'SUBRAMAS' or lower(vd.created_by) = 'SUBRAMAS')
+old   9: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: ac.change_note = ac.change_note || ' &6'
+new   4: ac.change_note = ac.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --ac.change_note = '&6'
+new   5: --ac.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old  16: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new  16: and (upper(ac.created_by) = 'SUBRAMAS' or lower(ac.created_by) = 'SUBRAMAS')
+old  17: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new  17: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  18: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  18: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:20:46 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+old   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   4: and (upper(dec.created_by) = 'SUBRAMAS' or lower(dec.created_by) = 'SUBRAMAS')
+old   5: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   4: and (upper(de.created_by) = 'SUBRAMAS' or lower(de.created_by) = 'SUBRAMAS')
+old   5: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   4: and (upper(vd.created_by) = 'SUBRAMAS' or lower(vd.created_by) = 'SUBRAMAS')
+old   5: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new   4: and (upper(ac.created_by) = 'SUBRAMAS' or lower(ac.created_by) = 'SUBRAMAS')
+old   5: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+./change_context_PROD_muliple_users.sh: line 69: SBR/jjsbr@(description=(address_list=(address=(protocol=TCP)(host=137.187.181.4)(port=1551)))(connect_data=(SID=DSRDEV))): No such file or directory
+./change_context_PROD_muliple_users.sh: line 70: SBR/jjsbr@(description=(address_list=(address=(protocol=TCP)(host=137.187.181.4)(port=1551)))(connect_data=(SID=DSRDEV))): No such file or directory
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:20:46 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+CREATE TABLE SBR.DEC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     52583
+
+CREATE TABLE SBR.DE_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     67141
+
+CREATE TABLE SBR.VD_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     17313
+
+CREATE TABLE SBR.AC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+    971081
+
+old   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: dec.change_note = dec.change_note || ' &6'
+new   4: dec.change_note = dec.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --dec.change_note = '&6'
+new   5: --dec.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   8: and (upper(dec.created_by) = 'WONGW' or lower(dec.created_by) = 'WONGW')
+old   9: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."DATA_ELEMENT_CONCEPTS"."CONTE_IDSEQ") to NULL
+
+
+old   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: de.change_note = de.change_note || ' &6'
+new   4: de.change_note = de.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --de.change_note = '&6'
+new   5: --de.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   8: and (upper(de.created_by) = 'WONGW' or lower(de.created_by) = 'WONGW')
+old   9: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."DATA_ELEMENTS"."CONTE_IDSEQ") to NULL
+
+
+old   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: vd.change_note = vd.change_note || ' &6'
+new   4: vd.change_note = vd.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --vd.change_note = '&6'
+new   5: --vd.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   8: and (upper(vd.created_by) = 'WONGW' or lower(vd.created_by) = 'WONGW')
+old   9: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."VALUE_DOMAINS"."CONTE_IDSEQ") to NULL
+
+
+old   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: ac.change_note = ac.change_note || ' &6'
+new   4: ac.change_note = ac.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --ac.change_note = '&6'
+new   5: --ac.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old  16: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new  16: and (upper(ac.created_by) = 'WONGW' or lower(ac.created_by) = 'WONGW')
+old  17: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new  17: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  18: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  18: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+*
+ERROR at line 3:
+ORA-01407: cannot update ("SBR"."ADMINISTERED_COMPONENTS"."CONTE_IDSEQ") to
+NULL
+
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:20:54 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+old   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   4: and (upper(dec.created_by) = 'WONGW' or lower(dec.created_by) = 'WONGW')
+old   5: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   4: and (upper(de.created_by) = 'WONGW' or lower(de.created_by) = 'WONGW')
+old   5: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   4: and (upper(vd.created_by) = 'WONGW' or lower(vd.created_by) = 'WONGW')
+old   5: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new   4: and (upper(ac.created_by) = 'WONGW' or lower(ac.created_by) = 'WONGW')
+old   5: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:20:54 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+CREATE TABLE SBR.DEC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     52583
+
+CREATE TABLE SBR.DE_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     67141
+
+CREATE TABLE SBR.VD_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     17313
+
+CREATE TABLE SBR.AC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+    971081
+
+old   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: dec.change_note = dec.change_note || ' &6'
+new   4: dec.change_note = dec.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --dec.change_note = '&6'
+new   5: --dec.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   8: and (upper(dec.created_by) = 'REEDK' or lower(dec.created_by) = 'REEDK')
+old   9: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: de.change_note = de.change_note || ' &6'
+new   4: de.change_note = de.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --de.change_note = '&6'
+new   5: --de.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   8: and (upper(de.created_by) = 'REEDK' or lower(de.created_by) = 'REEDK')
+old   9: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: vd.change_note = vd.change_note || ' &6'
+new   4: vd.change_note = vd.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --vd.change_note = '&6'
+new   5: --vd.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   8: and (upper(vd.created_by) = 'REEDK' or lower(vd.created_by) = 'REEDK')
+old   9: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: ac.change_note = ac.change_note || ' &6'
+new   4: ac.change_note = ac.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --ac.change_note = '&6'
+new   5: --ac.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old  16: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new  16: and (upper(ac.created_by) = 'REEDK' or lower(ac.created_by) = 'REEDK')
+old  17: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new  17: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  18: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  18: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:21:01 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+old   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   4: and (upper(dec.created_by) = 'REEDK' or lower(dec.created_by) = 'REEDK')
+old   5: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   4: and (upper(de.created_by) = 'REEDK' or lower(de.created_by) = 'REEDK')
+old   5: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   4: and (upper(vd.created_by) = 'REEDK' or lower(vd.created_by) = 'REEDK')
+old   5: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new   4: and (upper(ac.created_by) = 'REEDK' or lower(ac.created_by) = 'REEDK')
+old   5: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:21:02 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+CREATE TABLE SBR.DEC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     52583
+
+CREATE TABLE SBR.DE_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     67141
+
+CREATE TABLE SBR.VD_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+     17313
+
+CREATE TABLE SBR.AC_BACKUP1
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object
+
+
+
+  COUNT(*)
+----------
+    971081
+
+old   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: dec.change_note = dec.change_note || ' &6'
+new   4: dec.change_note = dec.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --dec.change_note = '&6'
+new   5: --dec.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   8: and (upper(dec.created_by) = 'DONOVANN' or lower(dec.created_by) = 'DONOVANN')
+old   9: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: de.change_note = de.change_note || ' &6'
+new   4: de.change_note = de.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --de.change_note = '&6'
+new   5: --de.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   8: and (upper(de.created_by) = 'DONOVANN' or lower(de.created_by) = 'DONOVANN')
+old   9: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: vd.change_note = vd.change_note || ' &6'
+new   4: vd.change_note = vd.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --vd.change_note = '&6'
+new   5: --vd.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new   7: vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old   8: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   8: and (upper(vd.created_by) = 'DONOVANN' or lower(vd.created_by) = 'DONOVANN')
+old   9: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   9: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  10: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  10: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+old   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2'),
+new   3: ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG'),
+old   4: ac.change_note = ac.change_note || ' &6'
+new   4: ac.change_note = ac.change_note || ' Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old   5: --ac.change_note = '&6'
+new   5: --ac.change_note = 'Changed from CTEP to COG for by script Tue Dec 31 10:18:44 EST 2013'
+old  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&1')
+new  14: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'CTEP')
+old  16: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new  16: and (upper(ac.created_by) = 'DONOVANN' or lower(ac.created_by) = 'DONOVANN')
+old  17: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new  17: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old  18: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new  18: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+0 rows updated.
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL*Plus: Release 10.2.0.4.0 - Production on Tue Dec 31 10:21:09 2013
+
+Copyright (c) 1982, 2007, Oracle.  All Rights Reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+old   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and dec.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(dec.created_by) = '&5' or lower(dec.created_by) = '&5')
+new   4: and (upper(dec.created_by) = 'DONOVANN' or lower(dec.created_by) = 'DONOVANN')
+old   5: and trunc(dec.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(dec.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(dec.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(dec.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and de.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(de.created_by) = '&5' or lower(de.created_by) = '&5')
+new   4: and (upper(de.created_by) = 'DONOVANN' or lower(de.created_by) = 'DONOVANN')
+old   5: and trunc(de.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(de.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(de.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(de.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and vd.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(vd.created_by) = '&5' or lower(vd.created_by) = '&5')
+new   4: and (upper(vd.created_by) = 'DONOVANN' or lower(vd.created_by) = 'DONOVANN')
+old   5: and trunc(vd.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(vd.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(vd.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(vd.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+old   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = '&2')
+new   3: and ac.CONTE_IDSEQ = (select CONTE_IDSEQ from SBR.CONTEXTS where name = 'COG')
+old   4: and (upper(ac.created_by) = '&5' or lower(ac.created_by) = '&5')
+new   4: and (upper(ac.created_by) = 'DONOVANN' or lower(ac.created_by) = 'DONOVANN')
+old   5: and trunc(ac.date_created) >= to_date('&3', 'YYYY-MM-DD')
+new   5: and trunc(ac.date_created) >= to_date('2010-03-19', 'YYYY-MM-DD')
+old   6: and trunc(ac.date_created) <= to_date('&4', 'YYYY-MM-DD')
+new   6: and trunc(ac.date_created) <= to_date('2013-10-22', 'YYYY-MM-DD')
+
+no rows selected
+
+Disconnected from Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+$ 
