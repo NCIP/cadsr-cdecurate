@@ -14,7 +14,7 @@
 <!--  goes to login page if error occurs -->
 <%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <curate:checkLogon name="Userbean" page="/LoginE.jsp" />
-<html debug="false">
+<html debug="true">
 	<head>
 		<title>
 			CDE Curation: Create Data Element Concept
@@ -33,7 +33,7 @@
         <%--});--%>
         <%--});--%>
         </script>
-        <script type="text/javascript" src="https://getfirebug.com/firebug-lite-debug.js"></script>
+        <%--<script type="text/javascript" src="https://getfirebug.com/firebug-lite-debug.js"></script>--%>
     </head>
 
 	<body bgcolor="#FFFFFF" text="#000000">
