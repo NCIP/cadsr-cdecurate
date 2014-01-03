@@ -1099,9 +1099,16 @@ L--%>
 									//begin GF7680
 						            String dispStyle = "inline";
 									String workflowStatus = (String)session.getAttribute("selStatus");
-									if(workflowStatus != null && workflowStatus.equals(Constants.WORKFLOW_STATUS_RELEASED) || inForm) {
+									System.out.println("PermissibleValue.jsp workflowStatus = '" + workflowStatus + "'");
+									if(workflowStatus != null && workflowStatus.equals(Constants.WORKFLOW_STATUS_RELEASED)
+									//|| inForm     //GF30800 should not depend on if it is used by the form or not
+									) {
 										dispStyle = "none";
+									} else {
+										dispStyle = "inline";
 									}
+                                    System.out.println("PermissibleValue.jsp PV" + i + " workflowStatus [" + workflowStatus + "] and inForm [" + inForm + "], dispStyle set to '" + dispStyle + "'");
+
 									//end GF7680
 						            %>
 															<tr id="<%=pvCount%>">
