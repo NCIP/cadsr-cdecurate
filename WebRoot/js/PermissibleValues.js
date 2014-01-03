@@ -3,11 +3,12 @@
 // $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/js/PermissibleValues.js,v 1.29 2009-04-20 18:32:49 hegdes Exp $
 // $Name: not supported by cvs2svn $
 
+//GF30800
 
 	var secondWindow;
 	var statusWindow;
 	//store values that need warning if pvs are in edit mode
-	var arrValidate = new Array();
+	var arrValidate = [];   //GF30800
 	arrValidate[0] = 'view';
 	arrValidate[1] = 'edit';
 	arrValidate[2] = 'view';
@@ -48,8 +49,7 @@
 		else
 		{
 			//make sure that no pv was in edit mode
-			if (sAction != "save" && sAction != "remove")
-			{
+			if (sAction !== "save" && sAction !== "remove") {
 	  			if (!validatePVAction(sAction)) {
 	  				return;
                 }
@@ -61,7 +61,7 @@
 	            secondWindow.close();
             }
 			var isValid = true;
-			if (sAction != "openEditVM") {
+			if (sAction !== "openEditVM") {
 				isValid = storeVMConcept(sAction);
 				
 				if (isValid) {
@@ -70,7 +70,7 @@
             }
 			if (isValid)  //submit only if valid
 			{
-				if (sAction == "save") {
+				if (sAction === "save") {
 					disableHyperlink(sAction);
                 }
 				DisableButtons();
@@ -88,39 +88,32 @@
 		if ( actObject === null) {
 			alert("what is the object");
         }
-		else
-		{
+		else {
 			actObject.value = sAction;
 	    	disableHyperlink(sAction);
 			DisableButtons();
 			document.PVForm.submit();
 		}
 	}
-	function disableHyperlink(action)
-	{
+	function disableHyperlink(action) {
 	  var pvObj = document.PVForm.editPVInd;
-	  if (pvObj !== null)
-	  {
+	  if (pvObj !== null) {
 	  	var pvNo = pvObj.value;
 		var hlObj = document.getElementById(pvNo + "ImgSaveLink");
-		if (hlObj !== null)
-		{
+		if (hlObj !== null) {
 			hlObj.href = "javascript:disabled();";
 		}
 	  }
 	}
-	function disabled()
-	{
+	function disabled() {
 		return;
 	}
 	//make sure none of the PVs are in edit mode
 	function validatePVAction(action)
 	{
 		var editedPV = getORsetEdited("none", "");
-		if (editedPV !== null && editedPV !== "")
-		{
-		  if (action == "save")
-		  {
+		if (editedPV !== null && editedPV !== "") {
+		  if (action === "save") {
 		  	//check current vm has the data
 		   	var curVM = document.PVForm.currentVM;
 		  	if (curVM === null || curVM.value === null || curVM.value === "") {
@@ -130,13 +123,10 @@
 		  	SubmitValidate("save");
 		  	return false;
 		  }
-		  else
-		  {
+		  else {
 		  	//check if the action belongs to list of actions that needs checking if pv is in edit mode
-		  	for (var i=0; i<arrValidate.length; i++)
-		  	{
-		  		if (arrValidate[i] == action)
-		  		{
+		  	for (var i=0; i<arrValidate.length; i++) {
+		  		if (arrValidate[i] === action) {
 		  			alert("Please save the Permissible Value before continuing.");
 		  			return false;
 		  		}
@@ -150,8 +140,7 @@
     function confirmRM(pvNo, itmAct, itmMsg)
     {
 		var confirmOK = true;
-		if (itmAct == "remove")
-		{
+		if (itmAct === "remove") {
 		  	if (!validatePVAction('remove')) {
 		  		return;
             }
@@ -160,11 +149,9 @@
 	    		return;
             }
 		}
-		if (confirmOK)
-		{
+		if (confirmOK) {
 			//mark to remove all
-		   if (itmAct == "remove" && pvNo == "All")
-		   {
+		   if (itmAct === "remove" && pvNo === "All") {
 		   		itmAct += pvNo;
 		   		pvNo = "";
 		   }
@@ -176,10 +163,9 @@
     //disable vm search if data exist
     function disableSearch(pvNo)
     {
-    	if (pvNo == "pvNew")
-    	{
+    	if (pvNo === "pvNew") {
     		var vmEDiv = document.getElementById("pvNewVMLblEdit");
-    		if (vmEDiv !== null && vmEDiv.style.display == "inline") {
+    		if (vmEDiv !== null && vmEDiv.style.display === "inline") {
     			vmEDiv.style.display = "none";
             }
     	//	var vmVDiv = document.getElementById("pvNewVMLblView");
@@ -202,8 +188,7 @@
     	var txtVM = "";
     	//first if user entered
     	var vmDiv = document.getElementById("pvNewVMEdit");
-    	if (vmDiv !== null && vmDiv.style.display == "block")
-    	{
+    	if (vmDiv !== null && vmDiv.style.display == "block") {
 	    	txtVM = document.PVForm.pvNewVM.value;
     	}
     	//may be using concepts
@@ -228,10 +213,8 @@
     	}
     	//get vm pv if not exists
     	var txtPV = document.PVForm.pvNewValue.value;
-    	if ((txtPV === null || txtPV === "") && alertMsg === "")
-    	{
- 			if (txtVM !== "")
-			{
+    	if ((txtPV === null || txtPV === "") && alertMsg === "") {
+ 			if (txtVM !== "") {
 				txtVM = txtVM.replace(/(\r\n)|(\n)/g, "");
 				document.PVForm.pvNewValue.value = txtVM;
 				txtPV = txtVM;
@@ -245,8 +228,7 @@
         }
     	else
     	{
-    		if (checkPVVMCombDuplicate(txtPV, txtVM, "newPV"))
-    		{
+    		if (checkPVVMCombDuplicate(txtPV, txtVM, "newPV")) {
     			var bSave = document.PVForm.btnCreateNew.value;
     			if (bSave !== null && !bSave.disabled) {
     				bSave.disabled = true;
@@ -256,8 +238,7 @@
     	}
     }
     
-    function EditPVCheck()
-    {
+    function EditPVCheck() {
     	var id = document.PVForm.editPVInd;
   		var pvNo = id.value;
   		
@@ -269,8 +250,7 @@
     	var txtVM = "";
     	//first if user entered
     	var vmDiv = nameObj[0];
-    	if (vmDiv !== null && vmDiv !== undefined )
-    	{
+    	if (vmDiv !== null && vmDiv !== undefined ) {
 	    	txtVM = vmDiv.value;
 	    /*	if (txtVM === null || txtVM === "") {
 	    		alertMsg += "Please enter the text for Value Meaning. \n";
@@ -280,8 +260,7 @@
     	
     	//check user entered description
     	var vmdDiv = defObj[0];
-    	if (vmdDiv !== null && vmdDiv !== undefined )
-    	{
+    	if (vmdDiv !== null && vmdDiv !== undefined ) {
 	    	var txtVMD = vmdDiv.value;
 	    	/*if (txtVMD === null || txtVMD === "") {
 	    		alertMsg += "Please enter the text for Value Meaning Description. \n";
@@ -306,18 +285,15 @@
     	if (alertMsg !== "") {
     		alert(alertMsg);
         }
-    	else
-    	{
+    	else {
     		return true;
     	}
     }
-    function ContinueDuplicateVM()
-    {
+    function ContinueDuplicateVM() {
     	reSubmitValidate("continueVM");
     }
     //viewall image clicked; collapse or expand each pv and its image according the expected action
-    function viewAll(changeTo)
-    {
+    function viewAll(changeTo) {
     	if (!validatePVAction('viewAll')) {
 	  		return;
         }
@@ -376,8 +352,7 @@
                             }
         					break;
         				case "uneditAll":
-        					if (sType == "edit")
-        					{
+        					if (sType == "edit") {
 			        			var pvImgHide = document.getElementById(vmCount + "ImgSave");
 			        			var pvImgDisp = document.getElementById(vmCount + "ImgEdit");
 			        			pvNo = "pv" + vmCount;
@@ -445,16 +420,13 @@
     	}
     }
     //set or get the editing pv indicator
-	function getORsetEdited(pvNo, field)
-	{
+	function getORsetEdited(pvNo, field) {
 		var pvIndHidden = document.PVForm.editPVInd;
-		if (pvIndHidden !== null)
-		{
+		if (pvIndHidden !== null) {
 			if (pvNo == "none") {
 				return pvIndHidden.value;
             }
-			else
-			{
+			else {
 				pvIndHidden.value = pvNo;
                 var obj = document.getElementsByName("txt" + pvNo + "Mean");
                 var txtMean = obj[0];
@@ -477,19 +449,15 @@
         }
     	viewVM = pvdiv;
     	var currDisp = viewVM.style.display;
-    	if (currDisp == "block" && action != "open" && action != "edit")
-    	{
+    	if (currDisp == "block" && action != "open" && action != "edit") {
     		viewVM.style.display = "none";
     		viewVM.setAttribute("viewType", "collapse");
     		toggleActionAll("collapse");
-    	}
-    	else if (currDisp == "none")
-    	{
+    	} else if (currDisp == "none") {
     		viewVM.style.display = "block";
     		if (action == "edit") {
     			viewVM.setAttribute("viewType", "edit");
-            }
-    		else {
+            } else {
     			viewVM.setAttribute("viewType", "expand");
             }
     		toggleActionAll("expand");
@@ -502,8 +470,7 @@
     		imgdivdisp.style.display = "inline";
         }
     	//collpase the view while edit more will changes back to edit icon
-    	if (currDisp == "block" && action == "view")
-    	{
+    	if (currDisp == "block" && action == "view") {
     		imgdivhide = document.getElementById(pvNo + "ImgSave");
     		if (imgdivhide !== null) {
     			imgdivhide.style.display = "none";

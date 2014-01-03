@@ -10,6 +10,7 @@ L--%>
     $Name: not supported by cvs2svn $
 -->
 
+<%--GF30800--%>
 <%@ page language="java" import="java.util.*"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.database.Alternates" %>
 <%@ page import="gov.nih.nci.cadsr.common.Constants" %>
@@ -366,7 +367,7 @@ L--%>
 			              } 
 			              %>
 													
-										<%if (!isView){%></select><%}else{%><br></p><%}%>
+										<%if (!isView){%></select><%}else{%><br><p><%}%>
 												</td>
 											  <% if (!isView) { %>	
 												<td align="center">
@@ -1384,20 +1385,20 @@ L--%>
 																	<% if (vEMsg.size() > 0 && sEditPV.equals(pvCount)) { %>
 																	<hr>
 																	<table width="100%" cellpadding="0.05in,0.05in,0.05in,0.05in" border="1">
-																		<col /></col>
+																		<%--<col /></col>   GF30800--%>
 																		<tr>
 																			<td colspan=2 valign="top">
 																				<table cellpadding="0.1in,0.1in,0.1in,0.1in">
 																					<tr>
 																						<td>
-																							<input type="button" id="btnUseSelect" value="Use Selection" disabled onClick="javascript:view('<%=sEditPV%>View', '<%=sEditPV%>ImgSave', '<%=sEditPV%>ImgEdit', 'save', '<%=sEditPV%>');">
+																							<input type="button" id="btnUseSelect1" value="Use Selection" disabled onClick="javascript:view('<%=sEditPV%>View', '<%=sEditPV%>ImgSave', '<%=sEditPV%>ImgEdit', 'save', '<%=sEditPV%>');">
 																						</td>
 																						<td>
 																							&nbsp;&nbsp;
 																							<!-- <input type="checkbox" name="saveAlt"/>  -->
 																						</td>
 																						<td>
-																							<input type="button" id="btnContinue"  value="Create" <% if (conceptMatch) { %>disabled <% } %>
+																							<input type="button" id="btnContinue1" value="Create" <% if (conceptMatch) { %>disabled <% } %>
 																								onClick="javascript:ContinueDuplicateVM('continueVM');">
 																						</td>
 																						<td>
@@ -1405,7 +1406,7 @@ L--%>
 																							<!-- Save the current Name and Description as Alternate Name and Definition <br>  -->
 																						</td>
 																						<td align="right">
-																							<input type="button" id="btnCancelUS" value="Cancel" onClick="javascript:confirmRM('<%=sEditPV%>', 'restore', 'restore');">
+																							<input type="button" id="btnCancelUS1" value="Cancel" onClick="javascript:confirmRM('<%=sEditPV%>', 'restore', 'restore');">
 																						</td>
 																					</tr>
 																				</table>
