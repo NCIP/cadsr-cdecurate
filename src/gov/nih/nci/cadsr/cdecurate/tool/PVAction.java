@@ -830,7 +830,7 @@ public class PVAction implements Serializable {
 						.getCurationServlet()
 						.getConn()
 						.prepareCall(
-								"{call SBREXT_SET_ROW.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+								"{call SBREXT_SET_ROW.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");		//GF30800 tagged; 15 parameters
 				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); //return code
 				cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); //vd_PVS id
 				cstmt.registerOutParameter(5, java.sql.Types.VARCHAR); //vd id
