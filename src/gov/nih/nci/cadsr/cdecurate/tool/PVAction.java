@@ -14,6 +14,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.common.Database;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -28,6 +29,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.servlet.http.HttpSession;
+
 
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
@@ -811,6 +813,9 @@ public class PVAction implements Serializable {
 	 * @return String of return code
 	 */
 	public String setVD_PVS(PVForm data) {
+		Database db = new Database();
+		db.trace(data.getCurationServlet().getConn());
+
 		PV_Bean pvBean = data.getSelectPV();
 		VD_Bean vdBean = data.getVD();
 		HttpSession session = data.getRequest().getSession();
@@ -830,7 +835,7 @@ public class PVAction implements Serializable {
 						.getCurationServlet()
 						.getConn()
 						.prepareCall(
-								"{call SBREXT_SET_ROW.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");		//GF30800 tagged; 15 parameters
+								"{call SBREXT_SET_ROW.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");		//GF30800 tagged 15 parameters
 				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); //return code
 				cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); //vd_PVS id
 				cstmt.registerOutParameter(5, java.sql.Types.VARCHAR); //vd id
@@ -905,6 +910,7 @@ public class PVAction implements Serializable {
 			sMsg += "\\t Exception : Unable to update or remove PV of VD.";
 		}finally{
 		  cstmt = SQLHelper.closeCallableStatement(cstmt);
+		  db.show();
 		}
 		return sMsg;
 	} //END setVD_PVS

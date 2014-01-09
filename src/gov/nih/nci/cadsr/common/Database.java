@@ -9,6 +9,7 @@ package gov.nih.nci.cadsr.common;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.sql.*;
 
 public class Database {
 	private static final String BUNDLE_NAME = "database"; //$NON-NLS-1$
@@ -16,8 +17,7 @@ public class Database {
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
 			.getBundle(BUNDLE_NAME);
 
-	private Database() {
-	}
+	private DbmsOutput dbmsOutput;
 
 	public static String getString(String key) {
 		try {
@@ -26,4 +26,25 @@ public class Database {
 			return '!' + key + '!';
 		}
 	}
+	
+	public void trace(Connection conn) {
+		try {
+			dbmsOutput = new DbmsOutput(conn);
+			dbmsOutput.enable( 1000000 );
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void show() {
+		try {
+			dbmsOutput.show();
+		    dbmsOutput.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 }

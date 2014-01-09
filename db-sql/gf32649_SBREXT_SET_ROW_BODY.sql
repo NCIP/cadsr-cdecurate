@@ -15117,12 +15117,11 @@ BEGIN
     END IF;
 
     --  Added the following code 24-Aug-2004 DLadino SPRF_2.1.1_2
-/*
-    IF Sbrext_Common_Routines.vd_pvs_qc_exists (P_VDPVS_VP_IDSEQ, NULL) = 'TRUE' THEN
-      P_RETURN_CODE := 'API_VDPVS_006';   --VD_PVS_QC found
-      RETURN;
-    END IF;
-*/
+    --GF30800 commented out as it is no longer need to tie with the form (does not matter if it is used by the form)
+--    IF Sbrext_Common_Routines.vd_pvs_qc_exists (P_VDPVS_VP_IDSEQ, NULL) = 'TRUE' THEN
+--      P_RETURN_CODE := 'API_VDPVS_006';   --VD_PVS_QC found
+--      RETURN;
+--    END IF;
 
     v_vp_pk.vp_idseq := P_VDPVS_VP_IDSEQ;
 
