@@ -23,7 +23,6 @@
 . gf32649_MAINTAIN_CONCEPTS_SPEC.sql
 . gf32649_SBREXT_GET_ROW_BODY.sql
 . gf32649_SBREXT_SET_ROW_BODY.sql
-. SBREXT_CDE_CURATOR_PKG_BODY.sql
 . update_evs_url.sql
 . GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql
 
@@ -49,7 +48,6 @@ https://ncisvn.nci.nih.gov/svn/cdecurate/trunk/db-sql/gf32649_README.txt
 
 Please execute the following scripts after the above in the order written:
 
-GF32647_VALID_VALUE_T.sql
 gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql
 SBREXT_CDE_CURATOR_PKG_SPEC.sql
 SBREXT_CDE_CURATOR_PKG_BODY.sql
