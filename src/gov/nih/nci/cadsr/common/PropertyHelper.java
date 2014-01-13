@@ -50,15 +50,15 @@ public class PropertyHelper {
 	}
 	
 	public static String getDatabaseUserID() {
-		return Database.getString("userid");
+		return null;	//Database.getString("userid");
 	}
 	
 	public static String getDatabasePassword() {
-		return Database.getString("password");
+		return null;	//Database.getString("password");
 	}
 	
 	public static String getDatabaseURL() {
-		return Database.getString("jdbcurl");
+		return null;	//Database.getString("jdbcurl");
 	}
 
 	public static String getPCSURL() {

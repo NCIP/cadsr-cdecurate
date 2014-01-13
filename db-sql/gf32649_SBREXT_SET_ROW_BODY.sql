@@ -9108,7 +9108,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'NCIP';	--GF32649
+  where upper(name) = 'NCIP';    --GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -9238,7 +9238,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'NCIP';	--GF32649
+  where upper(name) = 'NCIP';    --GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -9410,7 +9410,7 @@ BEGIN
    begin
     select conte_idseq into p_Con_Conte_idseq
     from contexts
-    where upper(name) = 'NCIP';	--GF32649
+    where upper(name) = 'NCIP';    --GF32649
    exception when no_data_found then
      P_RETURN_CODE := 'API_CON_106';  --CONTEXT_NAME cannot be null here
   RETURN;
@@ -10294,7 +10294,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'NCIP';	--GF32649
+  where upper(name) = 'NCIP';    --GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -14747,7 +14747,7 @@ P_UA_NAME   IN VARCHAR2
 ,P_PV_LOW_VALUE_NUM         IN OUT NUMBER
 ,P_PV_HIGH_VALUE_NUM      IN OUT NUMBER
 ,P_PV_END_DATE              IN OUT VARCHAR2
-,P_PV_VM_IDSEQ          	IN OUT VARCHAR2
+,P_PV_VM_IDSEQ              IN OUT VARCHAR2
 ,P_PV_CREATED_BY         OUT VARCHAR2
 ,P_PV_DATE_CREATED         OUT VARCHAR2
 ,P_PV_MODIFIED_BY         OUT VARCHAR2
@@ -15062,6 +15062,7 @@ v_end_date DATE := NULL;
 
 
 BEGIN
+  dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS entered (GF30800) ...');
 
   P_RETURN_CODE := NULL;
 
@@ -20280,7 +20281,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'NCIP';	--GF32649
+  where upper(name) = 'NCIP';    --GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -20415,7 +20416,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'NCIP';	--GF32649
+  where upper(name) = 'NCIP';    --GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -20590,7 +20591,7 @@ BEGIN
    begin
     select conte_idseq into p_Con_Conte_idseq
     from contexts
-    where upper(name) = 'NCIP';	--GF32649
+    where upper(name) = 'NCIP';    --GF32649
    exception when no_data_found then
      P_RETURN_CODE := 'API_CON_106';  --CONTEXT_NAME cannot be null here
   RETURN;
@@ -21483,7 +21484,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'NCIP';	--GF32649
+  where upper(name) = 'NCIP';    --GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
