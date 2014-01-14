@@ -15,7 +15,7 @@ L*/
 --  DDL for Package Body SBREXT_SET_ROW
 --------------------------------------------------------
 
-  CREATE OR REPLACE PACKAGE BODY "SBREXT"."SBREXT_SET_ROW" AS
+create or replace PACKAGE BODY          "SBREXT_SET_ROW" AS
 
 /*
 ** Private program units
@@ -15062,28 +15062,45 @@ v_end_date DATE := NULL;
 
 
 BEGIN
-  dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS entered (GF30800) ...');
+  dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS entered (GF30800 1) ...');
 
   P_RETURN_CODE := NULL;
 
     IF P_ACTION NOT IN ('INS','DEL','UPD') THEN
+    dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 1a (GF30800)');
     P_RETURN_CODE := 'API_VDPVS_700'; -- Invalid action
+    dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 1b (GF30800)');
     RETURN;
   END IF;
+    dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 1c (GF30800)');  
   IF p_ua_name IS NOT NULL THEN
+    dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 1d (GF30800)');
     admin_security_util.seteffectiveuser(p_ua_name);
+    dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 1e (GF30800)');
   END IF;
 
+  dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 1f (GF30800) P_ACTION [' || P_ACTION || ']');
+
   IF P_ACTION = 'INS' THEN              --we are inserting a record
+  dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS (GF30800) P_ACTION is INS');
+
+  dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 1.1 (GF30800)');
+  
     IF P_VDPVS_VP_IDSEQ IS NOT NULL THEN
       P_RETURN_CODE := 'API_VDPVS_100' ;  --for inserts the ID IS generated
+  dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 1.2 (GF30800)');
+      
    RETURN;
     ELSE
+  dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 1.3 (GF30800)');    
       --Check to see that all mandatory parameters are not null
    IF P_VDPVS_VD_IDSEQ IS NULL THEN
      P_RETURN_CODE := 'API_VDPVS_102'; --VD_IDSEQ cannot be null here
+  dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 1.4 (GF30800)');
   RETURN;
    END IF;
+
+  dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 2 (GF30800)');
 
       IF P_VDPVS_PV_IDSEQ IS NULL THEN
      P_RETURN_CODE := 'API_VDPVS_104'; --PV_IDSEQ cannot be null here
@@ -15095,6 +15112,8 @@ BEGIN
 --   2.1.1      08/23/2004  DLadino          1. Added code to "UPDATE" a VD_PVS record
 --                                              sprf_2.1.1_2b
   IF P_ACTION = 'UPD' THEN              --we are updating a record
+    dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS (GF30800) P_ACTION is UPD');
+
     IF P_VDPVS_VP_IDSEQ IS NULL THEN
       P_RETURN_CODE := 'API_VDPVS_105' ;  --for updates the ID is required
    RETURN;
@@ -15105,17 +15124,27 @@ BEGIN
     END IF;*/
   END IF;
 
+    dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 2 (GF30800)');
+
   IF P_ACTION = 'DEL' THEN              --we are deleting a record
+  dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS (GF30800) P_ACTION is DEL');
+
+    dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 3 (GF30800)');
 
     IF P_VDPVS_VP_IDSEQ IS  NULL THEN
+      dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 3.1 (GF30800)');
       P_RETURN_CODE := 'API_VDPVS_400' ;  --for deleted the ID id mandatory
    RETURN;
     ELSE
+      dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 3.2 (GF30800)');
       IF NOT Sbrext_Common_Routines.vd_pvs_exists(P_VDPVS_VP_IDSEQ) THEN
+      dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 3.3 (GF30800)');
      P_RETURN_CODE := 'API_VDPVS_005'; --VD_PVS NOT found
      RETURN;
    END IF;
     END IF;
+
+      dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 3.4 (GF30800)');
 
     --  Added the following code 24-Aug-2004 DLadino SPRF_2.1.1_2
     --GF30800 commented out as it is no longer need to tie with the form (does not matter if it is used by the form)
@@ -15123,6 +15152,7 @@ BEGIN
 --      P_RETURN_CODE := 'API_VDPVS_006';   --VD_PVS_QC found
 --      RETURN;
 --    END IF;
+      dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 3.5 (GF30800) old validation skipped c.f. SPRF_2.1.1_2');
 
     v_vp_pk.vp_idseq := P_VDPVS_VP_IDSEQ;
 
@@ -15132,22 +15162,34 @@ BEGIN
     WHERE  vp_idseq = P_VDPVS_VP_IDSEQ;
     v_vp_pk.jn_notes := NULL;
 
+      --dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 3.6 (GF30800) deleting vd_pvs relationship [' || to_char(v_vp_pk) || ']');
+      dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 3.6 (GF30800) deleting vd_pvs relationship vp_idseq [' || P_VDPVS_VP_IDSEQ || '] ...');
+
     BEGIN
       cg$vd_pvs_view.del(v_vp_pk);
+      dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 3.7 (GF30800)');
    RETURN;
     EXCEPTION WHEN OTHERS THEN
+      dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 3.8 (GF30800)');
       P_RETURN_CODE := 'API_VDPVS_501'; --Error deleting Value Domain
         P_RETURN_CODE := SQLCODE;
+      DBMS_OUTPUT.PUT_LINE ('[' || SQLCODE || '] ' || SQLERRM);
+
    RETURN;
     END;
+      dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 3.9 (GF30800)');
 
   END IF;
+
+      dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 3.10 (GF30800)');
 
   --check to see that Value Domain Aand Permissible Values and Context exist in the database
   IF NOT Sbrext_Common_Routines.ac_exists(P_VDPVS_VD_IDSEQ)  THEN
     P_RETURN_CODE := 'API_VDPVS_201'; --VALUE Domain NOT found in the database
     RETURN;
   END IF;
+
+      dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS passed 3.11 (GF30800)');
 
   IF P_VDPVS_CON_IDSEQ IS NOT NULL THEN
      IF NOT Sbrext_Common_Routines.ac_exists(P_VDPVS_CON_IDSEQ)  THEN
@@ -15322,6 +15364,8 @@ EXCEPTION
     NULL;
   WHEN OTHERS THEN
     NULL;
+
+  dbms_output.put_line('SBREXT_SET_ROW.SET_VD_PVS done (GF30800)');
 
 END SET_VD_PVS;
 

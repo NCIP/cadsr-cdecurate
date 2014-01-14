@@ -19,6 +19,7 @@ public class Database {
 //			.getBundle(BUNDLE_NAME);
 
 	private DbmsOutput dbmsOutput;
+	private boolean enabled = false;
 
 //	public static String getString(String key) {
 //		try {
@@ -32,6 +33,7 @@ public class Database {
 		try {
 			dbmsOutput = new DbmsOutput(conn);
 			dbmsOutput.enable( 1000000 );
+			enabled = true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -39,15 +41,17 @@ public class Database {
 	}
 	
 	public void show() {
-		try {
-			System.out.println("$$$$$$ Database.show() begin $$$$$$>");
-			dbmsOutput.show();
-		    dbmsOutput.close();
-			System.out.println("<$$$$$$ Database.show() end $$$$$$");
-		} catch (Exception e) {
-			System.out.println("----- Database.show() begin error ------>");
-			e.printStackTrace();
-			System.out.println("<----- Database.show() end error ------");
+		if(enabled) {
+			try {
+				System.out.println("$$$$$$ Database.show() begin $$$$$$>");
+				dbmsOutput.show();
+			    dbmsOutput.close();
+				System.out.println("<$$$$$$ Database.show() end $$$$$$");
+			} catch (Exception e) {
+				System.out.println("----- Database.show() begin error ------>");
+				e.printStackTrace();
+				System.out.println("<----- Database.show() end error ------");
+			}
 		}
 	}
 	

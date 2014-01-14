@@ -20,6 +20,7 @@ public class DbmsOutput {
 	private CallableStatement enable_stmt;
 	private CallableStatement disable_stmt;
 	private CallableStatement show_stmt;
+	private boolean enabled = false;
 
 	/*
 	 * our constructor simply prepares the three statements we plan on
@@ -58,6 +59,7 @@ public class DbmsOutput {
 	public void enable(int size) throws SQLException {
 		enable_stmt.setInt(1, size);
 		enable_stmt.executeUpdate();
+		enabled = true;
 	}
 
 	/*
@@ -75,17 +77,19 @@ public class DbmsOutput {
 	 */
 
 	public void show() throws SQLException {
-		int done = 0;
-
-		show_stmt.registerOutParameter(2, java.sql.Types.INTEGER);
-		show_stmt.registerOutParameter(3, java.sql.Types.VARCHAR);
-
-		for (;;) {
-			show_stmt.setInt(1, 32000);
-			show_stmt.executeUpdate();
-			System.out.print(show_stmt.getString(3));
-			if ((done = show_stmt.getInt(2)) == 1)
-				break;
+		if(enabled) {
+			int done = 0;
+	
+			show_stmt.registerOutParameter(2, java.sql.Types.INTEGER);
+			show_stmt.registerOutParameter(3, java.sql.Types.VARCHAR);
+	
+			for (;;) {
+				show_stmt.setInt(1, 32000);
+				show_stmt.executeUpdate();
+				System.out.print(show_stmt.getString(3));
+				if ((done = show_stmt.getInt(2)) == 1)
+					break;
+			}
 		}
 	}
 
