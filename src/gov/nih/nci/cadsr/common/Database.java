@@ -29,14 +29,27 @@ public class Database {
 //		}
 //	}
 	
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	
 	public void trace(Connection conn) {
-		try {
-			dbmsOutput = new DbmsOutput(conn);
-			dbmsOutput.enable( 1000000 );
-			enabled = true;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(conn != null) {
+			try {
+				dbmsOutput = new DbmsOutput(conn);
+				dbmsOutput.enable( 1000000 );
+				enabled = true;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			enabled = false;
+			System.out.println("Database:trace() conn is empty or NULL, trace disabled!");
 		}
 	}
 	

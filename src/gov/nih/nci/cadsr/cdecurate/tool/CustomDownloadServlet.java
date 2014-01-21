@@ -8,6 +8,7 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
+import gov.nih.nci.cadsr.common.Database;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,7 +47,6 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
@@ -176,22 +176,27 @@ public class CustomDownloadServlet extends CurationServlet {
 	}
 
 	private ArrayList<String[]> getRecords(boolean full, boolean restrict) {
-
 		ArrayList<String[]> rows = new ArrayList<String[]>();
 
 		ArrayList<HashMap<String,List<String[]>>> arrayData = new ArrayList<HashMap<String,List<String[]>>>();
 
+		//Database db = new Database();
+		//db.trace(getConn());
+		//System.out.println("CustomDownloadServlet);getRecords() trace " + db.isEnabled());
 		ResultSet rs = null;
 		PreparedStatement ps = null;
 		try {
+			List<String> sqlStmts = null;
 			if (getConn() == null) {
 				ErrorLogin(m_classReq, m_classRes);
 			} else {
 				int rowNum = 0;
-				List<String> sqlStmts = getSQLStatements(full, restrict);
+				sqlStmts = getSQLStatements(full, restrict);
 				for (String sqlStmt: sqlStmts) {
 					ps = getConn().prepareStatement(sqlStmt);
+					System.out.println("CustomDownloadServlet);getRecords() executing [" + sqlStmt + "] ...");
 					rs = ps.executeQuery();
+					System.out.println("CustomDownloadServlet);getRecords() sql executed");
 
 					ResultSetMetaData rsmd = rs.getMetaData();
 					int numColumns = rsmd.getColumnCount();
@@ -233,6 +238,7 @@ public class CustomDownloadServlet extends CurationServlet {
 						rowNum++;
 					}
 				}
+				System.out.println("CustomDownloadServlet);getRecords() sql stats [" + sqlStmts.toString() + "] results parsed");
 
 				m_classReq.getSession().setAttribute("arrayData", arrayData);
 			
@@ -241,14 +247,16 @@ public class CustomDownloadServlet extends CurationServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs!=null) try{rs.close();}catch(Exception e) {}
-			if (ps!=null) try{ps.close();}catch(Exception e) {}
+			if (rs!=null) try{rs.close();}catch(Exception e) {e.printStackTrace();}
+			if (ps!=null) try{ps.close();}catch(Exception e) {e.printStackTrace();}
+			//db.show();
 		}
 
 		return rows;
 	}
 
 	private List<String[]> getRowArrayData(ResultSet rs, String columnType, int index) throws Exception{
+		System.out.println("CustomDownloadServlet);getRowArrayData() entered");
 		List<String[]> rowArrayData = new ArrayList<String[]>();
 		Array array = null;
 		//Special case: first row has info on derivation, others on data elements
@@ -386,6 +394,7 @@ public class CustomDownloadServlet extends CurationServlet {
 				}
 			}
 		}
+		System.out.println("CustomDownloadServlet);getRowArrayData() exiting ...");
 		return rowArrayData;
 	}
 
