@@ -344,7 +344,7 @@ BEGIN
     IF (con_name = 'VP_PK') THEN
         cg$errors.push(nvl(VP_PK
                   ,cg$errors.MsgGetText(cg$errors.API_PK_CON_VIOLATED
-					                 ,cg$errors.APIMSG_PK_VIOLAT
+                                     ,cg$errors.APIMSG_PK_VIOLAT
                                      ,'VP_PK'
                                      ,'VD_PVS_VIEW')),
                        'E',
@@ -354,7 +354,7 @@ BEGIN
     ELSIF (con_name = 'VP_UK') THEN
         cg$errors.push(nvl(VP_UK
                   ,cg$errors.MsgGetText(cg$errors.API_UQ_CON_VIOLATED
-					                 ,cg$errors.APIMSG_UK_VIOLAT
+                                     ,cg$errors.APIMSG_UK_VIOLAT
                                      ,'VP_UK'
                                      ,'VD_PVS_VIEW')),
                        'E',
@@ -364,7 +364,7 @@ BEGIN
     ELSIF (con_name = 'VP_CONTE_FK') THEN
         cg$errors.push(nvl(VP_CONTE_FK
                       ,cg$errors.MsgGetText(cg$errors.API_FK_CON_VIOLATED
-					                 ,cg$errors.APIMSG_FK_VIOLAT
+                                     ,cg$errors.APIMSG_FK_VIOLAT
                                      ,'VP_CONTE_FK'
                                      ,'VD_PVS_VIEW')),
                        'E',
@@ -374,7 +374,7 @@ BEGIN
     ELSIF (con_name = 'VP_CET_FK') THEN
         cg$errors.push(nvl(VP_CET_FK
                       ,cg$errors.MsgGetText(cg$errors.API_FK_CON_VIOLATED
-					                 ,cg$errors.APIMSG_FK_VIOLAT
+                                     ,cg$errors.APIMSG_FK_VIOLAT
                                      ,'VP_CET_FK'
                                      ,'VD_PVS_VIEW')),
                        'E',
@@ -384,7 +384,7 @@ BEGIN
     ELSIF (con_name = 'VP_VD_FK') THEN
         cg$errors.push(nvl(VP_VD_FK
                       ,cg$errors.MsgGetText(cg$errors.API_FK_CON_VIOLATED
-					                 ,cg$errors.APIMSG_FK_VIOLAT
+                                     ,cg$errors.APIMSG_FK_VIOLAT
                                      ,'VP_VD_FK'
                                      ,'VD_PVS_VIEW')),
                        'E',
@@ -394,7 +394,7 @@ BEGIN
     ELSIF (con_name = 'VP_PV_FK') THEN
         cg$errors.push(nvl(VP_PV_FK
                       ,cg$errors.MsgGetText(cg$errors.API_FK_CON_VIOLATED
-					                 ,cg$errors.APIMSG_FK_VIOLAT
+                                     ,cg$errors.APIMSG_FK_VIOLAT
                                      ,'VP_PV_FK'
                                      ,'VD_PVS_VIEW')),
                        'E',
@@ -602,9 +602,9 @@ BEGIN
             cg$rec.END_DATE := cg$upd_rec.END_DATE;
         END IF;
     ELSE
-	   -- Perform checks if called from a trigger
-	   -- Indicators are only set on changed values
-	   null;
+       -- Perform checks if called from a trigger
+       -- Indicators are only set on changed values
+       null;
     --  Check updates to Primary Key VP_PK allowed
         IF (cg$ind.VP_IDSEQ ) THEN
             uk_key_updateable('VP_PK'); END IF;
@@ -732,7 +732,7 @@ END upd;
 --------------------------------------------------------------------------------
 PROCEDURE upd_denorm2( cg$rec IN cg$row_type,
                        cg$ind IN cg$ind_type
-					      )
+                          )
 IS
 BEGIN
 NULL;
@@ -750,7 +750,7 @@ PROCEDURE upd_oper_denorm2( cg$rec IN cg$row_type,
                             cg$old_rec IN cg$row_type,
                             cg$ind IN cg$ind_type,
                             operation IN VARCHAR2 DEFAULT 'UPD'
-					           )
+                               )
 IS
 BEGIN
 NULL;
@@ -781,17 +781,23 @@ BEGIN
            slct(cg$rec);
   dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) validating foreign key ...');
            validate_foreign_keys_del(cg$rec);
-  dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) cascade deletig domain ...');
+  dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) cascade deleting domain ...');
            domain_cascade_delete(cg$rec);
-           IF cg$pk.the_rowid is null THEN
-  dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) 1.1');
+  /*
+         begin - GF30800 delete based on VP_IDSEQ instead of rowid!!!
+  */
+--            IF cg$pk.the_rowid is null THEN
+  dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) 1.1 deleting cg$pk.VP_IDSEQ [' ||cg$pk.VP_IDSEQ||'] from SBR.VD_PVS_VIEW');
               DELETE VD_PVS_VIEW
               WHERE                    VP_IDSEQ = cg$pk.VP_IDSEQ;
-           ELSE
-  dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) 1.2 deleteing cg$pk.the_rowid [' ||cg$pk.the_rowid||'] from SBR.VD_PVS_VIEW');
-              DELETE VD_PVS_VIEW
-              WHERE  rowid = cg$pk.the_rowid;
-           END IF;
+--            ELSE
+  dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) 1.2 deleting cg$pk.the_rowid [' ||cg$pk.the_rowid||'] from SBR.VD_PVS_VIEW');
+--               DELETE VD_PVS_VIEW
+--               WHERE  rowid = cg$pk.the_rowid;
+--            END IF;
+  /*
+         end - GF30800 delete based on VP_IDSEQ instead of rowid!!!
+  */
   dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) 2');
            upd_oper_denorm2(cg$rec, cg$old_rec, cg$ind, 'DEL');
   dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) cascade deletig domain 2 ...');
