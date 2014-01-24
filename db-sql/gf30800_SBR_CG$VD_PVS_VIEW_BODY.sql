@@ -784,19 +784,70 @@ BEGIN
   dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) cascade deleting domain ...');
            domain_cascade_delete(cg$rec);
   /*
-         begin - GF30800 delete based on VP_IDSEQ instead of rowid!!!
+         begin - GF30800 https://gforge.nci.nih.gov/tracker/index.php?func=detail&aid=30800&group_i
   */
 --            IF cg$pk.the_rowid is null THEN
+  dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) 1.0.1 deleting');
+				delete from SBREXT.TA_PROTO_CSI_EXT where TA_IDSEQ in (
+				select 
+				t.TA_IDSEQ
+				from SBREXT.QUEST_CONTENTS_EXT q, SBREXT.TRIGGERED_ACTIONS_EXT t, SBREXT.TA_PROTO_CSI_EXT tt
+				where
+				q.QC_IDSEQ = t.S_QC_IDSEQ
+				and t.TA_IDSEQ = tt.TA_IDSEQ
+				and q.VP_IDSEQ = cg$pk.VP_IDSEQ
+				);
+
+  dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) 1.0.2 deleting');
+				delete from SBREXT.TRIGGERED_ACTIONS_EXT where TA_IDSEQ in (
+				select 
+				t.TA_IDSEQ
+				from SBREXT.QUEST_CONTENTS_EXT q, SBREXT.TRIGGERED_ACTIONS_EXT t
+				where
+				q.QC_IDSEQ = t.S_QC_IDSEQ
+				and q.VP_IDSEQ = cg$pk.VP_IDSEQ
+				);
+
+  dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) 1.0.3 deleting');
+				--the grandchild
+				delete
+				from SBREXT.VALID_VALUES_ATT_EXT v
+				where v.QC_IDSEQ in
+				(
+				select 
+				q.QC_IDSEQ
+				from SBR.VD_PVS_VIEW p
+				,SBREXT.QUEST_CONTENTS_EXT q 
+				,SBREXT.VALID_VALUES_ATT_EXT v
+				WHERE 
+				p.VP_IDSEQ = q.VP_IDSEQ
+				and q.QC_IDSEQ = v.QC_IDSEQ
+				and p.VP_IDSEQ = cg$pk.VP_IDSEQ
+				);
+
+  dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) 1.0.4 deleting');
+				--the first child of VD_PVS
+				delete from SBREXT.QUEST_CONTENTS_EXT where QC_IDSEQ in (
+					select 
+					q.QC_IDSEQ
+					from 
+					SBREXT.QUEST_CONTENTS_EXT q 
+					WHERE 
+					q.VP_IDSEQ = cg$pk.VP_IDSEQ
+				);
+  dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) 1.0 done :)');
+  
+                
   dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) 1.1 deleting cg$pk.VP_IDSEQ [' ||cg$pk.VP_IDSEQ||'] from SBR.VD_PVS_VIEW');
-              DELETE VD_PVS_VIEW
-              WHERE                    VP_IDSEQ = cg$pk.VP_IDSEQ;
+	              DELETE VD_PVS_VIEW
+	              WHERE VP_IDSEQ = cg$pk.VP_IDSEQ;
 --            ELSE
   dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) 1.2 deleting cg$pk.the_rowid [' ||cg$pk.the_rowid||'] from SBR.VD_PVS_VIEW');
 --               DELETE VD_PVS_VIEW
 --               WHERE  rowid = cg$pk.the_rowid;
 --            END IF;
   /*
-         end - GF30800 delete based on VP_IDSEQ instead of rowid!!!
+         end - GF30800 https://gforge.nci.nih.gov/tracker/index.php?func=detail&aid=30800&group_i
   */
   dbms_output.put_line('SBR.CG$VD_PVS_VIEW.del (GF30800) 2');
            upd_oper_denorm2(cg$rec, cg$old_rec, cg$ind, 'DEL');
