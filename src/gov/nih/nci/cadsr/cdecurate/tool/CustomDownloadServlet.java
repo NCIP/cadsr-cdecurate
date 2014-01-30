@@ -9,6 +9,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.common.Database;
+import gov.nih.nci.cadsr.common.ExceptionUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -325,7 +326,7 @@ public class CustomDownloadServlet extends CurationServlet {
 						valueStruct = (STRUCT) nestedRs.getObject(2);  //GF30779 cause ORA-01403: no data found exception (if no data), thus catch it without doing anything
 						valueDatum = valueStruct.getOracleAttributes(); //GF30779
 					} catch (Exception e) {
-						logger.info(e.getMessage());	//TBD performance impact here
+						logger.info(ExceptionUtil.createFriendlyErrorMessage(e) + " Error: " + e.getMessage());	//TBD performance impact here
 					}
 					if(valueDatum != null) {	//begin of valueDatum
 						String[] values = new String[valueDatum.length];
