@@ -14,6 +14,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.common.Database;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -22,7 +23,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Vector;
+
 import oracle.jdbc.OracleTypes;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -54,6 +57,7 @@ public class ConceptAction implements Serializable
     
     ResultSet rs = null;
     CallableStatement cstmt = null;
+	Database db = new Database();
     try
     {
       //get the connection from data if exists (used for testing)
@@ -62,7 +66,8 @@ public class ConceptAction implements Serializable
       if (data.getCurationServlet().getConn() != null)
     	  
       {
-          logger.info("ConceptAction - doConceptSearch 1 calling SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON ...");
+    	logger.info("ConceptAction - doConceptSearch 1 calling SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON ...");
+		db.trace(data.getCurationServlet().getConn());
     	  
           //get the data for the call
         cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?,?)}");
@@ -140,6 +145,7 @@ public class ConceptAction implements Serializable
     }finally{
     	rs = SQLHelper.closeResultSet(rs);
         cstmt = SQLHelper.closeCallableStatement(cstmt);
+		db.show();
         logger.debug("ConceptAction - doConceptSearch 1 done");
     }    
   }  //endconcept search

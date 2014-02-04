@@ -2520,8 +2520,8 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
  ,des.DESIG_IDSEQ                     lae_des_idseq
  ,vd.vd_id
  ,vd.origin
- ,ar.ar_idseq	--GF32398
- ,ar.registration_status	--GF32398
+ ,ar.ar_idseq    --GF32398
+ ,ar.registration_status    --GF32398
  ,AMIW.date_created -- GF32036
  ,AMIW.date_modified -- GF32036
  ,AMIW.created_by  -- GF32036 avoid calling sbrext_cde_curator_pkg.get_ua_full_name
@@ -2532,8 +2532,8 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
  ,vd.condr_idseq vd_condr_idseq
  ,NVL(r.long_name,r.preferred_name) rep_long_name
  ,r.asl_name rep_asl_name
- ,rsl.display_order		--GF32398
- ,rsl.registration_status	--GF32398
+ ,rsl.display_order        --GF32398
+ ,rsl.registration_status    --GF32398
  ,asl.display_order
  ,asl.asl_name
  ,sbrext_cde_curator_pkg.Get_One_Con_Name(NULL, vd.vd_idseq) con_name
@@ -2544,12 +2544,12 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
             '
  FROM
      sbr.value_domains_view       vd
-	,SBR.ADMINISTER_INFO_VIEW AMIW --GF32036 added a new view
+    ,SBR.ADMINISTER_INFO_VIEW AMIW --GF32036 added a new view
     ,sbr.conceptual_domains_view  cd
     ,sbr.contexts_view            c
-    ,ac_registrations_view ar	--GF32398
+    ,ac_registrations_view ar    --GF32398
     ,sbr.ac_status_lov_view asl
-    ,sbr.reg_status_lov_view rsl	--GF32398
+    ,sbr.reg_status_lov_view rsl    --GF32398
     ,sbrext.de_cn_language_view   des
     ,sbrext.REPRESENTATIONS_EXT   r ';
         v_where :=
@@ -2558,11 +2558,11 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
  AND vd.conte_idseq   = AMIW.conte_idseq --GF32036 added a new join (1 of 2)
  AND vd.vd_idseq = AMIW.ac_idseq --GF32036 added a new join (2 of 2)
  AND asl.asl_name = vd.asl_name
- AND ar.ac_idseq (+)= vd.vd_idseq	--GF32398 added new join
+ AND ar.ac_idseq (+)= vd.vd_idseq    --GF32398 added new join
  AND rsl.registration_status (+)= ar.registration_status --GF32398 added new join
  AND vd.cd_idseq  = cd.cd_idseq
  AND vd.vd_idseq  = des.ac_idseq (+)
- AND vd.vd_idseq    = ar.ac_idseq (+)	--GF32398 added new join
+ AND vd.vd_idseq    = ar.ac_idseq (+)    --GF32398 added new join
  AND vd.rep_idseq = r.rep_idseq  (+) ';
         IF v_search_string IS NOT NULL THEN
             -- 25-Mar-2004, W. Ver Hoef commented out comparison to u.name
@@ -2670,7 +2670,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
             v_where :=
                    v_where
                 || '
- AND TRUNC(AMIW.date_created) >= TO_DATE('''	--GF32036 changed vd. to AMIW.
+ AND TRUNC(AMIW.date_created) >= TO_DATE('''    --GF32036 changed vd. to AMIW.
                 || p_created_starting_date
                 || ''',''MM/DD/YYYY'')';
         END IF;
@@ -2683,7 +2683,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
             v_where :=
                    v_where
                 || '
- AND TRUNC(AMIW.date_modified) >= TO_DATE('''	--GF32036 changed vd. to AMIW.
+ AND TRUNC(AMIW.date_modified) >= TO_DATE('''    --GF32036 changed vd. to AMIW.
                 || p_modified_starting_date
                 || ''',''MM/DD/YYYY'')';
         END IF;
@@ -2691,7 +2691,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
             v_where :=
                    v_where
                 || '
- AND TRUNC(AMIW.date_modified) <= TO_DATE('''	--GF32036 changed vd. to AMIW.
+ AND TRUNC(AMIW.date_modified) <= TO_DATE('''    --GF32036 changed vd. to AMIW.
                 || p_modified_ending_date
                 || ''',''MM/DD/YYYY'')';
         END IF;
@@ -5553,6 +5553,9 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
         v_context         VARCHAR2( 2000 );
         v_context_list    VARCHAR2( 2000 );
     BEGIN
+    
+        -- dbms_output.put_line('GF33185 SBREXT_CDE_CURATOR_PKG: search_con p_con_id [' || p_con_id || '] p_definition [' || p_definition || ']');
+
         IF p_con_search_res%ISOPEN THEN
             CLOSE p_con_search_res;
         END IF;
@@ -5774,7 +5777,10 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
         -- dbms_output.put_line(SUBSTR(v_sql,1601,200));
         -- dbms_output.put_line(SUBSTR(v_sql,1801,200));
         OPEN p_con_search_res FOR v_sql;
-    END;
+        
+        -- dbms_output.put_line('GF33185 SBREXT_CDE_CURATOR_PKG: search_con v_sql = [' || v_sql || ']');
+
+    END; --END of search_con
     -- TT1824
     PROCEDURE add_to_sentinel_cs( p_id_seq IN VARCHAR2, p_ua_name IN VARCHAR2, p_csi_idseq OUT VARCHAR2 ) IS
         /*
