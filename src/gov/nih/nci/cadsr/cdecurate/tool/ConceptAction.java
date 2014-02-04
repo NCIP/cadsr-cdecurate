@@ -62,6 +62,8 @@ public class ConceptAction implements Serializable
       if (data.getCurationServlet().getConn() != null)
     	  
       {
+          logger.info("ConceptAction - doConceptSearch 1 calling SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON ...");
+    	  
           //get the data for the call
         cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?,?)}");
         cstmt.registerOutParameter(6, OracleTypes.CURSOR);
@@ -138,6 +140,7 @@ public class ConceptAction implements Serializable
     }finally{
     	rs = SQLHelper.closeResultSet(rs);
         cstmt = SQLHelper.closeCallableStatement(cstmt);
+        logger.debug("ConceptAction - doConceptSearch 1 done");
     }    
   }  //endconcept search
 

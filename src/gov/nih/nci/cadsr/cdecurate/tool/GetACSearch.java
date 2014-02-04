@@ -4124,6 +4124,9 @@ public class GetACSearch implements Serializable
                 bVListExist = true;
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
+
+            logger.info("GetACSearch - do_ConceptSearch 1 calling SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON ...");
+            
             cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?)}");
             cstmt.registerOutParameter(6, OracleTypes.CURSOR);
             cstmt.setString(1, InString);
@@ -4230,6 +4233,7 @@ public class GetACSearch implements Serializable
         }finally{
         	rs = SQLHelper.closeResultSet(rs);
             cstmt = SQLHelper.closeCallableStatement(cstmt);
+            logger.debug("GetACSearch - do_ConceptSearch 1 done");
         }
         return vList;
     }
