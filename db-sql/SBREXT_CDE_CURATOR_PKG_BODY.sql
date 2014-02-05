@@ -5553,8 +5553,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
         v_context         VARCHAR2( 2000 );
         v_context_list    VARCHAR2( 2000 );
     BEGIN
-    
-        -- dbms_output.put_line('GF33185 SBREXT_CDE_CURATOR_PKG: search_con p_con_id [' || p_con_id || '] p_definition [' || p_definition || ']');
+        dbms_output.put_line('GF33185 SBREXT_CDE_CURATOR_PKG: search_con entered 1');
 
         IF p_con_search_res%ISOPEN THEN
             CLOSE p_con_search_res;
@@ -5778,10 +5777,29 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
         -- dbms_output.put_line(SUBSTR(v_sql,1801,200));
         OPEN p_con_search_res FOR v_sql;
         
-        -- dbms_output.put_line('GF33185 SBREXT_CDE_CURATOR_PKG: search_con v_sql = [' || v_sql || ']');
+--        dbms_output.put_line('p_con_id');
+--        dbms_output.put_line(nvl(p_con_id, 'p_con_id is null or empty!'));
+--        dbms_output.put_line('p_definition');
+--        dbms_output.put_line(nvl(p_definition, 'p_definition is null or empty!'));
+    
+--        dbms_output.put_line('GF33185 SBREXT_CDE_CURATOR_PKG: search_con p_con_id [' || to_char(p_con_id) || '] p_definition [' || p_definition || ']');
+
+        dbms_output.put_line('GF33185 SBREXT_CDE_CURATOR_PKG: search_con 2.1 ');
+        
+        IF v_sql IS NOT NULL then
+          dbms_output.put_line('GF33185 SBREXT_CDE_CURATOR_PKG: search_con v_sql = [ 5');
+          if(LENGTH (v_sql) > 5999) then
+            dbms_output.put_line(substr(v_sql, 1, 5999));          
+          else
+            dbms_output.put_line(nvl(v_sql, 'v_sql is null or empty!'));
+          end if;
+          dbms_output.put_line(']');
+          dbms_output.put_line('v_sql length is ' || LENGTH (v_sql));
+        END IF;
+        dbms_output.put_line('GF33185 SBREXT_CDE_CURATOR_PKG: search_con done');
 
     END; --END of search_con
-    -- TT1824
+   -- TT1824
     PROCEDURE add_to_sentinel_cs( p_id_seq IN VARCHAR2, p_ua_name IN VARCHAR2, p_csi_idseq OUT VARCHAR2 ) IS
         /*
         ** Description: Create associations between a user CSI and

@@ -7,11 +7,17 @@
 
 package gov.nih.nci.cadsr.common;
 
+import gov.nih.nci.cadsr.cdecurate.tool.PVAction;
+
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.sql.*;
 
+import org.apache.log4j.Logger;
+
 public class Database {
+	private static final Logger logger = Logger.getLogger(Database.class.getName());
+
 	private static final String BUNDLE_NAME = "database"; //$NON-NLS-1$
 //	private static final String BUNDLE_NAME = "gov.nih.nci.cadsr.common.database"; //$NON-NLS-1$
 
@@ -41,7 +47,7 @@ public class Database {
 		if(conn != null) {
 			try {
 				dbmsOutput = new DbmsOutput(conn);
-				dbmsOutput.enable( 10000000 );
+				dbmsOutput.enable(10000000);
 				enabled = true;
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -49,22 +55,23 @@ public class Database {
 			}
 		} else {
 			enabled = false;
-			System.out.println("Database:trace() conn is empty or NULL, trace disabled!");
+			LogUtil.log("Database:trace() conn is empty or NULL, trace disabled!");
 		}
 	}
 	
 	public void show() {
 		if(enabled) {
 			try {
-				System.out.println("$$$$$$ Database.show() begin $$$$$$>");
+				LogUtil.log("$$$$$$ Database.show() begin $$$$$$>");
 				dbmsOutput.show();
 			    dbmsOutput.close();
-				System.out.println("<$$$$$$ Database.show() end $$$$$$");
+			    LogUtil.log("<$$$$$$ Database.show() end $$$$$$");
 			} catch (Exception e) {
-				System.out.println("----- Database.show() begin error ------>");
+				LogUtil.log("----- Database.show() begin error ------>");
 				e.printStackTrace();
-				System.out.println("<----- Database.show() end error ------");
+				LogUtil.log("<----- Database.show() end error ------");
 			}
+			LogUtil.log("$$$$$$ Database.show() end $$$$$$>");
 		}
 	}
 	

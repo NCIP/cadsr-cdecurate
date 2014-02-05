@@ -5,7 +5,11 @@ package gov.nih.nci.cadsr.common;
  */
 import java.sql.*;
 
+import org.apache.log4j.Logger;
+
 public class DbmsOutput {
+	private static final Logger logger = Logger.getLogger(DbmsOutput.class.getName());
+
 	/*
 	 * our instance variables. It is always best to use callable or prepared
 	 * statements and prepare (parse) them once per program execution, rather
@@ -60,13 +64,24 @@ public class DbmsOutput {
 		enable_stmt.setInt(1, size);
 		enable_stmt.executeUpdate();
 		enabled = true;
+		LogUtil.setLogger(logger);
 	}
-
+	
+	//Caused: 14:47:02,418 ERROR [STDERR] java.sql.SQLException: Missing IN or OUT parameter at index:: 1
+//	public void enable() throws SQLException {
+//		//NULL imply unlimited buffer (http://docs.oracle.com/cd/B19306_01/appdev.102/b14258/d_output.htm)
+//		
+//		enable_stmt.executeUpdate();
+//		enabled = true;
+//		LogUtil.setLogger(logger);
+//	}
+	
 	/*
 	 * disable only has to execute the dbms_output.disable call
 	 */
 	public void disable() throws SQLException {
 		disable_stmt.executeUpdate();
+		LogUtil.setLogger(null);
 	}
 
 	/*
@@ -86,10 +101,12 @@ public class DbmsOutput {
 			for (;;) {
 				show_stmt.setInt(1, 32000);
 				show_stmt.executeUpdate();
-				System.out.print(show_stmt.getString(3));
+				LogUtil.log(show_stmt.getString(3));
 				if ((done = show_stmt.getInt(2)) == 1)
 					break;
 			}
+		} else {
+			logger.info("DBMS_OUTPUT disabled");
 		}
 	}
 
