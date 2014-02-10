@@ -8,10 +8,10 @@
 package gov.nih.nci.cadsr.cdecurate.util;
 
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
+import gov.nih.nci.cadsr.cdecurate.tool.PV_Bean;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 
 import java.io.BufferedReader;
-
 import java.io.BufferedReader;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
@@ -156,6 +156,15 @@ public class AdministeredItemUtil {
 			}
 		}
 
+		return retVal;
+	}
+	
+	public static boolean isSimilarPV(PV_Bean pv1, PV_Bean pv2) {
+		boolean retVal = true;
+		StringBuffer pv1string, pv2string;
+		
+//		pv1.e
+		
 		return retVal;
 	}
 }

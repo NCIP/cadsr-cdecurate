@@ -295,7 +295,7 @@ public class PVServlet implements Serializable
           VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
           vmser.readDataForCreate(pv, -1);
           vm = vmser.vmData.getVMBean();
-          data.setStatusMsg(data.getStatusMsg() + vmser.vmData.getStatusMsg());
+          data.setStatusMsg(data.getStatusMsg() + vmser.vmData.getStatusMsg());		//GF33185 status should not be empty if duplicate exists!
         }
         pv.setPV_VM(vm);
         pv.setPV_VIEW_TYPE("expand");
@@ -405,7 +405,7 @@ public class PVServlet implements Serializable
       {
           Vector<PV_Bean> vdpvList = vd.getVD_PV_List();  
           if (vdpvList == null) vdpvList = new Vector<PV_Bean>();          
-          vdpvList.insertElementAt(pv, 0);
+          vdpvList.insertElementAt(pv, 0);		//GF33185 do not insert it if there is already the same VM based on its public id e.g. 4063971?!?
           vd.setVD_PV_List(vdpvList);
           pvInd = 0;
       }

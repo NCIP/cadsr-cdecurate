@@ -1459,8 +1459,8 @@ public class VMAction implements Serializable
 			{
 				for (int i = 0; i < nameCon.size(); i++)
 				{
-					EVS_Bean nBean = nameCon.elementAt(i);
-					EVS_Bean cBean = vCon.elementAt(i);
+					EVS_Bean nBean = nameCon.elementAt(i);	//GF33185 existing bean (from db)
+					EVS_Bean cBean = vCon.elementAt(i);		//GF33185 newly added bean
 					// if concepts don't match break the loop
 					if (!nBean.getCONCEPT_IDENTIFIER().equals(cBean.getCONCEPT_IDENTIFIER()))
 					{

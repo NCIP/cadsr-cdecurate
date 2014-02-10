@@ -398,7 +398,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
     vmData.setRequest(httpRequest);
     vmAction.setDataForCreate(pv, vd, vmData); 
     // - handle status message and other session attributes as needed    
-    Vector<VM_Bean> vErrMsg = vmData.getErrorMsgList();
+    Vector<VM_Bean> vErrMsg = vmData.getErrorMsgList();		//GF33185 duplicate error should be thrown here!?
     if (vErrMsg != null && vErrMsg.size()>0)
     {
       DataManager.setAttribute(session, "VMEditMsg", vErrMsg);
