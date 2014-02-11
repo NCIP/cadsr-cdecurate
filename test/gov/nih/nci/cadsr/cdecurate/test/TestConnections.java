@@ -71,14 +71,16 @@ public class TestConnections {
 			InputStream in = ClassLoader.getSystemResourceAsStream(_propFile);
 			_prop.loadFromXML(in);
 			in.close();
-		} catch (FileNotFoundException ex) {
-			_logger.fatal(ex.toString());
-		} catch (InvalidPropertiesFormatException ex) {
-			_logger.fatal(ex.toString());
-		} catch (IOException ex) {
-			_logger.fatal(ex.toString());
+//		} catch (FileNotFoundException ex) {
+//			_logger.fatal(ex.toString());
+//		} catch (InvalidPropertiesFormatException ex) {
+//			_logger.fatal(ex.toString());
+//		} catch (IOException ex) {
+//			_logger.fatal(ex.toString());
+//		}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
 	}
 
 	/**
