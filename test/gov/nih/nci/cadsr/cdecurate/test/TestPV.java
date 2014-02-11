@@ -113,7 +113,7 @@ public class TestPV
 		String evsDB = "caDSR";
 		PV_Bean pv1 = createPVBean(pvId, pvValue, beginDateStr, endDateStr, shortMeaningDesc, pvCD, cdrId, evsDB);
 		pvId = "F1C23491-BDC3-D439-E040-BB89A7B45E84";
-		pvValue = "PV1";
+		pvValue = "PV2";
 		beginDateStr = "1/1/1970";
 		endDateStr = "1/1/1970";
 		shortMeaningDesc = "Short meaning description 2 ...";
@@ -121,7 +121,7 @@ public class TestPV
 		cdrId = "F37D0428-B99E-6787-E034-0003BA3F9857";
 		evsDB = "caDSR";
 		PV_Bean pv2 = createPVBean(pvId, pvValue, beginDateStr, endDateStr, shortMeaningDesc, pvCD, cdrId, evsDB);
-		assertTrue(AdministeredItemUtil.isSimilarPV(pv1, pv2));
+		assertFalse(AdministeredItemUtil.isSimilarPV(pv1, pv2));
 
 	
 	}
@@ -139,6 +139,7 @@ public class TestPV
         String sCondr = cdrId;	//rs.getString("condr_idseq");
         VM_Bean vm = new VM_Bean();
         vm.setVM_CONDR_IDSEQ(sCondr);	//hint: select * from CABIO_CON_DER_RULES_VIEW where rownum < 11
+        vm.setVM_PREFERRED_DEFINITION(shortMeaningDesc);	//???
         EVS_Bean vmConcept = new EVS_Bean();
         vmConcept.setCONDR_IDSEQ(sCondr);
         if (sCondr != null && !sCondr.equals(""))
