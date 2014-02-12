@@ -403,8 +403,8 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
     {
       DataManager.setAttribute(session, "VMEditMsg", vErrMsg);
       httpRequest.setAttribute("ErrMsgAC", vmData.getStatusMsg());
-      httpRequest.setAttribute("editPVInd", pvInd);
       vmData.setVMBean(vm);
+      httpRequest.setAttribute("editPVInd", pvInd);
       Vector<VM_Bean> vmList = vmData.getExistVMList();
       if (vmList.size() > 0)
           httpRequest.setAttribute("vmNameMatch", "true");  

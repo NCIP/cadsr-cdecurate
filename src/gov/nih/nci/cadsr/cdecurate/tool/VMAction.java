@@ -1379,7 +1379,7 @@ public class VMAction implements Serializable
 				if (existVM != null)
 				{
 					data.setVMBean(existVM);
-					return existVM; // return the exact match name- definition-
+					return existVM; // return the exact match name- definition-		//GF33185 1
 									// concept
 				}
 			}
@@ -1955,7 +1955,7 @@ public class VMAction implements Serializable
 					VM_Bean vm = vmdef.elementAt(i);
 					// if (vm == null || vm.getVM_SHORT_MEANING() == null ||
 					// vm.getVM_SHORT_MEANING().equals(""))
-					if (vm == null || vm.getVM_LONG_NAME() == null
+					if (vm == null || vm.getVM_LONG_NAME() == null		//GF33185 2 this is ok as it is taken care by checkDefaultDefinition()
 							|| vm.getVM_LONG_NAME().equals(""))
 						break;
 					// mark the message
