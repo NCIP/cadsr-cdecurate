@@ -220,6 +220,7 @@ $Name: not supported by cvs2svn $
             <% } %>
 
         //selected concept info
+        //alert("GF33185 getting long name of the selected bean ...");
             <% if (selBean.getLONG_NAME() != null && !selBean.getLONG_NAME().equals(""))
       {
       	String sName = selBean.getLONG_NAME();
@@ -230,6 +231,7 @@ $Name: not supported by cvs2svn $
       	sDesc = serUtil.parsedStringSingleQuote(sDesc);
     System.out.println(selBean.getLONG_NAME() + " sel Con " + selBean.getCONCEPT_IDENTIFIER() + " db " + selBean.getEVS_DATABASE() + " def " + selBean.getPREFERRED_DEFINITION());
       %>
+        //alert("GF33185 SearchResultsBlocks.jsp before appendConcept: name=[<%=sName%>] ID=[<%=sID%>] DB=[<%=sDB%>] desc=[<%=sDesc%>]");
         opener.appendConcept('<%=sName%>', '<%=sID%>', '<%=sDB%>', '<%=sName%>', '<%=sDesc%>');
         window.close();
             <% } %>
@@ -255,25 +257,29 @@ $Name: not supported by cvs2svn $
 
         function EnableButtons(checked, currentField, isAConcept, conceptName, conceptID)
         {
-        if (opener.document == null)
-        window.close();
+            if (opener.document == null)
+            window.close();
 
-        EnableCheckButtons(checked, currentField, "<%=StringEscapeUtils.escapeJavaScript(sMAction)%>")
-        opener.document.newDECForm.isAConcept.value = isAConcept;		//GF30798
-        //alert("SearchResultsBlocks EnableButtons called!");
-        //begin GF33087
-        opener.document.newDECForm.conceptName.value = conceptName? conceptName: '';
-        opener.document.newDECForm.conceptID.value = conceptID? conceptID: '';
-        var tempStr = 'SearchResultsBlocks.jsp EnableButtons conceptName [' + opener.document.newDECForm.conceptName.value + '] conceptID [' + opener.document.newDECForm.conceptID.value + ']';
-        window.console && console.log(tempStr);
-        //alert(tempStr);
-        //end GF33087
+            EnableCheckButtons(checked, currentField, "<%=StringEscapeUtils.escapeJavaScript(sMAction)%>")
+            try {  //GF33185 this is not DEC (but rather VD/PV/VM form)
+                opener.document.newDECForm.isAConcept.value = isAConcept;		//GF30798
+                //alert("SearchResultsBlocks EnableButtons called!");
+                //begin GF33087
+                opener.document.newDECForm.conceptName.value = conceptName? conceptName: '';
+                opener.document.newDECForm.conceptID.value = conceptID? conceptID: '';
+                var tempStr = 'SearchResultsBlocks.jsp EnableButtons conceptName [' + opener.document.newDECForm.conceptName.value + '] conceptID [' + opener.document.newDECForm.conceptID.value + ']';
+                window.console && console.log(tempStr);
+                //alert(tempStr);
+                //end GF33087
 
-        //begin GF32723
-        var userVocab = document.searchParmsForm.listContextFilterVocab[document.searchParmsForm.listContextFilterVocab.selectedIndex].text;  //window.userSelectedVocab
-        opener.document.newDECForm.value = userVocab;
-        window.console && console.log('SearchResultsBlocks.jsp EnableButtons opener.document.newDECForm.value = [' + opener.document.newDECForm.value + ']');
-        //end GF32723
+                //begin GF32723
+                var userVocab = document.searchParmsForm.listContextFilterVocab[document.searchParmsForm.listContextFilterVocab.selectedIndex].text;  //window.userSelectedVocab
+                opener.document.newDECForm.value = userVocab;
+                window.console && console.log('SearchResultsBlocks.jsp EnableButtons opener.document.newDECForm.value = [' + opener.document.newDECForm.value + ']');
+                //end GF32723
+            } catch(e) {
+                window.console && console.log('SearchResultsBlocks.jsp EnableButtons error: ' + e);
+            }
         }
 
         function EnableButtonWithTxt(currentField)

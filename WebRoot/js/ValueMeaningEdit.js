@@ -89,7 +89,8 @@
 	
 	function appendConcept(iRow, nvpValue)
 	{
-    	var selRowObj = document.getElementsByName(elmSelectRow);
+        //alert("GF33185 ValueMeaningEdit.js appendConcept: iRow=["+iRow+"] nvpValue=["+nvpValue+"]");
+        var selRowObj = document.getElementsByName(elmSelectRow);
        	if (selRowObj[0] != null)
     	{
     		selRowObj[0].value = iRow;

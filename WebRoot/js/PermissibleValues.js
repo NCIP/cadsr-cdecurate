@@ -1188,7 +1188,9 @@
   	//add a row to append the selected concept to teh vm
   	function appendConcept(txName, txId, txVocab, vmName, vmDesc)
 	{
-		var curPV = document.PVForm.currentPVInd;
+        //alert("GF33185 PermissibleValues.js appendConcept: txName=["+txName+"] txId=["+txId+"] txVocab=["+txVocab+"] vmName=["+vmName+"] vmDesc=["+vmDesc+"]");
+        var curPV = document.PVForm.currentPVInd;
+        //alert("GF33185 PermissibleValues.js appendConcept: curPV=["+curPV+"]");
 		if (curPV !== null && curPV.value !== null)
 		{
 			changeConceptText(curPV.value, txName, txId, txVocab, vmDesc);
@@ -1356,8 +1358,15 @@
   		}
   		vm.innerText = appName;  // vmName;
   		vm.textContent = appName;
+        //alert("GF33185 PermissibleValues.js appendVMNameDesc before getByName() ...");
   		var vmFormName = getByName("txt"+pvInd+"Mean");  // vmName;
-  		vmFormName.value = appName;
+        //alert("GF33185 PermissibleValues.js appendVMNameDesc vmFormName=["+vmFormName+"]");
+        try {
+  		    vmFormName.value = appName;
+        }catch(e) {
+            //=== this error is not related to the fix we did for GF33185
+            window.console && console.log("PermissibleValues.js appendVMNameDesc: not able to get the name of the vm!");
+        }
   		
   		document.PVForm.currentVM.value = appName;
   		//get the vm description object
@@ -1373,7 +1382,12 @@
   		vmd.innerText = appDesc;  // vmDesc;
   		vmd.textContent = appDesc;
   		var vmFormDesc = getByName("txt"+pvInd+"Def");  // vmDesc;
-  		vmFormDesc.value = appDesc;
+        try {
+            vmFormDesc.value = appDesc;
+        }catch(e) {
+            //=== this error is not related to the fix we did for GF33185
+            window.console && console.log("PermissibleValues.js appendVMNameDesc: not able to get the desc of the vm!");
+        }
   		//make sure to disable the search link also when vm name exists
   		if (appName !== "") {
   			disableSearch('pvNew');

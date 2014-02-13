@@ -365,7 +365,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
       {
         UtilService util = new UtilService();        
         sVM = sVM.trim();//trim out the extra spaces
-        sVM = util.removeNewLineChar(sVM);
+        sVM = util.removeNewLineChar(sVM); 
        //vm.setVM_SHORT_MEANING(sVM);
 //        vm.setVM_LONG_NAME(sVM);
 		vm.setVM_LONG_NAME(AdministeredItemUtil.handleLongName(sVM)); //GF32004
@@ -379,16 +379,13 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
     vmData.setVMBean(vm);
     
     VD_Bean oldvd = (VD_Bean)session.getAttribute("oldVDBean");
-    Vector<PV_Bean> vdpvs = oldvd.getVD_PV_List();		//GF33185 compares all PVs here?
+    Vector<PV_Bean> vdpvs = oldvd.getVD_PV_List();
     if (pvInd > -1 && vdpvs.size() > 0)  // (selvm != null)
     {
         for (int i=0; i<vdpvs.size(); i++)
         {
           PV_Bean orgPV =  (PV_Bean)vdpvs.elementAt(i);
           
-          //=== begin of GF33180 fix
-          AdministeredItemUtil.isSimilarPV(pv, orgPV);	//comparing the newly added PV with existing ones (in db/form)
-          //=== end of GF33185 fix
           if (orgPV != null && pv.getPV_PV_IDSEQ() != null && orgPV.getPV_PV_IDSEQ().equals(pv.getPV_PV_IDSEQ()))
           {            
             selvm = orgPV.getPV_VM();
@@ -399,6 +396,24 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
           }
         }
     }
+    //=== begin of GF33180 fix
+    if (vdpvs.size() > 0) {
+        for (int i=0; i<vdpvs.size(); i++)
+        {
+          PV_Bean orgPV =  (PV_Bean)vdpvs.elementAt(i);
+          
+          //=== begin of GF33180 fix
+          AdministeredItemUtil.isSimilarPV(pv, orgPV);	//comparing the newly added PV with existing ones (in db/form)
+          //=== end of GF33185 fix
+//          if (orgPV != null && pv.getPV_PV_IDSEQ() != null && orgPV.getPV_PV_IDSEQ().equals(pv.getPV_PV_IDSEQ()))
+//          {            
+//            selvm = orgPV.getPV_VM();
+//            vmData.setSelectVM(selvm);
+//            break;
+//          }
+        }
+    }
+    //=== end of GF33185 fix
     vmData.setRequest(httpRequest);
     vmAction.setDataForCreate(pv, vd, vmData); 
     // - handle status message and other session attributes as needed    

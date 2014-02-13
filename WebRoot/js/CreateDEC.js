@@ -513,7 +513,12 @@ function SubmitValidate(origin)
 }
 
 function isAConcept() {
-    var flag = document.newDECForm.isAConcept.value;
+    var flag = false;
+
+    //GF33185 fixed issue not related to this ticket (Cannot read property 'isAConcept' of undefined    )
+    if(document.newDECForm !== undefined && document.newDECForm.isAConcept !== undefined) {
+        flag = document.newDECForm.isAConcept.value;
+    }
     window.console && console.log("CreateDEC.js isAConcept = [" + flag + "]");
     //alert("Is a concept = [" + flag + "]");
 
