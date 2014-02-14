@@ -17,7 +17,7 @@ L--%>
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
-		<SCRIPT LANGUAGE="JavaScript" SRC="../js/AddNewListOption.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="js/AddNewListOption.js"></SCRIPT>
 		<%@ page import="java.util.*"%>
 		<%@ page import="java.text.*"%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
