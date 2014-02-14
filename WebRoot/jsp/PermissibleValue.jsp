@@ -737,7 +737,7 @@ L--%>
 															<tr>
 																<td colspan=2>
 																	<% if (vmMatch.equals("true")) { %>
-																		The Value Meaning matches the name of another Value Meaning. Please (1) select from the list below and press the Use Selection button, (2) press the Create button to create a new Value Meaning as it appears above or (3) press Cancel to change the Value Meaning properties above then press Save again
+																		The Value Meaning matches the name of another Value Meaning. Please (1) select from the list below and press the Use Selection button, (2) press the Create button to create a new Value Meaning as it appears above (create is not available if the concept match) or (3) press Cancel to change the Value Meaning properties above then press Save again
 																	<% } else { %>
 																		The Value Meaning you are creating matches the definition or concepts of an existing Value Meaning.
 																		You may select an existing Value Meaning and click 'Link Concept', 

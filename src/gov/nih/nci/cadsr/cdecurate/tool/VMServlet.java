@@ -8,6 +8,7 @@ import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
+import gov.nih.nci.cadsr.cdecurate.util.ClassUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
 import gov.nih.nci.cadsr.common.StringUtil;
@@ -396,24 +397,6 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
           }
         }
     }
-    //=== begin of GF33180 fix
-    if (vdpvs.size() > 0) {
-        for (int i=0; i<vdpvs.size(); i++)
-        {
-          PV_Bean orgPV =  (PV_Bean)vdpvs.elementAt(i);
-          
-          //=== begin of GF33180 fix
-          AdministeredItemUtil.isSimilarPV(pv, orgPV);	//comparing the newly added PV with existing ones (in db/form)
-          //=== end of GF33185 fix
-//          if (orgPV != null && pv.getPV_PV_IDSEQ() != null && orgPV.getPV_PV_IDSEQ().equals(pv.getPV_PV_IDSEQ()))
-//          {            
-//            selvm = orgPV.getPV_VM();
-//            vmData.setSelectVM(selvm);
-//            break;
-//          }
-        }
-    }
-    //=== end of GF33185 fix
     vmData.setRequest(httpRequest);
     vmAction.setDataForCreate(pv, vd, vmData); 
     // - handle status message and other session attributes as needed    
@@ -428,6 +411,21 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
       if (vmList.size() > 0)
           httpRequest.setAttribute("vmNameMatch", "true");  
     }
+
+    //=== begin of GF33180 fix
+    if (vdpvs.size() > 0) {
+    	VM_Bean newVm = null;
+        for (int i=0; i<vdpvs.size(); i++)
+        {
+          PV_Bean orgPV =  (PV_Bean)vdpvs.elementAt(i);
+          newVm = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
+          pv.setPV_VM(newVm);
+          ClassUtil.isSimilarPV(pv, orgPV);	//comparing the newly added PV with existing ones (in db/form)
+          httpRequest.setAttribute("vmNameMatch", "true");  
+        }
+    }
+    //=== end of GF33185 fix
+    
   }
   
   /**

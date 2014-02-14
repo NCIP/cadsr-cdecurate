@@ -14,6 +14,7 @@ import gov.nih.nci.cadsr.cdecurate.tool.UtilService;
 import gov.nih.nci.cadsr.cdecurate.tool.VM_Bean;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
+import gov.nih.nci.cadsr.cdecurate.util.ClassUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DECHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
@@ -100,7 +101,7 @@ public class TestPV
 	@Test
 	public void testGF33185() {
 		//same PV, should be true
-		assertTrue(AdministeredItemUtil.isSimilarPV(null, null));
+		assertTrue(ClassUtil.isSimilarPV(null, null));
 
 		//different PV, should be false
 		String pvId = "F1C23491-BDC3-D439-E040-BB89A7B45E84";
@@ -121,7 +122,7 @@ public class TestPV
 		cdrId = "F37D0428-B99E-6787-E034-0003BA3F9857";
 		evsDB = "caDSR";
 		PV_Bean pv2 = createPVBean(pvId, pvValue, beginDateStr, endDateStr, shortMeaningDesc, pvCD, cdrId, evsDB);
-		assertFalse(AdministeredItemUtil.isSimilarPV(pv1, pv2));
+		assertFalse(ClassUtil.isSimilarPV(pv1, pv2));
 
 	
 	}
