@@ -197,6 +197,7 @@ function SearchBuildingBlocks(thisBlock, openToTree)
 function closeDep()
 {
     window.console && console.log('CreateDEC.js closeDep()');
+//    alert("CreateDEC.js closeDep() closing search window ...");
 
     if (searchWindow && !searchWindow.closed) {// && searchWindow.open
 //        window.console && console.log('CreateDEC.js closing searchWindow ...');

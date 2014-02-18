@@ -1157,7 +1157,7 @@ if(!sSelAC.equals("ValueMeaning"))
 %>
 				<tr>
 					<td width="5">
-						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this);" <%if((vCheckList != null && vCheckList.contains(ckName))){%> checked <%}%> onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
+						<input type="checkbox" name="<%=ckName%>" onClick="javascript:window.console && console.log('SearchResults.jsp: Item selected ');EnableButtons(checked,this);" <%if((vCheckList != null && vCheckList.contains(ckName))){%> checked <%}%> onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 					</td>
 					<%     if (sSelAC.equals("Questions") && !sMAction.equals("searchForCreate"))
        {

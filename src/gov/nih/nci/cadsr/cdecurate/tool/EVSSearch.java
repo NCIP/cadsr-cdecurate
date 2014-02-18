@@ -2422,6 +2422,7 @@ public class EVSSearch implements Serializable {
                                 conBean.markNVPConcept(conBean, session);
                                 vCons.addElement(conBean);
                         }
+                        System.out.println("******************************** sConName [" + sConName+ "] sDispName [" + sDispName + "] ******************************** ");
                 } catch (Exception ex) {
                         logger.error("storeConceptToBean: " + ex.toString(), ex);
                 }

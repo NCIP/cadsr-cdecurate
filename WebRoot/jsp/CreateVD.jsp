@@ -420,7 +420,9 @@ L--%>
 
 	function closeDep() 
 	{
-	  if (searchWindow && searchWindow.open && !searchWindow.closed) 
+    <%--alert("CreateVD.js closeDep() closing search window ...");--%>
+
+    if (searchWindow && searchWindow.open && !searchWindow.closed)
 	    searchWindow.close();
 	  if(altWindow && altWindow.open && ! altWindow.closed)
 	    altWindow.close();

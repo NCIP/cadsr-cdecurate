@@ -646,19 +646,21 @@ public class DataElementConceptServlet extends CurationServlet {
 			{
 				GetACService getAC = new GetACService(m_classReq, m_classRes, this);
 				Vector vCon = getAC.getAC_Concepts(sCondr, null, true);
-				for (int i=0; i<vCon.size();i++){
-					EVS_Bean eBean =(EVS_Bean)vCon.get(i);
-					logger.debug("At line 623 of DECServlet.java "+eBean.getLONG_NAME());
-					logger.debug("At line 624 of DECServlet.java "+eBean.getEVS_ORIGIN());
-					logger.debug("At line 625 of DECServlet.java "+eBean.getEVS_DATABASE());
-					logger.debug("At line 626 of DECServlet.java "+eBean.getCONCEPT_IDENTIFIER());
-					logger.debug("At line 627 of DECServlet.java "+eBean.getPREFERRED_DEFINITION());
-				}
+//				for (int i=0; i<vCon.size();i++){
+//					EVS_Bean eBean =(EVS_Bean)vCon.get(i);
+//					logger.debug("At line 623 of DECServlet.java "+eBean.getLONG_NAME());
+//
+//					logger.debug("At line 624 of DECServlet.java "+eBean.getEVS_ORIGIN());
+//					logger.debug("At line 625 of DECServlet.java "+eBean.getEVS_DATABASE());
+//					logger.debug("At line 626 of DECServlet.java "+eBean.getCONCEPT_IDENTIFIER());
+//					logger.debug("At line 627 of DECServlet.java "+eBean.getPREFERRED_DEFINITION());
+//				}
 				if (vCon != null && vCon.size() > 0)
 				{
 					for (int j = 0; j < vCon.size(); j++)
 					{
 						EVS_Bean bean = new EVS_Bean();
+	                    System.out.println("===== DataElementConceptServlet ===== eBean.getLONG_NAME() [" + bean.getLONG_NAME()+ "] ******************************** ");
 						bean = (EVS_Bean) vCon.elementAt(j);
 						if (bean != null)
 						{
@@ -1026,8 +1028,8 @@ public class DataElementConceptServlet extends CurationServlet {
 			//(isAConcept != null && isAConcept.trim().equals("false"))	//GF30798
 			//end of GF30798
 			//begin of GF32723
-//			String conceptName = (String) m_classReq.getParameter("conceptName");
-//			session.setAttribute("conceptName", conceptName);	//set it to the name picked by the user instead
+			String conceptName = (String) m_classReq.getParameter("conceptName");
+			session.setAttribute("conceptName", conceptName);	//set it to the name picked by the user instead
 //	        session.setAttribute(Constants.DEC_EVS_LOOKUP_FLAG, false);
 			DataManager.setAttribute(session, "vStatMsg", null);  //reset the status message (avoiding the duplicates in the warning dialog)
 			String userSelectedVocab = (String) m_classReq.getParameter("userSelectedVocab");
@@ -1056,16 +1058,16 @@ public class DataElementConceptServlet extends CurationServlet {
 				m_DEC = new DEC_Bean();
 			m_setAC.setDECValueFromPage(m_classReq, m_classRes, m_DEC);
 			Vector<EVS_Bean> vObjectClass = (Vector) session.getAttribute("vObjectClass");
-//			String evsDef = null;
-//			if(vObjectClass != null && vObjectClass.size() > 0) {
-//				for (int i=0; i<vObjectClass.size();i++){
-//					EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
-//					if(eBean != null) {
-//						logger.debug("At line 1001 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
-//						evsDef = eBean.getPREFERRED_DEFINITION();
-//					}
-//				}
-//			}
+			String evsDef = null;
+			if(vObjectClass != null && vObjectClass.size() > 0) {
+				for (int i=0; i<vObjectClass.size();i++){
+					EVS_Bean eBean =(EVS_Bean)vObjectClass.get(i);
+					if(eBean != null) {
+						logger.debug("At line 1001 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
+						evsDef = eBean.getPREFERRED_DEFINITION();
+					}
+				}
+			}
 			if (vObjectClass == null || vObjectClass.size() == 0) {
 				vObjectClass = new Vector<EVS_Bean>();
 				//reset the attributes for keeping track of non-caDSR choices...
@@ -1074,13 +1076,13 @@ public class DataElementConceptServlet extends CurationServlet {
 				session.removeAttribute("changedOCDefsWarning");
 			}
 			Vector<EVS_Bean> vProperty = (Vector) session.getAttribute("vProperty");
-//			if(vProperty != null && vProperty.size() > 0) {
-//				for (int i=0; i<vProperty.size();i++){
-//					EVS_Bean eBean =(EVS_Bean)vProperty.get(i);
-//					if(eBean != null)
-//					logger.debug("At line 1015 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
-//				}
-//			}
+			if(vProperty != null && vProperty.size() > 0) {
+				for (int i=0; i<vProperty.size();i++){
+					EVS_Bean eBean =(EVS_Bean)vProperty.get(i);
+					if(eBean != null)
+					logger.debug("At line 1015 of DECServlet.java "+eBean.getPREFERRED_DEFINITION()+"**"+eBean.getLONG_NAME()+"**"+eBean.getCONCEPT_IDENTIFIER());
+				}
+			}
 			if (vProperty == null || vProperty.size() == 0) {
 				vProperty = new Vector<EVS_Bean>();
 				//reset the attributes for keeping track of non-caDSR choices...
@@ -1356,15 +1358,20 @@ public class DataElementConceptServlet extends CurationServlet {
 				m_DEC = (DEC_Bean) this.getACNames(nullEVS, "blockName", m_DEC);
 
 		
-			//GF32723 patch up work - long name can not be empty/missing
-//			if(m_DEC.getDEC_LONG_NAME() == null || m_DEC.getDEC_LONG_NAME().equals("")) {
-//				String conceptName = (String) m_classReq.getParameter("conceptName");
+			//begin of GF32723 patch up work - long name is empty/missing
+//			if(m_DEC.getDEC_OCL_NAME() == null || m_DEC.getDEC_OCL_NAME().equals("")) {
+//				conceptName = (String) m_classReq.getParameter("conceptName");
 //				session.setAttribute("conceptName", conceptName);	//set it to the name picked by the user instead
 //				m_DEC.setDEC_OCL_NAME(conceptName);
 //				m_DEC = this.updateOCAttribues(vObjectClass, m_DEC);
+//			}
+//			if(m_DEC.getDEC_PROPL_NAME() == null || m_DEC.getDEC_PROPL_NAME().equals("")) {
+//				conceptName = (String) m_classReq.getParameter("conceptName");
+//				session.setAttribute("conceptName", conceptName);	//set it to the name picked by the user instead
+//				m_DEC.setDEC_PROPL_NAME(conceptName);
 //				m_DEC = this.updatePropAttribues(vProperty, m_DEC);
 //			}
-			
+			//end of GF32723 patch up work - long name is empty/missing
 			
 			DataManager.setAttribute(session, "m_DEC", m_DEC);	//set the user's selection + data from EVS in the DEC in session (for submission later on)
 			logger.info("DataElementConceptServlet:doDECUseSelection() DEC_Bean = " + m_DEC);
@@ -2429,8 +2436,16 @@ public class DataElementConceptServlet extends CurationServlet {
 		String nvpValue = "";
 		if (checkNVP(pBean))	//JT what is this check for?
 			nvpValue="::"+pBean.getNVP_CONCEPT_VALUE();
-		if (pBean.getLONG_NAME() != null)
+		if (pBean.getLONG_NAME() != null && !pBean.getLONG_NAME().equals("")) {
 			decBean.setDEC_OCL_NAME_PRIMARY(pBean.getLONG_NAME()+nvpValue);
+			System.out.println("DataElementConceptServlet: updateOCAttribues() pBean.getLONG_NAME() [" + pBean.getLONG_NAME() + "] DEC_OCL_NAME_PRIMARY [" + decBean.getDEC_OCL_NAME_PRIMARY() + "] DEC_OCL_NAME [" + decBean.getDEC_OCL_NAME() + "]");
+		}
+//		else
+//		//checking "missing"/empty long name issue from levevs!
+//		if (pBean.getLONG_NAME() != null && pBean.getLONG_NAME().equals("")) {
+//			decBean.setDEC_OCL_NAME_PRIMARY(decBean.getDEC_OCL_NAME());
+//		}
+		
 		decBean.setDEC_OC_CONCEPT_CODE(pBean.getCONCEPT_IDENTIFIER());
 		decBean.setDEC_OC_EVS_CUI_ORIGEN(pBean.getEVS_DATABASE());
 		//if (pBean.getIDSEQ() != null && pBean.getIDSEQ().length() > 0)
@@ -2480,8 +2495,15 @@ public class DataElementConceptServlet extends CurationServlet {
 		String nvpValue = "";
 		if (checkNVP(pBean))
 			nvpValue="::"+pBean.getNVP_CONCEPT_VALUE();
-		if (pBean.getLONG_NAME() != null)
+		if (pBean.getLONG_NAME() != null && !pBean.getLONG_NAME().equals("")) {
 			decBean.setDEC_PROPL_NAME_PRIMARY(pBean.getLONG_NAME()+nvpValue);
+		} 
+//		else
+//		//checking "missing"/empty long name issue from levevs!
+//		if (pBean.getLONG_NAME() != null && pBean.getLONG_NAME().equals("")) {
+//			decBean.setDEC_PROPL_NAME_PRIMARY(decBean.getDEC_PROPL_NAME());
+//		}
+
 		decBean.setDEC_PROP_CONCEPT_CODE(pBean.getCONCEPT_IDENTIFIER());
 		decBean.setDEC_PROP_EVS_CUI_ORIGEN(pBean.getEVS_DATABASE());
 		//decBean.setDEC_PROPL_IDSEQ(pBean.getIDSEQ());

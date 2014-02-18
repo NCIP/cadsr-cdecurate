@@ -109,7 +109,7 @@
   	 	nvpVal.value = nvpRow.value;
   	 	
     //continue with the submission
-    if(opener.document.newDECForm)  // != null)  //GF32723
+    if(opener.document.newDECForm !== undefined)  //GF32723
     {
       var source = opener.document.newDECForm.DECAction.value;
       opener.document.newDECForm.sCompBlocks.value = sComp;
@@ -120,9 +120,11 @@
       //end GF30798
         
       //GF32723
-      //alert("editName = [" + editName + "]");
+     //=== fix missing/empty long name issue
+//      alert("editName = [" + editName + "]");
+      opener.document.newDECForm.conceptName.value = editName;
       //opener.document.newDECForm.conceptName.value = toTitleCase(editName);
-        
+
       opener.SubmitValidate("UseSelection");
       //window.close();     //GF32723 do not close it
     }
@@ -131,7 +133,7 @@
       opener.document.createVDForm.sCompBlocks.value = sComp;
       opener.document.createVDForm.selRepRow.value = selRow;
       opener.SubmitValidate("UseSelection");
-      window.close();
+      window.close();   //comment this out to make the search window stay (not closed)
     }
   }
 
@@ -182,7 +184,7 @@ function toTitleCase(str)
         //call the function to submit the form
         opener.document.createVDForm.sCompBlocks.value = sComp;
         submitOpener();
-        window.close();
+        window.close();     //comment this out to make the search window stay (not closed)
       }
       //parent concept from vd page
       else if (sComp == "ParentConcept")  // && opener.document.createVDForm != null)

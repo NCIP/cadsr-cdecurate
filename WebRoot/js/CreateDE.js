@@ -314,7 +314,9 @@ function SearchVDValue()
 
  function closeDep() 
  {
-    if (searchWindow && !searchWindow.closed)   //&& searchWindow.open 
+//     alert("CreateDE.js closeDep() closing search window ...");
+
+     if (searchWindow && !searchWindow.closed)   //&& searchWindow.open
       searchWindow.close();
     if (altWindow && !altWindow.closed)  // && altWindow.open
       altWindow.close();

@@ -618,7 +618,7 @@ $Name: not supported by cvs2svn $
   %>
         <tr>
         <td width="5px" valign="top">
-        <input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this, false);">
+        <input type="checkbox" name="<%=ckName%>" onClick="javascript:window.console && console.log('SearchResultsBlocks.jsp: Non-concept selected ');EnableButtons(checked,this, false);">
         </td>
             <% if(sSelAC.equals("Rep Term") && temp.booleanValue()){ %>
         <td width="5px" valign="top">
@@ -645,7 +645,7 @@ $Name: not supported by cvs2svn $
             <%    }else{%>
         <tr>
         <td width="5px" valign="top">
-        <input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this, true);">
+        <input type="checkbox" name="<%=ckName%>" onClick="javascript:window.console && console.log('SearchResultsBlocks.jsp: Concept selected ');;EnableButtons(checked,this, true);">
         </td>
         <td width="150px" valign="top">
         <a href="<%=showConceptInTree%>">
