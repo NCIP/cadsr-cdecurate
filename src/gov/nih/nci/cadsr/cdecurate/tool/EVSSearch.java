@@ -2577,6 +2577,11 @@ public class EVSSearch implements Serializable {
 
                 ResolvedConceptReferenceList concepts = null;
 
+                //=== begin GF32723
+                HttpSession session = m_classReq.getSession();
+                session.setAttribute(Constants.DEC_EVS_LOOKUP_FLAG, String.valueOf(false));
+                //=== end GF32723
+                
                 if (vList == null)
                         vList = new Vector<EVS_Bean>();
                         try {
@@ -2736,6 +2741,10 @@ public class EVSSearch implements Serializable {
                         } catch (Exception ex) {
                                 logger.error("doMetaSearch exception : " + ex.toString(), ex);
                         }
+                        
+                        //=== GF32723
+                        session.setAttribute(Constants.DEC_EVS_LOOKUP_FLAG, String.valueOf(true));
+                        
                         return vList;
         }
         
@@ -3982,6 +3991,13 @@ public class EVSSearch implements Serializable {
                                                 Hashtable vhash = m_eUser.getVocab_Attr();
                                                 if (vhash == null)
                                                         return eBean;
+                                                
+                                                //=== begin GF32723 dtsVocab can not be empty, so set it to default NCIt
+                                                if(dtsVocab == null || dtsVocab.equals("")) {
+                                                	dtsVocab = Constants.DTS_VOCAB_NCIT;
+                                                }
+                                                //=== end GF32723 dtsVocab can not be empty, so set it to default NCIt
+                                                
                                                 //get the vocab source
                                                 EVS_UserBean eUser = (EVS_UserBean) vhash.get(dtsVocab);
                                                 if (eUser == null)

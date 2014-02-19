@@ -436,7 +436,7 @@
 			}
 		}
 	}
-    function view(pvd, imgdhide, imgddisp, action, pvNo)
+    function view(pvd, imgdhide, imgddisp, action, pvNo, vdwfstatus, vdusedinform, pvusedinform, fmwfstatus)
     {
         var pvdiv = document.getElementById(pvd);
         var imgdivhide = document.getElementById(imgdhide);
@@ -523,6 +523,32 @@
     	if (action == "view" || action == "edit") {
     		changeDepDivDisplay(pvNo, action);
         }
+
+        //=== begin of GF7680
+        //window.console && console.log('PermissibleValues.js handling new disabling logic ...');
+        window.console && console.log("PermissibleValues.js VD vdwfstatus [" + vdwfstatus + "] vdusedinform [" + vdusedinform + "] pvusedinform [" + pvusedinform + "] fmwfstatus [" + fmwfstatus + "]");
+        dojo.query("img.PVAction").forEach(function(node, index){
+            var altText = node.getAttribute('alt');
+            //window.console && console.log('PVAction altText [' + altText + ']');
+            if(altText === 'Remove') {
+                dojo.style(node, 'display', 'none');
+                window.console && console.log('PVAction remove disabled');
+            }
+        });
+        dojo.query('[name^="txtpv"]').forEach(function(node, index, arr){
+            dojo.attr(node, "disabled", true);
+            window.console && console.log('PV/VM input disabled');
+        });
+        dojo.query("img.ConceptAction").forEach(function(node, index){
+            var altText = node.getAttribute('alt');
+            //window.console && console.log('ConceptAction altText [' + altText + ']');
+            if(altText === 'Remove') {
+                dojo.style(node, 'display', 'none');
+                window.console && console.log('ConceptAction remove disabled');
+            }
+        });
+        //=== end of GF7680
+
     }
 	function changeDepDivDisplay(pvNo, action)
 	{
