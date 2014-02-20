@@ -1829,6 +1829,7 @@ public class EVSSearch implements Serializable {
                         String sMetaSource, int iMetaLimit, boolean isMetaSearch,
                         int ilevel, String subConType, HashSet<String> sConSet) {
                 try {
+                		System.out.println("EVSearch:doVocabSearch() searching term [" + termStr + "]");
                         //do not continue if empty string search.
                         if (termStr == null || termStr.equals(""))
                                 return vConList;
@@ -1897,6 +1898,7 @@ public class EVSSearch implements Serializable {
                                                         }
 
                                                         String sConName = rcr.getEntityDescription().getContent();
+                                                		System.out.println("EVSearch:doVocabSearch() 1 concept name returned from lexvs [" + sConName + "]");
                                                         if (sConName == null)
                                                                 sConName = "";
                                                         String sConID = rcr.getCode();

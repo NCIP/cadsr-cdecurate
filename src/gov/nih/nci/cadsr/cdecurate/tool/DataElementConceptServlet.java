@@ -1133,7 +1133,9 @@ public class DataElementConceptServlet extends CurationServlet {
 			{
 				storeStatusMsg("Unable to get the selected row from the " + sComp + " search results.\\n"
 						+ "Please try again.");
-				return;
+				throw new Exception("********************************** Unable to get the selected row from the " + sComp + " search results.\\n"
+						+ "Please try again." + "********************************** ");
+				//return;
 			}
 			// send it back if unable to obtion the concept
 			if (blockBean == null || blockBean.getLONG_NAME() == null)
