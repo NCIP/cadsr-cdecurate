@@ -1,0 +1,224 @@
+Sample output:
+
+[2014-02-20 09:20:51,936 INFO ] Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@654cecee: display name [org.springframework.context.support.ClassPathXmlApplicationContext@654cecee]; startup date [Thu Feb 20 09:20:51 EST 2014]; root of context hierarchy
+[2014-02-20 09:20:51,993 INFO ] Loading XML bean definitions from class path resource [application-config-client.xml]
+[2014-02-20 09:20:52,084 INFO ] Bean factory for application context [org.springframework.context.support.ClassPathXmlApplicationContext@654cecee]: org.springframework.beans.factory.support.DefaultListableBeanFactory@13a8e59b
+[2014-02-20 09:20:52,110 INFO ] Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@13a8e59b: defining beans [EvsServiceInfo,LexEVSInterceptor,DistributedProxyHelper,DataServiceProxyHelper,LexEVSApplicationService,AppService,EvsAuthenticationProvider,LexEVSApplicationServiceConfig]; root of factory hierarchy
+[2014-02-20 09:20:52,370 INFO ] Loading XML bean definitions from resource loaded through InputStream
+[2014-02-20 09:20:52,381 INFO ] Refreshing org.springframework.context.support.GenericApplicationContext@39db16d: display name [org.springframework.context.support.GenericApplicationContext@39db16d]; startup date [Thu Feb 20 09:20:52 EST 2014]; root of context hierarchy
+[2014-02-20 09:20:52,381 INFO ] Bean factory for application context [org.springframework.context.support.GenericApplicationContext@39db16d]: org.springframework.beans.factory.support.DefaultListableBeanFactory@4d414c92
+[2014-02-20 09:20:52,383 INFO ] Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@4d414c92: defining beans [EvsServiceInfo,DistributedProxyHelper,DataServiceProxyHelper,interceptor,applicationService,authenticationProvider]; root of factory hierarchy
+Testing by term
+[2014-02-20 09:20:54,632 INFO ] DLB calling remotely: org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.restrictToMatchingDesignations
+[2014-02-20 09:20:55,050 INFO ] DLB calling remotely: org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.resolveToList
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+C0013700 Egg Proteins
+[2014-02-20 09:21:16,891 INFO ] DLB calling remotely: org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.restrictToMatchingDesignations
+[2014-02-20 09:21:16,951 INFO ] DLB calling remotely: org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.resolveToList
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+C0005767 Blood
+Testing by cui
+[2014-02-20 09:22:09,437 INFO ] DLB calling remotely: org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.restrictToProperties
+[2014-02-20 09:22:09,946 INFO ] DLB calling locally: org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.restrictToCodes
+[2014-02-20 09:22:09,949 INFO ] DLB calling remotely: org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.resolveToList
+C0029045 Oocytes
+Meta source code search
+[2014-02-20 09:22:11,738 INFO ] DLB calling remotely: org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.restrictToProperties
+[2014-02-20 09:22:11,821 INFO ] DLB calling remotely: org.LexGrid.LexBIG.Impl.codednodeset.SingleLuceneIndexCodedNodeSet.resolveToList
+C0029045 Oocytes
