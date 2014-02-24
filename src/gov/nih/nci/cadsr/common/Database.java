@@ -47,7 +47,7 @@ public class Database {
 		if(conn != null) {
 			try {
 				dbmsOutput = new DbmsOutput(conn);
-				dbmsOutput.enable(10000000);
+				dbmsOutput.enable(100000000);
 				enabled = true;
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block

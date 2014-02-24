@@ -41,11 +41,13 @@ public class DbmsOutput {
 	 */
 	public DbmsOutput(Connection conn) throws SQLException {
 		enable_stmt = conn.prepareCall("begin dbms_output.enable(:1); end;");
+//		enable_stmt = conn.prepareCall("begin dbms_output.enable(:1);dbms_output.enable(NULL); end;");		//set it to unlimited c.f. http://stackoverflow.com/questions/16476568/how-to-increase-dbms-output-buffer
 		disable_stmt = conn.prepareCall("begin dbms_output.disable; end;");
 
 		show_stmt = conn
 				.prepareCall("declare "
-						+ "    l_line varchar2(255); "
+//						+ "    l_line varchar2(255); "
+						+ "    l_line varchar2(32000); "
 						+ "    l_done number; "
 						+ "    l_buffer long; "
 						+ "begin "
@@ -99,7 +101,7 @@ public class DbmsOutput {
 			show_stmt.registerOutParameter(3, java.sql.Types.VARCHAR);
 	
 			for (;;) {
-				show_stmt.setInt(1, 32000);
+				show_stmt.setInt(1, 1000000);
 				show_stmt.executeUpdate();
 				LogUtil.log(show_stmt.getString(3));
 				if ((done = show_stmt.getInt(2)) == 1)

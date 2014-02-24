@@ -18,6 +18,7 @@ import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.Database;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -38,6 +39,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
@@ -4106,6 +4108,9 @@ public class GetACSearch implements Serializable
        // Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
+		Database db = new Database();
+		db.trace(m_servlet.getConn());
+        
         try
         {
         	if ((conID != null) && !conID.equals("")){
@@ -4127,7 +4132,7 @@ public class GetACSearch implements Serializable
 
             logger.info("GetACSearch - do_ConceptSearch 1 calling SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON ...");
             
-            cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?)}");
+            cstmt = m_servlet.getConn().prepareCall("{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?)}");	//GF33204
             cstmt.registerOutParameter(6, OracleTypes.CURSOR);
             cstmt.setString(1, InString);
             cstmt.setString(2, ASLName);
@@ -4226,14 +4231,16 @@ public class GetACSearch implements Serializable
                 
             }
           }
-        catch (NumberFormatException e){}
+        //catch (NumberFormatException e){}		//GF33204
         catch (Exception e)
         {
+        	e.printStackTrace();
             logger.error("ERROR - GetACSearch-do_conceptSearch for other : " + e.toString(), e);
         }finally{
         	rs = SQLHelper.closeResultSet(rs);
             cstmt = SQLHelper.closeCallableStatement(cstmt);
             logger.debug("GetACSearch - do_ConceptSearch 1 done");
+  		  	db.show();
         }
         return vList;
     }
