@@ -16,3 +16,5 @@ grant select, insert, update on SBR.DATA_ELEMENT_CONCEPTS_VIEW to cdebrowser
 ALTER TABLE SBR.DATA_ELEMENT_CONCEPTS
   ADD CDR_NAME varchar2 (255);
 /
+create or replace view sbr.data_element_concepts_view as select * from sbr.data_element_concepts
+/
