@@ -1,10 +1,3 @@
-/*L
-  Copyright ScenPro Inc, SAIC-F
-
-  Distributed under the OSI-approved BSD 3-Clause License.
-  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
-L*/
-
 --Better be safe than sorry
 --Run with SBR user
 CREATE TABLE SBR.USER_ACCOUNTS_BACKUP
@@ -84,4 +77,4 @@ select count(*) from sbr.sc_contexts where lower(scl_name) like '%cabig%';
 
 select count(*) from sbr.SECURITY_CONTEXTS_LOV where lower(scl_name) like '%cabig%';
 
-select g.grp_name from SBR.USER_GROUPS where ua_name = 'GUEST';
+select g.grp_name from SBR.USER_GROUPS g where ua_name = 'GUEST';
