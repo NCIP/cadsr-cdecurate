@@ -11,10 +11,3 @@ fix_spellings_vd_crf.sql (SBREXT)
 cdebrowser_41.sql (SBR)
 
 In short, there will be 5 scripts in total that needs to be executed for this change request to work correctly.
-
-*** APPLYING CHANGES ***
-
-Please execute the scripts in the order as suggested below. Sample execution outputs are also captured (DEV tier) as a reference.
-
-=========> Run with user SBR:
-
