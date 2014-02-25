@@ -26,6 +26,8 @@
 . update_evs_url.sql
 . GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql
 
+There are 25 scripts in total.
+
 *** Execution order ***
 
 Please execute the scripts in the order written as the following (as well as the order as appeared in the sample *_REAME.txt files):

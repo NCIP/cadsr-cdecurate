@@ -5,6 +5,8 @@
   See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
 L*/
 
+--run with user SBREXT
+
 update sbrext.quest_contents_ext qc
 set preferred_definition=replace(preferred_definition, 'Aminostransferase', 'Aminotransferase'),
 long_name=replace(long_name, 'Aminostransferase', 'Aminotransferase')

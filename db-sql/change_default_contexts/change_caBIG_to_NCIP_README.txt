@@ -1,4 +1,24 @@
+*** Notes ***
+
+The following scripts does not belong to the default context changing changes but have to be run again nevertheless. 
+The account that needs to be used are specified in the parenthesis, please use the account as suggested to execute the scripts
+ and as the order suggested:
+
+gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql (SBREXT)
+gf32649_MAINTAIN_CONCEPTS_BODY.sql (SBREXT)
+gf32649_SBREXT_GET_ROW_BODY.sql (SBREXT)
+gf32649_SBREXT_SET_ROW_BODY.sql (SBREXT)
+
+The default context changing scripts as well as account that should be used to execute them are as the following:
+
+change_default_context_to_NCIP.sql (SBR)
+change_user_groups_sc_groups_to_NCIP.sql (SBR)
+
+In short, there will be 6 scripts in total that needs to be executed for this change request to work correctly.
+
 *** APPLYING CHANGES ***
+
+Please execute the scripts in the order as suggested below. Sample execution outputs are also captured (DEV tier) as a reference.
 
 =========> Run with user SBR:
 

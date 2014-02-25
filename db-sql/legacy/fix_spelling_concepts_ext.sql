@@ -5,6 +5,8 @@
   See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
 L*/
 
+--run with user SBR
+
 update sbrext.concepts_ext
 set long_name=replace(long_name, 'Symnptom', 'Symptom')
 where con_id=3698694;
