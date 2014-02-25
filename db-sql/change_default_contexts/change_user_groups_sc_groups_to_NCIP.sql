@@ -58,7 +58,7 @@ delete from sbr.sc_contexts where scl_name = 'caBIG_SC';
 delete from sbr.SECURITY_CONTEXTS_LOV where scl_name = 'caBIG_SC';
 
 --Take care of GUEST account
-Insert into SBR.USER_GROUPS (UA_NAME,GRP_NAME,CREATED_BY,DATE_CREATED,MODIFIED_BY,DATE_MODIFIED) values ('GUEST','NCIP_BROWSER','DWARZEL',to_timestamp('19-JUL-07','DD-MON-RR HH.MI.SSXFF AM'),'DWARZEL',to_timestamp('19-JUL-07','DD-MON-RR HH.MI.SSXFF AM'))
+Insert into SBR.USER_GROUPS (UA_NAME,GRP_NAME,CREATED_BY,DATE_CREATED,MODIFIED_BY,DATE_MODIFIED) values ('GUEST','NCIP_BROWSER','DWARZEL',to_timestamp('19-JUL-07','DD-MON-RR HH.MI.SSXFF AM'),'DWARZEL',to_timestamp('19-JUL-07','DD-MON-RR HH.MI.SSXFF AM'));
 
 commit;
 
