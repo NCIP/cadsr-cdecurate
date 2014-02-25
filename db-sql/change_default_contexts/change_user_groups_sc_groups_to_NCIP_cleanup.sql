@@ -1,10 +1,3 @@
-/*L
-  Copyright ScenPro Inc, SAIC-F
-
-  Distributed under the OSI-approved BSD 3-Clause License.
-  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
-L*/
-
 --Run with SBR user
 DROP TABLE SBR.SECURITY_CONTEXTS_LOV_BACKUP;
 
