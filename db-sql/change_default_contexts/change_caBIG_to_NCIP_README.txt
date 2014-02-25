@@ -13,8 +13,9 @@ The default context changing scripts as well as account that should be used to e
 
 change_default_context_to_NCIP.sql (SBR)
 change_user_groups_sc_groups_to_NCIP.sql (SBR)
+change_user_groups_sc_groups_to_NCIP_cleanup.sql (SBR)
 
-In short, there will be 6 scripts in total that needs to be executed for this change request to work correctly.
+In short, there will be 7 scripts in total that needs to be executed for this change request to work correctly.
 
 *** APPLYING CHANGES ***
 

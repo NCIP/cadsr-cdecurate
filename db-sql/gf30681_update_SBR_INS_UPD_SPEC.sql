@@ -1,3 +1,4 @@
+
 /*L
   Copyright ScenPro Inc, SAIC-F
 
@@ -165,14 +166,14 @@ PROCEDURE   domain_cascade_delete(cg$old_rec IN OUT cg$row_type);
 
 PROCEDURE   upd_denorm2( cg$rec IN cg$row_type,
                          cg$ind IN cg$ind_type
-					        );
+                            );
 
 
 PROCEDURE   upd_oper_denorm2( cg$rec IN cg$row_type,
                               cg$old_rec IN cg$row_type,
                               cg$ind IN cg$ind_type,
                               operation IN VARCHAR2 DEFAULT 'UPD'
-					             );
+                                 );
 
 
 -- moved from pkg body, 21-Jul-2003, W. Ver Hoef ------------------------

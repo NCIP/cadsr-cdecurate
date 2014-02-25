@@ -1,3 +1,4 @@
+
 CREATE OR REPLACE TRIGGER SBREXT."CON_BIU_ROW_ASSIGN" 
  BEFORE INSERT OR UPDATE
  ON SBREXT.CONCEPTS_EXT  REFERENCING OLD AS OLD NEW AS NEW
@@ -11,7 +12,7 @@ BEGIN
      if :new.con_idseq is null Then
         :new.con_idseq :=admincomponent_crud.cmr_guid;
      end if;
-	      if :new.deleted_ind is null then
+          if :new.deleted_ind is null then
         :new.deleted_ind := 'No';
      end if;
 
@@ -24,10 +25,10 @@ BEGIN
      if :new.begin_date is null Then --GF32724
         :new.begin_date:=sysdate;
      end if;
-	 if nvl(meta_global_pkg.transaction_type,'null') <> 'VERSION' then
-	   select cde_id_seq.nextval into :new.con_id
-	   from dual;
-	 end if;
+     if nvl(meta_global_pkg.transaction_type,'null') <> 'VERSION' then
+       select cde_id_seq.nextval into :new.con_id
+       from dual;
+     end if;
    elsif UPDATING then
     :new.modified_by := admin_security_util.effective_user;
        :new.date_modified := sysdate;
@@ -37,4 +38,3 @@ BEGIN
 END;
 
 /
-

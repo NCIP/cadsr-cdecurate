@@ -1,32 +1,34 @@
-*** All scripts related to Release 4.1 of Curation Tool ***
+*** Notes ***
 
-. customDownload.sql
-. gf30681_alter_grant_dec_table.sql
-. gf30681_update_SBR_INS_UPD_SPEC.sql
-. gf30681_update_existing_DEC_CDR_no_oc.sql
-. gf30681_update_existing_DEC_CDR_no_prop.sql
-. gf30681_update_SBREXT_Set_Row_SET_DEC_BODY.sql 
-. gf30681_update_ac_exists.sql
-. gf30681_update_existing_DEC_CDR.sql
-. gf30681_update_SBR_data_element_concepts_view.sql
-. gf30681_update_SBR_INS_UPD_BODY.sql
-. gf30681_update_SBR_INS_UPD_SPEC.sql
-. gf30681_update_SBREXT_Set_Row_SET_DEC_BODY.sql
-. gf30681_update_SBREXT_Set_Row_SET_DEC_SPEC.sql
-. SBREXT_CDE_CURATOR_PKG_SPEC.sql
-. SBREXT_CDE_CURATOR_PKG_BODY.sql
-. GF32647_VALID_VALUE_T.sql
-. gf32649_SBREXT_GET_ROW_BODY.sql
-. gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql
-. gf32649_CADSR_XLS_LOADER_PKG_WORK3_SPEC.sql
-. gf32649_MAINTAIN_CONCEPTS_BODY.sql
-. gf32649_MAINTAIN_CONCEPTS_SPEC.sql
-. gf32649_SBREXT_GET_ROW_BODY.sql
-. gf32649_SBREXT_SET_ROW_BODY.sql
-. update_evs_url.sql
-. GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql
+The following scripts belong to the Release 4.1 of Curation Tool changes/fixes. 
+The account that needs to be used are specified in the parenthesis, please use the account as suggested to execute the scripts and as the order suggested:
 
-There are 25 scripts in total.
+. customDownload.sql (SBREXT)
+. gf30681_alter_grant_dec_table.sql (SBREXT)
+. gf30681_update_SBR_INS_UPD_SPEC.sql (SBR)
+. gf30681_update_existing_DEC_CDR_no_oc.sql (SBR)
+. gf30681_update_existing_DEC_CDR_no_prop.sql (SBR)
+. gf30681_update_SBREXT_Set_Row_SET_DEC_BODY.sql (SBREXT)
+. gf30681_update_ac_exists.sql (SBREXT)
+. gf30681_update_existing_DEC_CDR.sql (SBR)
+. gf30681_update_SBR_data_element_concepts_view.sql (SBREXT)
+. gf30681_update_SBR_INS_UPD_BODY.sql (SBR)
+. gf30681_update_SBR_INS_UPD_SPEC.sql (SBR)
+. gf30681_update_SBREXT_Set_Row_SET_DEC_BODY.sql (SBREXT)
+. gf30681_update_SBREXT_Set_Row_SET_DEC_SPEC.sql (SBREXT)
+. SBREXT_CDE_CURATOR_PKG_SPEC.sql (SBREXT)
+. SBREXT_CDE_CURATOR_PKG_BODY.sql (SBREXT)
+. gf32649_SBREXT_GET_ROW_BODY.sql (SBREXT)
+. gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql (SBREXT)
+. gf32649_CADSR_XLS_LOADER_PKG_WORK3_SPEC.sql (SBREXT)
+. gf32649_MAINTAIN_CONCEPTS_BODY.sql (SBREXT)
+. gf32649_MAINTAIN_CONCEPTS_SPEC.sql (SBREXT)
+. gf32649_SBREXT_GET_ROW_BODY.sql (SBREXT)
+. gf32649_SBREXT_SET_ROW_BODY.sql (SBREXT)
+. update_evs_url.sql (SBREXT)
+. GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql (SBREXT)
+
+There are 24 scripts in total.
 
 *** Execution order ***
 
@@ -58,6 +60,6 @@ gf30681_update_ac_exists.sql
 gf30681_update_existing_DEC_CDR.sql
 GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql
 
-*** Notes ***
+*** Additional Notes ***
 
 Some *_SPEC.sql files are purposely skipped as seen above. Their execution are optional as there is no change made for this release.
