@@ -3995,9 +3995,9 @@ public class EVSSearch implements Serializable {
                                                         return eBean;
                                                 
                                                 //=== begin GF32723 dtsVocab can not be empty, so set it to default NCIt
-                                                if(dtsVocab == null || dtsVocab.equals("")) {
-                                                	dtsVocab = Constants.DTS_VOCAB_NCIT;
-                                                }
+//                                                if(dtsVocab == null || dtsVocab.equals("")) {
+//                                                	dtsVocab = Constants.DTS_VOCAB_NCIT;
+//                                                }
                                                 //=== end GF32723 dtsVocab can not be empty, so set it to default NCIt
                                                 
                                                 //get the vocab source

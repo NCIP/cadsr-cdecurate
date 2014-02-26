@@ -495,21 +495,21 @@ function SubmitValidate(origin)
             userSelectedVocabName = document.newDECForm.userSelectedVocab.value;    //document.searchParmsForm.listContextFilterVocab[document.searchParmsForm.listContextFilterVocab.selectedIndex].text;
         }
         window.console && console.log('CreateDEC.js SubmitValidate(origin) userSelectedVocabName is [' + userSelectedVocabName + ']');
-//        if(userSelectedVocabName !== 'nothing' && isAConcept() === 'true') {
+        if(userSelectedVocabName !== 'nothing' && isAConcept() === 'true') {
             window.console && console.log('calling dojoCheckEVSStatus ...');
             timer = setInterval(dojoGetEVSNCItTermMatchedCount, 5000);
             //dojoCheckEVSStatus();
             window.console && console.log('CreateDEC.js about to call dojoSubmitNewDECForm() ...');
             dojoSubmitNewDECForm();
             window.console && console.log('CreateDEC.js dojoSubmitNewDECForm() called (submitted)');
-//        }
-//        else {
-//            window.console && console.log('CreateDEC.js SubmitValidate(origin) dojoCheckEVSStatus skipped as vocab is ['+ userSelectedVocabName + ']');
-//            window.console && console.log('CreateDEC.js about to call submitNewDECForm() ...');
-//            submitNewDECForm(true);
-//            window.console && console.log('CreateDEC.js submitNewDECForm() called (submitted)');
-//            searchWindow.close();
-//        }
+        }
+        else {
+            window.console && console.log('CreateDEC.js SubmitValidate(origin) dojoCheckEVSStatus skipped as vocab is ['+ userSelectedVocabName + ']');
+            window.console && console.log('CreateDEC.js about to call submitNewDECForm() ...');
+            submitNewDECForm(true);
+            window.console && console.log('CreateDEC.js submitNewDECForm() called (submitted)');
+            searchWindow.close();
+        }
         //end GF33087
     }
 }

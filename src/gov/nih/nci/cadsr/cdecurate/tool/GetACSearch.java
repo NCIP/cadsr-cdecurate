@@ -4108,8 +4108,8 @@ public class GetACSearch implements Serializable
        // Connection conn = null;
         ResultSet rs = null;
         CallableStatement cstmt = null;
-		Database db = new Database();
-		db.trace(m_servlet.getConn());
+		//Database db = new Database();
+		//db.trace(m_servlet.getConn());
         
         try
         {
@@ -4240,7 +4240,7 @@ public class GetACSearch implements Serializable
         	rs = SQLHelper.closeResultSet(rs);
             cstmt = SQLHelper.closeCallableStatement(cstmt);
             logger.debug("GetACSearch - do_ConceptSearch 1 done");
-  		  	db.show();
+  		  	//db.show();
         }
         return vList;
     }

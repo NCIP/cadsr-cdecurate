@@ -14,6 +14,7 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ErrorHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
 import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.Database;
 import gov.nih.nci.cadsr.persist.ac.Admin_Components_Mgr;
 import gov.nih.nci.cadsr.persist.ac.Tool_Options_View_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.evs.Evs_Mgr;
@@ -41,6 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+
 
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
@@ -4144,6 +4146,8 @@ public class CurationServlet
   }
   private void setEffectiveUser(String userName){
 	  CallableStatement cstmt=null;
+	  Database db = new Database();
+	  db.trace(m_conn);
 	  try{
 		  cstmt = this.m_conn.prepareCall("{call admin_security_util.seteffectiveuser(?)}");
 		  cstmt.setString(1, userName);
@@ -4152,6 +4156,7 @@ public class CurationServlet
 		     logger.error("ERROR in setEffectiveUser: " + e.toString(), e);
 	  }finally{
 	       	cstmt = SQLHelper.closeCallableStatement(cstmt);
+  		  	db.show();	//GF33204
 	  }
   }
 
