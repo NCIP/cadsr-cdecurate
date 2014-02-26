@@ -1,0 +1,50 @@
+Start of instructions.
+
+The following scripts have to be executed after each database refresh. 
+The account that needs to be used for execution are specified in the parenthesis, please use the account as suggested 
+to execute the scripts and as the order suggested:
+
+Legacy Scripts (5 scripts in total). Please execute as in the following order:
+
+. add_defintion_types.sql (SBREXT)
+. fix_hugo_lexEVS51.sql (SBREXT)
+. fix_spelling_concepts_ext.sql (SBREXT)
+. fix_spellings_vd_crf.sql (SBREXT)
+. cdebrowser_41.sql (SBR)
+
+Default Context Changing scripts (3 in total). Please proceed only if the previous scripts were successfully executed and validated.
+Please execute as in the following order:
+
+. change_user_groups_sc_groups_to_NCIP_cleanup.sql (SBR)
+. change_default_context_to_NCIP.sql (SBR)
+. change_user_groups_sc_groups_to_NCIP.sql (SBR)
+
+Curation Tool 4.1 related scripts (24 scripts in total). Please proceed only if the previous scripts were successfully executed and validated.
+Please execute as in the following order:
+
+. customDownload.sql (SBREXT)
+. gf30681_alter_grant_dec_table.sql (SBREXT)
+. gf30681_update_SBR_INS_UPD_SPEC.sql (SBR)
+. gf30681_update_SBR_INS_UPD_BODY.sql (SBR)
+. gf30681_update_existing_DEC_CDR_no_oc.sql (SBR)
+. gf30681_update_existing_DEC_CDR_no_prop.sql (SBR)
+. gf30681_update_SBREXT_Set_Row_SET_DEC_SPEC.sql (SBREXT)
+. gf30681_update_SBREXT_Set_Row_SET_DEC_BODY.sql (SBREXT)
+. gf30681_update_ac_exists.sql (SBREXT)
+. gf30681_update_existing_DEC_CDR.sql (SBR)
+. gf30681_update_SBR_data_element_concepts_view.sql (SBREXT)
+. SBREXT_CDE_CURATOR_PKG_SPEC.sql (SBREXT)
+. SBREXT_CDE_CURATOR_PKG_BODY.sql (SBREXT)
+. gf32649_SBREXT_SET_ROW_BODY.sql (SBREXT)
+. gf32649_SBREXT_GET_ROW_BODY.sql (SBREXT)
+. gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql (SBREXT)
+. gf32649_CADSR_XLS_LOADER_PKG_WORK3_SPEC.sql (SBREXT)
+. gf32649_MAINTAIN_CONCEPTS_BODY.sql (SBREXT)
+. gf32649_MAINTAIN_CONCEPTS_SPEC.sql (SBREXT)
+. gf32649_SBREXT_GET_ROW_BODY.sql (SBREXT)
+. gf32649_CADSR_XLS_LOADER_PKG_WORK3_SPEC.sql (SBREXT)
+. gf32649_MAINTAIN_CONCEPTS_SPEC.sql (SBREXT)
+. update_evs_url.sql (SBREXT)
+. GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql (SBREXT)
+
+End of instructions.
