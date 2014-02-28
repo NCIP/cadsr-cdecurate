@@ -12,3 +12,5 @@ desc sbr.groups_backup;
 desc sbr.user_groups_backup;
 
 desc sbr.sc_groups_backup;
+
+commit;

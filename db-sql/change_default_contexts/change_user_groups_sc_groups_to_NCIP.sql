@@ -25,6 +25,10 @@ AS (SELECT *
     FROM sbr.sc_groups
 );
 
+--Remove old names
+delete from sbr.sc_contexts where scl_name = 'caBIG_SC';
+delete from sbr.SECURITY_CONTEXTS_LOV where scl_name = 'caBIG_SC';
+
 --Update parents dependencies first
 Insert into SBR.SECURITY_CONTEXTS_LOV (SCL_NAME,DESCRIPTION,CREATED_BY,DATE_CREATED,MODIFIED_BY,DATE_MODIFIED) values ('NCIP_SC','Security Context for NCIP','SBR',to_timestamp('30-APR-04','DD-MON-RR HH.MI.SSXFF AM'),null,null);
 Insert into SBR.SC_CONTEXTS (CONTE_IDSEQ,SCL_NAME,CREATED_BY,DATE_CREATED,MODIFIED_BY,DATE_MODIFIED) values ('D9344734-8CAF-4378-E034-0003BA12F5E7','NCIP_SC','SBR',to_timestamp('14-FEB-02','DD-MON-RR HH.MI.SSXFF AM'),'SBR',to_timestamp('14-FEB-02','DD-MON-RR HH.MI.SSXFF AM'));
@@ -57,10 +61,6 @@ update sbr.sc_groups set grp_name = 'NCIP_MANAGER' where grp_name = 'caBIG_MANAG
 
 commit;
 
---Remove old names
-delete from sbr.sc_contexts where scl_name = 'caBIG_SC';
-delete from sbr.SECURITY_CONTEXTS_LOV where scl_name = 'caBIG_SC';
-
 --Take care of GUEST account
 Insert into SBR.USER_GROUPS (UA_NAME,GRP_NAME,CREATED_BY,DATE_CREATED,MODIFIED_BY,DATE_MODIFIED) values ('GUEST','NCIP_BROWSER','DWARZEL',to_timestamp('19-JUL-07','DD-MON-RR HH.MI.SSXFF AM'),'DWARZEL',to_timestamp('19-JUL-07','DD-MON-RR HH.MI.SSXFF AM'));
 
@@ -78,3 +78,5 @@ select count(*) from sbr.sc_contexts where lower(scl_name) like '%cabig%';
 select count(*) from sbr.SECURITY_CONTEXTS_LOV where lower(scl_name) like '%cabig%';
 
 select g.grp_name from SBR.USER_GROUPS g where ua_name = 'GUEST';
+
+commit;

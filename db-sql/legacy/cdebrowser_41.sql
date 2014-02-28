@@ -1,11 +1,4 @@
-/*L
-  Copyright ScenPro Inc, SAIC-F
-
-  Distributed under the OSI-approved BSD 3-Clause License.
-  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
-L*/
-
---run with user SBR
+--run with user SBREXT
 --https://system-requests-test.nci.nih.gov:7443/jira/browse/TASKMGT-4655
 
 DROP VIEW DE_EXCEL_GENERATOR_VIEW;
@@ -20,7 +13,7 @@ DROP TYPE VALID_VALUE_T2;
 
 CREATE OR REPLACE
 TYPE          "VM_DEF_T"                                          AS OBJECT
-("Definition"	    VARCHAR2 (4000)
+("Definition"        VARCHAR2 (4000)
 );
 /
 
@@ -38,7 +31,7 @@ TYPE          "VALID_VALUE_T2"                                          AS OBJEC
     PvEndDate DATE,
     VmPublicId NUMBER,
     VmVersion NUMBER(4,2),
-	vm_alt_defs VM_DEF_LIST_T );
+    vm_alt_defs VM_DEF_LIST_T );
 /
 
 CREATE OR REPLACE
@@ -90,176 +83,176 @@ CREATE OR REPLACE VIEW DE_EXCEL_GENERATOR_VIEW
  REP_CONCEPTS)
 AS 
 SELECT    de.de_idseq 
-	 	 ,de.cde_id 
+          ,de.cde_id 
          ,de.long_name 
          ,de.preferred_name 
-		 ,rd.doc_text 
-		 ,de.preferred_definition 
-		 ,de.VERSION 
-		 ,de.origin 
-		 ,de.begin_date 
-		 ,de_conte.NAME de_conte_name 
-		 ,de_conte.VERSION de_conte_version 
-		 ,DEC.dec_id 
-		 ,DEC.preferred_name dec_preferred_name 
-		 ,DEC.VERSION dec_version 
-		 ,dec_conte.NAME dec_conte_name 
-		 ,dec_conte.VERSION dec_conte_version 
-		 ,vd.vd_id 
-		 ,vd.preferred_name vd_preferred_name 
-		 ,vd.VERSION vd_version 
-		 ,vd_conte.NAME vd_conte_name 
-		 ,vd_conte.VERSION vd_conte_version 
-		 ,DECODE (vd.vd_type_flag,'E','Enumerated','N','Non Enumerated','Unknown') vd_type 
-		 ,vd.dtl_name 
-		 ,vd.max_length_num 
-		 ,vd.min_length_num 
-		 ,vd.high_value_num 
-		 ,vd.low_value_num 
-		 ,vd.DECIMAL_PLACE 
-		 ,vd.FORML_NAME 
-		 ,vd.LONG_NAME vd_long_name 
-		 ,cd.cd_id 
-		 ,cd.preferred_name cd_preferred_name 
-		 ,cd.VERSION cd_version 
-		 ,cd_conte.NAME cd_conte_name 
-		 ,oc.oc_id 
-		 ,oc.preferred_name oc_preferred_name 
-		 ,oc.long_name oc_long_name 
-		 ,oc.VERSION oc_version 
-		 ,oc_conte.NAME oc_conte_name 
-		 ,prop.prop_id 
-		 ,prop.preferred_name prop_preferred_name 
-		 ,prop.long_name prop_long_name 
-		 ,prop.VERSION prop_version 
-		 ,prop_conte.NAME prop_conte_name 
-		 ,DEC.LONG_NAME dec_long_name 
-		 ,de.ASL_NAME de_wk_flow_status 
-		 ,acr.registration_status 
-		 ,CAST(MULTISET( 
-	     	               SELECT pv.VALUE 
-			      ,vm.long_name short_meaning 
-			      ,vm.preferred_definition 
-			      ,Sbrext_Common_Routines.get_concepts(vm.condr_idseq) MeaningConcepts 
-			      ,pv.begin_date 
-			      ,pv.end_date 
-			      ,vm.vm_id 
-			      ,vm.VERSION, 
-			 CAST(MULTISET (SELECT def.DEFINITION AS "Definition" 
-			 				  		  FROM definitions def 
-									  WHERE def.AC_IDSEQ = vm.VM_IDSEQ 
-			 )AS vm_def_list_t) vv_definitions 
-			FROM  sbr.permissible_values pv, sbr.vd_pvs vp, value_meanings vm 
-			WHERE vp.vd_idseq = vd.vd_idseq 
-			AND   vp.pv_idseq = pv.pv_idseq 
-			AND   pv.vm_idseq = vm.vm_idseq 
-	   		) AS valid_value_list_t2) valid_values 
+         ,rd.doc_text 
+         ,de.preferred_definition 
+         ,de.VERSION 
+         ,de.origin 
+         ,de.begin_date 
+         ,de_conte.NAME de_conte_name 
+         ,de_conte.VERSION de_conte_version 
+         ,DEC.dec_id 
+         ,DEC.preferred_name dec_preferred_name 
+         ,DEC.VERSION dec_version 
+         ,dec_conte.NAME dec_conte_name 
+         ,dec_conte.VERSION dec_conte_version 
+         ,vd.vd_id 
+         ,vd.preferred_name vd_preferred_name 
+         ,vd.VERSION vd_version 
+         ,vd_conte.NAME vd_conte_name 
+         ,vd_conte.VERSION vd_conte_version 
+         ,DECODE (vd.vd_type_flag,'E','Enumerated','N','Non Enumerated','Unknown') vd_type 
+         ,vd.dtl_name 
+         ,vd.max_length_num 
+         ,vd.min_length_num 
+         ,vd.high_value_num 
+         ,vd.low_value_num 
+         ,vd.DECIMAL_PLACE 
+         ,vd.FORML_NAME 
+         ,vd.LONG_NAME vd_long_name 
+         ,cd.cd_id 
+         ,cd.preferred_name cd_preferred_name 
+         ,cd.VERSION cd_version 
+         ,cd_conte.NAME cd_conte_name 
+         ,oc.oc_id 
+         ,oc.preferred_name oc_preferred_name 
+         ,oc.long_name oc_long_name 
+         ,oc.VERSION oc_version 
+         ,oc_conte.NAME oc_conte_name 
+         ,prop.prop_id 
+         ,prop.preferred_name prop_preferred_name 
+         ,prop.long_name prop_long_name 
+         ,prop.VERSION prop_version 
+         ,prop_conte.NAME prop_conte_name 
+         ,DEC.LONG_NAME dec_long_name 
+         ,de.ASL_NAME de_wk_flow_status 
+         ,acr.registration_status 
+         ,CAST(MULTISET( 
+                            SELECT pv.VALUE 
+                  ,vm.long_name short_meaning 
+                  ,vm.preferred_definition 
+                  ,Sbrext_Common_Routines.get_concepts(vm.condr_idseq) MeaningConcepts 
+                  ,pv.begin_date 
+                  ,pv.end_date 
+                  ,vm.vm_id 
+                  ,vm.VERSION, 
+             CAST(MULTISET (SELECT def.DEFINITION AS "Definition" 
+                                         FROM definitions def 
+                                      WHERE def.AC_IDSEQ = vm.VM_IDSEQ 
+             )AS vm_def_list_t) vv_definitions 
+            FROM  sbr.permissible_values pv, sbr.vd_pvs vp, value_meanings vm 
+            WHERE vp.vd_idseq = vd.vd_idseq 
+            AND   vp.pv_idseq = pv.pv_idseq 
+            AND   pv.vm_idseq = vm.vm_idseq 
+               ) AS valid_value_list_t2) valid_values 
                ,CAST(MULTISET( 
                                SELECT rd.NAME 
-				      ,org.NAME 
-				      ,rd.DCTL_NAME 
-				      ,rd.doc_text 
-				      ,rd.URL 
-				      ,rd.lae_name 
-				      ,rd.display_order 
-				FROM  sbr.reference_documents rd, sbr.organizations org 
-				WHERE de.de_idseq = rd.ac_idseq (+) 
-				AND   rd.ORG_IDSEQ = org.ORG_IDSEQ (+) 
-				) AS cdebrowser_rd_list_t) reference_docs 
-		,CAST(MULTISET( 
-                 		SELECT admin_component_with_id_t(csv.cs_id 
-							   	,csv.cs_context_name 
-						         	,csv.cs_context_version 
-							 	,csv.preferred_name 
-							 	,csv.VERSION) 
-							 	,csv.csi_name 
-							 	,csv.csitl_name 
-							 	,csv.csi_id 
-							 	,csv.csi_version 
-				FROM  sbrext.cdebrowser_cs_view csv 
-				WHERE de.de_idseq = csv.ac_idseq 
-				) AS cdebrowser_csi_list_t) classifications 
+                      ,org.NAME 
+                      ,rd.DCTL_NAME 
+                      ,rd.doc_text 
+                      ,rd.URL 
+                      ,rd.lae_name 
+                      ,rd.display_order 
+                FROM  sbr.reference_documents rd, sbr.organizations org 
+                WHERE de.de_idseq = rd.ac_idseq (+) 
+                AND   rd.ORG_IDSEQ = org.ORG_IDSEQ (+) 
+                ) AS cdebrowser_rd_list_t) reference_docs 
+        ,CAST(MULTISET( 
+                         SELECT admin_component_with_id_t(csv.cs_id 
+                                   ,csv.cs_context_name 
+                                     ,csv.cs_context_version 
+                                 ,csv.preferred_name 
+                                 ,csv.VERSION) 
+                                 ,csv.csi_name 
+                                 ,csv.csitl_name 
+                                 ,csv.csi_id 
+                                 ,csv.csi_version 
+                FROM  sbrext.cdebrowser_cs_view csv 
+                WHERE de.de_idseq = csv.ac_idseq 
+                ) AS cdebrowser_csi_list_t) classifications 
                 ,CAST(MULTISET( 
                                      SELECT des_conte.NAME 
-				      ,des_conte.VERSION 
-					  ,des.NAME 
-					  ,des.DETL_NAME 
-					  ,des.LAE_NAME 
-				FROM  sbr.designations des,sbr.contexts des_conte 
-				WHERE de.de_idseq = des.AC_IDSEQ (+) 
-				AND   des.conte_idseq = des_conte.conte_idseq (+) 
-				) AS DESIGNATIONS_LIST_T) designations 
-		,derived_data_element_t (ccd.crtl_name 
-				                 ,ccd.description 
-					             ,ccd.methods 
-					             ,ccd.RULE 
-					             ,ccd.concat_char 
-					             ,"DataElementsList") DE_DERIVATION 
+                      ,des_conte.VERSION 
+                      ,des.NAME 
+                      ,des.DETL_NAME 
+                      ,des.LAE_NAME 
+                FROM  sbr.designations des,sbr.contexts des_conte 
+                WHERE de.de_idseq = des.AC_IDSEQ (+) 
+                AND   des.conte_idseq = des_conte.conte_idseq (+) 
+                ) AS DESIGNATIONS_LIST_T) designations 
+        ,derived_data_element_t (ccd.crtl_name 
+                                 ,ccd.description 
+                                 ,ccd.methods 
+                                 ,ccd.RULE 
+                                 ,ccd.concat_char 
+                                 ,"DataElementsList") DE_DERIVATION 
                 ,CAST(MULTISET( 
                       SELECT con.preferred_name 
-		       ,con.long_name 
-		       ,con.con_id 
-		       ,con.definition_source 
-		       ,con. origin 
+               ,con.long_name 
+               ,con.con_id 
+               ,con.definition_source 
+               ,con. origin 
                        ,con.evs_Source 
                        ,com.primary_flag_ind 
                        ,com.display_order 
-		      FROM  COMPONENT_CONCEPTS_EXT com,CONCEPTS_EXT con 
-				WHERE vd.condr_idseq = com.condr_IDSEQ (+) 
-				AND   com.con_idseq = con.con_idseq (+) 
-				ORDER BY display_order DESC) AS Concepts_list_t) vd_concepts 
+              FROM  COMPONENT_CONCEPTS_EXT com,CONCEPTS_EXT con 
+                WHERE vd.condr_idseq = com.condr_IDSEQ (+) 
+                AND   com.con_idseq = con.con_idseq (+) 
+                ORDER BY display_order DESC) AS Concepts_list_t) vd_concepts 
         ,CAST(MULTISET( 
                 SELECT con.preferred_name 
-		       ,con.long_name 
-		       ,con.con_id 
-		       ,con.definition_source 
-		       ,con. origin 
+               ,con.long_name 
+               ,con.con_id 
+               ,con.definition_source 
+               ,con. origin 
                        ,con.evs_Source 
                        ,com.primary_flag_ind 
                        ,com.display_order 
-		      FROM  COMPONENT_CONCEPTS_EXT com,CONCEPTS_EXT con 
-				WHERE oc.condr_idseq = com.condr_IDSEQ (+) 
-				AND   com.con_idseq = con.con_idseq (+) 
-				ORDER BY display_order DESC) AS Concepts_list_t) oc_concepts 
+              FROM  COMPONENT_CONCEPTS_EXT com,CONCEPTS_EXT con 
+                WHERE oc.condr_idseq = com.condr_IDSEQ (+) 
+                AND   com.con_idseq = con.con_idseq (+) 
+                ORDER BY display_order DESC) AS Concepts_list_t) oc_concepts 
         ,CAST(MULTISET( 
                 SELECT con.preferred_name 
-		       ,con.long_name 
-		       ,con.con_id 
-		       ,con.definition_source 
-		       ,con. origin 
+               ,con.long_name 
+               ,con.con_id 
+               ,con.definition_source 
+               ,con. origin 
                        ,con.evs_Source 
                        ,com.primary_flag_ind 
                        ,com.display_order 
-		      FROM  COMPONENT_CONCEPTS_EXT com,CONCEPTS_EXT con 
-				WHERE prop.condr_idseq = com.condr_IDSEQ (+) 
-				AND   com.con_idseq = con.con_idseq (+) 
-				ORDER BY display_order DESC) AS Concepts_list_t) prop_concepts 
-		 ,rep.rep_id 
-		 ,rep.preferred_name rep_preferred_name 
-		 ,rep.long_name rep_long_name 
-		 ,rep.VERSION rep_version 
-		 ,rep_conte.NAME rep_conte_name 
+              FROM  COMPONENT_CONCEPTS_EXT com,CONCEPTS_EXT con 
+                WHERE prop.condr_idseq = com.condr_IDSEQ (+) 
+                AND   com.con_idseq = con.con_idseq (+) 
+                ORDER BY display_order DESC) AS Concepts_list_t) prop_concepts 
+         ,rep.rep_id 
+         ,rep.preferred_name rep_preferred_name 
+         ,rep.long_name rep_long_name 
+         ,rep.VERSION rep_version 
+         ,rep_conte.NAME rep_conte_name 
         ,CAST(MULTISET( 
                 SELECT con.preferred_name 
-		       ,con.long_name 
-		       ,con.con_id 
-		       ,con.definition_source 
-		       ,con. origin 
+               ,con.long_name 
+               ,con.con_id 
+               ,con.definition_source 
+               ,con. origin 
                        ,con.evs_Source 
                        ,com.primary_flag_ind 
                        ,com.display_order 
-		      FROM  COMPONENT_CONCEPTS_EXT com,CONCEPTS_EXT con 
-				WHERE rep.condr_idseq = com.condr_IDSEQ (+) 
-				AND   com.con_idseq = con.con_idseq (+) 
-				ORDER BY display_order DESC) AS Concepts_list_t) rep_concepts 
-FROM	 sbr.data_elements de 
-  		,sbr.data_element_concepts DEC 
-		,sbr.contexts de_conte 
-		,sbr.value_domains vd 
-		,sbr.contexts vd_conte 
-		,sbr.contexts dec_conte 
-		,sbr.ac_registrations acr 
-		,cdebrowser_complex_de_view ccd 
+              FROM  COMPONENT_CONCEPTS_EXT com,CONCEPTS_EXT con 
+                WHERE rep.condr_idseq = com.condr_IDSEQ (+) 
+                AND   com.con_idseq = con.con_idseq (+) 
+                ORDER BY display_order DESC) AS Concepts_list_t) rep_concepts 
+FROM     sbr.data_elements de 
+          ,sbr.data_element_concepts DEC 
+        ,sbr.contexts de_conte 
+        ,sbr.value_domains vd 
+        ,sbr.contexts vd_conte 
+        ,sbr.contexts dec_conte 
+        ,sbr.ac_registrations acr 
+        ,cdebrowser_complex_de_view ccd 
                 ,conceptual_domains cd 
                 ,contexts cd_conte 
                 ,OBJECT_CLASSES_EXT oc 
@@ -272,11 +265,11 @@ FROM	 sbr.data_elements de
                   FROM reference_documents 
                   WHERE dctl_name = 'Preferred Question Text') rd 
   WHERE  de.dec_idseq = DEC.dec_idseq 
-  AND	 de.conte_idseq = de_conte.conte_idseq 
-  AND	 de.vd_idseq = vd.vd_idseq 
+  AND     de.conte_idseq = de_conte.conte_idseq 
+  AND     de.vd_idseq = vd.vd_idseq 
   AND    vd.conte_idseq = vd_conte.conte_idseq 
-  AND	 DEC.conte_idseq = dec_conte.conte_idseq 
-  AND	 de.de_idseq = rd.ac_idseq (+) 
+  AND     DEC.conte_idseq = dec_conte.conte_idseq 
+  AND     de.de_idseq = rd.ac_idseq (+) 
   AND    de.de_idseq = acr.ac_idseq (+) 
   AND    de.de_idseq = ccd.p_de_idseq (+) 
   AND    vd.cd_idseq = cd.cd_idseq 
@@ -302,35 +295,35 @@ CREATE OR REPLACE VIEW DE_XML_GENERATOR_VIEW
 AS 
 SELECT 
          de.de_idseq 
-	 	 ,de.CDE_ID "PublicId" 
+          ,de.CDE_ID "PublicId" 
          ,de.long_name "LongName" 
          ,de.preferred_name "PreferredName" 
-		 ,de.preferred_definition "PreferredDefinition" 
-		 ,de.VERSION "Version" 
-		 ,de.ASL_NAME "WorkflowStatus" 
-		 ,de_conte.NAME "ContextName" 
-		 ,de_conte.VERSION "ContextVersion" 
-		 ,de.origin "Origin" 
-		 ,ar.registration_status "RegistrationStatus" 
-		 ,cdebrowser_dec_t( DEC.dec_id 
-		 		    ,DEC.dec_preferred_name 
-		 		    ,DEC.PREFERRED_DEFINITION 
-				    ,DEC.dec_long_name 
-		 		    ,DEC.dec_version 
-				    ,DEC.ASL_NAME 
-				    ,DEC.dec_context_name 
-				    ,DEC.dec_context_version 
-				    ,admin_component_with_id_ln_t(DEC.cd_id 
-						   		               ,DEC.cd_context_name 
-						                       ,DEC.cd_context_version 
-								               ,DEC.cd_preferred_name 
-								               ,DEC.cd_version 
+         ,de.preferred_definition "PreferredDefinition" 
+         ,de.VERSION "Version" 
+         ,de.ASL_NAME "WorkflowStatus" 
+         ,de_conte.NAME "ContextName" 
+         ,de_conte.VERSION "ContextVersion" 
+         ,de.origin "Origin" 
+         ,ar.registration_status "RegistrationStatus" 
+         ,cdebrowser_dec_t( DEC.dec_id 
+                     ,DEC.dec_preferred_name 
+                     ,DEC.PREFERRED_DEFINITION 
+                    ,DEC.dec_long_name 
+                     ,DEC.dec_version 
+                    ,DEC.ASL_NAME 
+                    ,DEC.dec_context_name 
+                    ,DEC.dec_context_version 
+                    ,admin_component_with_id_ln_t(DEC.cd_id 
+                                                  ,DEC.cd_context_name 
+                                               ,DEC.cd_context_version 
+                                               ,DEC.cd_preferred_name 
+                                               ,DEC.cd_version 
                                                ,DEC.cd_long_name) 
-				    ,admin_component_with_con_t(DEC.oc_id 
-						   	                   ,DEC.oc_context_name 
-						                       ,DEC.oc_context_version 
-							                   ,DEC.oc_preferred_name 
-							                   ,DEC.oc_version 
+                    ,admin_component_with_con_t(DEC.oc_id 
+                                                  ,DEC.oc_context_name 
+                                               ,DEC.oc_context_version 
+                                               ,DEC.oc_preferred_name 
+                                               ,DEC.oc_version 
                                                ,DEC.oc_long_name 
                                                ,CAST(MULTISET( 
                                                               SELECT con.preferred_name 
@@ -345,11 +338,11 @@ SELECT
                                                               WHERE  DEC.oc_condr_idseq = com.condr_IDSEQ (+) 
                                                               AND   com.con_idseq = con.con_idseq (+) 
                                                               ORDER BY display_order DESC) AS Concepts_list_t)) 
-				       ,admin_component_with_con_t( DEC.prop_id 
-						   	                   ,DEC.pt_context_name 
-						                       ,DEC.pt_context_version 
-							                   ,DEC.pt_preferred_name 
-							                   ,DEC.pt_version 
+                       ,admin_component_with_con_t( DEC.prop_id 
+                                                  ,DEC.pt_context_name 
+                                               ,DEC.pt_context_version 
+                                               ,DEC.pt_preferred_name 
+                                               ,DEC.pt_version 
                                                ,DEC.pt_long_name 
                                                ,CAST(MULTISET( 
                                                               SELECT con.preferred_name 
@@ -364,39 +357,39 @@ SELECT
                                                               WHERE  DEC.prop_condr_idseq = com.condr_IDSEQ (+) 
                                                               AND   com.con_idseq = con.con_idseq (+) 
                                                               ORDER BY display_order DESC) AS Concepts_list_t)) 
-				                                 ,DEC.obj_class_qualifier 
-	  			                                 ,DEC.property_qualifier 
-						                         ,DEC.dec_origin) "DataElementConcept" 
-		 ,cdebrowser_vd_t(vd.vd_id 
-		 				,vd.preferred_name 
-		 				,vd.preferred_definition 
-						,vd.long_name 
-						,vd.VERSION 
-						,vd.asl_name 
-						,vd_conte.NAME 
-						,vd_conte.VERSION 
-						,admin_component_with_id_ln_T(cd.cd_id 
-									,cd_conte.NAME 
-						            ,cd_conte.VERSION 
-								  	,cd.preferred_name 
-								  	,cd.VERSION 
+                                                 ,DEC.obj_class_qualifier 
+                                                   ,DEC.property_qualifier 
+                                                 ,DEC.dec_origin) "DataElementConcept" 
+         ,cdebrowser_vd_t(vd.vd_id 
+                         ,vd.preferred_name 
+                         ,vd.preferred_definition 
+                        ,vd.long_name 
+                        ,vd.VERSION 
+                        ,vd.asl_name 
+                        ,vd_conte.NAME 
+                        ,vd_conte.VERSION 
+                        ,admin_component_with_id_ln_T(cd.cd_id 
+                                    ,cd_conte.NAME 
+                                    ,cd_conte.VERSION 
+                                      ,cd.preferred_name 
+                                      ,cd.VERSION 
                                     ,cd.long_name) 
-						,vd.dtl_name 
-						,DECODE(vd.vd_type_flag,'E','Enumerated','N','NonEnumerated') 
-						,vd.uoml_name 
-						,vd.forml_name 
-						,vd.max_length_num 
-						,vd.min_length_num 
-						,vd.decimal_place 
-						,vd.char_set_name 
-						,vd.high_value_num 
-						,vd.low_value_num 
-						,vd.origin 
+                        ,vd.dtl_name 
+                        ,DECODE(vd.vd_type_flag,'E','Enumerated','N','NonEnumerated') 
+                        ,vd.uoml_name 
+                        ,vd.forml_name 
+                        ,vd.max_length_num 
+                        ,vd.min_length_num 
+                        ,vd.decimal_place 
+                        ,vd.char_set_name 
+                        ,vd.high_value_num 
+                        ,vd.low_value_num 
+                        ,vd.origin 
                                                 ,admin_component_with_con_t(rep.rep_id 
-						   	                   ,rep_conte.NAME 
-						                       ,rep_conte.VERSION 
-							                   ,rep.preferred_name 
-							                   ,rep.VERSION 
+                                                  ,rep_conte.NAME 
+                                               ,rep_conte.VERSION 
+                                               ,rep.preferred_name 
+                                               ,rep.VERSION 
                                                ,rep.long_name 
                                                ,CAST(MULTISET( 
                                                               SELECT con.preferred_name 
@@ -411,95 +404,95 @@ SELECT
                                                               WHERE  rep.condr_idseq = com.condr_IDSEQ (+) 
                                                               AND   com.con_idseq = con.con_idseq (+) 
                                                               ORDER BY display_order DESC) AS Concepts_list_t)) 
-						,CAST(MULTISET( 
-	                 			SELECT pv.VALUE 
-						      ,pv.short_meaning 
-			                  ,vm.preferred_definition 
-			                  ,Sbrext_Common_Routines.get_concepts(vm.condr_idseq) MeaningConcepts 
-			                  ,pv.begin_date 
-			                  ,pv.end_date 
-			                  ,vm.vm_id 
-			                  ,vm.VERSION, 
-							  			 CAST(MULTISET (SELECT def.DEFINITION AS "Definition" 
-			 				  		  FROM definitions def 
-									  WHERE def.AC_IDSEQ = vm.VM_IDSEQ 
-			 )AS vm_def_list_t) vv_definitions 
-						FROM  sbr.permissible_values pv, sbr.vd_pvs vp, value_meanings vm 
-					 	WHERE vp.vd_idseq = vd.vd_idseq 
-						AND   vp.pv_idseq = pv.pv_idseq 
-						AND pv.vm_idseq = vm.vm_idseq 
-	   					) AS valid_value_list_t2) 
+                        ,CAST(MULTISET( 
+                                 SELECT pv.VALUE 
+                              ,pv.short_meaning 
+                              ,vm.preferred_definition 
+                              ,Sbrext_Common_Routines.get_concepts(vm.condr_idseq) MeaningConcepts 
+                              ,pv.begin_date 
+                              ,pv.end_date 
+                              ,vm.vm_id 
+                              ,vm.VERSION, 
+                                           CAST(MULTISET (SELECT def.DEFINITION AS "Definition" 
+                                         FROM definitions def 
+                                      WHERE def.AC_IDSEQ = vm.VM_IDSEQ 
+             )AS vm_def_list_t) vv_definitions 
+                        FROM  sbr.permissible_values pv, sbr.vd_pvs vp, value_meanings vm 
+                         WHERE vp.vd_idseq = vd.vd_idseq 
+                        AND   vp.pv_idseq = pv.pv_idseq 
+                        AND pv.vm_idseq = vm.vm_idseq 
+                           ) AS valid_value_list_t2) 
                                              ,CAST(MULTISET( 
                                         SELECT con.preferred_name 
-		                               ,con.long_name 
-		                               ,con.con_id 
-		                               ,con.definition_source 
-		                               ,con. origin 
+                                       ,con.long_name 
+                                       ,con.con_id 
+                                       ,con.definition_source 
+                                       ,con. origin 
                                         ,con.evs_Source 
                                                          ,com.primary_flag_ind 
                                                          ,com.display_order 
-		                                         FROM  COMPONENT_CONCEPTS_EXT com,CONCEPTS_EXT con 
-				                         WHERE vd.condr_idseq = com.condr_IDSEQ (+) 
-				                         AND   com.con_idseq = con.con_idseq (+) 
-				                         ORDER BY display_order DESC) AS Concepts_list_t) 
-				  ) "ValueDomain" 
-		,CAST(MULTISET( 
-                 		SELECT rd.NAME 
-				      ,org.NAME 
-				      ,rd.DCTL_NAME 
-				      ,rd.doc_text 
-				      ,rd.URL 
-				      ,rd.lae_name 
-				      ,rd.display_order 
-				FROM  sbr.reference_documents rd, sbr.organizations org 
-				WHERE de.de_idseq = rd.ac_idseq 
-				AND   rd.ORG_IDSEQ = org.ORG_IDSEQ (+) 
-				) AS cdebrowser_rd_list_t) "ReferenceDocumentsList" 
-		,CAST(MULTISET( 
-                 		SELECT admin_component_with_id_t(csv.cs_id 
-							   							,csv.cs_context_name 
-						         						,csv.cs_context_version 
-							 							,csv.preferred_name 
-							 							,csv.VERSION) 
-							 							,csv.csi_name 
-							 							,csv.csitl_name 
-							 							,csv.csi_id 
-							 							,csv.csi_version 
-				FROM  sbrext.cdebrowser_cs_view csv 
-				WHERE de.de_idseq = csv.ac_idseq 
-				) AS cdebrowser_csi_list_t) "ClassificationsList" 
-		,CAST(MULTISET( 
+                                                 FROM  COMPONENT_CONCEPTS_EXT com,CONCEPTS_EXT con 
+                                         WHERE vd.condr_idseq = com.condr_IDSEQ (+) 
+                                         AND   com.con_idseq = con.con_idseq (+) 
+                                         ORDER BY display_order DESC) AS Concepts_list_t) 
+                  ) "ValueDomain" 
+        ,CAST(MULTISET( 
+                         SELECT rd.NAME 
+                      ,org.NAME 
+                      ,rd.DCTL_NAME 
+                      ,rd.doc_text 
+                      ,rd.URL 
+                      ,rd.lae_name 
+                      ,rd.display_order 
+                FROM  sbr.reference_documents rd, sbr.organizations org 
+                WHERE de.de_idseq = rd.ac_idseq 
+                AND   rd.ORG_IDSEQ = org.ORG_IDSEQ (+) 
+                ) AS cdebrowser_rd_list_t) "ReferenceDocumentsList" 
+        ,CAST(MULTISET( 
+                         SELECT admin_component_with_id_t(csv.cs_id 
+                                                           ,csv.cs_context_name 
+                                                         ,csv.cs_context_version 
+                                                         ,csv.preferred_name 
+                                                         ,csv.VERSION) 
+                                                         ,csv.csi_name 
+                                                         ,csv.csitl_name 
+                                                         ,csv.csi_id 
+                                                         ,csv.csi_version 
+                FROM  sbrext.cdebrowser_cs_view csv 
+                WHERE de.de_idseq = csv.ac_idseq 
+                ) AS cdebrowser_csi_list_t) "ClassificationsList" 
+        ,CAST(MULTISET( 
                 SELECT des_conte.NAME 
-				      ,des_conte.VERSION 
-					  ,des.NAME 
-					  ,des.detl_name 
-					  ,des.lae_name 
-				FROM  sbr.designations des,sbr.contexts des_conte 
-				WHERE de.de_idseq = des.AC_IDSEQ (+) 
-				AND   des.conte_idseq = des_conte.conte_idseq (+) 
-				) AS cdebrowser_altname_list_t) "AlternateNameList" 
-		 ,derived_data_element_t (ccd.crtl_name 
-				                 ,ccd.description 
-					             ,ccd.methods 
-					             ,ccd.RULE 
-					             ,ccd.concat_char 
-					             ,"DataElementsList") "DataElementDerivation" 
-FROM	 sbr.data_elements de 
-  		,sbrext.cdebrowser_de_dec_view DEC 
-		,sbr.contexts de_conte 
-		,sbr.value_domains vd 
-		,sbr.contexts vd_conte 
-		,sbr.contexts cd_conte 
-		,sbr.conceptual_domains cd 
-		,sbr.ac_registrations ar 
-		,cdebrowser_complex_de_view ccd 
+                      ,des_conte.VERSION 
+                      ,des.NAME 
+                      ,des.detl_name 
+                      ,des.lae_name 
+                FROM  sbr.designations des,sbr.contexts des_conte 
+                WHERE de.de_idseq = des.AC_IDSEQ (+) 
+                AND   des.conte_idseq = des_conte.conte_idseq (+) 
+                ) AS cdebrowser_altname_list_t) "AlternateNameList" 
+         ,derived_data_element_t (ccd.crtl_name 
+                                 ,ccd.description 
+                                 ,ccd.methods 
+                                 ,ccd.RULE 
+                                 ,ccd.concat_char 
+                                 ,"DataElementsList") "DataElementDerivation" 
+FROM     sbr.data_elements de 
+          ,sbrext.cdebrowser_de_dec_view DEC 
+        ,sbr.contexts de_conte 
+        ,sbr.value_domains vd 
+        ,sbr.contexts vd_conte 
+        ,sbr.contexts cd_conte 
+        ,sbr.conceptual_domains cd 
+        ,sbr.ac_registrations ar 
+        ,cdebrowser_complex_de_view ccd 
                 ,sbrext.REPRESENTATIONS_EXT rep 
-		,sbr.contexts rep_conte 
+        ,sbr.contexts rep_conte 
   WHERE  de.de_idseq = DEC.de_idseq 
-  AND	 de.conte_idseq = de_conte.conte_idseq 
-  AND	 de.vd_idseq = vd.vd_idseq 
+  AND     de.conte_idseq = de_conte.conte_idseq 
+  AND     de.vd_idseq = vd.vd_idseq 
   AND    vd.conte_idseq = vd_conte.conte_idseq 
-  AND	 vd.cd_idseq = cd.cd_idseq 
+  AND     vd.cd_idseq = cd.cd_idseq 
   AND    cd.conte_idseq = cd_conte.conte_idseq 
   AND    de.de_idseq = ar.ac_idseq (+) 
   AND    de.de_idseq = ccd.p_de_idseq (+) 
@@ -519,6 +512,6 @@ delete from tool_options_ext where tool_name='CDEBrowser' and property='RELEASE_
 
 insert into tool_options_ext (tool_name, property, value) values ('CDEBrowser', 'RELEASE_NOTES_WIKI', 'https://wiki.nci.nih.gov/x/DydhAg');
 
-UPDATE TOOL_OPTIONS_EXT SET VALUE = 'https://wiki.nci.nih.gov/x/oiBhAg' WHERE tool_name='CDEBrowser' AND property = 'HELP.ROOT'
+UPDATE TOOL_OPTIONS_EXT SET VALUE = 'https://wiki.nci.nih.gov/x/oiBhAg' WHERE tool_name='CDEBrowser' AND property = 'HELP.ROOT';
 
 commit;
