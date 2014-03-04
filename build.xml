@@ -146,13 +146,13 @@ L-->
 		<echo>Building deployable WAR file ...</echo>
 		<war destfile="${dist.dir}/cdecurate.war" basedir="${root.dir}" update="true" webxml="${web.dir}/web.xml" excludes="**/commons-logging*.jar"/>
 		<!-- uncomment the following and change the dest accordingly for DEV (Linux/Mac OSX)-->
-<!--
-		<delete file="/Applications/jboss-5.1.0.GA/server/default/deploy/cdecurate.war" />
- 		<unwar dest="/Applications/jboss-5.1.0.GA/server/default/deploy/cdecurate.war">
+		<delete file="/Apps/jboss-5.1.0.GA/server/default/deploy/cdecurate.war" />
+ 		<unwar dest="/Apps/jboss-5.1.0.GA/server/default/deploy/cdecurate.war">
 		    <fileset dir="${dist.dir}">
 		        <include name="cdecurate.war"/>    
 		    </fileset>
 		</unwar>
+<!--
 -->
  		<!-- uncomment the following and change the dest accordingly for DEV (Windows)-->
 <!--

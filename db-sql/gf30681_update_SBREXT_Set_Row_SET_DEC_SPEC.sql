@@ -1,3 +1,10 @@
+/*L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L*/
+
 -- run this as SBREXT user
 /*
  * Fix related to issue https://gforge.nci.nih.gov/tracker/index.php?func=detail&aid=30681.
@@ -28,7 +35,7 @@ P_UA_NAME          IN VARCHAR2
 ,P_DEC_MODIFIED_BY         OUT    VARCHAR2
 ,P_DEC_DATE_MODIFIED     OUT    VARCHAR2
 ,P_DEC_DELETED_IND         OUT    VARCHAR2
-,P_DEC_ORIGIN               IN     VARCHAR2 DEFAULT NULL    -- 15-Jul-2003, W. Ver Hoef
+,P_DEC_ORIGIN               IN     VARCHAR2 DEFAULT NULL	-- 15-Jul-2003, W. Ver Hoef
 ,P_DEC_CDR_NAME               IN     VARCHAR2  --GF30681
 );
  END DEC_ACTIONS;

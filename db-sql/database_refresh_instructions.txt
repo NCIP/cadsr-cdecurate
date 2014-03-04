@@ -10,7 +10,7 @@ Legacy Scripts (5 scripts in total). Please execute as in the following order:
 . fix_hugo_lexEVS51.sql (SBREXT)
 . fix_spelling_concepts_ext.sql (SBREXT)
 . fix_spellings_vd_crf.sql (SBREXT)
-. cdebrowser_41.sql (SBR)
+. cdebrowser_41.sql (SBREXT)
 
 Default Context Changing scripts (3 in total). Please proceed only if the previous scripts were successfully executed and validated.
 Please execute as in the following order:

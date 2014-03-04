@@ -1,3 +1,10 @@
+/*L
+  Copyright ScenPro Inc, SAIC-F
+
+  Distributed under the OSI-approved BSD 3-Clause License.
+  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
+L*/
+
 --------------------------------------------------------
 --  Please run with SBREXT account
 --------------------------------------------------------
@@ -50,14 +57,14 @@
    /*
    FUNCTION load_perm_val(p_vd_id in varchar2,p_vd_idseq in varchar2, p_conte_idseq in varchar2) return number;
    FUNCTION load_perm_val(p_vd_idseq in varchar2, p_conte_idseq in varchar2,
-                        P_VD_CONTE_NAME in varchar2, P_VD_CONTE_VERSION in varchar2,
-                       P_VD_VERSION in varchar2, P_VD_PREFERRED_NAME in varchar2) return number;
+		 			   P_VD_CONTE_NAME in varchar2, P_VD_CONTE_VERSION in varchar2,
+					   P_VD_VERSION in varchar2, P_VD_PREFERRED_NAME in varchar2) return number;
    */
    PROCEDURE load_perm_val;
 
    CURSOR cur_ac_stg IS
     SELECT     *
-    FROM       ADMIN_COMPONENTS_STAGING;
+	FROM       ADMIN_COMPONENTS_STAGING;
    TYPE type_ac_stg IS REF CURSOR RETURN cur_ac_stg%ROWTYPE;
 
    PROCEDURE get_ac_staging(p_ac_id   IN  VARCHAR2,
