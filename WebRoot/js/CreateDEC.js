@@ -508,7 +508,7 @@ function SubmitValidate(origin)
             window.console && console.log('CreateDEC.js about to call submitNewDECForm() ...');
             submitNewDECForm(true);
             window.console && console.log('CreateDEC.js submitNewDECForm() called (submitted)');
-            searchWindow.close();
+            searchWindow && searchWindow.close();   //GF33139
         }
         //end GF33087
     }
