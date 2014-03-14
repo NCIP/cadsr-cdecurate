@@ -1,0 +1,11 @@
+To build, you can use Eclipse or ant.
+
+For Eclipse, just import the whole project (.project and .classpath).
+
+For Ant, perform:
+
+ant build.xml or just ant
+
+Before build, change build.properties to point to the right database as well as setting the right password.
+
+Good luck!
