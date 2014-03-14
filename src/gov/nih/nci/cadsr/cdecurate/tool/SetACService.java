@@ -727,7 +727,7 @@ public class SetACService implements Serializable
 					String prop_detl_name=(String) session.getAttribute("userSelectedConCodePROP");
 					System.out.println("detl_type="+req.getParameter("userSelectedVocabOC"));
 					System.out.println("detl_name="+req.getParameter("userSelectedConCodeOC"));
-					if(!AdministeredItemUtil.isAlternateDesignationExists(prop_detl_type, prop_detl_name, altSession)) {
+					if(/* begin GF33139 */ prop_detl_name != null && !prop_detl_name.trim().equals("") /* end GF33139 */ && !AdministeredItemUtil.isAlternateDesignationExists(prop_detl_type, prop_detl_name, altSession)) {
 						//if(!altSession.addAlternateName(detl_type,detl_name,m_DEC,m_servlet.getConn())) {
 						sReturnCode=ins.setDES("INS", m_DEC.getDEC_PROPL_IDSEQ(), m_DEC.getContextIDSEQ(), m_DEC.getContextName(), prop_detl_type, prop_detl_name, "ENGLISH", desIDSEQ);
 							System.out.println("************************ DEC SetACService: AC [" + m_DEC.getDEC_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
@@ -1183,7 +1183,7 @@ public class SetACService implements Serializable
 				
 				
 			    //GF30796
-				if(!AdministeredItemUtil.isAlternateDefinitionExists(chosenDef, altSession)) {
+				if(/* begin GF33139 */ chosenDef != null && !chosenDef.trim().equals("") /* end GF33139 */ && !AdministeredItemUtil.isAlternateDefinitionExists(chosenDef, altSession)) {
 					altSession.addAlternateDefinition(chosenDef,m_VD, m_servlet.getConn());		//GF30796
 				}
 			}
