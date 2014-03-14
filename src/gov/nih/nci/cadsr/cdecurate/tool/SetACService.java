@@ -717,7 +717,7 @@ public class SetACService implements Serializable
 					
 					String sReturnCode="";
 					String desIDSEQ="";
-					if(!AdministeredItemUtil.isAlternateDesignationExists(detl_type, detl_name, altSession)) {
+					if(/* begin GF33139 */ detl_name != null && !detl_name.trim().equals("") /* end GF33139 */ && !AdministeredItemUtil.isAlternateDesignationExists(detl_type, detl_name, altSession)) {
 						//if(!altSession.addAlternateName(detl_type,detl_name,m_DEC,m_servlet.getConn())) {
 						sReturnCode=ins.setDES("INS", m_DEC.getDEC_OCL_IDSEQ(), m_DEC.getContextIDSEQ(), m_DEC.getContextName(), detl_type, detl_name, "ENGLISH", desIDSEQ);
 							System.out.println("************************ DEC SetACService: AC [" + m_DEC.getDEC_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************");
