@@ -695,7 +695,7 @@ public class SetACService implements Serializable
 			
 				 //GF30796
 			}
-				if(!AdministeredItemUtil.isAlternateDefinitionExists(chosenDef, altSession)) {
+				if(/* begin GF33139 */ chosenDef != null && !chosenDef.trim().equals("") /* end GF33139 */ && !AdministeredItemUtil.isAlternateDefinitionExists(chosenDef, altSession)) {
 					altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796
 				}
 				//begin GF32723
