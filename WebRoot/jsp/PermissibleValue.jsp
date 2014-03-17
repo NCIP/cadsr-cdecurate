@@ -1096,13 +1096,13 @@ L--%>
 						            //TODO - figure out this later; cannot use the type cast for vectors in jsp
 						           // Vector<EVS_Bean> vmCon = vm.getVM_CONCEPT_LIST();
 						            		
-									//begin GF7680
-						            String dispStyle = "inline";
+						            String dispStyle = "inline"; //GF33140 display by default
+						            /*
 									String workflowStatus = (String)session.getAttribute("selStatus");
 									if(workflowStatus != null && workflowStatus.equals(Constants.WORKFLOW_STATUS_RELEASED) || inForm) {
-										dispStyle = "none";
+										dispStyle = "none";		
 									}
-									//end GF7680
+									*/
 						            %>
 															<tr id="<%=pvCount%>">
 																<td align="center" valign="top">
