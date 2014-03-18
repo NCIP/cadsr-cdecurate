@@ -2009,7 +2009,7 @@ public class SetACService implements Serializable
 				}
 				logger.debug("At Line 1883 of SetACService.java,strOCInvalid"+strOCInvalid+"strOCValid"+strOCValid+"strPropInvalid"+strPropInvalid+"strPropValid"+strPropValid);
 				UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Object Class", sOCL, bNotMandatory, 255, strOCInvalid, sOriginAction, strOCValid);	//GF30681
-				//UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Property", s, bNotMandatory, 255, strPropInvalid, sOriginAction, strPropValid);	//GF31953
+				UtilService.setValPageVectorForOC_Prop_Rep(vValidate, "Property", s, bNotMandatory, 255, strPropInvalid, sOriginAction, strPropValid);	//GF31953/GF33153
 			}
 			else
 			{
