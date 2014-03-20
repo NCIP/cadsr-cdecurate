@@ -632,7 +632,7 @@ public class SetACService implements Serializable
 			}			
 			
 			
-			s = m_DEC.getDEC_LONG_NAME();
+			s = m_DEC.getDEC_PREFERRED_NAME();	//m_DEC.getDEC_LONG_NAME();	//GF33168 should use preferred name, not long name!
 			if (s == null) s = "";
 			strInValid = "";
 			UtilService.setValPageVector(vValidate, "Long Name", s, bMandatory, 255, strInValid, sOriginAction);
