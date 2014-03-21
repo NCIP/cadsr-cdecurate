@@ -1087,9 +1087,9 @@ String temp =
         </td>
         <td valign="top" align="left">
             <%if(sOriginAction.equals("BlockEditDEC") || isView){%>
-        <textarea name="CreateDefinition" style="width:80%" rows=6 readonly onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
+        <textarea name="CreateDefinition" style="width:80%" rows=6 readonly="readonly" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
             <% } else { %>
-        <textarea name="CreateDefinition" style="width:80%" rows=6 onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
+        <textarea name="CreateDefinition" style="width:80%" rows=6 readonly="readonly" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
             <% }%>
         </td>
         </tr>
