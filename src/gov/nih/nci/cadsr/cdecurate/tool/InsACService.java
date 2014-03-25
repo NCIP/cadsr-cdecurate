@@ -6211,17 +6211,21 @@ public class InsACService implements Serializable {
     		//GF30681 ---- begin new CDR rule !!!
             //use the existing DEC if exists based on the new CDR for DEC
      		//DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
-			String strInValid = checkDECUniqueCDRName((String)session.getAttribute(Constants.DEC_CDR_NAME));
+         	String cdrName = (String)session.getAttribute(Constants.DEC_CDR_NAME);
+			String strInValid = checkDECUniqueCDRName(cdrName);
 			if (strInValid != null && !strInValid.equals("")) {
-//				statusBean.setStatusMessage(strInValid);
-//				statusBean.setCondrExists(true);
-//				statusBean.setCondrIDSEQ(condrIDSEQ);
-//				statusBean.setEvsBeanExists(true);
-//				statusBean.setEvsBeanIDSEQ(idseq);
 				sReturnCode = strInValid;
 			}
     		//GF30681 ---- end new CDR rule !!!
-         	
+			//begin GF33178
+			else {
+				cdrName = cdrName.replaceAll("::", ":");
+				strInValid = checkDECUniqueCDRName(cdrName);
+				if (strInValid != null && !strInValid.equals("")) {
+					sReturnCode = strInValid;
+				}
+			}
+			//end GF33178
          	
          	if(sReturnCode != null && !sReturnCode.equals("")) {	//begin of GF30681 final duplicate check (new)
          		//do nothing
