@@ -6,6 +6,16 @@
 
 The scripts need to be executed in the correct order for them to work. They are showed as below -
 
+Run with user SBREXT:
+
+SQL> @gf30681_update_SBR_data_element_concepts_view.sql
+
+View created.
+
+
+View created.
+
+
 Run with user SBR:
 
 SQL>@gf30681_alter_grant_dec_table.sql
@@ -146,6 +156,24 @@ SQL> @gf30681_update_SBREXT_Set_Row_SET_DEC_BODY.sql
 
 Package body created.
 
+
+SQL> @gf30681_update_existing_DEC_CDR.sql
+
+Table dropped.
+
+
+Table dropped.
+
+
+Table created.
+
+
+Table created.
+
+
+PL/SQL procedure successfully completed.
+
+SQL>
 
 *** UNDOING CHANGES ***
 

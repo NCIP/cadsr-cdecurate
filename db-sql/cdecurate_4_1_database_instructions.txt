@@ -7,8 +7,8 @@
 . gf30681_update_existing_DEC_CDR_no_prop.sql
 . gf30681_update_SBREXT_Set_Row_SET_DEC_BODY.sql 
 . gf30681_update_ac_exists.sql
-. gf30681_update_existing_DEC_CDR.sql
 . gf30681_update_SBR_data_element_concepts_view.sql
+. gf30681_update_existing_DEC_CDR.sql
 . gf30681_update_SBR_INS_UPD_BODY.sql
 . gf30681_update_SBR_INS_UPD_SPEC.sql
 . gf30681_update_SBREXT_Set_Row_SET_DEC_BODY.sql

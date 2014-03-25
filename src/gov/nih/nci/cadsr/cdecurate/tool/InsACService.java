@@ -1130,7 +1130,7 @@ public class InsACService implements Serializable {
 				}
 				// insert newly created row into hold vector
 				if (sReturnCode != null && sAction.equals("INS")){
-					if (sReturnCode.equalsIgnoreCase("API_DEC_300")) {//GF30681
+					if (sReturnCode.equalsIgnoreCase("API_DEC_300")) {//GF30681/GF33178 (just a tag, not a fix)
 						//Place the reuse logic here.
 						logger.debug("DEC already exists with DEC_Id"+sDEC_ID);
 						this.storeStatusMsg("Data Element Concept Name : ["

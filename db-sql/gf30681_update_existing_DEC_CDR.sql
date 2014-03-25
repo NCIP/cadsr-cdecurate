@@ -1,18 +1,19 @@
-/*L
-  Copyright ScenPro Inc, SAIC-F
-
-  Distributed under the OSI-approved BSD 3-Clause License.
-  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
-L*/
-
 -- run this with SBR user
 /*
  * Notes related to issue https://gforge.nci.nih.gov/tracker/index.php?func=detail&aid=30681.
  */
 SET SERVEROUTPUT ON;
 
+-- Cleanup for previous backups, if any
+DROP TABLE SBR.DATA_ELEMENT_CONCEPTS_BACKUP
+/
+DROP TABLE SBR.DEC_VIEW_BACKUP
+/
+
 -- Backing up for rollback, in case of failed deployment/production release
 CREATE TABLE SBR.DATA_ELEMENT_CONCEPTS_BACKUP AS SELECT * FROM SBR.DATA_ELEMENT_CONCEPTS
+/
+CREATE TABLE SBR.DEC_VIEW_BACKUP AS SELECT * FROM SBR.DATA_ELEMENT_CONCEPTS_VIEW
 /
  
 DECLARE
@@ -60,6 +61,8 @@ NEW_CDR_NAME:=':' || OC_CDR_NAME || ':' || PROP_CDR_NAME;
 -- DBMS_OUTPUT.put_line('********* Updating DEC_IDSEQ [' || DECID.DEC_IDSEQ || '] CDR_NAME with [' || NEW_CDR_NAME || '] ...');
 
 Update SBR.DATA_ELEMENT_CONCEPTS SET CDR_NAME=NEW_CDR_NAME where DEC_IDSEQ=DECID.DEC_IDSEQ;
+
+Update SBR.DATA_ELEMENT_CONCEPTS_VIEW SET CDR_NAME=NEW_CDR_NAME where DEC_IDSEQ=DECID.DEC_IDSEQ;
 
 -- DBMS_OUTPUT.put_line('DEC_IDSEQ = ' || DECID.DEC_IDSEQ || ' LONG NAME = ' || DECID.LONG_NAME || ' CDR_NAME set to [' || NEW_CDR_NAME || '] *********');
 
