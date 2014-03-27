@@ -302,6 +302,8 @@ public class CurationServlet
     	    userbean.setUsername(username);
     	    userbean.setPassword(password);
      		uc.validateCredentials(NCICurationServlet._userName, NCICurationServlet._password, username, password);
+     		req.getSession().invalidate();  // per Appscan, new Session ID should be generated after successful login
+     		session = req.getSession(true);
      		if (m_conn == null){
      			get_m_conn();
      		}

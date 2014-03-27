@@ -128,4 +128,19 @@ public class StringUtil {
 
 		return sw.toString();
 	}	
+	
+	public static String cleanJavascriptAndHtml(String stringToClean) {
+		if (stringToClean == null)
+			return stringToClean;
+		
+		stringToClean = stringToClean.replaceAll("alert", "");
+		stringToClean = stringToClean.replaceAll("<script>", "");
+		stringToClean = stringToClean.replaceAll("</script>", "");
+		stringToClean = stringToClean.replaceAll("javascript", "");
+		stringToClean = stringToClean.replaceAll(".html", "");
+		stringToClean = stringToClean.replaceAll("iframe", "");
+		//stringToClean = stringToClean.replaceAll(".net", "");
+		
+		return stringToClean;
+	}
 }

@@ -11,6 +11,8 @@ L--%>
 <%@ page session="true"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
+<%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
+
 <%
 
 	long stime = System.currentTimeMillis();
@@ -22,7 +24,7 @@ L--%>
 	Vector vContext = new Vector();
 	Vector vDocs = new Vector();
 	Vector vACAttr = new Vector();
-	String sessionRecordsDisplayed = (String) session.getAttribute("sessionRecordsDisplayed");
+	String sessionRecordsDisplayed = StringUtil.cleanJavascriptAndHtml( (String) session.getAttribute("sessionRecordsDisplayed") );
 	String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
 	String sInitiatedFrom = (String) session.getAttribute("initiatedFrom");
 	String sLastKeyword, sSearchIn, sContextUse = "", sContext = "";
@@ -280,7 +282,7 @@ L--%>
 	String sKeyword, nRecs;
 	Vector vSelAttr = new Vector();
 	Vector vCheckList = new Vector();
-	String sMAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
+	String sMAction = StringUtil.cleanJavascriptAndHtml( (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION) );
 	String sButtonPressed = (String) session.getAttribute("LastMenuButtonPressed");
 	if (sButtonPressed == null)
 		sButtonPressed = "undefined";

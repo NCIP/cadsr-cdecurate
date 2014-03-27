@@ -14,6 +14,7 @@ L--%>
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <%@ page import="java.util.*"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
+<%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
 <html>
 	<head>
 		<title>
@@ -30,7 +31,7 @@ L--%>
 	  intText = "Loading Conceptual Domains .....";
    
    if (intText.equals(""))
-	  intText = "List of Conceptual Domains for Value Meaning - " + sVM + ".";
+	  intText = "List of Conceptual Domains for Value Meaning - " + StringUtil.cleanJavascriptAndHtml(sVM) + ".";
    if (cdResult == null) cdResult = new Vector();
    
    String nRecs = "No ";

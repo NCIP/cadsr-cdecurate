@@ -12,6 +12,8 @@ L--%>
 
 <!-- goes to secondary window error page if error occurs -->
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
+<%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
+
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -39,7 +41,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     Hashtable hCommType = (Hashtable)session.getAttribute("CommType");
     Hashtable hAddrType = (Hashtable)session.getAttribute("AddrType");
    // Vector vContact = new Vector();
-    String contAction = (String)request.getAttribute("ContAction");
+    String contAction = StringUtil.cleanJavascriptAndHtml((String)request.getAttribute("ContAction"));
     if (contAction == null || contAction.equals(""))
       contAction = "new";
     //get the contact vector for the AC
@@ -47,7 +49,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     AC_CONTACT_Bean accBean = (AC_CONTACT_Bean)session.getAttribute("selACContact");
     if (accBean == null) accBean = new AC_CONTACT_Bean();
     //get contact information
-    String ctRank = accBean.getRANK_ORDER();
+    String ctRank = StringUtil.cleanJavascriptAndHtml( accBean.getRANK_ORDER() );
     if (ctRank == null) ctRank = "";
     String ctPer = accBean.getPERSON_IDSEQ();
     if (ctPer == null) ctPer = "";
@@ -226,7 +228,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				  { 
 		  			String sName = ctPer;
 		  			if (hPer != null && hPer.containsKey(ctPer))
-		  			  sName = (String)hPer.get(ctPer);
+		  			  sName = StringUtil.cleanJavascriptAndHtml((String)hPer.get(ctPer));
 		%>
 										<option value="<%=ctPer%>" selected="selected">
 											<%=sName%>
@@ -239,7 +241,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					  while (enum1.hasMoreElements())
 					  {
 					    String sID = (String)enum1.nextElement();
-					    String sName = (String)hPer.get(sID);
+					    String sName = StringUtil.cleanJavascriptAndHtml((String)hPer.get(sID));
 		%>
 										<option value="<%=sID%>" <%if(sID.equals(ctPer)){%> selected <%}%>>
 											<%=sName%>

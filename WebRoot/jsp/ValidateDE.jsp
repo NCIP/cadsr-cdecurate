@@ -19,6 +19,7 @@ L--%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.Session_Data"%>
 		<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
+		<%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 		<TITLE>
 			Validate Data Element
@@ -210,11 +211,11 @@ newUrl = newUrl + '&idseq=' +idseq+'&type='+type;
   {
     for (int i = 0; vValidate.size()>i; i = i+3)
     {
-      String sItem = (String)vValidate.elementAt(i);
-      String sContent = (String)vValidate.elementAt(i+1);
+      String sItem = StringUtil.cleanJavascriptAndHtml( (String)vValidate.elementAt(i) );
+      String sContent = StringUtil.cleanJavascriptAndHtml( (String)vValidate.elementAt(i+1) );
       if (sContent == null) sContent = "";
       //System.out.println("content : " + sContent);
-      String sStat = (String)vValidate.elementAt(i+2);
+      String sStat = StringUtil.cleanJavascriptAndHtml( (String)vValidate.elementAt(i+2) );
       String sFont = "#000000";
       if (sStat.equals("Valid") || sStat.equals("No Change"))
         sFont = "#238E23";

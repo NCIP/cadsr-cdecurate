@@ -11,6 +11,7 @@ L--%>
 -->
 
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
+<%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
 <curate:checkLogon name="Userbean" page="/ErrorPageWindow.jsp" />
 <html>
 	<head>
@@ -34,7 +35,7 @@ L--%>
     Vector vRefTypes = (Vector)session.getAttribute("RefDocTypes");
     Vector vLanguage = (Vector)session.getAttribute("vLanguage");
     //get the display type of designation, altnames, refdocs etc
-    String dispType = (String)request.getAttribute("displayType");
+    String dispType = StringUtil.cleanJavascriptAndHtml( (String)request.getAttribute("displayType") );
     if (dispType == null) dispType = "";
     String acType = (String)session.getAttribute("dispACType");
     if (acType == null) acType = "";

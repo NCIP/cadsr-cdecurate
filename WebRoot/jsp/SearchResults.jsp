@@ -25,6 +25,8 @@ L--%>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 		<%@ page import="java.util.*"%>
 		<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+		<%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
+		
 		<%
 		
    UtilService serUtil = new UtilService();
@@ -72,7 +74,7 @@ L--%>
    String sKeyword, nRecs;
    Vector vSelAttr = new Vector();
    Vector vCheckList = new Vector();
-   String sMAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
+   String sMAction = StringUtil.cleanJavascriptAndHtml( (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION) );
    String sButtonPressed = (String)session.getAttribute("LastMenuButtonPressed");
    if (sButtonPressed == null) sButtonPressed = "undefined";
    //get the session attributes according searching from Menu or create page

@@ -18,6 +18,8 @@ L--%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.util.TreeNode"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.database.DBAccess"%>
+<%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
+
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -275,7 +277,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				</table>
 				<div id="csiList" class="list" style="height: 3in">
         <%
-            text = (String) req.getAttribute(AltNamesDefsServlet._reqAttribute);
+            text = StringUtil.cleanJavascriptAndHtml((String) req.getAttribute(AltNamesDefsServlet._reqAttribute));
         %>
 					<%=text%>
 				</div>

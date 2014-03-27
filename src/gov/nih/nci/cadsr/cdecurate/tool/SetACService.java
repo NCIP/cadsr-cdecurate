@@ -12,6 +12,7 @@ import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.persist.common.DBConstants;
 
 import java.io.Serializable;
@@ -3668,7 +3669,7 @@ public class SetACService implements Serializable
 			{
 				sID = sVDid[0];
 				m_DE.setDE_VD_IDSEQ(sID);
-				sName = (String)req.getParameter("selVDText");
+				sName = StringUtil.cleanJavascriptAndHtml((String)req.getParameter("selVDText"));
 				if (sName != null) m_DE.setDE_VD_NAME(sName);
 			}
 
