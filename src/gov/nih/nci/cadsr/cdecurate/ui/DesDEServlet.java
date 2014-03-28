@@ -21,11 +21,14 @@ import gov.nih.nci.cadsr.cdecurate.tool.REF_DOC_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.SetACService;
 import gov.nih.nci.cadsr.cdecurate.tool.UserBean;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.common.StringUtil;
 
 import java.util.Vector;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -484,7 +487,7 @@ public class DesDEServlet
     {
         GetACSearch getACSearch = new GetACSearch(req, res, _servlet);
 
-        String dispType = (String) req.getParameter("pageDisplayType");
+        String dispType = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("pageDisplayType"));
         if (dispType == null)
             dispType = "";
 

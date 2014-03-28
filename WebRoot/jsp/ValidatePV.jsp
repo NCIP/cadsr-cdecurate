@@ -12,6 +12,7 @@ L--%>
 
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
+<%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
 <html>
 	<head>
 		<title>
@@ -142,10 +143,10 @@ L--%>
 				<%
     for (int i = 0; vValidate.size()>i; i = i+3)
     {
-      String sItem = (String)vValidate.elementAt(i);
-      String sContent = (String)vValidate.elementAt(i+1);
+      String sItem = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i));
+      String sContent = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i+1));
       if (sContent == null) sContent = "";
-      String sStat = (String)vValidate.elementAt(i+2);
+      String sStat = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i+2));
       String sFont = "#000000";
       if (sStat.equals("Valid"))
         sFont = "#238E23";

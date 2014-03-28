@@ -17,6 +17,8 @@ L--%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.util.TreeNode"%>
+<%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
+
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -143,7 +145,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					&nbsp;
 				</p>
 				<%
-    text = (String) pageContext.getRequest().getAttribute(AltNamesDefsServlet._reqAttribute);
+    text = StringUtil.cleanJavascriptAndHtml((String) pageContext.getRequest().getAttribute(AltNamesDefsServlet._reqAttribute));
   %>
 				<%=text%>
 			</div>

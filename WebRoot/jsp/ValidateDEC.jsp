@@ -12,6 +12,7 @@ L--%>
 <%@ page contentType="text/html;charset=WINDOWS-1252"%>
 <%@ page import="java.util.*"%>
 <%@ page import="gov.nih.nci.cadsr.common.Constants" %>
+<%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
 
 <HTML>
 	<HEAD>
@@ -170,10 +171,10 @@ L--%>
 				<%
     for (int i = 0; vValidate.size()>i; i = i+3)
     {
-      String sItem = (String)vValidate.elementAt(i);
-      String sContent = (String)vValidate.elementAt(i+1);
+      String sItem = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i));
+      String sContent = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i+1));
       if (sContent == null) sContent = "";
-      String sStat = (String)vValidate.elementAt(i+2);
+      String sStat = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i+2));
       if(sItem != null && sItem.equals("Alternate Definition")) {
 	String temp = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
 	System.out.println("temp [" + temp + "] temp.trim().indexOf(null) = " + temp.trim().indexOf("null"));

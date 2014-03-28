@@ -14,6 +14,8 @@ L--%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
+
 <html>
 	<head>
 		<title>
@@ -53,7 +55,7 @@ L--%>
    String sSelectedParentName = "", sSelectedParentCC = "", sSelectedParentDB = "";
  
    Vector vSelAttr = new Vector();
-   String sMAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
+   String sMAction = StringUtil.cleanJavascriptAndHtml( (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION) );
    if (sMAction != null && sMAction.equals("searchForCreate"))  // || sMAction.equals("BEDisplay"))
    {
        sKeyword = (String)session.getAttribute("creKeyword");

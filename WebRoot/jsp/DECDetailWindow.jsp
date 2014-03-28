@@ -14,6 +14,7 @@ L--%>
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <%@ page import="java.util.*"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
+<%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
 <html>
 	<head>
 		<title>
@@ -23,7 +24,7 @@ L--%>
 		<%
    Vector decResult = (Vector)request.getAttribute("lstDECResult");
    if (decResult == null) decResult = new Vector();
-   String resLabel = (String)request.getAttribute("resultLabel");
+   String resLabel = StringUtil.cleanJavascriptAndHtml( (String)request.getAttribute("resultLabel") );
    if (resLabel == null) resLabel = "";
    String nRecs = "No ";
    int nDECs = decResult.size();
