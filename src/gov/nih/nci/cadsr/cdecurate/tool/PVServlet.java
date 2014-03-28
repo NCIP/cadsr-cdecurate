@@ -24,6 +24,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -491,8 +492,11 @@ public class PVServlet implements Serializable
        Vector<PV_Bean> vVDPVList = vd.getVD_PV_List();  // (Vector)session.getAttribute("VDPVList");
        if (vVDPVList == null) vVDPVList = new Vector<PV_Bean>();
        selectPV = (PV_Bean)vVDPVList.elementAt(pvInd);
-       if (selectPV != null && selectPV.getPV_VALUE() != null && !selectPV.getPV_VALUE().equals(""))
-         data.setSelectPV(selectPV);
+       if (selectPV != null && selectPV.getPV_VALUE() != null && !selectPV.getPV_VALUE().equals("")) {
+    	   data.setSelectPV(selectPV);
+		} else {
+			System.out.println("PVServlet: delete PV, nothing is done as PV value is empty or null!");		//GF30800 added message to ease troubleshooting
+		}
      }
      else
      {
@@ -833,7 +837,7 @@ public class PVServlet implements Serializable
          if (idseq != null && !idseq.equals("") && !idseq.contains("EVS"))
          {
            pv.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_DEL);
-           data.setSelectPV(pv);
+           data.setSelectPV(pv);	//GF30800 tagged
            data.setVD(vd);
            String ret = pvAction.setVD_PVS(data);
            if (ret != null && !ret.equals(""))

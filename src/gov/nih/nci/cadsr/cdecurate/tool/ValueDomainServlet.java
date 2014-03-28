@@ -1471,7 +1471,7 @@ public class ValueDomainServlet extends CurationServlet {
 		storeStatusMsg("Value Domain Name : " + VDBean.getVD_LONG_NAME());
 		storeStatusMsg("Public ID : " + VDBean.getVD_VD_ID());
 		// call stored procedure to update attributes
-		String ret = insAC.setVD("UPD", VDBean, "Edit", oldVDBean);
+		String ret = insAC.setVD("UPD", VDBean, "Edit", oldVDBean);		//GF30800 tagged
 		// forward to search page with refreshed list after successful update
 		if ((ret == null) || ret.equals(""))
 		{
