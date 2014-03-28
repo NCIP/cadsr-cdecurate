@@ -2897,21 +2897,25 @@ public class SetACService implements Serializable
                       " WHERE DEC.CONTE_IDSEQ = CV.CONTE_IDSEQ AND DEC.LONG_NAME = '" + sValue + "'" +
                       " AND DEC.VERSION = '" + sVersion + "' AND CV.NAME = '" + sContext + "'" + editSQL;
         }
-        else*/ if (sField.equals("Name"))
-        {
-        	String decID = mDEC.getDEC_DEC_ID();
-        	sValue = mDEC.getDEC_PREFERRED_NAME();
-        	sValue = m_util.parsedStringSingleQuoteOracle(sValue);
-        	/*sSQL = "SELECT COUNT(*) FROM DATA_ELEMENT_CONCEPTS_VIEW DEC, CONTEXTS_VIEW CV" +
-        	" WHERE DEC.CONTE_IDSEQ = CV.CONTE_IDSEQ AND DEC.PREFERRED_NAME = '" + sValue + "'" +
-        	" AND DEC.VERSION = '" + sVersion + "' AND CV.NAME = '" + sContext + "'" + editSQL;*/
-        	//GF32788
-        	sSQL="SELECT COUNT(*) FROM DATA_ELEMENT_CONCEPTS_VIEW DEC, CONTEXTS_VIEW CV" +
-            	" WHERE DEC.CONTE_IDSEQ = CV.CONTE_IDSEQ AND DEC.VERSION = '" + sVersion + "' AND CV.NAME = '" + sContext + "' AND DEC.DEC_ID = '" + decID+"'"  +editSQL;
-        	retValue="Combination of Object Class, Property and context exists with different short name";
-        	//GF32788
-        }
-        else if (sField.equals("Version"))
+        else*/ 
+		//begin GF33182 - commented out as it is no longer relevant due to GF30681
+//		if (sField.equals("Name"))
+//        {
+//        	String decID = mDEC.getDEC_DEC_ID();
+//        	sValue = mDEC.getDEC_PREFERRED_NAME();
+//        	sValue = m_util.parsedStringSingleQuoteOracle(sValue);
+//        	/*sSQL = "SELECT COUNT(*) FROM DATA_ELEMENT_CONCEPTS_VIEW DEC, CONTEXTS_VIEW CV" +
+//        	" WHERE DEC.CONTE_IDSEQ = CV.CONTE_IDSEQ AND DEC.PREFERRED_NAME = '" + sValue + "'" +
+//        	" AND DEC.VERSION = '" + sVersion + "' AND CV.NAME = '" + sContext + "'" + editSQL;*/
+//        	//GF32788
+//        	sSQL="SELECT COUNT(*) FROM DATA_ELEMENT_CONCEPTS_VIEW DEC, CONTEXTS_VIEW CV" +
+//            	" WHERE DEC.CONTE_IDSEQ = CV.CONTE_IDSEQ AND DEC.VERSION = '" + sVersion + "' AND CV.NAME = '" + sContext + "' AND DEC.DEC_ID = '" + decID+"'"  +editSQL;
+//        	retValue="Combination of Object Class, Property and context exists with different short name";
+//        	//GF32788
+//        }
+//        else 
+		//end GF33182
+		if (sField.equals("Version"))
         {
         	String decID = mDEC.getDEC_DEC_ID();
         	sSQL = "SELECT COUNT(*) FROM DATA_ELEMENT_CONCEPTS_VIEW DEC WHERE DEC.DEC_ID = '" + decID +

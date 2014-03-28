@@ -1130,19 +1130,20 @@ public class InsACService implements Serializable {
 				}
 				// insert newly created row into hold vector
 				if (sReturnCode != null && sAction.equals("INS")){
-					if (sReturnCode.equalsIgnoreCase("API_DEC_300")) {//GF30681/GF33178 (just a tag, not a fix)
+					//begin GF33182 commented check based on long name didn't work, just tagged the following lines
+					if (sReturnCode.equalsIgnoreCase("API_DEC_300")) {//GF30681
 						//Place the reuse logic here.
 						logger.debug("DEC already exists with DEC_Id"+sDEC_ID);
 						this.storeStatusMsg("Data Element Concept Name : ["
-								+ dec.getDEC_LONG_NAME() + "] already exists");
+								+ dec.getDEC_LONG_NAME() + "] already exists. Error [" + sReturnCode + "]");	//TODO GF33178 (tagged, to continue from here)
 					}else{
 						logger.debug("sReturnCode at 1063 of InsACService.java is" + sReturnCode);
 						this
 								.storeStatusMsg("\\t "
 										+ sReturnCode
-										+ " : Unable to create new Data Element Concept Successfully.");
+										+ " : Unable to create new Data Element Concept Successfully. Error [" + sReturnCode + "]");
 					}
-					
+					//end GF33182
 				}
 				else if ((sReturnCode == null || (sReturnCode != null && sAction
 						.equals("UPD")))
@@ -1322,7 +1323,7 @@ public class InsACService implements Serializable {
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
-					.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes.");
+					.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes.");	//GF33182 tagged
 		}
 		finally{
 			rs = SQLHelper.closeResultSet(rs);
@@ -6325,7 +6326,7 @@ public class InsACService implements Serializable {
     	}catch(Exception e){
     		logger.error("ERROR in InsACService-setDEC for other : "+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
-			this.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes.");
+			this.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes.");	//GF33182 tagged
     	}
     	return sReturnCode;
 	}
