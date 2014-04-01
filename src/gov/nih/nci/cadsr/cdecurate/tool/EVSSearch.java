@@ -4470,12 +4470,15 @@ public class EVSSearch implements Serializable {
                 ends = termStr.startsWith("*"); // Term ends with rest of the string
                 starts = termStr.endsWith("*"); // Term starts with rest of the string
                 
-                contains = termStr.substring(1,termStr.length()-1).indexOf(" *") >= 0 ||
+                if(termStr.length() > 1) {                 //TODO need a ticket for this
+                	contains = termStr.substring(1,termStr.length()-1).indexOf(" *") >= 0 ||
                                         termStr.substring(1,termStr.length()-1).indexOf("* ") >= 0;
-                if (!contains)          
-                        embed = termStr.substring(1,termStr.length()-1).indexOf("*") >= 0;
-                
-                multiple = termStr.indexOf(' ') > 0;
+
+	                if (!contains)          
+	                        embed = termStr.substring(1,termStr.length()-1).indexOf("*") >= 0;
+	                
+	                multiple = termStr.indexOf(' ') > 0;
+                }                 //TODO need a ticket for this
                 
                 
                 if (starts) {
