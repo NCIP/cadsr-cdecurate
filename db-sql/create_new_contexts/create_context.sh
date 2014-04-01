@@ -4,9 +4,12 @@
 #	DATABASE SETTINGS
 
 export user=SBR
-export pwd=
-export SQLPLUS_PATH=~/Dropbox/nih/instantclient_10_2/
-#export HOST=@"(description=(address_list=(address=(protocol=TCP)(host=137.187.181.4)(port=1551)))(connect_data=(SID=DSRDEV)))"
+export pwd=jjsbr
+export SQLPLUS_PATH=sqlplus
+export HOST=@"(description=(address_list=(address=(protocol=TCP)(host=137.187.181.4)(port=1551)))(connect_data=(SID=DSRDEV)))"
 
-
-$SQLPLUS_PATHsqlplus $user/$pwd$HOST @run_create_context.sql 'ABTC' 'Adult Brain Tumor Consortium'
+echo 'Creating context ...'
+echo 
+$SQLPLUS_PATH $user/$pwd$HOST @run_create_context.sql 'ABTC' 'Adult Brain Tumor Consortium'
+$SQLPLUS_PATH $user/$pwd$HOST @run_create_context.sql 'ABTC' 'Adult Brain Tumor Consortium'
+echo 'Done'
