@@ -483,14 +483,14 @@ public class EVSMasterTree {
 			+ "','" + sNodeID + "','" + nodeLvl + jsEnd;
 			buf.append("href=").append(sCollapse).append(" >");
 			buf.append("<img src='images/").append(openedImage).append(
-			"' border='0'>");
+			"' border='0' alt='tree'>");
 		} else {
 			js = "\"javascript:doTreeAction('expand','";
 			sExpand = js + nodeCCode + "','" + m_dtsVocab + "','" + sJSName
 			+ "','" + sNodeID + "','" + nodeLvl + jsEnd;
 			buf.append("href=").append(sExpand).append(" >");
 			buf.append("<img src='images/").append(collapsedImage).append(
-			"' border='0'>");
+			"' border='0' alt='tree'>");
 		}
 		buf.append("</a>");
 		buf.append("&nbsp;");
@@ -577,7 +577,7 @@ public class EVSMasterTree {
 		String sSearch = js + nodeCCode + "','" + m_dtsVocab + "','" + sJSName
 		+ "','" + sLeafID + "','" + leafLvl + jsEnd;
 		buf.append("<img src='images/").append(leafImage).append(
-		"' border='0'>");
+		"' border='0' alt='tree'>");
 		buf.append("&nbsp;");
 		buf.append("<a ");
 		buf.append("href=").append(sSearch).append(">");

@@ -150,11 +150,11 @@ public class ObjMenuTag extends MenuTag {
 		String tdTag1 = null;
 		String tdTag2 = null;
 		if (imageSingle != null && !(imageSingle == "" ))
-		  image_single = "<img src=\""+ request.getContextPath() +"/images/"+imageSingle+".gif\" border=\"0\">";
+		  image_single = "<img src=\""+ request.getContextPath() +"/images/"+imageSingle+".gif\" border=\"0\" alt=\"single\">";
 		else
 			image_single = "&middot;";
 		if (imageMultiple != null && !(imageMultiple == "" ))
-			image_multiple = "<img src=\""+ request.getContextPath() +"/images/"+imageMultiple+".gif\" border=\"0\">";
+			image_multiple = "<img src=\""+ request.getContextPath() +"/images/"+imageMultiple+".gif\" border=\"0\" alt=\"multiple\">";
 		else
 			image_multiple = "&middot;";
 		if (image_single == "&middot;"){

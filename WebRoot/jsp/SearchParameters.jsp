@@ -548,7 +548,7 @@ function LoadKeyHandler()
 				<tr>
 					<th align=right><%=item++%>)</th>
 					<th valign="top" align="left">
-						Search For:
+						<label for="listSearchFor">Search For:</label>
 					</th>
 				</tr>
 				<tr>
@@ -560,7 +560,7 @@ function LoadKeyHandler()
 						<%
 						if (!sMenuAction.equals("searchForCreate")) {
 						%>
-						<select name="listSearchFor" size="1" style="width: 172px"
+						<select name="listSearchFor" size="1" style="width: 172px" id="listSearchFor"
 							onChange="doSearchForChange();"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="ClassSchemeItems"
@@ -634,7 +634,7 @@ function LoadKeyHandler()
 					<th valign="top" align=right><%=item++%>)</th>
 					<th valign="bottom">
 						<div align="left">
-							Search In:
+							<label for="listSearchIn">Search In:</label>
 						</div>
 					</th>
 				</tr>
@@ -643,7 +643,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listSearchIn" size="1" style="width: 172px"
+						<select name="listSearchIn" size="1" style="width: 172px" id="listSearchIn"
 							onChange="doSearchInChange();"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<!-- include names&definition only if not questions-->
@@ -890,7 +890,7 @@ function LoadKeyHandler()
 					<th><div valign="top" align=right><%=item++%>)</div></th>
 					<th valign="bottom">
 						<div align="left">
-							Enter Search Term:
+							<label for="keyword">Enter Search Term:</label>
 						</div>
 					</th>
 				</tr>
@@ -903,7 +903,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<input type="text" name="keyword" size="24"
+						<input type="text" name="keyword" size="24" id="keyword"
 							value="<%=sLastKeyword%>"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 					</td>
@@ -975,7 +975,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td style="height: 20" valign=bottom>
-						<b> Context </b>
+						<b> <label for="listMultiContextFilter">Context</label> </b>
 					</td>
 				</tr>
 				<tr>
@@ -983,7 +983,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listMultiContextFilter" size="3" style="width: 172px"
+						<select name="listMultiContextFilter" size="3" style="width: 172px" id="listMultiContextFilter"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="All (No Test/Train)"
@@ -1037,10 +1037,10 @@ function LoadKeyHandler()
 					</td>
 					<td align=left>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="radio" name="rContextUse" value="OWNED_BY"
+						<input type="radio" name="rContextUse" value="OWNED_BY" id="owned"
 							<%if(sContextUse.equals("OWNED_BY")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-						Owned By
+						<label for="owned">Owned By</label>
 					</td>
 				</tr>
 				<%
@@ -1052,10 +1052,10 @@ function LoadKeyHandler()
 					</td>
 					<td align=left>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="radio" name="rContextUse" value="USED_BY"
+						<input type="radio" name="rContextUse" value="USED_BY" id="used"
 							<%if(sContextUse.equals("USED_BY")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-						Used By
+						<label for="used">Used By</label>
 					</td>
 				</tr>
 				<tr style="height: 10">
@@ -1064,10 +1064,10 @@ function LoadKeyHandler()
 					</td>
 					<td align=left>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="radio" name="rContextUse" value="BOTH"
+						<input type="radio" name="rContextUse" value="BOTH" id="both"
 							<%if(sContextUse.equals("BOTH")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-						Owned By/Used By
+						<label for="both">Owned By/Used By</label>
 					</td>
 				</tr>
 				<%
@@ -1095,16 +1095,16 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td align=left>
-						<input type="radio" name="rVersion" value="All"
+						<input type="radio" name="rVersion" value="All" id="all"
 							onclick="javascript:removeOtherText();"
 							<%if(sVersion.equals("All")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-						All&nbsp;
-						<input type="radio" name="rVersion" value="Yes"
+						<label for="all">All&nbsp;</label>
+						<input type="radio" name="rVersion" value="Yes" id="latest"
 							onclick="javascript:removeOtherText();"
 							<%if(sVersion.equals("Yes")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-						Latest&nbsp;
+						<label for="latest">Latest&nbsp;</label>
 						<input type="radio" name="rVersion" value="Other"
 							<% if (sVersion.equals("Other")) { %> checked <% } %>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
@@ -1136,10 +1136,10 @@ function LoadKeyHandler()
 					</td>
 					<td align=left>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="checkbox" name="enumBox" value="E"
+						<input type="checkbox" name="enumBox" value="E" id="enumBox"
 							<%if(typeEnum != null && typeEnum.equals("E")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-						Enumerated
+						<label for="enumBox">Enumerated</label>
 					</td>
 				</tr>
 				<tr>
@@ -1148,11 +1148,11 @@ function LoadKeyHandler()
 					</td>
 					<td align=left>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="checkbox" name="nonEnumBox" value="N"
+						<input type="checkbox" name="nonEnumBox" value="N" id="nonEnumBox"
 							<%if(typeNonEnum != null && typeNonEnum.equals("N")){%> checked
 							<%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-						Non-Enumerated
+						<label for="nonEnumBox">Non-Enumerated</label>
 					</td>
 				</tr>
 				<%
@@ -1170,7 +1170,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td style="height: 20" valign=bottom>
-						Classification Schemes
+						<label for="listCSName">Classification Schemes</label>
 					</td>
 				</tr>
 				<tr>
@@ -1178,7 +1178,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listCSName" size="1" style="width: 172px" valign="top"
+						<select name="listCSName" size="1" style="width: 172px" valign="top" id="listCSName"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="AllSchemes" selected>
 								All Schemes
@@ -1213,7 +1213,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td style="height: 20" valign=bottom>
-						<b> Conceptual Domain </b>
+						<b> <label for="listCDName">Conceptual Domain</label> </b>
 					</td>
 				</tr>
 				<tr>
@@ -1221,7 +1221,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listCDName" size="1" style="width: 172px" valign="top"
+						<select name="listCDName" size="1" style="width: 172px" valign="top" id="listCDName"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="All Domains" <%if(selCD.equals("All Domains")){%>
 								selected <%}%>>
@@ -1255,7 +1255,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td style="height: 20" valign=bottom>
-						<b> Registration Status </b>
+						<b> <label for="listRegStatus">Registration Status</label> </b>
 					</td>
 				</tr>
 				<tr>
@@ -1263,7 +1263,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listRegStatus" size="1" style="width: 172px"
+						<select name="listRegStatus" size="1" style="width: 172px" id="listRegStatus"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allReg"
 								<%if (vRegStatus == null || vRegStatus.size()==0 
@@ -1302,7 +1302,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td style="height: 20" valign=bottom>
-						<b> Workflow Status </b>
+						<b> <label for="listStatusFilter">Workflow Status</label> </b>
 					</td>
 				</tr>
 				<tr>
@@ -1310,7 +1310,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listStatusFilter" size="3" style="width: 172px"
+						<select name="listStatusFilter" size="3" style="width: 172px" id="listStatusFilter"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<!--store the status list as per the CONCEPT SEARCH  -->
@@ -1428,7 +1428,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td style="height: 20" valign=bottom>
-						<b> Registration Status </b>
+						<b> <label for="listRegStatus1">Registration Status</label> </b>
 					</td>
 				</tr>
 				<tr>
@@ -1436,7 +1436,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listRegStatus" size="1" style="width: 172px"
+						<select name="listRegStatus" size="1" style="width: 172px" id="listRegStatus1"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allReg"
 								<%if (vRegStatus == null || vRegStatus.size()==0 
@@ -1472,7 +1472,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td style="height: 20" valign=bottom>
-						<b> Value Domain Data Type </b>
+						<b> <label for="listDataType">Value Domain Data Type</label> </b>
 					</td>
 				</tr>
 				<tr>
@@ -1480,7 +1480,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listDataType" size="1" style="width: 172px"
+						<select name="listDataType" size="1" style="width: 172px" id="listDataType"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allData"
 								<%if (vDataType == null || vDataType.size()==0 
@@ -1524,7 +1524,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td style="height: 20" valign=bottom>
-						<b> Derivation Type </b>
+						<b> <label for="listDeriveType">Derivation Type</label> </b>
 					</td>
 				</tr>
 				<tr>
@@ -1532,7 +1532,7 @@ function LoadKeyHandler()
 						&nbsp;
 					</td>
 					<td>
-						<select name="listDeriveType" size="1" style="width: 172px"
+						<select name="listDeriveType" size="1" style="width: 172px" id="listDeriveType"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allDer"
 								<%if (vDerType == null || vDerType.size()==0 
@@ -1574,7 +1574,7 @@ function LoadKeyHandler()
 									&nbsp;
 								</td>
 								<td style="height: 20" colspan=4 valign=bottom>
-									<b> Date Created </b> &nbsp;&nbsp;(MM/DD/YYYY)
+									<b> <label for="createdFrom">Date Created</label> </b> &nbsp;&nbsp;(MM/DD/YYYY)
 								</td>
 							</tr>
 							<tr>
@@ -1585,7 +1585,7 @@ function LoadKeyHandler()
 									From
 								</td>
 								<td>
-									<input type="text" name="createdFrom" value="<%=sCreatedFrom%>"
+									<input type="text" name="createdFrom" value="<%=sCreatedFrom%>" id="createdFrom"
 										size="8" readonly
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
@@ -1601,10 +1601,10 @@ function LoadKeyHandler()
 									&nbsp;
 								</td>
 								<td align=right>
-									To
+									<label for="createdTo">To</label>
 								</td>
 								<td>
-									<input type="text" name="createdTo" value="<%=sCreatedTo%>"
+									<input type="text" name="createdTo" value="<%=sCreatedTo%>" id="createdTo"
 										size="8" readonly
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
@@ -1621,7 +1621,7 @@ function LoadKeyHandler()
 									&nbsp;
 								</td>
 								<td style="height: 20" colspan=4 valign=bottom>
-									<b> Creator </b>
+									<b> <label for="creator">Creator</label> </b>
 								</td>
 							<tr>
 							</tr>
@@ -1630,7 +1630,7 @@ function LoadKeyHandler()
 									&nbsp;
 								</td>
 								<td style="height: 20" colspan=4 valign=top>
-									<select name="creator" size="1" style="width: 172px" valign="top"
+									<select name="creator" size="1" style="width: 172px" valign="top" id="creator"
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 										<option value="allUsers"
 											<%if (vUsers == null || vUsers.size()==0 
@@ -1671,15 +1671,15 @@ function LoadKeyHandler()
 									&nbsp;
 								</td>
 								<td align=right>
-									From
+									<label for="modifiedFrom">From</label>
 								</td>
 								<td>
-									<input type="text" name="modifiedFrom"
+									<input type="text" name="modifiedFrom" id="modifiedFrom"
 										value="<%=sModifiedFrom%>" size="8" readonly
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center>
-									<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('modifiedFrom', event);">
+									<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('modifiedFrom', event);" alt="calendar">
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('modifiedFrom');"> Clear </a>
@@ -1690,10 +1690,10 @@ function LoadKeyHandler()
 									&nbsp;
 								</td>
 								<td align=right>
-									To
+									<label for="modifiedTo">To</label>
 								</td>
 								<td>
-									<input type="text" name="modifiedTo" value="<%=sModifiedTo%>"
+									<input type="text" name="modifiedTo" value="<%=sModifiedTo%>" id="modifiedTo"
 										size="8" readonly
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
@@ -1710,7 +1710,7 @@ function LoadKeyHandler()
 									&nbsp;
 								</td>
 								<td style="height: 20" colspan=4 valign=bottom>
-									<b> Modifier </b>
+									<b> <label for="modifier">Modifier</label> </b>
 								</td>
 							</tr>
 							<tr>
@@ -1718,7 +1718,7 @@ function LoadKeyHandler()
 									&nbsp;
 								</td>
 								<td style="height: 35" colspan=4 valign=top>
-									<select name="modifier" size="1" style="width: 172px"
+									<select name="modifier" size="1" style="width: 172px" id="modifier"
 										valign="top"
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 										<option value="allUsers"
@@ -1760,13 +1760,13 @@ function LoadKeyHandler()
 				<tr>
 					<td class="dashed-black" colspan=2>
 						<div align="left">
-							<b> <%=item++%> )&nbsp;&nbsp;Display Attributes: </b> &nbsp;<input type="button" name="updateDisplayBtn" value="Update"
+							<b> <%=item++%> )&nbsp;&nbsp;<label for="listAttrFilter">Display Attributes:</label> </b> &nbsp;<input type="button" name="updateDisplayBtn" value="Update"
 								onClick="<%=updFunction%>"
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
 						</div>
 						<br>
 						<div align="right" valign="bottom">
-							<select name="listAttrFilter" size="4" style="width: 175px"
+							<select name="listAttrFilter" size="4" style="width: 175px" id="listAttrFilter"
 								multiple valign="bottom"
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
 								<%
@@ -1802,8 +1802,8 @@ function LoadKeyHandler()
 				<tr>
 					<td height="35" valign="bottom" colspan="2">
 						<div align="left">
-							Results Displayed:
-							<select name="recordsDisplayed" size="1" style="width: 160">
+							<label for="recordsDisplayed">Results Displayed:</label>
+							<select name="recordsDisplayed" size="1" style="width: 160" id="recordsDisplayed">
 							
 								<option value="500" <% if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && sessionRecordsDisplayed.equals("500")){ %>
 								selected<%} %>>

@@ -229,12 +229,12 @@ function linkNCICB()
 			<tr bgcolor="#A90101">
 				<td align="left">
 					<a href="http://www.cancer.gov" target=_blank>
-						<img src="images/brandtype.gif" border="0">
+						<img src="images/brandtype.gif" border="0" alt="NCI Logo">
 					</a>
 				</td>
 				<td align="right">
 					<a href="http://www.cancer.gov" target=_blank>
-						<img src="images/tagline_nologo.gif" border="0">
+						<img src="images/tagline_nologo.gif" border="0" alt="no logo">
 					</a>
 				</td>
 			</tr>

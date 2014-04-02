@@ -52,8 +52,8 @@ L--%>
                         <table style="border-collapse: collapse"><col align="right"/><col />
                             <br/>
                             <tr><td colspan = "2" align = "center"><b>Please enter User Name and Password.</b></td></tr>
-                            <tr><td style="padding: 0.2in 0.1in 0.1in 0.1in"><b>User&nbsp;Name</b></td><td style="padding: 0.2in 0.1in 0.1in 0.1in"><input type="text" name="Username" value="" size="25"/></td></tr>
-                            <tr><td style="padding: 0.1in 0.1in 0.1in 0.1in"><b>Password</b></td><td style="padding: 0.1in 0.1in 0.1in 0.1in"><input type="password" name="Password" value="" size="25"/></td></tr>
+                            <tr><td style="padding: 0.2in 0.1in 0.1in 0.1in"><b><label for="Username">User&nbsp;Name</label></b></td><td style="padding: 0.2in 0.1in 0.1in 0.1in"><input type="text" name="Username" id="Username" value="" size="25"/></td></tr>
+                            <tr><td style="padding: 0.1in 0.1in 0.1in 0.1in"><b><label for="Password">Password</label></b></td><td style="padding: 0.1in 0.1in 0.1in 0.1in"><input type="password" name="Password" id="Password" value="" size="25"/></td></tr>
                             <tr><td style="padding: 0.1in 0.1in 0.2in 0.1in" align="left">&nbsp;</td><td style="padding: 0.1in 0.1in 0.2in 0.1in" align="right"><input type="Submit" value="Login" name="login" onclick="javascript:callMessageGifLogin();"/> <input type="button" value="Cancel" name="cancel" onclick="javascript:CloseWindow();"/></td></tr>
                         </table>
                       </form>

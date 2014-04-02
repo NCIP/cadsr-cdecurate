@@ -72,7 +72,7 @@ public class MenuTag extends TagSupport {
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		String tag = "";
 		if (request != null){
-		 tag = "<img src=\""+ request.getContextPath() +"/images/CheckBox.gif\" border=\"0\">";
+		 tag = "<img src=\""+ request.getContextPath() +"/images/CheckBox.gif\" border=\"0\" alt=\"image menu\">";
 		} 
 		return tag;
 		

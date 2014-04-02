@@ -1024,7 +1024,7 @@ function ShowSelectedRowss(){
 				     
                        <td valign="top" align="left">
                        <div class = "scItem">
-                         <b>Search For</b>
+                         <b><label for="listSearchFor">Search For</label></b>
                         </div> 
                       </td>
                      </tr>
@@ -1036,7 +1036,7 @@ function ShowSelectedRowss(){
 						if (!sMenuAction.equals("searchForCreate")) {
 						%>
 						
-						<select name="listSearchFor" size="1" style="width: 185"
+						<select name="listSearchFor" size="1" style="width: 185" id="listSearchFor"
 							onChange="doSearchForChange();"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="ClassSchemeItems"
@@ -1109,14 +1109,14 @@ function ShowSelectedRowss(){
                      <tr>
                      
                         <td> <div class = "scItem">    
-                              <b>Search In</b></div>
+                              <b><label for="listSearchIn">Search In</label></b></div>
                         </td> 
                            
                      </tr>
                      <tr>
                         <td>       
                                 <div style="padding-left: 20px">
-                                    <select name="listSearchIn" size="1" style="width: 185"
+                                    <select name="listSearchIn" size="1" style="width: 185" id="listSearchIn"
 							onChange="doSearchInChange();"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<!-- include names&definition only if not questions-->
@@ -1313,13 +1313,13 @@ function ShowSelectedRowss(){
 				     %>     
                       <tr>
                         <td>  <div class = "scItem">      
-                              <b>Enter Protocol ID</b></div>
+                              <b><label for="protoKeyword">Enter Protocol ID</label></b></div>
                         </td> 
                      </tr>   
                      <tr>
                        <td>
                          <div style="padding-left: 20px">
-						 <input type="text" name="protoKeyword" size="24"
+						 <input type="text" name="protoKeyword" size="24" id="protoKeyword"
 							value="<%=sProtoKeyword%>"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 					   </div> 
@@ -1328,7 +1328,7 @@ function ShowSelectedRowss(){
 					 
 					  <tr>
                         <td>  <div class = "scItem">      
-                              <b>Enter CRF Name</b></div>
+                              <b><label for="keyword">Enter CRF Name</label></b></div>
                         </td> 
                      </tr>        
                       <!--keep the seach term for all other cases-->
@@ -1337,7 +1337,7 @@ function ShowSelectedRowss(){
 				     %>     
                            <tr>
                         <td> <div class = "scItem">       
-                              <b>Enter Search Term</b></div>
+                              <b><label for="keyword">Enter Search Term</label></b></div>
                               <div style="padding-left: 20px">
                                     <i>use * as wildcard</i><br/>
                               </div>
@@ -1351,7 +1351,7 @@ function ShowSelectedRowss(){
                      <!-- same input box for crf name and other keyword searches -->      
                      <tr>     
                       <td><div style="padding-left: 20px">
-						<input type="text" name="keyword" size="24" style="width: 185"
+						<input type="text" name="keyword" size="24" style="width: 185" id="keyword"
 							value="<%=sLastKeyword%>"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 					  </div>
@@ -1410,14 +1410,14 @@ function ShowSelectedRowss(){
                  <tr>          
                    <td>
                        <div style="padding-left: 20px">    
-                       <b>Context</b>
+                       <b><label for="listMultiContextFilter">Context</label></b>
                        </div>
                    </td> 
                  </tr>                 
                  <tr>
                    <td>
                        <div style="padding-left: 20px">    
-                        <select name="listMultiContextFilter" size="5" style="width: 185"
+                        <select name="listMultiContextFilter" size="5" style="width: 185" id="listMultiContextFilter"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								<option value="All (No Test/Train)"
@@ -1471,28 +1471,28 @@ function ShowSelectedRowss(){
                      
                  <tr>
                   <td><div style="padding-left: 20px">
-                   <input type="radio" name="rContextUse" value="OWNED_BY"
+                   <input type="radio" name="rContextUse" value="OWNED_BY" id="owned"
 							<%if(sContextUse.equals("OWNED_BY")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-						Owned By</div>
+						<label for="owned">Owned By</label></div>
 					</td>
 				</tr> 
 				
 				<tr>
                   <td><div style="padding-left: 20px">
-                   <input type="radio" name="rContextUse" value="USED_BY"
+                   <input type="radio" name="rContextUse" value="USED_BY" id="used"
 							<%if(sContextUse.equals("USED_BY")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-						Used By
+						<label for="used">Used By</label>
 					</td>
 				</tr>    
 				
 				<tr>
                   <td><div style="padding-left: 20px">
-                   <input type="radio" name="rContextUse" value="BOTH"
+                   <input type="radio" name="rContextUse" value="BOTH" id="both"
 							<%if(sContextUse.equals("BOTH")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-						Owned By/Used By
+						<label for="both">Owned By/Used By</label>
 					</td>
 				</tr>       
                             
@@ -1512,25 +1512,25 @@ function ShowSelectedRowss(){
                             
                  <tr>
                    <td><div class="scSubItem">
-                                    <b>Version</b></div>           
+                                    <b><label for="tVersion">Version</label><label for="other">&nbsp;</label></b></div>           
                    </td>         
                  </tr>           
                  <tr>
 					<td align=left>
 					<div style="padding-left: 20px">
-						<input type="radio" name="rVersion" value="All"
+						<input type="radio" name="rVersion" value="All" id="all"
 							onclick="javascript:removeOtherText();"
 							<%if(sVersion.equals("All")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-						All&nbsp;
-						<input type="radio" name="rVersion" value="Yes"
+						<label for="all">All&nbsp;</label>
+						<input type="radio" name="rVersion" value="Yes" id="latest"
 							onclick="javascript:removeOtherText();"
 							<%if(sVersion.equals("Yes")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-						Latest&nbsp;
-						<input type="radio" name="rVersion" value="Other"
+						<label for="latest">Latest&nbsp;</label>
+						<input type="radio" name="rVersion" value="Other" id="other"
 							<% if (sVersion.equals("Other")) { %> checked <% } %>
-							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false"><input type="text" name="tVersion" value="<%=txVersion%>"
+							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false"><input type="text" name="tVersion" id="tVersion" value="<%=txVersion%>"
 							maxlength="5" size="3" style="height: 20"
 							onkeyup="javascript:enableOtherVersion();"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
@@ -1553,20 +1553,20 @@ function ShowSelectedRowss(){
 				<!-- check box value domain type -->
 				<tr>
 					<td ><div style="padding-left: 20px">
-						<input type="checkbox" name="enumBox" value="E"
+						<input type="checkbox" name="enumBox" value="E" id="enumBox"
 							<%if(typeEnum != null && typeEnum.equals("E")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-						Enumerated
+						<label for="enumBox">Enumerated</label>
 					</div>
 					</td>
 				</tr>
 				<tr>
 					<td><div style="padding-left: 20px">
-						<input type="checkbox" name="nonEnumBox" value="N"
+						<input type="checkbox" name="nonEnumBox" value="N" id="nonEnumBox"
 							<%if(typeNonEnum != null && typeNonEnum.equals("N")){%> checked
 							<%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-						Non-Enumerated
+						<label for="nonEnumBox">Non-Enumerated</label>
 					</div>
 					</td>
 				</tr> 
@@ -1588,12 +1588,12 @@ function ShowSelectedRowss(){
                             
                  <tr>
                    <td><div class="scSubItem">
-                        <b>Classification Schemes</b></div>           
+                        <b><label for="listCSName">Classification Schemes</label></b></div>           
                    </td>         
                  </tr>                  
                  <tr>
                    <td><div style="padding-left: 20px">
-						<select name="listCSName" size="1" style="width: 185" valign="top"
+						<select name="listCSName" size="1" style="width: 185" valign="top" id="listCSName"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="AllSchemes" selected>
 								All Schemes
@@ -1626,12 +1626,12 @@ function ShowSelectedRowss(){
 				%>               
                  <tr>
                    <td><div class="scSubItem">
-                        <b> Conceptual Domain </b>         
+                        <b> <label for="listCDName">Conceptual Domain</label> </b>         
                    </td>         
                  </tr>     
                  <tr>
                   <td><div style="padding-left: 20px">
-						<select name="listCDName" size="1" style="width: 185" valign="top"
+						<select name="listCDName" size="1" style="width: 185" valign="top" id="listCDName"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="All Domains" <%if(selCD.equals("All Domains")){%>
 								selected <%}%>>
@@ -1664,12 +1664,12 @@ function ShowSelectedRowss(){
                 <tr>
                  <td>
                      <div class="scSubItem">
-                         <b>Registration Status</b>      
+                         <b><label for="listRegStatus">Registration Status</label></b>      
                  </td>        
                 </tr>
                 <tr>
                    <td><div style="padding-left: 20px">
-						<select name="listRegStatus" size="1" style="width: 185"
+						<select name="listRegStatus" size="1" style="width: 185" id="listRegStatus"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allReg"
 								<%if (vRegStatus == null || vRegStatus.size()==0 
@@ -1707,12 +1707,12 @@ function ShowSelectedRowss(){
 				%>
                   <tr>
                    <td><div class="scSubItem">
-                        <b>Workflow Status</b>         
+                        <b><label for="listStatusFilter">Workflow Status</label></b>         
                    </td>         
                  </tr>    
                  <tr>
 					<td><div style="padding-left: 20px">
-						<select name="listStatusFilter" size="5" style="width: 185"
+						<select name="listStatusFilter" size="5" style="width: 185" id="listStatusFilter"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<!--store the status list as per the CONCEPT SEARCH  -->
@@ -1824,12 +1824,12 @@ function ShowSelectedRowss(){
                 <tr>
                  <td>
                      <div class="scSubItem">
-                         <b>Registration Status</b>      
+                         <b><label for="listRegStatus1">Registration Status</label></b>      
                  </td>        
                 </tr>
                 <tr>
                    <td><div style="padding-left: 20px">
-						<select name="listRegStatus" size="1" style="width: 185"
+						<select name="listRegStatus" size="1" style="width: 185" id="listRegStatus1"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allReg"
 								<%if (vRegStatus == null || vRegStatus.size()==0 
@@ -1865,12 +1865,12 @@ function ShowSelectedRowss(){
                    <tr>
                  <td>
                      <div class="scSubItem">
-                         <b> Value Domain Data Type</b>      
+                         <b> <label for="listDataType">Value Domain Data Type</label></b>      
                  </td>        
                 </tr>     
                 <tr>
                   <td><div style="padding-left: 20px">
-						<select name="listDataType" size="1" style="width: 185"
+						<select name="listDataType" size="1" style="width: 185" id="listDataType"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allData"
 								<%if (vDataType == null || vDataType.size()==0 
@@ -1913,12 +1913,12 @@ function ShowSelectedRowss(){
                  <tr>
                  <td>
                      <div class="scSubItem">
-                         <b> Derivation Type </b>      
+                         <b> <label for="listDeriveType">Derivation Type</label> </b>      
                  </td>        
                 </tr>        
                 <tr>
                     <td> <div style="padding-left: 20px">
-						<select name="listDeriveType" size="1" style="width: 185"
+						<select name="listDeriveType" size="1" style="width: 185" id="listDeriveType"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allDer"
 								<%if (vDerType == null || vDerType.size()==0 
@@ -1973,10 +1973,10 @@ function ShowSelectedRowss(){
 									&nbsp;
 								</td>
 								<td align=right>
-									From
+									<label for="createdFrom">From</label>
 								</td>
 								<td>
-									<input type="text" name="createdFrom" value="<%=sCreatedFrom%>"
+									<input type="text" name="createdFrom" value="<%=sCreatedFrom%>" id="createdFrom"
 										size="8" readonly
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
@@ -1993,10 +1993,10 @@ function ShowSelectedRowss(){
 									&nbsp;
 								</td>
 								<td align=right>
-									To
+									<label for="createdTo">To</label>
 								</td>
 								<td>
-									<input type="text" name="createdTo" value="<%=sCreatedTo%>"
+									<input type="text" name="createdTo" value="<%=sCreatedTo%>" id="createdTo"
 										size="8" readonly
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
@@ -2015,7 +2015,7 @@ function ShowSelectedRowss(){
 									&nbsp;
 								</td>
 								<td style="height: 20" colspan=4 valign=bottom>
-									<b> Creator </b>
+									<b> <label for="creator">Creator</label> </b>
 								</td>
 							<tr>
 							</tr>
@@ -2024,7 +2024,7 @@ function ShowSelectedRowss(){
 									&nbsp;
 								</td>
 								<td style="height: 20" colspan=4 valign=top><div style="padding-left: 20px">
-									<select name="creator" size="1" style="width: 173" valign="top"
+									<select name="creator" size="1" style="width: 173" valign="top" id="creator"
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 										<option value="allUsers"
 											<%if (vUsers == null || vUsers.size()==0 
@@ -2070,11 +2070,11 @@ function ShowSelectedRowss(){
 									&nbsp;
 								</td>
 								<td align=right>
-									From
+									<label for="modifiedFrom">From</label>
 								</td>
 								<td>
 									<input type="text" name="modifiedFrom"
-										value="<%=sModifiedFrom%>" size="8" readonly
+										value="<%=sModifiedFrom%>" size="8" readonly id="modifiedFrom"
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center>
@@ -2090,10 +2090,10 @@ function ShowSelectedRowss(){
 									&nbsp;
 								</td>
 								<td align=right>
-									To
+									<label for="modifiedTo">To</label>
 								</td>
 								<td>
-									<input type="text" name="modifiedTo" value="<%=sModifiedTo%>"
+									<input type="text" name="modifiedTo" value="<%=sModifiedTo%>" id="modifiedTo"
 										size="8" readonly
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
@@ -2112,7 +2112,7 @@ function ShowSelectedRowss(){
 									&nbsp;
 								</td>
 								<td style="height: 20" colspan=4 valign=bottom>
-									<b> Modifier </b>
+									<b> <label for="modifier">Modifier</label> </b>
 								</td>
 							</tr>
 							<tr>
@@ -2122,7 +2122,7 @@ function ShowSelectedRowss(){
 								
 								<td style="height: 35" colspan=4 valign=top>
 									<div style="padding-left: 20px">
-									<select name="modifier" size="1" style="width: 173"
+									<select name="modifier" size="1" style="width: 173" id="modifier"
 										valign="top"
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 										<option value="allUsers"
@@ -2162,7 +2162,7 @@ function ShowSelectedRowss(){
                 <tr>
                   <td>
                       <div class="scItem">
-                         <b>Display Attributes</b> &nbsp;
+                         <b><label for="listAttrFilter">Display Attributes</label></b> &nbsp;
                          <input type="button" name="updateDisplayBtn" value="Update"
 								onClick="<%=updFunction%>" 
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">                              
@@ -2172,7 +2172,7 @@ function ShowSelectedRowss(){
                <tr>
                 <td>
                    <div style="padding-left: 20px">
-                      <select name="listAttrFilter" size="5" style="width: 185"
+                      <select name="listAttrFilter" size="5" style="width: 185" id="listAttrFilter"
 								multiple valign="bottom"
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
 								<%
@@ -2208,8 +2208,8 @@ function ShowSelectedRowss(){
                  				<tr>
 					<td align="center" class="scItem">
 						<div align="left">
-							Results Displayed:
-							<select name="recordsDisplayed" size="1" style="width: 160">
+							<label for="recordsDisplayed">Results Displayed:</label>
+							<select name="recordsDisplayed" size="1" style="width: 160" id="recordsDisplayed">
 							
 								<option value="500" <% if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && sessionRecordsDisplayed.equals("500")){ %>
 								selected<%} %>>
@@ -2324,7 +2324,7 @@ function ShowSelectedRowss(){
 				<tr>
 					<td><%if ((show != null) && (show.equals("Yes")) ){ %><input type="button" name="defaultSortBtn" value="Default Sort" onClick="doSearchDE();"><%}%>
 						<font size="2">
-							&nbsp;
+							<label for="allCK">&nbsp;</label>
 							<%=nRecs%>
 							of <%=totalRecords%> Records Displayed <%if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && !sessionRecordsDisplayed.equals("0")) { %>
 										    (search limited to first <%=sessionRecordsDisplayed %> results) <%} else if (sessionRecordsDisplayed != null && sessionRecordsDisplayed.equals("0")) {%>
@@ -2341,13 +2341,13 @@ function ShowSelectedRowss(){
 				 <tr valign="middle">
 					<%    if (sSelAC.equals("Data Element") || !sMAction.equals("searchForCreate")) {     %>
 					<th class="rsCell">
-						    <input type="checkbox" <%if((sSelectAll).equals("true")){%>checked<%}%> onClick="javascript:SelectUnSelectCheckBox();" name = "allCK" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
+						    <input type="checkbox" <%if((sSelectAll).equals("true")){%>checked<%}%> onClick="javascript:SelectUnSelectCheckBox();" name = "allCK" id = "allCK" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 					</th>
 					<th class="rsCell">
 					</th>
 					<%    } else   { %>
 					<th class="rsCell">
-						<img src="images/CheckBox.gif" border="0" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
+						<img src="images/CheckBox.gif" border="0" alt="check-box" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 					</th>
 					
 					<%    } %>
