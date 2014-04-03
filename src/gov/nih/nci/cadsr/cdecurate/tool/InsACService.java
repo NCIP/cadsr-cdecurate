@@ -15,6 +15,7 @@ import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.PropertyHelper;
 import gov.nih.nci.cadsr.persist.concept.Con_Derivation_Rules_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.de.DeComp;
 import gov.nih.nci.cadsr.persist.de.DeErrorCodes;
@@ -44,6 +45,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
@@ -1638,7 +1640,7 @@ public class InsACService implements Serializable {
 					cstmt = m_servlet
 							.getConn()
 							.prepareCall(
-									"{call SBREXT_SET_ROW.SET_OC_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+									"{call SBREXT_SET_ROW.SET_OC_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
 					// cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); //
 					// ua_name
 					cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // return
@@ -1674,6 +1676,7 @@ public class InsACService implements Serializable {
 					cstmt.setString(2, sOCCondrString); // comma-delimited con
 					// idseqs
 					cstmt.setString(3, sContextID);
+					cstmt.setString(24, PropertyHelper.getDefaultContextName());	//GF32649
 					cstmt.execute();
 					sReturnCode = cstmt.getString(4);
 					sOCL_IDSEQ = cstmt.getString(5);
@@ -1827,7 +1830,7 @@ public class InsACService implements Serializable {
 					cstmt = m_servlet
 							.getConn()
 							.prepareCall(
-									"{call SBREXT_SET_ROW.SET_PROP_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+									"{call SBREXT_SET_ROW.SET_PROP_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");		//GF32649
 					// cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); //
 					// ua_name
 					cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // return
@@ -1861,6 +1864,7 @@ public class InsACService implements Serializable {
 					// idseqs
 					cstmt.setString(3, sContextID);
 					// Now we are ready to call the stored procedure
+					cstmt.setString(24, PropertyHelper.getDefaultContextName());	//GF32649
 					cstmt.execute();
 					sReturnCode = cstmt.getString(4);
 					sPROPL_IDSEQ = cstmt.getString(5);
@@ -2008,7 +2012,7 @@ public class InsACService implements Serializable {
 						cstmt = m_servlet
 								.getConn()
 								.prepareCall(
-										"{call SBREXT_SET_ROW.SET_REP_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+										"{call SBREXT_SET_ROW.SET_REP_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");	//GF32649
 						cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // return
 						// code
 						cstmt.registerOutParameter(5, java.sql.Types.VARCHAR); // OCL
@@ -2041,6 +2045,7 @@ public class InsACService implements Serializable {
 						cstmt.setString(2, sOCCondrString); // comma-delimited
 						// con idseqs
 						cstmt.setString(3, sContextID);
+						cstmt.setString(24, PropertyHelper.getDefaultContextName());	//GF32649
 						cstmt.execute();
 						sReturnCode = cstmt.getString(4);
 
@@ -5243,7 +5248,7 @@ public class InsACService implements Serializable {
 					cstmt = m_servlet
 							.getConn()
 							.prepareCall(
-									"{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+									"{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
 					// register the Out parameters
 					cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // return
 					// code
@@ -5317,7 +5322,7 @@ public class InsACService implements Serializable {
 					// Now we are ready to call the stored procedure
 					// logger.info("setConcept " +
 					// evsBean.getCONCEPT_IDENTIFIER());
-
+					cstmt.setString(23, PropertyHelper.getDefaultContextName());	//GF32649
 					cstmt.execute();
 					sReturnCode = cstmt.getString(2);
 					conIdseq = cstmt.getString(4);
@@ -5382,7 +5387,7 @@ public class InsACService implements Serializable {
 				cstmt = m_servlet
 						.getConn()
 						.prepareCall(
-								"{call SBREXT_GET_ROW.GET_CON(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+								"{call SBREXT_GET_ROW.GET_CON(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");	//GF32649
 				cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); // return
 				// code
 				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // con
@@ -5430,6 +5435,7 @@ public class InsACService implements Serializable {
 				logger.debug("EVS Bean at Line 5252 of InsACService.java IDSEQ"+evsBean.getIDSEQ()+"CONCEPT_IDENTIFIER"+evsBean.getCONCEPT_IDENTIFIER());
 				// code
 				// Now we are ready to call the stored procedure
+				cstmt.setString(22, PropertyHelper.getDefaultContextName());	//GF32649
 				cstmt.execute();
 				sCON_IDSEQ = (String) cstmt.getObject(2);
 				evsBean.setIDSEQ(sCON_IDSEQ);

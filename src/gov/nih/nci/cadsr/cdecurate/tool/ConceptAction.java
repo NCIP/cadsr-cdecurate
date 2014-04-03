@@ -14,6 +14,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.common.PropertyHelper;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -22,7 +23,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Vector;
+
 import oracle.jdbc.OracleTypes;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -267,7 +270,7 @@ public class ConceptAction implements Serializable
          if (data.getCurationServlet().getConn() != null)
          {
            //cstmt = conn.prepareCall("{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-           cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+           cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");		//GF32649
            // register the Out parameters
            cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //return code
            cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //con idseq
@@ -317,6 +320,7 @@ public class ConceptAction implements Serializable
            cstmt.setString(14, evsBean.getEVS_DEF_SOURCE());
            cstmt.setString(15, evsBean.getNCI_CC_TYPE());
             // Now we are ready to call the stored procedure
+           cstmt.setString(23, PropertyHelper.getDefaultContextName());		//GF32649
            cstmt.execute();
            String sReturnCode = cstmt.getString(2);
            String conIdseq = cstmt.getString(4);

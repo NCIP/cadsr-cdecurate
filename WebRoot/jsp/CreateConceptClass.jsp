@@ -13,6 +13,8 @@ L--%>
 <!-- goes to lgoin page if error occurs -->
 <%@page errorPage="ErrorPage.jsp"%>
 <%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
+<!-- GF32649 -->
+<%@ page import="gov.nih.nci.ncicb.cadsr.common.CaDSRUtil"%>
 <html>
 <head>
 		<!-- includes change for NCIP -->
@@ -465,9 +467,9 @@ L--%>
 											</option>
 											
 											<!-- GF32649 -->
-											<option value="NCIP"
+											<option value="<%=CaDSRUtil.getDefaultContextName()%>"
 												>
-												NCIP
+                                                <%=CaDSRUtil.getDefaultContextName()%>
 											</option>
 											
 											<option value="caCORE"

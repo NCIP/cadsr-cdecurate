@@ -13,11 +13,13 @@ L--%>
 
 <!--  goes to login page if error occurs -->
 <%@ taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
+<!-- GF32649 -->
+<%--<%@ page import="gov.nih.nci.ncicb.cadsr.common.CaDSRUtil"%>--%>
 <curate:checkLogon name="Userbean" page="/LoginE.jsp" />
 <html>
 	<head>
 		<title>
-			CDE Curation: Create Data Element Concept
+            CDE Curation: Create Data Element Concept
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<script>

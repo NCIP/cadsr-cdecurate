@@ -1,8 +1,10 @@
 package gov.nih.nci.cadsr.common;
 
 import gov.nih.nci.cadsr.cdecurate.util.CurationToolProperties;
+import gov.nih.nci.ncicb.cadsr.common.CaDSRUtil;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.util.Map;
 import java.util.Properties;
@@ -103,4 +105,21 @@ public class PropertyHelper {
         _logger.debug("PropertyHelper: " + _user + " property loaded.");
     }
     */
+
+	/**
+	 * GF32649 Default Context change for curation tool
+	 */
+	public static String getDefaultContextName() {
+		String retVal = "Unknown";
+
+		try {
+			retVal = CaDSRUtil.getDefaultContextName();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return retVal;
+	}
+
 }
