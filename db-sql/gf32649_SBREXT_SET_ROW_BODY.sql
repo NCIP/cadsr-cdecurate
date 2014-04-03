@@ -1,10 +1,3 @@
-/*L
-  Copyright ScenPro Inc, SAIC-F
-
-  Distributed under the OSI-approved BSD 3-Clause License.
-  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
-L*/
-
 --------------------------------------------------------
 --  Please run with SBREXT account
 --------------------------------------------------------
@@ -9074,7 +9067,8 @@ EXCEPTION
 
 END SET_OBJECT_CLASS;
 
-PROCEDURE SET_OC_CONDR(
+/* GF32649 not used, renamed */
+PROCEDURE SET_OC_CONDR_OLD(
 P_OC_con_array           IN VARCHAR2
 ,P_OC_CONTE_IDSEQ            IN VARCHAR2
 ,P_RETURN_CODE                OUT VARCHAR2
@@ -9096,7 +9090,8 @@ P_OC_con_array           IN VARCHAR2
 ,P_OC_MODIFIED_BY             OUT VARCHAR2
 ,P_OC_DELETED_IND             OUT VARCHAR2
 ,P_OC_CONDR_IDSEQ             OUT VARCHAR2
-,P_OC_ID                      OUT VARCHAR2) IS
+,P_OC_ID                      OUT VARCHAR2
+) IS
 
 v_Exists NUMBER;
 v_Condr_idseq con_Derivation_rules_ext.condr_idseq%type;
@@ -9108,7 +9103,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'NCIP';	--GF32649
+  where upper(name) = 'NCIP';    --GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -9205,7 +9200,8 @@ P_RETURN_CODE := SUBSTR(sqlerrm,1,255);
 END;
 
 
-PROCEDURE SET_PROP_CONDR(
+/* GF32649 not used, renamed */
+PROCEDURE SET_PROP_CONDR_OLD(
 P_PROP_con_array           IN VARCHAR2
 ,P_PROP_CONTE_IDSEQ            IN VARCHAR2
 ,P_RETURN_CODE                OUT VARCHAR2
@@ -9238,7 +9234,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'NCIP';	--GF32649
+  where upper(name) = 'NCIP';    --GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -9335,7 +9331,7 @@ EXCEPTION WHEN OTHERS THEN
 P_RETURN_CODE := 'Error Creating Property';
 
 END;
-PROCEDURE SET_CONCEPT(
+PROCEDURE SET_CONCEPT_OLD(
 P_RETURN_CODE              OUT VARCHAR2
 ,P_ACTION         IN VARCHAR2
 ,P_CON_IDSEQ             OUT VARCHAR2
@@ -9356,7 +9352,8 @@ P_RETURN_CODE              OUT VARCHAR2
 ,P_CON_CREATED_BY       OUT VARCHAR2
 ,P_CON_DATE_MODIFIED           OUT VARCHAR2
 ,P_CON_MODIFIED_BY             OUT VARCHAR2
-,P_CON_DELETED_IND             OUT VARCHAR2)
+,P_CON_DELETED_IND             OUT VARCHAR2
+)
 IS
 /******************************************************************************
    NAME:       SET_CONCEPT
@@ -9410,7 +9407,7 @@ BEGIN
    begin
     select conte_idseq into p_Con_Conte_idseq
     from contexts
-    where upper(name) = 'NCIP';	--GF32649
+    where upper(name) = 'NCIP';    --GF32649
    exception when no_data_found then
      P_RETURN_CODE := 'API_CON_106';  --CONTEXT_NAME cannot be null here
   RETURN;
@@ -9780,7 +9777,7 @@ EXCEPTION
   WHEN OTHERS THEN
     NULL;
 
-END SET_CONCEPT;
+END SET_CONCEPT_OLD;
 
 PROCEDURE SET_representation(
  P_RETURN_CODE                  OUT VARCHAR2
@@ -10260,7 +10257,8 @@ EXCEPTION
 
 END SET_representation;
 
-PROCEDURE SET_REP_CONDR(
+/* GF32649 not used, renamed */
+PROCEDURE SET_REP_CONDR_OLD(
 P_REP_con_array           IN VARCHAR2
 ,P_REP_CONTE_IDSEQ            IN VARCHAR2
 ,P_RETURN_CODE                OUT VARCHAR2
@@ -10294,7 +10292,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'NCIP';	--GF32649
+  where upper(name) = 'NCIP';    --GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -14747,7 +14745,7 @@ P_UA_NAME   IN VARCHAR2
 ,P_PV_LOW_VALUE_NUM         IN OUT NUMBER
 ,P_PV_HIGH_VALUE_NUM      IN OUT NUMBER
 ,P_PV_END_DATE              IN OUT VARCHAR2
-,P_PV_VM_IDSEQ          	IN OUT VARCHAR2
+,P_PV_VM_IDSEQ              IN OUT VARCHAR2
 ,P_PV_CREATED_BY         OUT VARCHAR2
 ,P_PV_DATE_CREATED         OUT VARCHAR2
 ,P_PV_MODIFIED_BY         OUT VARCHAR2
@@ -20264,7 +20262,9 @@ PROCEDURE SET_OC_CONDR(
 ,P_OC_MODIFIED_BY             OUT VARCHAR2
 ,P_OC_DELETED_IND             OUT VARCHAR2
 ,P_OC_CONDR_IDSEQ             OUT VARCHAR2
-,P_OC_ID                      OUT VARCHAR2) IS
+,P_OC_ID                      OUT VARCHAR2
+,P_DEFAULT_CONTE_NAME           IN VARCHAR2   /* GF32649 */
+) IS
 
 v_Exists NUMBER;
 v_Condr_idseq con_Derivation_rules_ext.condr_idseq%type;
@@ -20279,7 +20279,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'NCIP';	--GF32649
+  where upper(name) = P_DEFAULT_CONTE_NAME;    --GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -20400,7 +20400,9 @@ PROCEDURE SET_PROP_CONDR(
 ,P_PROP_MODIFIED_BY             OUT VARCHAR2
 ,P_PROP_DELETED_IND             OUT VARCHAR2
 ,P_PROP_CONDR_IDSEQ             OUT VARCHAR2
-,P_PROP_ID             OUT VARCHAR2) IS
+,P_PROP_ID             OUT VARCHAR2
+,P_DEFAULT_CONTE_NAME           IN VARCHAR2   /* GF32649 */
+) IS
 
 v_Exists number;
 v_Condr_idseq con_Derivation_rules_ext.condr_idseq%type;
@@ -20414,7 +20416,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'NCIP';	--GF32649
+  where upper(name) = P_DEFAULT_CONTE_NAME;    --GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -20532,7 +20534,9 @@ P_UA_NAME       IN VARCHAR2
 ,P_CON_CREATED_BY       OUT VARCHAR2
 ,P_CON_DATE_MODIFIED           OUT VARCHAR2
 ,P_CON_MODIFIED_BY             OUT VARCHAR2
-,P_CON_DELETED_IND             OUT VARCHAR2)
+,P_CON_DELETED_IND             OUT VARCHAR2
+,P_DEFAULT_CONTE_NAME           IN VARCHAR2   /* GF32649 */
+)
 IS
 /******************************************************************************
    NAME:       SET_CONCEPT
@@ -20589,7 +20593,7 @@ BEGIN
    begin
     select conte_idseq into p_Con_Conte_idseq
     from contexts
-    where upper(name) = 'NCIP';	--GF32649
+    where upper(name) = P_DEFAULT_CONTE_NAME;    --GF32649
    exception when no_data_found then
      P_RETURN_CODE := 'API_CON_106';  --CONTEXT_NAME cannot be null here
   RETURN;
@@ -21467,7 +21471,9 @@ PROCEDURE SET_REP_CONDR(
 ,P_REP_MODIFIED_BY             OUT VARCHAR2
 ,P_REP_DELETED_IND             OUT VARCHAR2
 ,P_REP_CONDR_IDSEQ            OUT VARCHAR2
-,P_REP_ID            OUT VARCHAR2) IS
+,P_REP_ID            OUT VARCHAR2
+,P_DEFAULT_CONTE_NAME           IN VARCHAR2   /* GF32649 */
+) IS
 
 v_Exists NUMBER;
 v_Condr_idseq con_Derivation_rules_ext.condr_idseq%type;
@@ -21482,7 +21488,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = 'NCIP';	--GF32649
+  where upper(name) = P_DEFAULT_CONTE_NAME;    --GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
