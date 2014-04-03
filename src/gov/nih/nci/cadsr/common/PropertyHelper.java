@@ -25,7 +25,9 @@ public class PropertyHelper {
 	public static String LOGO_LINK;
 	public static String EMAIL_ID;
 	public static String EMAIL_PWD;
-	
+	//GF32679
+	public static String DEFAULT_CONTEXT_NAME;
+
 	public static String getHELP_LINK() {
 		return HELP_LINK;
 	}
@@ -110,16 +112,18 @@ public class PropertyHelper {
 	 * GF32649 Default Context change for curation tool
 	 */
 	public static String getDefaultContextName() {
-		String retVal = "Unknown";
-
-		try {
-			retVal = CaDSRUtil.getDefaultContextName();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(DEFAULT_CONTEXT_NAME == null) {
+			try {
+				DEFAULT_CONTEXT_NAME = CaDSRUtil.getDefaultContextName();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		
-		return retVal;
+
+		System.out.println("****** DEFAULT_CONTEXT_NAME = [" + DEFAULT_CONTEXT_NAME + "] from cadsrutil.properties ******");
+
+		return DEFAULT_CONTEXT_NAME;
 	}
 
 }
