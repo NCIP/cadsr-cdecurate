@@ -5,6 +5,7 @@ Notes: This is just a test for parallel test of the old context name in the prod
 Please run the scripts (with the proper account as suggested in the brackets after the script name) in the order specified as the following:
 
 create_context_caBIG.sql (SBR)
+update_default_context_to_caBIG.sql (SBREXT)
 change_default_context_to_caBIG.sql (SBR)
 --gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql (SBREXT)
 --gf32649_MAINTAIN_CONCEPTS_BODY.sql (SBREXT)
