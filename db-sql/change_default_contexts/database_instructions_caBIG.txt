@@ -1,0 +1,22 @@
+*** All scripts related to default context changes back to caBIG ***
+
+Notes: This is just a test for parallel test of the old context name in the production.
+
+Please run the scripts (with the proper account as suggested in the brackets after the script name) in the order specified as the following:
+
+create_context_caBIG.sql (SBR)
+change_default_context_to_caBIG.sql (SBR)
+--gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql (SBREXT)
+--gf32649_MAINTAIN_CONCEPTS_BODY.sql (SBREXT)
+gf32649_SBREXT_GET_ROW_SPEC.sql (SBREXT)
+gf32649_SBREXT_GET_ROW_BODY.sql (SBREXT)
+gf32649_SBREXT_SET_ROW_SPEC.sql (SBREXT)
+gf32649_SBREXT_SET_ROW_BODY.sql (SBREXT)
+change_user_groups_sc_groups_backup_cleanup.sql (SBR)
+change_user_groups_sc_groups_to_caBIG.sql (SBR)
+delete_context_caBIG.sql (SBREXT, yes it is SBREXT not SBR)
+
+The first and therefore the last scripts are optional, depending if caBIG already exists or not the target database.
+-- means commented out and should not be executed for now, until it is proven that it is needed.
+
+End of instruction.
