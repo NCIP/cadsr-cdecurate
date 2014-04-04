@@ -12,11 +12,13 @@ gf32649_SBREXT_GET_ROW_SPEC.sql (SBREXT)
 gf32649_SBREXT_GET_ROW_BODY.sql (SBREXT)
 gf32649_SBREXT_SET_ROW_SPEC.sql (SBREXT)
 gf32649_SBREXT_SET_ROW_BODY.sql (SBREXT)
-change_user_groups_sc_groups_backup_cleanup.sql (SBR)
 change_user_groups_sc_groups_to_caBIG.sql (SBR)
-delete_context_caBIG.sql (SBREXT, yes it is SBREXT not SBR)
 
-The first and therefore the last scripts are optional, depending if caBIG already exists or not the target database.
+Please run the scripts once the test is over:
+
+change_user_groups_sc_groups_backup_cleanup.sql (SBR)
+delete_context_caBIG.sql (SBR)
+
 -- means commented out and should not be executed for now, until it is proven that it is needed.
 
 End of instruction.
