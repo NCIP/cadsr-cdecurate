@@ -1,6 +1,8 @@
 --Run with SBR user
 update sbr.contexts_view  set name='caBIG' where conte_idseq=(select tv.value from sbrext.tool_options_view_ext tv , sbr.contexts_view  cv where tv.tool_name = 'caDSR' and tv.property = 'DEFAULT_CONTEXT' and tv.value = cv.conte_idseq)
 /
+update sbr.contexts  set name='caBIG' where conte_idseq=(select tv.value from sbrext.tool_options_view_ext tv , sbr.contexts_view  cv where tv.tool_name = 'caDSR' and tv.property = 'DEFAULT_CONTEXT' and tv.value = cv.conte_idseq)
+/
 update sbrext.tool_options_view_ext set value = 'caBIG' where property = 'REPTERM.DEFAULT.CONTEXT'
 /
 update SBR.CONCEPTUAL_DOMAINS set preferred_name = 'caBIG', long_name = 'caBIG' where preferred_name = 'NCIP'
