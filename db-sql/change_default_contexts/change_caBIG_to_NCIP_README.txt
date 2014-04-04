@@ -156,7 +156,7 @@ Table created.
 *************************************************************************************
 ONLY IF the update is successful (like after the user's test), execute the following:
 
-SQL> @change_user_groups_sc_groups_to_NCIP_cleanup.sql
+SQL> @change_user_groups_sc_groups_backup_cleanup.sql
 
 Table dropped.
 

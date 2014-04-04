@@ -1,10 +1,3 @@
-/*L
-  Copyright ScenPro Inc, SAIC-F
-
-  Distributed under the OSI-approved BSD 3-Clause License.
-  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
-L*/
-
 --------------------------------------------------------
 --  Please run with SBREXT account
 --------------------------------------------------------
@@ -30,7 +23,7 @@ begin
 
 select conte_idseq into v_Conte_idseq
 from contexts
-where upper(name) = 'NCIP';	--GF32649 changed CABIG to NCI
+where upper(name) = 'NCIP';    --GF32649 changed CABIG to NCI
 
 select count(*) into v_count
 from concepts_Ext
