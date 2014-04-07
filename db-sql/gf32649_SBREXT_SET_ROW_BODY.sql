@@ -9386,7 +9386,7 @@ v_conte_idseq contexts.conte_idseq%type;
 BEGIN
 
   -- dbms_output.put_line(CHR(10) || 'No data found for ' || DECID.LONG_NAME || ' (' || DECID.DEC_ID || ')');
-	dbms_output.put_line('SET_CONCEPT_OLD called');
+    dbms_output.put_line('SET_CONCEPT_OLD called');
 
   P_RETURN_CODE := NULL;
 
@@ -15065,6 +15065,9 @@ v_end_date DATE := NULL;
 
 
 BEGIN
+	
+	dbms_output.put_line('SET_VD_PVS entered P_VDPVS_PV_IDSEQ = [' || P_VDPVS_PV_IDSEQ || ']');
+	dbms_output.put_line('SET_VD_PVS entered P_VDPVS_CONTE_IDSEQ = [' || P_VDPVS_CONTE_IDSEQ || ']');
 
   P_RETURN_CODE := NULL;
 
@@ -20570,8 +20573,8 @@ v_Count number;
 v_conte_idseq contexts.conte_idseq%type;
 
 BEGIN
-	dbms_output.put_line('SET_CONCEPT called');
-	dbms_output.put_line('SET_CONCEPT P_DEFAULT_CONTE_NAME = [' || P_DEFAULT_CONTE_NAME || ']');
+    dbms_output.put_line('SET_CONCEPT called');
+    dbms_output.put_line('SET_CONCEPT P_DEFAULT_CONTE_NAME = [' || P_DEFAULT_CONTE_NAME || ']');
 
   P_RETURN_CODE := NULL;
 

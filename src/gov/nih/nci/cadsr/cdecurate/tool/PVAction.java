@@ -14,6 +14,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.common.Database;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -28,6 +29,8 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.servlet.http.HttpSession;
+
+
 
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
@@ -815,6 +818,9 @@ public class PVAction implements Serializable {
 		VD_Bean vdBean = data.getVD();
 		HttpSession session = data.getRequest().getSession();
 		CallableStatement cstmt = null;
+		Database mon = new Database();
+		mon.setEnabled(true);
+		mon.trace(data.getCurationServlet().getConn());
 		String sMsg = "";
 		try {
 			String sAction = pvBean.getVP_SUBMIT_ACTION();
@@ -853,8 +859,8 @@ public class PVAction implements Serializable {
 				cstmt.setString(4, pvBean.getPV_VDPVS_IDSEQ()); //VPid);       //vd_pvs ideq - not null
 				cstmt.setString(5, vdBean.getVD_VD_IDSEQ()); // sVDid);       //value domain id - not null
 				cstmt.setString(6, pvBean.getPV_PV_IDSEQ()); // sPVid);       //permissible value id - not null
-				cstmt.setString(7, vdBean.getVD_CONTE_IDSEQ()); // sContextID);       //context id - not null for INS, must be null for UPD
 				String pvOrigin = pvBean.getPV_VALUE_ORIGIN();
+				cstmt.setString(7, vdBean.getVD_CONTE_IDSEQ()); // sContextID);       //context id - not null for INS, must be null for UPD
 				//believe that it is defaulted to vd's origin
 				//if (pvOrigin == null || pvOrigin.equals(""))
 				//   pvOrigin = vdBean.getVD_SOURCE();
@@ -905,6 +911,8 @@ public class PVAction implements Serializable {
 			sMsg += "\\t Exception : Unable to update or remove PV of VD.";
 		}finally{
 		  cstmt = SQLHelper.closeCallableStatement(cstmt);
+			System.out.println("-------------------------- PVAction: 1 ---------------------------");
+			mon.show();
 		}
 		return sMsg;
 	} //END setVD_PVS
