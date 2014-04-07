@@ -8,6 +8,8 @@
 --  DDL for Package Body SBREXT_SET_ROW
 --------------------------------------------------------
 
+SET SERVEROUTPUT ON;
+
   CREATE OR REPLACE PACKAGE BODY "SBREXT"."SBREXT_SET_ROW" AS
 
 /*
@@ -9382,6 +9384,9 @@ v_Count number;
 v_conte_idseq contexts.conte_idseq%type;
 
 BEGIN
+
+  -- dbms_output.put_line(CHR(10) || 'No data found for ' || DECID.LONG_NAME || ' (' || DECID.DEC_ID || ')');
+	dbms_output.put_line('SET_CONCEPT_OLD called');
 
   P_RETURN_CODE := NULL;
 
@@ -20279,7 +20284,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = P_DEFAULT_CONTE_NAME;    --GF32649
+  where upper(name) = upper(P_DEFAULT_CONTE_NAME);    --GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -20416,7 +20421,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = P_DEFAULT_CONTE_NAME;    --GF32649
+  where upper(name) = upper(P_DEFAULT_CONTE_NAME);    --GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
@@ -20565,6 +20570,8 @@ v_Count number;
 v_conte_idseq contexts.conte_idseq%type;
 
 BEGIN
+	dbms_output.put_line('SET_CONCEPT called');
+	dbms_output.put_line('SET_CONCEPT P_DEFAULT_CONTE_NAME = [' || P_DEFAULT_CONTE_NAME || ']');
 
   P_RETURN_CODE := NULL;
 
@@ -20593,7 +20600,7 @@ BEGIN
    begin
     select conte_idseq into p_Con_Conte_idseq
     from contexts
-    where upper(name) = P_DEFAULT_CONTE_NAME;    --GF32649
+   where upper(name) = upper(P_DEFAULT_CONTE_NAME);    --GF32649
    exception when no_data_found then
      P_RETURN_CODE := 'API_CON_106';  --CONTEXT_NAME cannot be null here
   RETURN;
@@ -21488,7 +21495,7 @@ BEGIN
   begin
   select conte_idseq into v_CONTE_IDSEQ
   from contexts
-  where upper(name) = P_DEFAULT_CONTE_NAME;    --GF32649
+  where upper(name) = upper(P_DEFAULT_CONTE_NAME);    --GF32649
   exception when others then
    P_RETURN_CODE := 'API_PROP_001';
    RETURN;
