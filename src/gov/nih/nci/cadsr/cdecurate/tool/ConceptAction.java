@@ -14,6 +14,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.common.Database;
 import gov.nih.nci.cadsr.common.PropertyHelper;
 
 import java.io.Serializable;
@@ -262,6 +263,8 @@ public class ConceptAction implements Serializable
      String sMsg = "";
      ResultSet rs = null;
      CallableStatement cstmt = null;
+     Database mon = new Database();
+     mon.setEnabled(true);
      //Get the username from the session.
      String userName = (String)data.getCurationServlet().sessionData.UsrBean.getUsername();
      try
@@ -269,6 +272,7 @@ public class ConceptAction implements Serializable
          // Create a Callable Statement object.
          if (data.getCurationServlet().getConn() != null)
          {
+           mon.trace(data.getCurationServlet().getConn());
            //cstmt = conn.prepareCall("{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
            cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");		//GF32649
            // register the Out parameters
@@ -341,6 +345,7 @@ public class ConceptAction implements Serializable
     	 rs = SQLHelper.closeResultSet(rs);
          cstmt = SQLHelper.closeCallableStatement(cstmt);
          }
+      mon.show();
       return sMsg;
   }  //end concept
 

@@ -15,6 +15,7 @@ import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.Database;
 import gov.nih.nci.cadsr.common.PropertyHelper;
 import gov.nih.nci.cadsr.persist.concept.Con_Derivation_Rules_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.de.DeComp;
@@ -45,6 +46,8 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+
 
 
 //import oracle.jdbc.driver.OracleTypes;
@@ -1559,6 +1562,10 @@ public class InsACService implements Serializable {
 		HttpSession session = m_classReq.getSession();
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
+		Database mon = new Database();
+		mon.setEnabled(true);
+		mon.trace(m_servlet.getConn());
+
 		String sReturnCode = "";
 		String sOCL_IDSEQ = "";
 		try {
@@ -1718,6 +1725,9 @@ public class InsACService implements Serializable {
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
         	}
+		System.out.println("-------------------------- InsACService: 1 ---------------------------");
+		mon.show();
+		
 		return dec;
 	}
 
@@ -1748,6 +1758,9 @@ public class InsACService implements Serializable {
 		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
+		Database mon = new Database();
+		mon.setEnabled(true);
+		mon.trace(m_servlet.getConn());
 		String sReturnCode = "";
 		String sPROPL_IDSEQ = "";
 		try {
@@ -1902,6 +1915,9 @@ public class InsACService implements Serializable {
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
         	}
+		System.out.println("-------------------------- InsACService: 2 ---------------------------");
+		mon.show();
+		
 		return dec;
 	}
 
@@ -1931,6 +1947,9 @@ public class InsACService implements Serializable {
 		HttpSession session = m_classReq.getSession();
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
+		Database mon = new Database();
+		mon.setEnabled(true);
+		mon.trace(m_servlet.getConn());
 		String sReturnCode = "";
 		try {
 			String sREPName = "";
@@ -2086,6 +2105,9 @@ public class InsACService implements Serializable {
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
 			}
+		System.out.println("-------------------------- InsACService: 3 ---------------------------");
+		mon.show();
+		
 		return sReturnCode;
 	}
 
@@ -5223,6 +5245,9 @@ public class InsACService implements Serializable {
 			EVS_Bean evsBean) {
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
+		Database mon = new Database();
+		mon.setEnabled(true);
+		mon.trace(m_servlet.getConn());
 		HttpSession session = m_classReq.getSession();
 		String conIdseq = "";
 		try {
@@ -5356,6 +5381,9 @@ public class InsACService implements Serializable {
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
 			}
+		System.out.println("-------------------------- InsACService: 4 ---------------------------");
+		mon.show();
+
 		return conIdseq;
 	} // end concept
 
@@ -5379,6 +5407,9 @@ public class InsACService implements Serializable {
 		ResultSet rs = null;
 		String sCON_IDSEQ = "";
 		CallableStatement cstmt = null;
+		Database mon = new Database();
+		mon.setEnabled(true);
+		mon.trace(m_servlet.getConn());
 		try {
 			HttpSession session = (HttpSession) m_classReq.getSession();
 			if (m_servlet.getConn() == null)
@@ -5489,6 +5520,8 @@ public class InsACService implements Serializable {
 		}finally{
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
+			System.out.println("-------------------------- InsACService: 5 ---------------------------");
+			mon.show();
 		}
 		return sCON_IDSEQ; // TODO check what is parent concept id
 	} // end get concept
