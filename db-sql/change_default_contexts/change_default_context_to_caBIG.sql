@@ -10,6 +10,9 @@ update SBR.CONCEPTUAL_DOMAINS set preferred_name = 'caBIG', long_name = 'caBIG' 
 commit
 /
 -- To Check whether default context is changed to "caBIG" in Database
+SELECT name from sbr.contexts where conte_idseq=(select tv.value from sbrext.tool_options_view_ext tv , sbr.contexts_view  cv where 
+tv.tool_name = 'caDSR' and tv.property = 'DEFAULT_CONTEXT' and tv.value = cv.conte_idseq)
+/
 SELECT name from sbr.contexts_view where conte_idseq=(select tv.value from sbrext.tool_options_view_ext tv , sbr.contexts_view  cv where 
 tv.tool_name = 'caDSR' and tv.property = 'DEFAULT_CONTEXT' and tv.value = cv.conte_idseq)
 /
