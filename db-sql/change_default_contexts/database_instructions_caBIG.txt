@@ -5,7 +5,6 @@ caBIG is case sensitive (thus caBIG is not equivalent to CABIG).
 
 Please run the scripts (with the proper account as suggested in the brackets after the script name) in the order specified as the following:
 
-create_context_caBIG.sql (SBR)
 update_default_context_to_caBIG.sql (SBREXT)
 change_default_context_to_caBIG.sql (SBR)
 gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY_caBIG.sql (SBREXT)
@@ -19,6 +18,5 @@ change_user_groups_sc_groups_to_caBIG.sql (SBR)
 Please run the scripts once the test is over:
 
 change_user_groups_sc_groups_backup_cleanup.sql (SBR)
-delete_context_caBIG.sql (SBR)
 
 End of instruction.
