@@ -3794,7 +3794,10 @@ EXCEPTION    WHEN NO_DATA_FOUND THEN
        NULL;
 END SET_PV;
 
-PROCEDURE  SET_VD_PVS_OLD(
+/*
+ * This is not called directly from Java but from PL/SQL codes.
+*/
+PROCEDURE  SET_VD_PVS(
  P_RETURN_CODE                OUT VARCHAR2
 ,P_ACTION                   IN     VARCHAR2
 ,P_VDPVS_VP_IDSEQ         IN OUT VARCHAR2
@@ -3836,7 +3839,7 @@ v_end_date DATE := NULL;
 
 BEGIN
 
-dbms_output.put_line('SET_VD_PVS_OLD entered P_VDPVS_PV_IDSEQ ['||P_VDPVS_PV_IDSEQ||'] P_VDPVS_CONTE_IDSEQ ['||P_VDPVS_CONTE_IDSEQ||']');
+dbms_output.put_line('SET_VD_PVS (PL/SQL) entered P_VDPVS_PV_IDSEQ ['||P_VDPVS_PV_IDSEQ||'] P_VDPVS_CONTE_IDSEQ ['||P_VDPVS_CONTE_IDSEQ||']');
 
   P_RETURN_CODE := NULL;
 
@@ -9071,8 +9074,8 @@ EXCEPTION
 
 END SET_OBJECT_CLASS;
 
-/* GF32649 not used, renamed */
-PROCEDURE SET_OC_CONDR_OLD(
+/* GF32649 not called from Java but from PL/SQL codes */
+PROCEDURE SET_OC_CONDR(
 P_OC_con_array           IN VARCHAR2
 ,P_OC_CONTE_IDSEQ            IN VARCHAR2
 ,P_RETURN_CODE                OUT VARCHAR2
@@ -9204,8 +9207,8 @@ P_RETURN_CODE := SUBSTR(sqlerrm,1,255);
 END;
 
 
-/* GF32649 not used, renamed */
-PROCEDURE SET_PROP_CONDR_OLD(
+/* GF32649 not called from Java but from PL/SQL codes */
+PROCEDURE SET_PROP_CONDR(
 P_PROP_con_array           IN VARCHAR2
 ,P_PROP_CONTE_IDSEQ            IN VARCHAR2
 ,P_RETURN_CODE                OUT VARCHAR2
@@ -9335,7 +9338,9 @@ EXCEPTION WHEN OTHERS THEN
 P_RETURN_CODE := 'Error Creating Property';
 
 END;
-PROCEDURE SET_CONCEPT_OLD(
+
+/* GF32649 not called from Java but from PL/SQL codes */
+PROCEDURE SET_CONCEPT(
 P_RETURN_CODE              OUT VARCHAR2
 ,P_ACTION         IN VARCHAR2
 ,P_CON_IDSEQ             OUT VARCHAR2
@@ -9388,7 +9393,7 @@ v_conte_idseq contexts.conte_idseq%type;
 BEGIN
 
   -- dbms_output.put_line(CHR(10) || 'No data found for ' || DECID.LONG_NAME || ' (' || DECID.DEC_ID || ')');
-    dbms_output.put_line('SET_CONCEPT_OLD called');
+    dbms_output.put_line('SET_CONCEPT (PL/SQL) called');
 
   P_RETURN_CODE := NULL;
 
@@ -9784,7 +9789,7 @@ EXCEPTION
   WHEN OTHERS THEN
     NULL;
 
-END SET_CONCEPT_OLD;
+END SET_CONCEPT;
 
 PROCEDURE SET_representation(
  P_RETURN_CODE                  OUT VARCHAR2
@@ -10264,8 +10269,8 @@ EXCEPTION
 
 END SET_representation;
 
-/* GF32649 not used, renamed */
-PROCEDURE SET_REP_CONDR_OLD(
+/* GF32649 not called from Java but from PL/SQL codes */
+PROCEDURE SET_REP_CONDR(
 P_REP_con_array           IN VARCHAR2
 ,P_REP_CONTE_IDSEQ            IN VARCHAR2
 ,P_RETURN_CODE                OUT VARCHAR2
