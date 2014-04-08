@@ -23,7 +23,7 @@ begin
 
 select conte_idseq into v_Conte_idseq
 from contexts
-where name = 'NCIP';    --GF32649 changed CABIG to NCI
+where name = 'caBIG';    --GF32649
 
 select count(*) into v_count
 from concepts_Ext

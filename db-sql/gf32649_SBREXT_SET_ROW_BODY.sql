@@ -3794,7 +3794,7 @@ EXCEPTION    WHEN NO_DATA_FOUND THEN
        NULL;
 END SET_PV;
 
-PROCEDURE  SET_VD_PVS(
+PROCEDURE  SET_VD_PVS_OLD(
  P_RETURN_CODE                OUT VARCHAR2
 ,P_ACTION                   IN     VARCHAR2
 ,P_VDPVS_VP_IDSEQ         IN OUT VARCHAR2
@@ -3835,6 +3835,8 @@ v_end_date DATE := NULL;
 
 
 BEGIN
+
+dbms_output.put_line('SET_VD_PVS_OLD entered P_VDPVS_PV_IDSEQ ['||P_VDPVS_PV_IDSEQ||'] P_VDPVS_CONTE_IDSEQ ['||P_VDPVS_CONTE_IDSEQ||']');
 
   P_RETURN_CODE := NULL;
 
@@ -15065,9 +15067,9 @@ v_end_date DATE := NULL;
 
 
 BEGIN
-	
-	dbms_output.put_line('SET_VD_PVS entered P_VDPVS_PV_IDSEQ = [' || P_VDPVS_PV_IDSEQ || ']');
-	dbms_output.put_line('SET_VD_PVS entered P_VDPVS_CONTE_IDSEQ = [' || P_VDPVS_CONTE_IDSEQ || ']');
+    
+    dbms_output.put_line('SET_VD_PVS entered P_VDPVS_PV_IDSEQ = [' || P_VDPVS_PV_IDSEQ || ']');
+    dbms_output.put_line('SET_VD_PVS entered P_VDPVS_CONTE_IDSEQ = [' || P_VDPVS_CONTE_IDSEQ || ']');
 
   P_RETURN_CODE := NULL;
 

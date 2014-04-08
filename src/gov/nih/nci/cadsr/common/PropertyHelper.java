@@ -114,7 +114,7 @@ public class PropertyHelper {
 	public static String getDefaultContextName() {
 		if(DEFAULT_CONTEXT_NAME == null) {
 			try {
-				DEFAULT_CONTEXT_NAME = CaDSRUtil.getDefaultContextName();
+				DEFAULT_CONTEXT_NAME = CaDSRUtil.getDefaultContextNameNoCache();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
