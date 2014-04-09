@@ -1590,7 +1590,7 @@ function LoadKeyHandler()
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center>
-									<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('createdFrom', event);">
+									<img src="../../cdecurate/images/calendarbutton.gif" alt="Calendar" onclick="calendar('createdFrom', event);">
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('createdFrom');"> Clear </a>
@@ -1609,7 +1609,7 @@ function LoadKeyHandler()
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center>
-									<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('createdTo', event);">
+									<img src="../../cdecurate/images/calendarbutton.gif" alt="Calendar" onclick="calendar('createdTo', event);">
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('createdTo');"> Clear </a>
@@ -1679,7 +1679,7 @@ function LoadKeyHandler()
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center>
-									<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('modifiedFrom', event);" alt="calendar">
+									<img src="../../cdecurate/images/calendarbutton.gif" alt="Calendar" onclick="calendar('modifiedFrom', event);" alt="calendar">
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('modifiedFrom');"> Clear </a>
@@ -1698,7 +1698,7 @@ function LoadKeyHandler()
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center>
-									<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('modifiedTo', event);">
+									<img src="../../cdecurate/images/calendarbutton.gif" alt="Calendar" onclick="calendar('modifiedTo', event);">
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('modifiedTo');"> Clear </a>

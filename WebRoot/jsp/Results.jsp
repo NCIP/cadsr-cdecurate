@@ -1980,7 +1980,7 @@ function ShowSelectedRowss(){
 										size="8" readonly
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
-								<td align=center><img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('createdFrom', event);">
+								<td align=center><img src="../../cdecurate/images/calendarbutton.gif" alt="Calendar" onclick="calendar('createdFrom', event);">
 									
 								</td>
 								<td align=left>
@@ -2001,7 +2001,7 @@ function ShowSelectedRowss(){
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center>
-									<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('createdTo', event);">
+									<img src="../../cdecurate/images/calendarbutton.gif" alt="Calendar" onclick="calendar('createdTo', event);">
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('createdTo');"> Clear </a>
@@ -2078,7 +2078,7 @@ function ShowSelectedRowss(){
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center>
-									<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('modifiedFrom', event);">
+									<img src="../../cdecurate/images/calendarbutton.gif" alt="Calendar" onclick="calendar('modifiedFrom', event);">
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('modifiedFrom');"> Clear </a>
@@ -2098,7 +2098,7 @@ function ShowSelectedRowss(){
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center>
-									<img src="../../cdecurate/images/calendarbutton.gif" onclick="calendar('modifiedTo', event);">
+									<img src="../../cdecurate/images/calendarbutton.gif" alt="Calendar" onclick="calendar('modifiedTo', event);">
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('modifiedTo');"> Clear </a>
@@ -2848,7 +2848,7 @@ function ShowSelectedRowss(){
 						<input type="checkbox" onClick="javascript:checkClick(this);" name="<%=ckName%>" <%if((vCheckList != null && vCheckList.contains(ckName))){%> checked <%}%> onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
 					</td>
 					<td  class="rsCell" align="center" style="width: 1px">
-					<img <%if ((j%2) == 0){%>class="stripe"<%}else{%>class="white"<%}%> onclick="menuShow(this, event, 'yes');" onmouseover="style.border=('1px solid #4876FF');" onmouseout="setBorder(this, <%=j%>)" menuID="objMenu" rowId="<%=j%>" src="images/actionicon.gif"  border="1"/></td>
+					<img <%if ((j%2) == 0){%>class="stripe"<%}else{%>class="white"<%}%> onclick="menuShow(this, event, 'yes');" onmouseover="style.border=('1px solid #4876FF');" onmouseout="setBorder(this, <%=j%>)" menuID="objMenu" rowId="<%=j%>" src="images/actionicon.gif"  border="1" alt="Action"/></td>
 					<%     if (sSelAC.equals("Questions") && !sMAction.equals("searchForCreate"))
        {
           //if edit, display the status as complete, otherwise incomplete
@@ -2907,7 +2907,7 @@ function ShowSelectedRowss(){
                 <p style="margin-left: 0.5in">
 						<span onclick="hideShowDef('<%=id1%>', '<%=id2%>', '<%=id3%>');"
 							style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img <%if ((j%2) == 0){%>class="stripe"<%}else{%>class="white"<%}%> 
-								id="<%=id1%>" src="images/plus_8.gif" border="1"
+								id="<%=id1%>" src="images/plus_8.gif" border="1" alt="Expand"
 								style="margin: 0px 0px 0px 0px" onmouseover="style.border=('1px solid #4876FF');" onmouseout="setBorder(this, <%=j%>);"></span> Definition: <%=def%><span id="<%=id2%>">&hellip;</span><span id="<%=id3%>" style="display: none"><%=definition%>
 				</span></p></td></tr>			
 	     <%}else{%>
@@ -2917,7 +2917,7 @@ function ShowSelectedRowss(){
 			        <tr>
 			    <%} %>
 			    <td class="rsCell">&nbsp;</td><td class="rsCell">&nbsp;</td><td class="rsCell" colspan="<%=colspan%>"><p style="margin-left: 0.5in">
-			    <span style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img src="images/blank_8.gif" style="margin: 0px 0px 0px 0px"></span> Definition: <%=definition%></td>
+			    <span style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img src="images/blank_8.gif" alt="blank" style="margin: 0px 0px 0px 0px"></span> Definition: <%=definition%></td>
 			     </tr>
 		<%}%>
     <%}%>

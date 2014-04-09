@@ -9,6 +9,7 @@ import gov.nih.nci.cadsr.cdecurate.util.ErrorHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolConstants;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
 import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.common.TimeWatch;
 import gov.nih.nci.cadsr.persist.ac.Admin_Components_Mgr;
 import gov.nih.nci.cadsr.persist.exception.DBException;
@@ -242,7 +243,7 @@ public class SearchServlet extends CurationServlet {
                 // search is from regular search page
                 else
                 {
-                    String sComponent = (String) m_classReq.getParameter("listSearchFor");
+                    String sComponent = StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("listSearchFor") );
                     if (sComponent != null && sComponent.equals("Questions"))
                     {
                         DataManager.setAttribute(session, "originAction", "QuestionSearch");
@@ -326,16 +327,16 @@ public class SearchServlet extends CurationServlet {
     {
         HttpSession session = m_classReq.getSession();
         Boolean approvedRep = new Boolean(false);
-        String actType = (String) m_classReq.getParameter("actSelect");
+        String actType = StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("actSelect") );
         if (actType == null)
             actType = "";
-        String sSearchFor = (String) m_classReq.getParameter("listSearchFor");
-        String sKeyword = (String) m_classReq.getParameter("keyword");
+        String sSearchFor = StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("listSearchFor") );
+        String sKeyword = StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("keyword") );
         String dtsVocab = m_classReq.getParameter("listContextFilterVocab");
         // String sSearchInEVS = "";
        // String sUISearchType = "";
         String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
-        String sMetaSource = m_classReq.getParameter("listContextFilterSource");
+        String sMetaSource = StringUtil.cleanJavascriptAndHtml( m_classReq.getParameter("listContextFilterSource") );
         if (sMetaSource == null)
             sMetaSource = "";
         GetACSearch getACSearch = new GetACSearch(m_classReq, m_classRes, this);
@@ -723,11 +724,11 @@ public class SearchServlet extends CurationServlet {
     {
         HttpSession session = m_classReq.getSession();
         // same for both searchfor create and regular search
-        String sSearchIn = (String) m_classReq.getParameter("listSearchIn");
+        String sSearchIn = StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("listSearchIn") );
         if (sSearchIn == null)
             sSearchIn = "longName";
         // same for both searchfor create and regular search
-        String sSearchAC = (String) m_classReq.getParameter("listSearchFor");
+        String sSearchAC = StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("listSearchFor") );
         // set the selected display attributes so they persist through refreshes
         String selAttrs[] = m_classReq.getParameterValues("listAttrFilter");
        // int selLength = selAttrs.length;
@@ -824,7 +825,7 @@ public class SearchServlet extends CurationServlet {
         HttpSession session = m_classReq.getSession();
         // clearSessionAttributes(m_classReq, m_classRes);
         // get the search for parameter from the request
-        String sSearchAC = (String) m_classReq.getParameter("listSearchFor");
+        String sSearchAC = StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("listSearchFor") );
         String sSearchIn = "longName";
         // call the method to get attribute list for the selected AC
         String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
@@ -1000,7 +1001,7 @@ public class SearchServlet extends CurationServlet {
     {
         HttpSession session = m_classReq.getSession();
         GetACSearch getACSearch = new GetACSearch(m_classReq, m_classRes, this);
-        String sSearchAC = m_classReq.getParameter("listSearchFor");
+        String sSearchAC = StringUtil.cleanJavascriptAndHtml( m_classReq.getParameter("listSearchFor") );
         // store the all the selected attributes in search parameter jsp
         this.getSelectedAttr(menuAction, "ChangeUIFilter");
         // get list of search previous search results
@@ -1990,7 +1991,7 @@ public class SearchServlet extends CurationServlet {
        // this.clearSessionAttributes(m_classReq, m_classRes);
        // this.clearBuildingBlockSessionAttributes(m_classReq, m_classRes);
        // this.clearCreateSessionAttributes(m_classReq, m_classRes);
-        String sMAction = (String) m_classReq.getParameter("hidMenuAction");
+        String sMAction = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("hidMenuAction"));
         if (sMAction == null)
             sMAction = "nothing";
         DataManager.setAttribute(session, "DDEAction", "nothing"); // reset from "CreateNewDEFComp"
@@ -2068,7 +2069,7 @@ public class SearchServlet extends CurationServlet {
         this.clearSessionAttributes(m_classReq, m_classRes);
         this.clearBuildingBlockSessionAttributes(m_classReq, m_classRes);
         this.clearCreateSessionAttributes(m_classReq, m_classRes);
-        String sMAction = (String) m_classReq.getParameter("hidMenuAction");
+        String sMAction = StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("hidMenuAction") );
         if (sMAction == null)
             sMAction = "nothing";
         DataManager.setAttribute(session, "DDEAction", "nothing"); // reset from "CreateNewDEFComp"
