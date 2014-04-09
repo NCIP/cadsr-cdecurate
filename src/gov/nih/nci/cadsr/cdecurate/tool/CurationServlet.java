@@ -14,6 +14,7 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ErrorHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
 import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.persist.ac.Admin_Components_Mgr;
 import gov.nih.nci.cadsr.persist.ac.Tool_Options_View_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.evs.Evs_Mgr;
@@ -41,6 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+
 
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
@@ -738,8 +740,8 @@ public class CurationServlet
     private void doCreatePVActions(HttpServletRequest req, HttpServletResponse res) throws Exception
     {
         HttpSession session = req.getSession();
-        String sAction = (String) req.getParameter("pageAction");
-        String sMenuAction = (String) req.getParameter("MenuAction");
+        String sAction = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("pageAction") );
+        String sMenuAction = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("MenuAction") );
         if (sMenuAction != null)
             DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
         String sButtonPressed = (String) session.getAttribute("LastMenuButtonPressed");

@@ -18,6 +18,7 @@ import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.StringUtil;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -38,6 +39,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
@@ -112,9 +114,9 @@ public class GetACSearch implements Serializable
             DataManager.setAttribute(session, "sortType", "longName");
             DataManager.setAttribute(session, "serProtoID", "");
             // get the selected Administed component for Search
-            String sRecordsDisplayed = (String) req.getParameter("recordsDisplayed");
+            String sRecordsDisplayed = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("recordsDisplayed") );
             logger.info("$$$$$$$$$$$$$$$$$$$$"+sRecordsDisplayed);
-            String sComponent = (String) req.getParameter("listSearchFor");
+            String sComponent = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("listSearchFor") );
             String sSearchAC = (String) session.getAttribute("searchAC");
             
             DataManager.setAttribute(session, "sessionRecordsDisplayed", sRecordsDisplayed);
@@ -128,7 +130,7 @@ public class GetACSearch implements Serializable
                  }	
             sSearchAC = (String) session.getAttribute("searchAC");
             // do the keyword search for the selected component
-            String sKeyword = (String) req.getParameter("keyword");
+            String sKeyword = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("keyword") );
             if(sKeyword == null && sSearchAC.equals("PermissibleValue"))
             	sKeyword = (String)session.getAttribute("serKeyword");
             if (sKeyword != null)
@@ -7680,7 +7682,7 @@ public class GetACSearch implements Serializable
             DataManager.setAttribute(session, "sortType", "longName");
             SetACService setAC = new SetACService(m_servlet);
             EVSSearch evs = new EVSSearch(req, res, m_servlet);
-            String sSearchAC = (String) req.getParameter("listSearchFor");
+            String sSearchAC = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("listSearchFor") );
             if (sSearchAC == null)
             {
                 sSearchAC = (String) session.getAttribute("searchAC");
@@ -7689,14 +7691,14 @@ public class GetACSearch implements Serializable
             }
             DataManager.setAttribute(session, "creSearchAC", sSearchAC);
             // get the search in data
-            String sRecordsDisplayed = req.getParameter("recordsDisplayed");
-            String sSearchIn = (String) req.getParameter("listSearchIn");
+            String sRecordsDisplayed = StringUtil.cleanJavascriptAndHtml( req.getParameter("recordsDisplayed") );
+            String sSearchIn = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("listSearchIn") );
             if (sSearchIn == null)
                 sSearchIn = "longName";
             req.setAttribute("creSearchIn", sSearchIn);
             DataManager.setAttribute(session, "creSearchInBlocks", sSearchIn);
             boolean isBlockSearch = false;
-            String dtsVocab = req.getParameter("listContextFilterVocab");
+            String dtsVocab = StringUtil.cleanJavascriptAndHtml( req.getParameter("listContextFilterVocab") );
             session.setAttribute(Constants.USER_SELECTED_VOCAB, dtsVocab);	//GF32723 save front end EVS vocab
             System.out.println(">>>>>>>>> Constants.USER_SELECTED_VOCAB [" + session.getAttribute(Constants.USER_SELECTED_VOCAB) + "] saved.");
             if (dtsVocab != null && !dtsVocab.equals(""))
@@ -7705,21 +7707,21 @@ public class GetACSearch implements Serializable
                 dtsVocab = "";
             // System.out.println(" dtsVocab " + dtsVocab);
             DataManager.setAttribute(session, "dtsVocab", dtsVocab);
-            String sSearchInEVS = (String) req.getParameter("listSearchInEVS");
+            String sSearchInEVS = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("listSearchInEVS") );
             if (sSearchInEVS == null)
                 sSearchInEVS = "Synonym";
             DataManager.setAttribute(session, "SearchInEVS", sSearchInEVS);
             // System.out.println(sSearchIn + " search in " + sSearchInEVS);
             // filter by Retired Concepts
-            String sRetired = (String) req.getParameter("rRetired");
+            String sRetired = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("rRetired") );
             DataManager.setAttribute(session, "creRetired", sRetired);
             if (sRetired == null)
                 sRetired = "";
-            String sMetaSource = (String) req.getParameter("listContextFilterSource");
+            String sMetaSource = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("listContextFilterSource") );
             if (sMetaSource == null)
                 sMetaSource = "All Sources";
             DataManager.setAttribute(session, "MetaSource", sMetaSource);
-            String sMetaLimit = (String) req.getParameter("listMetaLimit");
+            String sMetaLimit = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("listMetaLimit") );
             int intMetaLimit = 0;
             if (sMetaLimit != null)
             {
@@ -7731,7 +7733,7 @@ public class GetACSearch implements Serializable
             else
                 intMetaLimit = 100;
             // do the keyword search for the selected component
-            String sKeyword = (String) req.getParameter("keyword");
+            String sKeyword = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("keyword") );
             if (sKeyword == null)
                 sKeyword = "";
             if (isIntSearch == true)
@@ -7750,7 +7752,7 @@ public class GetACSearch implements Serializable
             // if (sSearchAC.equals("RepTerm") || sSearchAC.equals("Property") || sSearchAC.equals("ObjectClass"))
             if (isBlockSearch == true)
             {
-                sContext = (String) req.getParameter("listContextFilter");
+                sContext = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("listContextFilter") );
                 String setContext = sContext;
                 
                 if (sContext == null || sContext.equals("AllContext")) {
@@ -7767,19 +7769,19 @@ public class GetACSearch implements Serializable
             else
                 sContext = getMultiReqValues(sSearchAC, "searchForCreate", "Context");
             // filter by contextUse
-            String sContextUse = (String) req.getParameter("rContextUse");
+            String sContextUse = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("rContextUse") );
             DataManager.setAttribute(session, "creContextUse", sContextUse);
             if (sContextUse == null)
                 sContextUse = "";
             // filter by version
-            String sVersion = (String) req.getParameter("rVersion");
+            String sVersion = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("rVersion") );
             if (isIntSearch == true && sSearchAC.equals("ConceptualDomain"))
                 sVersion = "Yes";
             DataManager.setAttribute(session, "creVersion", sVersion);
             // get the version number if other
             String txVersion = "";
             if (sVersion != null && sVersion.equals("Other"))
-                txVersion = (String) req.getParameter("tVersion");
+                txVersion = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("tVersion") );
             if (txVersion == null)
                 txVersion = "";
             DataManager.setAttribute(session, "creVersionNum", txVersion);
@@ -7803,12 +7805,12 @@ public class GetACSearch implements Serializable
                 sVersion = "";
             // filter by value domain type enumerated
             String sVDType = "";
-            String sVDTypeEnum = (String) req.getParameter("enumBox");
+            String sVDTypeEnum = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("enumBox") );
             DataManager.setAttribute(session, "creVDTypeEnum", sVDTypeEnum);
             if (sVDTypeEnum != null)
                 sVDType = "E";
             // filter by value domain type non enumerated
-            String sVDTypeNonEnum = (String) req.getParameter("nonEnumBox");
+            String sVDTypeNonEnum = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("nonEnumBox") );
             DataManager.setAttribute(session, "creVDTypeNonEnum", sVDTypeNonEnum);
             if (sVDTypeNonEnum != null && !sVDTypeNonEnum.equals(""))
             {
@@ -7817,7 +7819,7 @@ public class GetACSearch implements Serializable
                 sVDType = sVDType + "N";
             }
             // filter by value domain type enumerated by reference
-            String sVDTypeRef = (String) req.getParameter("refEnumBox");
+            String sVDTypeRef = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("refEnumBox") );
             DataManager.setAttribute(session, "creVDTypeRef", sVDTypeRef);
             if (sVDTypeRef != null && !sVDTypeRef.equals(""))
             {
@@ -7827,7 +7829,7 @@ public class GetACSearch implements Serializable
             }
             sVDType = sVDType.trim();
             String sCDid = "";
-            sCDid = (String) req.getParameter("listCDName");
+            sCDid = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("listCDName") );
             if (sCDid == null || sCDid.equals("All Domains"))
                 sCDid = "";
             DataManager.setAttribute(session, "creSelectedCD", sCDid);
