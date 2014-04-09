@@ -1107,8 +1107,9 @@ L--%>
 						           // Vector<EVS_Bean> vmCon = vm.getVM_CONCEPT_LIST();
 						            		
 						            String dispStyle = "inline"; //GF33140 display by default
-						            /*
+						            String vdUsedInForm = (String)session.getAttribute(Constants.VD_USED_IN_FORM);  //GF7680
 									String workflowStatus = (String)session.getAttribute("selStatus");
+						            /*
 									if(workflowStatus != null && workflowStatus.equals(Constants.WORKFLOW_STATUS_RELEASED) || inForm) {
 										dispStyle = "none";		
 									}
@@ -1124,7 +1125,9 @@ L--%>
 																	</div>
 																 <%if (!isView){ %>	
 																	<div id="<%=pvCount%>ImgEdit" style="display: <%=dispStyle%>">
-																		<% if (inForm) {%> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>');" onclick="return confirm('This element is used in a form. Any edits will put the form out of sync. Are you sure you want to edit?');"><img src="images/edit.gif" border="0" alt="Edit" style="display: <%=dispStyle%>"></a>
+																		<%
+																		System.out.println("vdWs [" + workflowStatus + "] vdUsedInForm [" + vdUsedInForm + "] pvUsedInForm [" + inForm + "] crfWs [" + inForm + "]");
+																		if (inForm) {%> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>');" onclick="return confirm('This element is used in a form. Any edits will put the form out of sync. Are you sure you want to edit?');"><img src="images/edit.gif" border="0" alt="Edit" style="display: <%=dispStyle%>"></a>
 																		<% } else { %> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>');"><img src="images/edit.gif" border="0" alt="Edit" style="display: <%=dispStyle%>"></a>
 																		<% } %>
 																		
