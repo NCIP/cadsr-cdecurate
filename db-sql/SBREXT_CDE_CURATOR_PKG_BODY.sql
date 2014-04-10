@@ -1,10 +1,3 @@
-/*L
-  Copyright ScenPro Inc, SAIC-F
-
-  Distributed under the OSI-approved BSD 3-Clause License.
-  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
-L*/
-
 -- run with SBREXT user
 --------------------------------------------------------
 --  DDL for Package Body SBREXT_CDE_CURATOR_PKG
@@ -2520,8 +2513,8 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
  ,des.DESIG_IDSEQ                     lae_des_idseq
  ,vd.vd_id
  ,vd.origin
- ,ar.ar_idseq	--GF32398
- ,ar.registration_status	--GF32398
+ ,ar.ar_idseq    --GF32398
+ ,ar.registration_status    --GF32398
  ,AMIW.date_created -- GF32036
  ,AMIW.date_modified -- GF32036
  ,AMIW.created_by  -- GF32036 avoid calling sbrext_cde_curator_pkg.get_ua_full_name
@@ -2532,8 +2525,8 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
  ,vd.condr_idseq vd_condr_idseq
  ,NVL(r.long_name,r.preferred_name) rep_long_name
  ,r.asl_name rep_asl_name
- ,rsl.display_order		--GF32398
- ,rsl.registration_status	--GF32398
+ ,rsl.display_order        --GF32398
+ ,rsl.registration_status    --GF32398
  ,asl.display_order
  ,asl.asl_name
  ,sbrext_cde_curator_pkg.Get_One_Con_Name(NULL, vd.vd_idseq) con_name
@@ -2544,12 +2537,12 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
             '
  FROM
      sbr.value_domains_view       vd
-	,SBR.ADMINISTER_INFO_VIEW AMIW --GF32036 added a new view
+    ,SBR.ADMINISTER_INFO_VIEW AMIW --GF32036 added a new view
     ,sbr.conceptual_domains_view  cd
     ,sbr.contexts_view            c
-    ,ac_registrations_view ar	--GF32398
+    ,ac_registrations_view ar    --GF32398
     ,sbr.ac_status_lov_view asl
-    ,sbr.reg_status_lov_view rsl	--GF32398
+    ,sbr.reg_status_lov_view rsl    --GF32398
     ,sbrext.de_cn_language_view   des
     ,sbrext.REPRESENTATIONS_EXT   r ';
         v_where :=
@@ -2558,11 +2551,11 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
  AND vd.conte_idseq   = AMIW.conte_idseq --GF32036 added a new join (1 of 2)
  AND vd.vd_idseq = AMIW.ac_idseq --GF32036 added a new join (2 of 2)
  AND asl.asl_name = vd.asl_name
- AND ar.ac_idseq (+)= vd.vd_idseq	--GF32398 added new join
+ AND ar.ac_idseq (+)= vd.vd_idseq    --GF32398 added new join
  AND rsl.registration_status (+)= ar.registration_status --GF32398 added new join
  AND vd.cd_idseq  = cd.cd_idseq
  AND vd.vd_idseq  = des.ac_idseq (+)
- AND vd.vd_idseq    = ar.ac_idseq (+)	--GF32398 added new join
+ AND vd.vd_idseq    = ar.ac_idseq (+)    --GF32398 added new join
  AND vd.rep_idseq = r.rep_idseq  (+) ';
         IF v_search_string IS NOT NULL THEN
             -- 25-Mar-2004, W. Ver Hoef commented out comparison to u.name
@@ -2670,7 +2663,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
             v_where :=
                    v_where
                 || '
- AND TRUNC(AMIW.date_created) >= TO_DATE('''	--GF32036 changed vd. to AMIW.
+ AND TRUNC(AMIW.date_created) >= TO_DATE('''    --GF32036 changed vd. to AMIW.
                 || p_created_starting_date
                 || ''',''MM/DD/YYYY'')';
         END IF;
@@ -2683,7 +2676,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
             v_where :=
                    v_where
                 || '
- AND TRUNC(AMIW.date_modified) >= TO_DATE('''	--GF32036 changed vd. to AMIW.
+ AND TRUNC(AMIW.date_modified) >= TO_DATE('''    --GF32036 changed vd. to AMIW.
                 || p_modified_starting_date
                 || ''',''MM/DD/YYYY'')';
         END IF;
@@ -2691,7 +2684,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
             v_where :=
                    v_where
                 || '
- AND TRUNC(AMIW.date_modified) <= TO_DATE('''	--GF32036 changed vd. to AMIW.
+ AND TRUNC(AMIW.date_modified) <= TO_DATE('''    --GF32036 changed vd. to AMIW.
                 || p_modified_ending_date
                 || ''',''MM/DD/YYYY'')';
         END IF;
@@ -3520,15 +3513,19 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
                      ,vm.change_note
                      ,vm.comments
                      ,vm.latest_version_ind
-
+                    ,CRF.WORKFLOW   --GF7680
                 FROM value_domains_view vd
                     ,vd_pvs vp
                     ,permissible_values_view pv
                     ,value_meanings_view vm   -- 08-Apr-2004, W. Ver Hoef added
+                    ,SBREXT.QUEST_CONTENTS_VIEW_EXT C   --GF7680
+                    ,SBREXT.FB_FORMS_VIEW CRF   --GF7680
             WHERE    vd.vd_idseq = vp.vd_idseq
                  AND vp.pv_idseq = pv.pv_idseq
                  AND pv.vm_idseq = vm.vm_idseq   -- 08-Apr-2004, W. Ver Hoef added
                  AND vd.vd_idseq = NVL( p_vd_idseq, vd.vd_idseq )
+                 AND vp.VP_IDSEQ = C.VP_IDSEQ   --GF7680
+                 AND C.DN_CRF_IDSEQ = CRF.QC_IDSEQ   --GF7680
             ORDER BY UPPER( pv.VALUE );
     END;
     PROCEDURE search_csi(

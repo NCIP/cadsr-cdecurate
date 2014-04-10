@@ -446,6 +446,11 @@ public class PVAction implements Serializable {
 						String sCon = rs.getString("con_idseq");
 						this.doSetParentAttributes(sCon, pvBean, data);
 
+						//begin GF7680
+						String formWorkflow = rs.getString("WORKFLOW");
+						pvBean.setCRF_WORKFLOW(formWorkflow);
+						//end GF7680
+						
 						pvBean.setPV_VIEW_TYPE("expand");
 						//add pv idseq in the pv id vector
 						vList.addElement(pvBean); //add the bean to a vector

@@ -138,6 +138,7 @@ public class PV_Bean implements Serializable
   private String PV_VM_CONDR_IDSEQ;
   private String PV_VIEW_TYPE;
   private boolean PV_IN_FORM = false;
+  private String CRF_WORKFLOW;	//GF7680
 
 
   /**
@@ -175,6 +176,7 @@ public class PV_Bean implements Serializable
       this.setPV_VM_CONDR_IDSEQ(fromBean.getPV_VM_CONDR_IDSEQ());
       this.setPARENT_CONCEPT(fromBean.getPARENT_CONCEPT());
       this.setPV_IN_FORM(fromBean.getPV_IN_FORM());
+      this.setCRF_WORKFLOW(fromBean.getCRF_WORKFLOW());		//GF7680
     }
     //send the to bean back
     return this;
@@ -814,6 +816,14 @@ public void setPV_IN_FORM(boolean inForm) {
 public boolean getPV_IN_FORM() {
 
 	return PV_IN_FORM;
+}
+
+public String getCRF_WORKFLOW() {
+	return CRF_WORKFLOW;
+}
+
+public void setCRF_WORKFLOW(String cRF_WORKFLOW) {
+	CRF_WORKFLOW = cRF_WORKFLOW;
 }
 
 } //end of class
