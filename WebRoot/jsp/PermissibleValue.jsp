@@ -1109,6 +1109,7 @@ L--%>
 						            String dispStyle = "inline"; //GF33140 display by default
 						            String vdUsedInForm = (String)session.getAttribute(Constants.VD_USED_IN_FORM);  //GF7680
 									String workflowStatus = (String)session.getAttribute("selStatus");
+									String crfWorkflowStatus = pvBean.getCRF_WORKFLOW();    //GF7680
 						            /*
 									if(workflowStatus != null && workflowStatus.equals(Constants.WORKFLOW_STATUS_RELEASED) || inForm) {
 										dispStyle = "none";		
@@ -1126,7 +1127,7 @@ L--%>
 																 <%if (!isView){ %>	
 																	<div id="<%=pvCount%>ImgEdit" style="display: <%=dispStyle%>">
 																		<%
-																		System.out.println("vdWs [" + workflowStatus + "] vdUsedInForm [" + vdUsedInForm + "] pvUsedInForm [" + inForm + "] crfWs [" + inForm + "]");
+																		System.out.println("vdWs [" + workflowStatus + "] vdUsedInForm [" + vdUsedInForm + "] pvUsedInForm [" + inForm + "] crfWs [" + crfWorkflowStatus + "]");
 																		if (inForm) {%> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>');" onclick="return confirm('This element is used in a form. Any edits will put the form out of sync. Are you sure you want to edit?');"><img src="images/edit.gif" border="0" alt="Edit" style="display: <%=dispStyle%>"></a>
 																		<% } else { %> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>');"><img src="images/edit.gif" border="0" alt="Edit" style="display: <%=dispStyle%>"></a>
 																		<% } %>
