@@ -13,7 +13,6 @@ L--%>
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
 <%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
-<%@ page import="gov.nih.nci.cadsr.common.Constants"%>
 <html>
 	<head>
 		<title>
@@ -31,10 +30,9 @@ L--%>
     vValidate = (Vector)request.getAttribute("vValidate");
     String vdIDSEQ = (String) request.getAttribute("vdIDSEQ");
     boolean inForm = false;
-    if (vdIDSEQ != null && vdIDSEQ.length() > 0) {
+    if (vdIDSEQ != null && vdIDSEQ.length() > 0) {  //GF7680 just curly braces
     	inForm = true;
     }
-    session.setAttribute(Constants.VD_USED_IN_FORM, inForm);    //GF7680
     for (int i = 0; vValidate.size()>i; i = i+3)
     {
       String sStat = (String)vValidate.elementAt(i+2);

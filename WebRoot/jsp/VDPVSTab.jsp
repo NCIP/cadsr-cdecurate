@@ -13,9 +13,9 @@ L--%>
 <%@ page language="java" import="java.util.*"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@ page import="gov.nih.nci.cadsr.common.Constants"%>
 <link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
-
-<%  
+<%
 		String sTabFocus = (String) session.getAttribute("TabFocus");
 		//for view only page
 		String bodyPage = (String) request.getAttribute("IncludeViewPage");
@@ -54,6 +54,9 @@ L--%>
       if (mVD == null) mVD = new VD_Bean();
       String sVDIDseq = mVD.getVD_VD_IDSEQ();
       boolean inForm = mVD.getVD_IN_FORM();
+      if(inForm) {
+          session.setAttribute(Constants.VD_USED_IN_FORM, inForm);    //GF7680
+      }
       String sLongName = mVD.getVD_LONG_NAME();
       if (sLongName == null) sLongName = "";
       if (!sLongName.equals(""))

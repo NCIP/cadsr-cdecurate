@@ -464,7 +464,7 @@
 			}
 		}
 	}
-    function view(pvd, imgdhide, imgddisp, action, pvNo)
+    function view(pvd, imgdhide, imgddisp, action, pvNo, vdwfstatus, vdusedinform, pvusedinform, fmwfstatus) //GF7680 added 4 formal parameters
     {
         var pvdiv = document.getElementById(pvd);
         var imgdivhide = document.getElementById(imgdhide);
@@ -556,6 +556,45 @@
     	if (action == "view" || action == "edit") {
     		changeDepDivDisplay(pvNo, action);
         }
+
+        //=== begin of GF7680
+        //window.console && console.log('PermissibleValues.js handling new disabling logic ...');
+        window.console && console.log("*** GF7680 PermissibleValues.js VD vdwfstatus [" + vdwfstatus + "] vdusedinform [" + vdusedinform + "] pvusedinform [" + pvusedinform + "] fmwfstatus [" + fmwfstatus + "]");
+        if(vdwfstatus === 'RELEASED' && vdusedinform === true && pvusedinform === true && fmwfstatus === 'RELEASED') {
+            //#1
+            dojo.query("img.PVAction").forEach(function (node, index) {
+                var altText = node.getAttribute('alt');
+                //window.console && console.log('PVAction altText [' + altText + ']');
+                if (altText === 'Remove') {
+                    dojo.style(node, 'display', 'none');
+                    window.console && console.log('PVAction remove disabled');
+                }
+            });
+        }
+        if((vdwfstatus === 'RELEASED' && vdusedinform === true && pvusedinform === true && fmwfstatus === 'RELEASED') ||
+           (vdwfstatus === 'RELEASED' && vdusedinform === true && pvusedinform === true && fmwfstatus !== 'RELEASED') ||
+           (vdwfstatus === 'RELEASED' && vdusedinform === true && pvusedinform === false) ||
+           (vdwfstatus !== 'RELEASED' && vdusedinform === true && pvusedinform === true && fmwfstatus === 'RELEASED')
+         ) {
+            //#2
+            dojo.query('[name^="txtpv"]').forEach(function (node, index, arr) {
+                dojo.attr(node, "disabled", true);
+                window.console && console.log('PV/VM input disabled');
+            });
+        }
+        //#4 please keep the following for future requirements changes, if any
+        /*
+        dojo.query("img.ConceptAction").forEach(function(node, index){
+            var altText = node.getAttribute('alt');
+            //window.console && console.log('ConceptAction altText [' + altText + ']');
+            if(altText === 'Remove') {
+                dojo.style(node, 'display', 'none');
+                window.console && console.log('ConceptAction remove disabled');
+            }
+        });
+        */
+        //=== end of GF7680
+
     }
 	function changeDepDivDisplay(pvNo, action)
 	{

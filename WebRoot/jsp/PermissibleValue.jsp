@@ -1107,7 +1107,7 @@ L--%>
 						           // Vector<EVS_Bean> vmCon = vm.getVM_CONCEPT_LIST();
 						            		
 						            String dispStyle = "inline"; //GF33140 display by default
-						            String vdUsedInForm = (String)session.getAttribute(Constants.VD_USED_IN_FORM);  //GF7680
+						            Boolean vdUsedInForm = (Boolean)session.getAttribute(Constants.VD_USED_IN_FORM);  //GF7680
 									String workflowStatus = (String)session.getAttribute("selStatus");
 									String crfWorkflowStatus = pvBean.getCRF_WORKFLOW();    //GF7680
 						            /*
@@ -1119,22 +1119,22 @@ L--%>
 															<tr id="<%=pvCount%>">
 																<td align="center" valign="top">
 																	<div id="<%=pvCount%>ImgClose" style="display: <%if (viewType.equals("collapse")) {%>inline <% } else { %> none <% } %>">
-																		<a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgClose', '<%=pvCount%>ImgOpen', 'view', '<%=pvCount%>');"><img src="images/folderClosed.gif" border="0" alt="Expand"></a>
+																		<a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgClose', '<%=pvCount%>ImgOpen', 'view', '<%=pvCount%>', '<%=workflowStatus%>','<%=vdUsedInForm%>','<%=inForm%>','<%=crfWorkflowStatus%>');"><img src="images/folderClosed.gif" border="0" alt="Expand"></a>
 																	</div>
 																	<div id="<%=pvCount%>ImgOpen" style="display: <%if (viewType.equals("expand")) {%>inline <% } else { %> none <% } %>">
-																		<a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgOpen', '<%=pvCount%>ImgClose', 'view', '<%=pvCount%>');"><img src="images/folderOpen.gif" border="0" alt="Collapse"></a>
+																		<a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgOpen', '<%=pvCount%>ImgClose', 'view', '<%=pvCount%>', '<%=workflowStatus%>','<%=vdUsedInForm%>','<%=inForm%>','<%=crfWorkflowStatus%>');"><img src="images/folderOpen.gif" border="0" alt="Collapse"></a>
 																	</div>
 																 <%if (!isView){ %>	
 																	<div id="<%=pvCount%>ImgEdit" style="display: <%=dispStyle%>">
 																		<%
-																		System.out.println("vdWs [" + workflowStatus + "] vdUsedInForm [" + vdUsedInForm + "] pvUsedInForm [" + inForm + "] crfWs [" + crfWorkflowStatus + "]");
-																		if (inForm) {%> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>');" onclick="return confirm('This element is used in a form. Any edits will put the form out of sync. Are you sure you want to edit?');"><img src="images/edit.gif" border="0" alt="Edit" style="display: <%=dispStyle%>"></a>
-																		<% } else { %> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>');"><img src="images/edit.gif" border="0" alt="Edit" style="display: <%=dispStyle%>"></a>
+																		System.out.println("PermissibleValues.jsp vdWs [" + workflowStatus + "] vdUsedInForm [" + vdUsedInForm + "] pvUsedInForm [" + inForm + "] crfWs [" + crfWorkflowStatus + "]");
+																		if (inForm) {%> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>', '<%=workflowStatus%>','<%=vdUsedInForm%>','<%=inForm%>','<%=crfWorkflowStatus%>');" onclick="return confirm('This element is used in a form. Any edits will put the form out of sync. Are you sure you want to edit?');"><img src="images/edit.gif" border="0" alt="Edit" style="display: <%=dispStyle%>"></a>
+																		<% } else { %> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>', '<%=workflowStatus%>','<%=vdUsedInForm%>','<%=inForm%>','<%=crfWorkflowStatus%>');"><img src="images/edit.gif" border="0" alt="Edit" style="display: <%=dispStyle%>"></a>
 																		<% } %>
 																		
 																	</div>
 																	<div id="<%=pvCount%>ImgSave" style="display: <%=dispStyle%>">
-																		<a id="<%=pvCount%>ImgSaveLink" href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgSave', '<%=pvCount%>ImgEdit', 'save', '<%=pvCount%>');"><img src="images/save.gif" border="0" alt="Save"></a>
+																		<a id="<%=pvCount%>ImgSaveLink" href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgSave', '<%=pvCount%>ImgEdit', 'save', '<%=pvCount%>', '<%=workflowStatus%>','<%=vdUsedInForm%>','<%=inForm%>','<%=crfWorkflowStatus%>');"><img src="images/save.gif" border="0" alt="Save"></a>
 																	</div>
 																	<div id="<%=pvCount%>ImgDelete" style="display: <%=dispStyle%>">
 																	 <a href="javascript:confirmRM('<%=pvCount%>', 'remove', 'the Permissible Value : <%=sPVValJ%>');"><img src="images/delete.gif" border="0" alt="Remove" style="display: <%=dispStyle%>"></a>
@@ -1397,7 +1397,8 @@ L--%>
 																				<table cellpadding="0.1in,0.1in,0.1in,0.1in">
 																					<tr>
 																						<td>
-																							<input type="button" id="btnUseSelect" value="Use Selection" disabled onClick="javascript:view('<%=sEditPV%>View', '<%=sEditPV%>ImgSave', '<%=sEditPV%>ImgEdit', 'save', '<%=sEditPV%>');">
+																							<%--<input type="button" id="btnUseSelect" value="Use Selection" disabled onClick="javascript:view('<%=sEditPV%>View', '<%=sEditPV%>ImgSave', '<%=sEditPV%>ImgEdit', 'save', '<%=sEditPV%>');">--%>
+    <input type="button" id="btnUseSelect1" value="Use Selection" disabled onClick="javascript:view('<%=sEditPV%>View', '<%=sEditPV%>ImgSave', '<%=sEditPV%>ImgEdit', 'save', '<%=sEditPV%>', '<%=workflowStatus%>','<%=vdUsedInForm%>','<%=inForm%>','<%=crfWorkflowStatus%>');">   <!-- GF7680 appended 4 parameters -->
 																						</td>
 																						<td>
 																							&nbsp;&nbsp;
