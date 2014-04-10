@@ -560,7 +560,7 @@
         //=== begin of GF7680
         //window.console && console.log('PermissibleValues.js handling new disabling logic ...');
         window.console && console.log("*** GF7680 PermissibleValues.js VD vdwfstatus [" + vdwfstatus + "] vdusedinform [" + vdusedinform + "] pvusedinform [" + pvusedinform + "] fmwfstatus [" + fmwfstatus + "]");
-        if(vdwfstatus === 'RELEASED' && vdusedinform === true && pvusedinform === true && fmwfstatus === 'RELEASED') {
+        if(vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus === 'RELEASED') {
             //#1
             dojo.query("img.PVAction").forEach(function (node, index) {
                 var altText = node.getAttribute('alt');
@@ -571,10 +571,10 @@
                 }
             });
         }
-        if((vdwfstatus === 'RELEASED' && vdusedinform === true && pvusedinform === true && fmwfstatus === 'RELEASED') ||
-           (vdwfstatus === 'RELEASED' && vdusedinform === true && pvusedinform === true && fmwfstatus !== 'RELEASED') ||
-           (vdwfstatus === 'RELEASED' && vdusedinform === true && pvusedinform === false) ||
-           (vdwfstatus !== 'RELEASED' && vdusedinform === true && pvusedinform === true && fmwfstatus === 'RELEASED')
+        if((vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus === 'RELEASED') ||
+           (vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus !== 'RELEASED') ||
+           (vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === false) ||
+           (vdwfstatus !== 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus === 'RELEASED')
          ) {
             //#2
             dojo.query('[name^="txtpv"]').forEach(function (node, index, arr) {
