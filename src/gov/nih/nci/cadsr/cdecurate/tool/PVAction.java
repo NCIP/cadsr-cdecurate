@@ -370,6 +370,37 @@ public class PVAction implements Serializable {
 
 		vd.setValidateList(vValidate);
 	}
+	
+	//GF7680
+	private String getCRFWorkflowStatus(PVForm data, String vpId) throws Exception {
+		if(vpId == null || vpId.equals("")) {
+			throw new Exception("PVAction: CRF Form Workflow requires a valid/non-empty vpId!");
+		}
+		String retVal = "Unknown";
+		PreparedStatement pstmt = null;
+		String sql = "SELECT " +
+                "DISTINCT " +
+                "crf.long_name as \"Form Name\", crf.public_id as \"Pub. Id\", CRF.VERSION as \"Ver.\", " +
+                "CRF.WORKFLOW as \"Workflow\" " +
+                ",CRF.CONTEXT_NAME as \"Context\", UA.NAME as \"Created By\", CRF.CREATED_BY, crf.qc_idseq " +
+                "FROM SBREXT.FB_FORMS_VIEW crf ,SBREXT.QUEST_CONTENTS_VIEW_EXT qc ,SBR.VD_PVS_VIEW vdpvs1 ,SBR.USER_ACCOUNTS_VIEW ua " +
+                "WHERE " +
+                "(qc.VP_IDSEQ = vdpvs1.VP_IDSEQ) AND (qc.DN_CRF_IDSEQ = crf.QC_IDSEQ) AND (CRF.CREATED_BY = UA.UA_NAME) AND " +
+                "VDPVS1.VP_IDSEQ = ?";
+
+		pstmt = data
+				.getCurationServlet()
+				.getConn()
+				.prepareStatement(sql);
+		pstmt.setString(1, vpId);
+		ResultSet rs = pstmt.executeQuery();
+		while (rs.next()) {
+			retVal = rs.getString("Workflow");
+			break;	//assume only one record
+		}
+		
+		return retVal;
+	}
 
 	/**
 	 * To get the Permissible Values for the selected AC  from the database.
@@ -390,6 +421,9 @@ public class PVAction implements Serializable {
 	{
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
+		Database mon = new Database();
+		mon.setEnabled(true);
+		mon.trace(data.getCurationServlet().getConn());
 		Vector<PV_Bean> vList = new Vector<PV_Bean>();
 		try {
 			if (data.getCurationServlet().getConn() != null) {
@@ -447,7 +481,7 @@ public class PVAction implements Serializable {
 						this.doSetParentAttributes(sCon, pvBean, data);
 
 						//begin GF7680
-						String formWorkflow = rs.getString("WORKFLOW");
+						String formWorkflow = getCRFWorkflowStatus(data, pvBean.getPV_VDPVS_IDSEQ());	//rs.getString("WORKFLOW");
 						pvBean.setCRF_WORKFLOW(formWorkflow);
 						//end GF7680
 						
@@ -463,6 +497,8 @@ public class PVAction implements Serializable {
 		finally{
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
+			System.out.println("-------------------------- PVAction: 2 doPVACSearch() ---------------------------");
+			mon.show();
 		}
 		
 		vList = populateFormInfo(vList, data);
@@ -916,7 +952,7 @@ public class PVAction implements Serializable {
 			sMsg += "\\t Exception : Unable to update or remove PV of VD.";
 		}finally{
 		  cstmt = SQLHelper.closeCallableStatement(cstmt);
-			System.out.println("-------------------------- PVAction: 1 ---------------------------");
+			System.out.println("-------------------------- PVAction: 1 setVD_PVS() ---------------------------");
 			mon.show();
 		}
 		return sMsg;
