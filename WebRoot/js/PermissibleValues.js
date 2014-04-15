@@ -582,9 +582,9 @@
             (vdwfstatus !== 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus === 'RELEASED' /* cond 5 */)
          ) {
             //#2 disablement
-            dojo.query('[id^="txtpvonly"]').forEach(function (node, index, arr) { //GF7680 "txtpvonly" has to be the same as gov.nih.nci.cadsr.common.PV_NAME
+            dojo.query('[id^="txtpv"]').forEach(function (node, index, arr) { //GF7680 "txtpvonly" has to be the same as gov.nih.nci.cadsr.common.PV_NAME
                 try {
-                    dojo.attr(node, "disabled", true);
+                    dojo.attr(node, "readonly", true);
                     window.console && console.log('PV/VM input disabled');
                 } catch(e) {
                     window.console && console.log('Error: Not able to disable PV/VM input, ' + e);
