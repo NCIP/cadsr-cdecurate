@@ -560,8 +560,10 @@
         //=== begin of GF7680
         //window.console && console.log('PermissibleValues.js handling new disabling logic ...');
         window.console && console.log("*** GF7680 PermissibleValues.js VD vdwfstatus [" + vdwfstatus + "] vdusedinform [" + vdusedinform + "] pvusedinform [" + pvusedinform + "] fmwfstatus [" + fmwfstatus + "]");
-        if(vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus === 'RELEASED') {
-            //#1
+        if((vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true') /* cond 2 and 3 */ ||
+            (vdwfstatus !== 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus === 'RELEASED' /* cond 5 */)
+        ) {
+            //#1 disablement
             dojo.query("img.PVAction").forEach(function (node, index) {
                 var altText = node.getAttribute('alt');
                 //window.console && console.log('PVAction altText [' + altText + ']');
@@ -571,12 +573,11 @@
                 }
             });
         }
-        if((vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus === 'RELEASED') ||
-           (vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus !== 'RELEASED') ||
-           (vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === false) ||
-           (vdwfstatus !== 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus === 'RELEASED')
+        if((vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true') /* cond 2 and 3 */ ||
+           (vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'false') /* cond 4 */ ||
+            (vdwfstatus !== 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus === 'RELEASED' /* cond 5 */)
          ) {
-            //#2
+            //#2 disablement
             dojo.query('[name^="txtpv"]').forEach(function (node, index, arr) {
                 dojo.attr(node, "disabled", true);
                 window.console && console.log('PV/VM input disabled');

@@ -14,6 +14,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.common.Database;
 
 import java.io.Serializable;
@@ -29,6 +30,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.servlet.http.HttpSession;
+
 
 
 
@@ -372,11 +374,18 @@ public class PVAction implements Serializable {
 	}
 	
 	//GF7680
+	/**
+	 * Method to get workflow of the form referring to the PV/VM. It will just returns either "RELEASED" or "NON RELEASED".
+	 * @param data
+	 * @param vpId
+	 * @return
+	 * @throws Exception
+	 */
 	private String getCRFWorkflowStatus(PVForm data, String vpId) throws Exception {
 		if(vpId == null || vpId.equals("")) {
 			throw new Exception("PVAction: CRF Form Workflow requires a valid/non-empty vpId!");
 		}
-		String retVal = "Unknown";
+		String retVal = Constants.WORKFLOW_STATUS_NOT_RELEASED;
 		PreparedStatement pstmt = null;
 		String sql = "SELECT " +
                 "DISTINCT " +
@@ -386,7 +395,7 @@ public class PVAction implements Serializable {
                 "FROM SBREXT.FB_FORMS_VIEW crf ,SBREXT.QUEST_CONTENTS_VIEW_EXT qc ,SBR.VD_PVS_VIEW vdpvs1 ,SBR.USER_ACCOUNTS_VIEW ua " +
                 "WHERE " +
                 "(qc.VP_IDSEQ = vdpvs1.VP_IDSEQ) AND (qc.DN_CRF_IDSEQ = crf.QC_IDSEQ) AND (CRF.CREATED_BY = UA.UA_NAME) AND " +
-                "VDPVS1.VP_IDSEQ = ?";
+                "VDPVS1.VP_IDSEQ = ? order by crf.long_name desc";
 
 		pstmt = data
 				.getCurationServlet()
@@ -396,9 +405,12 @@ public class PVAction implements Serializable {
 		ResultSet rs = pstmt.executeQuery();
 		while (rs.next()) {
 			retVal = rs.getString("Workflow");
-			break;	//assume only one record
+			if(retVal != null && retVal.trim().equalsIgnoreCase(Constants.WORKFLOW_STATUS_RELEASED)) {
+				retVal = Constants.WORKFLOW_STATUS_RELEASED;
+				break;	//assume only one record
+			}
 		}
-		
+
 		return retVal;
 	}
 

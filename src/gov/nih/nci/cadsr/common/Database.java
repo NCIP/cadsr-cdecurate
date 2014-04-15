@@ -62,16 +62,16 @@ public class Database {
 	public void show() {
 		if(enabled) {
 			try {
-				LogUtil.log("$$$$$$ Database.show() begin $$$$$$>");
+				LogUtil.log("begin $$$$$$>");
 				dbmsOutput.show();
 			    dbmsOutput.close();
-			    LogUtil.log("<$$$$$$ Database.show() end $$$$$$");
+			    LogUtil.log("<end $$$$$$");
 			} catch (Exception e) {
-				LogUtil.log("----- Database.show() begin error ------>");
+				LogUtil.log("----- begin error ------>");
 				e.printStackTrace();
-				LogUtil.log("<----- Database.show() end error ------");
+				LogUtil.log("<----- end error ------");
 			}
-			LogUtil.log("$$$$$$ Database.show() end $$$$$$>");
+			LogUtil.log("end $$$$$$>");
 		}
 	}
 	

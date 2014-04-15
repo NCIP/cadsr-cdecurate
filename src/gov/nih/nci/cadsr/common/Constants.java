@@ -18,6 +18,7 @@ public class Constants {
 	public static final String USER_SELECTED_ALTERNATE_DEF_COMP4_COUNT = "userSelectedDef_Comp4_Count";
     //GF7680 
     public static final String WORKFLOW_STATUS_RELEASED = "RELEASED";
+    public static final String WORKFLOW_STATUS_NOT_RELEASED = "NOT RELEASED";
     public static final String VD_USED_IN_FORM = "VDUsedInForm";
 	//GF32723
 	public static final String USER_SELECTED_VOCAB = "userSelectedDtsVocab";
