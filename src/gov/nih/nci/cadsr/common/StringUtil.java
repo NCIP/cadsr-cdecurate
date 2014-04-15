@@ -129,6 +129,12 @@ public class StringUtil {
 		return sw.toString();
 	}	
 	
+	/**
+	 * This method is added to address XSS issue discovered during app scan.
+	 * 
+	 * @param stringToClean
+	 * @return
+	 */
 	public static String cleanJavascriptAndHtml(String stringToClean) {
 		if (stringToClean == null)
 			return stringToClean;
