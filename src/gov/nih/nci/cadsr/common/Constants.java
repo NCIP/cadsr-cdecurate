@@ -20,6 +20,7 @@ public class Constants {
     public static final String WORKFLOW_STATUS_RELEASED = "RELEASED";
     public static final String WORKFLOW_STATUS_NOT_RELEASED = "NOT RELEASED";
     public static final String VD_USED_IN_FORM = "VDUsedInForm";
+    public static final String PV_NAME = "txtpvonly";
 	//GF32723
 	public static final String USER_SELECTED_VOCAB = "userSelectedDtsVocab";
 	public static final String USER_SELECTED_CON_CODE = "userSelectedConceptCode";

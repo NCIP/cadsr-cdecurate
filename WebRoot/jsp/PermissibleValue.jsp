@@ -1189,7 +1189,7 @@ L--%>
 																	</div>
 																	<div id="<%=pvCount%>ValueEdit" style="display: none">
 																		&nbsp;&nbsp;
-																		<input type="text" name="txt<%=pvCount%>Value" maxlength="255" width="98%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'pv');" value="<%=sPVValJsp%>">
+                                                                        <!-- GF7680 pvname only --><input type="text" id="txtpvonly<%=pvCount%>" name="txt<%=pvCount%>Value" maxlength="255" width="98%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'pv');" value="<%=sPVValJsp%>">
 																	</div>
 																</td>
 																<td valign="top">
