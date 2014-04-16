@@ -6223,152 +6223,211 @@ public class InsACService implements Serializable {
 		   return name;
    }
 
-	public String doSetDEC(String sAction, DEC_Bean dec, String sInsertFor, DEC_Bean oldDEC){
+	public String doSetDEC(String sAction, DEC_Bean dec, String sInsertFor,
+			DEC_Bean oldDEC) {
 		String sReturnCode = "";
-	    HttpSession session = m_classReq.getSession();
+		HttpSession session = m_classReq.getSession();
 		ValidationStatusBean ocStatusBean = new ValidationStatusBean();
-        ValidationStatusBean propStatusBean = new ValidationStatusBean();
+		ValidationStatusBean propStatusBean = new ValidationStatusBean();
 		Vector vObjectClass = (Vector) session.getAttribute("vObjectClass");
 		Vector vProperty = (Vector) session.getAttribute("vProperty");
-	    String userName = (String)session.getAttribute("Username");
-		HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
-		String conteIdseq= (String)defaultContext.get("idseq");
-		String checkValidityOC = (String)session.getAttribute("checkValidityOC");
-        String checkValidityProp = (String)session.getAttribute("checkValidityProp");
-		try{
-		    m_classReq.setAttribute("retcode", "");
-    		if (checkValidityOC.equals("Yes")){
-		      if ((vObjectClass != null && vObjectClass.size()>0) && (defaultContext != null && defaultContext.size()>0)){
-        	     ocStatusBean = this.evsBeanCheck(vObjectClass, defaultContext, "", "Object Class");
-         	  }
-    		}
-         	if (checkValidityProp.equals("Yes")){
-    		  if ((vProperty != null && vProperty.size()>0) && (defaultContext != null && defaultContext.size()>0)){
-        	    propStatusBean = this.evsBeanCheck(vProperty, defaultContext, "", "Property");
-         	  }
-         	}
-         	
-    		//GF30681 ---- begin new CDR rule !!!
-            //use the existing DEC if exists based on the new CDR for DEC
-     		//DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
-         	String cdrName = (String)session.getAttribute(Constants.DEC_CDR_NAME);
-			String strInValid = checkDECUniqueCDRName(cdrName);
-			if (strInValid != null && !strInValid.equals("")) {
-				sReturnCode = strInValid;
+		String userName = (String) session.getAttribute("Username");
+		HashMap<String, String> defaultContext = (HashMap) session
+				.getAttribute("defaultContext");
+		String conteIdseq = (String) defaultContext.get("idseq");
+		String checkValidityOC = (String) session
+				.getAttribute("checkValidityOC");
+		String checkValidityProp = (String) session
+				.getAttribute("checkValidityProp");
+		try {
+			m_classReq.setAttribute("retcode", "");
+			if (checkValidityOC.equals("Yes")) {
+				if ((vObjectClass != null && vObjectClass.size() > 0)
+						&& (defaultContext != null && defaultContext.size() > 0)) {
+					ocStatusBean = this.evsBeanCheck(vObjectClass,
+							defaultContext, "", "Object Class");
+				}
 			}
-    		//GF30681 ---- end new CDR rule !!!
-			//begin GF33178
-			else {
-				cdrName = cdrName.replaceAll("::", ":");
-				strInValid = checkDECUniqueCDRName(cdrName);
+			if (checkValidityProp.equals("Yes")) {
+				if ((vProperty != null && vProperty.size() > 0)
+						&& (defaultContext != null && defaultContext.size() > 0)) {
+					propStatusBean = this.evsBeanCheck(vProperty,
+							defaultContext, "", "Property");
+				}
+			}
+
+			// GF30681 ---- begin new CDR rule !!!
+			// use the existing DEC if exists based on the new CDR for DEC
+			// DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
+			String cdrName = (String) session
+					.getAttribute(Constants.DEC_CDR_NAME);
+			if(cdrName != null) {	//avoid NPE during DEC update
+				String strInValid = checkDECUniqueCDRName(cdrName);
 				if (strInValid != null && !strInValid.equals("")) {
 					sReturnCode = strInValid;
 				}
+				// GF30681 ---- end new CDR rule !!!
+				// begin GF33178
+				else {
+					cdrName = cdrName.replaceAll("::", ":");
+					strInValid = checkDECUniqueCDRName(cdrName);
+					if (strInValid != null && !strInValid.equals("")) {
+						sReturnCode = strInValid;
+					}
+				}
+				// end GF33178
 			}
-			//end GF33178
-         	
-         	if(sReturnCode != null && !sReturnCode.equals("")) {	//begin of GF30681 final duplicate check (new)
-         		//do nothing
-         		logger.info("Exising DEC found with CDR!");
-         	} else {	//existing check continues
-         	if (checkValidityOC.equals("Yes")){
-         	//set OC if it is null
-         	if ((vObjectClass != null && vObjectClass.size()>0)){
-         	 if (!ocStatusBean.isEvsBeanExists()){
-        				if (ocStatusBean.isCondrExists()) {
-							dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean.getCondrIDSEQ());
-						    // Create Object Class
-							String ocIdseq = this.createEvsBean(userName, ocStatusBean.getCondrIDSEQ(), conteIdseq, "Object Class");
-							if (ocIdseq != null && !ocIdseq.equals("")) {
-								dec.setDEC_OCL_IDSEQ(ocIdseq);
-								logger.debug("At Line 6044 of InsACService.java DEC_OCL_IDSEQ"+ocIdseq+"DEC_OC_CONDR_IDSEQ"+ocStatusBean.getCondrIDSEQ());
-							}
-						} else {
-							// Create Condr
-							String condrIdseq = this.createCondr(vObjectClass, ocStatusBean.isAllConceptsExists());
-							String ocIdseq = "";
-							// Create Object Class
-							if (condrIdseq != null && !condrIdseq.equals("")) {
-								dec.setDEC_OC_CONDR_IDSEQ(condrIdseq);
-								logger.debug("At Line 6053 DEC_OC_CONDR_IDSEQ"+condrIdseq);
-								ocIdseq = this.createEvsBean(userName, condrIdseq, conteIdseq, "Object Class");
-							}
-							if (ocIdseq != null && !ocIdseq.equals("")) {
-								dec.setDEC_OCL_IDSEQ(ocIdseq);
-								logger.debug("At Line 6058 of InsACService.java DEC_OCL_IDSEQ"+ocIdseq);
-							}
-						}
 
-           	 }else{
-           		if (ocStatusBean.isNewVersion()) {
-         	        if (ocStatusBean.getEvsBeanIDSEQ() != null && !ocStatusBean.getEvsBeanIDSEQ().equals("")){
-         	             String newID = "";
-         	             newID = this.setOC_PROP_REP_VERSION(ocStatusBean.getEvsBeanIDSEQ(), "ObjectClass");
-         	             if (newID != null && !newID.equals("")){
-         	            	dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean.getCondrIDSEQ());
-         	                dec.setDEC_OCL_IDSEQ(newID);
-         	             }
-         	          }
-				} else {
-           		      dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean.getCondrIDSEQ());
-           		      dec.setDEC_OCL_IDSEQ(ocStatusBean.getEvsBeanIDSEQ());
-				}
-           	 }
-         	}
-         	}
-         	if (checkValidityProp.equals("Yes")){
-         	//set property if it is null
-            if ((vProperty != null && vProperty.size()>0)){
-         	 if (!propStatusBean.isEvsBeanExists()){
-       				if (propStatusBean.isCondrExists()) {
-							dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean.getCondrIDSEQ());
-						    // Create Property
-							String propIdseq = this.createEvsBean(userName, propStatusBean.getCondrIDSEQ(), conteIdseq, "Property");
-							if (propIdseq != null && !propIdseq.equals("")) {
-								dec.setDEC_PROPL_IDSEQ(propIdseq);
-								logger.debug("At Line 6089 of InsACService.java DEC_PROPL_IDSEQ"+propIdseq+"DEC_PROP_CONDR_IDSEQ"+propStatusBean.getCondrIDSEQ());
+			if (sReturnCode != null && !sReturnCode.equals("")) { // begin of
+																	// GF30681
+																	// final
+																	// duplicate
+																	// check
+																	// (new)
+				// do nothing
+				logger.info("Exising DEC found with CDR!");
+			} else { // existing check continues
+				if (checkValidityOC.equals("Yes")) {
+					// set OC if it is null
+					if ((vObjectClass != null && vObjectClass.size() > 0)) {
+						if (!ocStatusBean.isEvsBeanExists()) {
+							if (ocStatusBean.isCondrExists()) {
+								dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean
+										.getCondrIDSEQ());
+								// Create Object Class
+								String ocIdseq = this.createEvsBean(userName,
+										ocStatusBean.getCondrIDSEQ(),
+										conteIdseq, "Object Class");
+								if (ocIdseq != null && !ocIdseq.equals("")) {
+									dec.setDEC_OCL_IDSEQ(ocIdseq);
+									logger.debug("At Line 6044 of InsACService.java DEC_OCL_IDSEQ"
+											+ ocIdseq
+											+ "DEC_OC_CONDR_IDSEQ"
+											+ ocStatusBean.getCondrIDSEQ());
+								}
+							} else {
+								// Create Condr
+								String condrIdseq = this.createCondr(
+										vObjectClass,
+										ocStatusBean.isAllConceptsExists());
+								String ocIdseq = "";
+								// Create Object Class
+								if (condrIdseq != null
+										&& !condrIdseq.equals("")) {
+									dec.setDEC_OC_CONDR_IDSEQ(condrIdseq);
+									logger.debug("At Line 6053 DEC_OC_CONDR_IDSEQ"
+											+ condrIdseq);
+									ocIdseq = this.createEvsBean(userName,
+											condrIdseq, conteIdseq,
+											"Object Class");
+								}
+								if (ocIdseq != null && !ocIdseq.equals("")) {
+									dec.setDEC_OCL_IDSEQ(ocIdseq);
+									logger.debug("At Line 6058 of InsACService.java DEC_OCL_IDSEQ"
+											+ ocIdseq);
+								}
 							}
+
 						} else {
-							// Create Condr
-							String condrIdseq = this.createCondr(vProperty, propStatusBean.isAllConceptsExists());
-							String propIdseq = "";
-							// Create Property
-							if (condrIdseq != null && !condrIdseq.equals("")) {
-								dec.setDEC_PROP_CONDR_IDSEQ(condrIdseq);
-								logger.debug("At Line 6098 of InsACService.java DEC_PROP_CONDR_IDSEQ"+condrIdseq);
-								propIdseq = this.createEvsBean(userName, condrIdseq, conteIdseq,"Property");
-							}
-							if (propIdseq != null && !propIdseq.equals("")) {
-								dec.setDEC_PROPL_IDSEQ(propIdseq);
-								logger.debug("At Line 6103 of InsACService.java DEC_PROPL_IDSEQ"+propIdseq);
+							if (ocStatusBean.isNewVersion()) {
+								if (ocStatusBean.getEvsBeanIDSEQ() != null
+										&& !ocStatusBean.getEvsBeanIDSEQ()
+												.equals("")) {
+									String newID = "";
+									newID = this.setOC_PROP_REP_VERSION(
+											ocStatusBean.getEvsBeanIDSEQ(),
+											"ObjectClass");
+									if (newID != null && !newID.equals("")) {
+										dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean
+												.getCondrIDSEQ());
+										dec.setDEC_OCL_IDSEQ(newID);
+									}
+								}
+							} else {
+								dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean
+										.getCondrIDSEQ());
+								dec.setDEC_OCL_IDSEQ(ocStatusBean
+										.getEvsBeanIDSEQ());
 							}
 						}
-	       	 }else{
-           		if (propStatusBean.isNewVersion()) {
-         	        if (propStatusBean.getEvsBeanIDSEQ() != null && !propStatusBean.getEvsBeanIDSEQ().equals("")){
-         	             String newID = "";
-         	             newID = this.setOC_PROP_REP_VERSION(propStatusBean.getEvsBeanIDSEQ(), "Property");
-         	             if (newID != null && !newID.equals("")){
-         	            	dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean.getCondrIDSEQ());
-         	                dec.setDEC_PROPL_IDSEQ(newID);
-         	             }
-         	          }
-				} else {
-           		     dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean.getCondrIDSEQ());
-           		     dec.setDEC_PROPL_IDSEQ(propStatusBean.getEvsBeanIDSEQ());
+					}
 				}
-           	 }
-         }
-         }
-    	 sReturnCode = this.setDEC(sAction, dec, sInsertFor, oldDEC);
-		} 	//end of GF30681 final duplicate check (new)
-    	}catch(Exception e){
-    		logger.error("ERROR in InsACService-setDEC for other : "+ e.toString(), e);
+				if (checkValidityProp.equals("Yes")) {
+					// set property if it is null
+					if ((vProperty != null && vProperty.size() > 0)) {
+						if (!propStatusBean.isEvsBeanExists()) {
+							if (propStatusBean.isCondrExists()) {
+								dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean
+										.getCondrIDSEQ());
+								// Create Property
+								String propIdseq = this.createEvsBean(userName,
+										propStatusBean.getCondrIDSEQ(),
+										conteIdseq, "Property");
+								if (propIdseq != null && !propIdseq.equals("")) {
+									dec.setDEC_PROPL_IDSEQ(propIdseq);
+									logger.debug("At Line 6089 of InsACService.java DEC_PROPL_IDSEQ"
+											+ propIdseq
+											+ "DEC_PROP_CONDR_IDSEQ"
+											+ propStatusBean.getCondrIDSEQ());
+								}
+							} else {
+								// Create Condr
+								String condrIdseq = this.createCondr(vProperty,
+										propStatusBean.isAllConceptsExists());
+								String propIdseq = "";
+								// Create Property
+								if (condrIdseq != null
+										&& !condrIdseq.equals("")) {
+									dec.setDEC_PROP_CONDR_IDSEQ(condrIdseq);
+									logger.debug("At Line 6098 of InsACService.java DEC_PROP_CONDR_IDSEQ"
+											+ condrIdseq);
+									propIdseq = this.createEvsBean(userName,
+											condrIdseq, conteIdseq, "Property");
+								}
+								if (propIdseq != null && !propIdseq.equals("")) {
+									dec.setDEC_PROPL_IDSEQ(propIdseq);
+									logger.debug("At Line 6103 of InsACService.java DEC_PROPL_IDSEQ"
+											+ propIdseq);
+								}
+							}
+						} else {
+							if (propStatusBean.isNewVersion()) {
+								if (propStatusBean.getEvsBeanIDSEQ() != null
+										&& !propStatusBean.getEvsBeanIDSEQ()
+												.equals("")) {
+									String newID = "";
+									newID = this.setOC_PROP_REP_VERSION(
+											propStatusBean.getEvsBeanIDSEQ(),
+											"Property");
+									if (newID != null && !newID.equals("")) {
+										dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean
+												.getCondrIDSEQ());
+										dec.setDEC_PROPL_IDSEQ(newID);
+									}
+								}
+							} else {
+								dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean
+										.getCondrIDSEQ());
+								dec.setDEC_PROPL_IDSEQ(propStatusBean
+										.getEvsBeanIDSEQ());
+							}
+						}
+					}
+				}
+				sReturnCode = this.setDEC(sAction, dec, sInsertFor, oldDEC);
+			} // end of GF30681 final duplicate check (new)
+		} catch (Exception e) {
+			logger.error(
+					"ERROR in InsACService-setDEC for other : " + e.toString(),
+					e);
+			System.out.println("InsACService doSetDEC() exception: " + e);
 			m_classReq.setAttribute("retcode", "Exception");
-			this.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes.");	//GF33182 tagged
-    	}
-    	return sReturnCode;
+			this.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes."); // GF33182
+																										// tagged
+		}
+		return sReturnCode;
 	}
+
 	public String createCondr(Vector vConceptList, boolean isAllConceptsExists){
 		String condrIdseq = "";
 		try {
