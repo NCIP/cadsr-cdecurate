@@ -1,4 +1,4 @@
-<%--L
+    <%--L
   Copyright ScenPro Inc, SAIC-F
 
   Distributed under the OSI-approved BSD 3-Clause License.
@@ -246,13 +246,21 @@ L--%>
       if (opener.document == null)
         window.close();
       EnableCheckButtons(checked, currentField, "<%=StringEscapeUtils.escapeJavaScript(sMAction)%>")
-      opener.document.newDECForm.isAConcept.value = isAConcept;		//GF30798
+      try {
+        opener.document.newDECForm.isAConcept.value = isAConcept;		//GF30798
+      } catch(e) {
+        window.console && console.log("SearchResultsBlocks.jsp EnableButtons error: " + e);
+      }
       //alert("SearchResultsBlocks EnableButtons called!");
       //opener.document.newDECForm.conceptName.value = "TEST CONCEPT NAME";
       //begin GF32723
-      var userVocab = document.searchParmsForm.listContextFilterVocab[document.searchParmsForm.listContextFilterVocab.selectedIndex].text;  //window.userSelectedVocab
-      opener.document.newDECForm.value = userVocab;
-      window.console && console.log('SearchResultsBlocks.jsp EnableButtons opener.document.newDECForm.value = [' + opener.document.newDECForm.value + ']');
+      var userVocab = document.searchParmsForm.listContextFilterVocab[document.searchParmsForm.listContextFilterVocab.selectedIndex].text;            //window.userSelectedVocab
+      try {
+        opener.document.newDECForm.value = userVocab;
+        window.console && console.log('SearchResultsBlocks.jsp EnableButtons opener.document.newDECForm.value = [' + opener.document.newDECForm.value + ']');
+      } catch(e) {
+        window.console && console.log("SearchResultsBlocks.jsp EnableButtons error: " + e);
+      }
     //end GF32723
    }
    
