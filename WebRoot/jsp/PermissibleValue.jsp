@@ -1620,7 +1620,7 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 							<!-- stores the selected rows to get the bean from the search results -->
 							<select name="hiddenSelRow" size="1" style="visibility:hidden;width:160" multiple></select>
 							<!-- use both name and id -->
-							<select id="hiddenConVM" name="hiddenConVM" size="1" style="visibility:hidden;width:160" multiple></select>
+							<select id="hiddenConVM" name="hiddenConVM" size="100" style="visibility:hidden;width:160" multiple></select>
 							<input type="hidden" name="acSearch" value="">
 						</div>
 					</form>

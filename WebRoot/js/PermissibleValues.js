@@ -560,48 +560,50 @@
         //=== begin of GF7680
         //window.console && console.log('PermissibleValues.js handling new disabling logic ...');
         window.console && console.log("*** GF7680 PermissibleValues.js VD vdwfstatus [" + vdwfstatus + "] vdusedinform [" + vdusedinform + "] pvusedinform [" + pvusedinform + "] fmwfstatus [" + fmwfstatus + "]");
-        if((vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true') /* cond 2 and 3 */ ||
-            (vdwfstatus !== 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus === 'RELEASED' /* cond 5 */)
-        ) {
-            //#1 disablement
-            dojo.query("img.PVAction").forEach(function (node, index) {
-                try {
-                    var altText = node.getAttribute('alt');
-                    //window.console && console.log('PVAction altText [' + altText + ']');
-                    if (altText === 'Remove') {
-                        dojo.style(node, 'display', 'none');
-                        window.console && console.log('PVAction remove disabled');
+        if(fmwfstatus !== 'null') { //only for existing VD
+            if ((vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true') /* cond 2 and 3 */ ||
+                (vdwfstatus !== 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus === 'RELEASED' /* cond 5 */)
+                ) {
+                //#1 disablement
+                dojo.query("img.PVAction").forEach(function (node, index) {
+                    try {
+                        var altText = node.getAttribute('alt');
+                        //window.console && console.log('PVAction altText [' + altText + ']');
+                        if (altText === 'Remove') {
+                            dojo.style(node, 'display', 'none');
+                            window.console && console.log('PVAction remove disabled');
+                        }
+                    } catch (e) {
+                        window.console && console.log('Error: Not able to disable PVAction remove, ' + e);
                     }
-                } catch(e) {
-                    window.console && console.log('Error: Not able to disable PVAction remove, ' + e);
-                }
-            });
-        }
-        if((vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true') /* cond 2 and 3 */ ||
-           (vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'false') /* cond 4 */ ||
-            (vdwfstatus !== 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus === 'RELEASED' /* cond 5 */)
-         ) {
-            //#2 disablement
-            dojo.query('[id^="txtpv"]').forEach(function (node, index, arr) { //GF7680 "txtpvonly" has to be the same as gov.nih.nci.cadsr.common.PV_NAME
-                try {
-                    dojo.attr(node, "readonly", true);
-                    window.console && console.log('PV/VM input disabled');
-                } catch(e) {
-                    window.console && console.log('Error: Not able to disable PV/VM input, ' + e);
-                }
-            });
-        }
-        //#4 please keep the following for future requirements changes, if any
-        /*
-        dojo.query("img.ConceptAction").forEach(function(node, index){
-            var altText = node.getAttribute('alt');
-            //window.console && console.log('ConceptAction altText [' + altText + ']');
-            if(altText === 'Remove') {
-                dojo.style(node, 'display', 'none');
-                window.console && console.log('ConceptAction remove disabled');
+                });
             }
-        });
-        */
+            if ((vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true') /* cond 2 and 3 */ ||
+                (vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'false') /* cond 4 */ ||
+                (vdwfstatus !== 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus === 'RELEASED' /* cond 5 */)
+                ) {
+                //#2 disablement
+                dojo.query('[id^="txtpv"]').forEach(function (node, index, arr) { //GF7680 "txtpvonly" has to be the same as gov.nih.nci.cadsr.common.PV_NAME
+                    try {
+                        dojo.attr(node, "readonly", true);
+                        window.console && console.log('PV/VM input disabled');
+                    } catch (e) {
+                        window.console && console.log('Error: Not able to disable PV/VM input, ' + e);
+                    }
+                });
+            }
+            //#4 please keep the following for future requirements changes, if any
+            /*
+             dojo.query("img.ConceptAction").forEach(function(node, index){
+             var altText = node.getAttribute('alt');
+             //window.console && console.log('ConceptAction altText [' + altText + ']');
+             if(altText === 'Remove') {
+             dojo.style(node, 'display', 'none');
+             window.console && console.log('ConceptAction remove disabled');
+             }
+             });
+             */
+        }
         //=== end of GF7680
 
     }
