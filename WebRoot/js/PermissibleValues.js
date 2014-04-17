@@ -1440,8 +1440,12 @@
   		vm.innerText = appName;  // vmName;
   		vm.textContent = appName;
   		var vmFormName = getByName("txt"+pvInd+"Mean");  // vmName;
-  		vmFormName.value = appName;
-  		
+  		// GF33216
+  		if (vmFormName != null )
+  		{
+  			vmFormName.value = appName;
+  		}
+  		// GF33216
   		document.PVForm.currentVM.value = appName;
   		//get the vm description object
   		var vmd = document.getElementById(pvInd + "VMDView");
@@ -1456,7 +1460,12 @@
   		vmd.innerText = appDesc;  // vmDesc;
   		vmd.textContent = appDesc;
   		var vmFormDesc = getByName("txt"+pvInd+"Def");  // vmDesc;
-  		vmFormDesc.value = appDesc;
+  		// GF33216
+  		if( vmFormDesc != null )
+  		{
+  			vmFormDesc.value = appDesc;
+  		}
+  		// GF33216
   		//make sure to disable the search link also when vm name exists
   		if (appName !== "") {
   			disableSearch('pvNew');
