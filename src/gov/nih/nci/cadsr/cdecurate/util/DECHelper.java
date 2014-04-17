@@ -64,10 +64,10 @@ public class DECHelper {
 		//logic to construct
 		String finalString = "";
 		//begin GF33186
-		String prefixDef = (String) request.getParameter("CreateDefinition");
-		if(prefixDef != null) {
-			finalString = prefixDef + "_";
-		}
+//		String prefixDef = (String) request.getParameter("CreateDefinition");
+//		if(prefixDef != null) {
+//			finalString = prefixDef + "_";
+//		}
 		//end GF33186
 		if(comp1 != null) {
 			finalString = comp1 + "_"; 
