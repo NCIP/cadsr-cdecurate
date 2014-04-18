@@ -274,7 +274,7 @@ public class ConceptAction implements Serializable
          {
            mon.trace(data.getCurationServlet().getConn());
            //cstmt = conn.prepareCall("{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
-           cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");		//GF32649
+           cstmt = data.getCurationServlet().getConn().prepareCall("{call SBREXT.SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");		//GF32649
            // register the Out parameters
            cstmt.registerOutParameter(2,java.sql.Types.VARCHAR);       //return code
            cstmt.registerOutParameter(4,java.sql.Types.VARCHAR);       //con idseq
@@ -340,7 +340,7 @@ public class ConceptAction implements Serializable
      catch(Exception e)
      {
        logger.error("ERROR in setConcept for other : " + e.toString(), e);
-       sMsg += "\\t Exception : Unable to update Concept attributes.";
+       sMsg += "\\t Exception : Unable to update Concept attributes (1).";
      }finally{
     	 rs = SQLHelper.closeResultSet(rs);
          cstmt = SQLHelper.closeCallableStatement(cstmt);

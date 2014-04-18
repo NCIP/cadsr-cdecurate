@@ -11,7 +11,7 @@
 --  DDL for Package SBREXT_SET_ROW
 --------------------------------------------------------
 
-create or replace PACKAGE SBREXT_SET_ROW AS
+CREATE OR REPLACE PACKAGE "SBREXT"."SBREXT_SET_ROW" AS
 /******************************************************************************
    NAME:       SBREXT_SET_ROW
    PURPOSE:    This Package holds all the API's to get a single row of data
@@ -1634,6 +1634,26 @@ PROCEDURE set_ac_contact (
     ,p_contact_role           in  out   varchar2);
 
 
-END Sbrext_Set_Row;
+END SBREXT_SET_ROW;
 
 /
+
+  GRANT EXECUTE ON "SBREXT"."SBREXT_SET_ROW" TO PUBLIC;
+ 
+  GRANT EXECUTE ON "SBREXT"."SBREXT_SET_ROW" TO "CDEBROWSER";
+ 
+  GRANT DEBUG ON "SBREXT"."SBREXT_SET_ROW" TO "CDEBROWSER";
+ 
+  GRANT EXECUTE ON "SBREXT"."SBREXT_SET_ROW" TO "DATA_LOADER";
+ 
+  GRANT DEBUG ON "SBREXT"."SBREXT_SET_ROW" TO "DATA_LOADER";
+ 
+  GRANT EXECUTE ON "SBREXT"."SBREXT_SET_ROW" TO "SBR" WITH GRANT OPTION;
+ 
+  GRANT DEBUG ON "SBREXT"."SBREXT_SET_ROW" TO "SBR" WITH GRANT OPTION;
+ 
+  GRANT EXECUTE ON "SBREXT"."SBREXT_SET_ROW" TO "APPLICATION_USER";
+ 
+  GRANT DEBUG ON "SBREXT"."SBREXT_SET_ROW" TO "APPLICATION_USER";
+ 
+  GRANT EXECUTE ON "SBREXT"."SBREXT_SET_ROW" TO "DER_USER";

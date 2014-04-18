@@ -5376,7 +5376,7 @@ public class InsACService implements Serializable {
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
-					.storeStatusMsg("\\t Exception : Unable to update Concept attributes.");
+					.storeStatusMsg("\\t Exception : Unable to update Concept attributes. (2)");
 		}finally{
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
@@ -5418,7 +5418,7 @@ public class InsACService implements Serializable {
 				cstmt = m_servlet
 						.getConn()
 						.prepareCall(
-								"{call SBREXT_GET_ROW.GET_CON(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");	//GF32649
+								"{call SBREXT.SBREXT_GET_ROW.GET_CON(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");	//GF32649
 				cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); // return
 				// code
 				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // con
@@ -5463,7 +5463,7 @@ public class InsACService implements Serializable {
 
 				cstmt.setString(2, evsBean.getIDSEQ()); // con idseq
 				cstmt.setString(3, evsBean.getCONCEPT_IDENTIFIER()); // concept
-				logger.debug("EVS Bean at Line 5252 of InsACService.java IDSEQ"+evsBean.getIDSEQ()+"CONCEPT_IDENTIFIER"+evsBean.getCONCEPT_IDENTIFIER());
+				System.out.println("InsACService.java IDSEQ"+evsBean.getIDSEQ()+"CONCEPT_IDENTIFIER"+evsBean.getCONCEPT_IDENTIFIER());
 				// code
 				// Now we are ready to call the stored procedure
 				cstmt.setString(22, PropertyHelper.getDefaultContextName());	//GF32649
@@ -5515,6 +5515,7 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
+			System.out.println("InsACSevice getConcept error: " + e);
 			logger.error("ERROR in InsACService- getConcept for exception : "
 					+ e.toString(), e);
 		}finally{
@@ -6438,7 +6439,7 @@ public class InsACService implements Serializable {
 		} catch (DBException e) {
 			logger.error("ERROR in InsACService-createCondr: "+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
-			this.storeStatusMsg("Exception Error : Unable to create Condr");
+			this.storeStatusMsg("Exception Error : Unable to create Condr. (3)");
 		}
 		return condrIdseq;
 	}

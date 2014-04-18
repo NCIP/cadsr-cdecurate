@@ -61,6 +61,7 @@ public class Component_Concepts_Ext_Mgr extends DBManager{
 			}
 
 		} catch (Exception e) {
+			System.out.println("Component_Concepts_Ext_Mgr insert() insert into component_concepts_view_ext( cc_idseq, condr_idseq, con_idseq, display_order, primary_flag_ind, concept_value) values(?,?,?,?,?,?)");
 			logger.error("Error inserting Component Concepts " + e);
 			errorList.add("Error inserting Component Concepts ");
 			throw new DBException(errorList);
