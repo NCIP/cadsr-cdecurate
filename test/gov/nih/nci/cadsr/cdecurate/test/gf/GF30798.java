@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverBackedSelenium;
+//import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -84,9 +84,9 @@ public class GF30798 {
 			// fp.setEnableNativeEvents(true);
 			driver = new FirefoxDriver(fp);
 		}
-		selenium = new WebDriverBackedSelenium(driver,
-				"http://localhost:8888");
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+//		selenium = new WebDriverBackedSelenium(driver,
+//				"http://localhost:8888");
+//		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		
 		LogoutLogin();
 	}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="test"/>
 	<classpathentry excluding="gov/nih/nci/cadsr/cdecurate/test/SoundsLike.java|gov/nih/nci/cadsr/cdecurate/test/Util.java" kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
@@ -72,13 +72,13 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/hibernate-core-3.3.2.GA.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/asm-3.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/cadsrutil.jar"/>
+	<classpathentry kind="lib" path="testlib/junit/selenium-server-standalone-2.41.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/servlet.jar"/>
 	<classpathentry kind="lib" path="testlib/easymock-2.3.jar"/>
 	<classpathentry kind="lib" path="testlib/log4jdbc4-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.13.jar"/>
 	<classpathentry kind="lib" path="lib/ojdbc6.jar"/>
-	<classpathentry kind="lib" path="testlib/junit/selenium-server-standalone-2.35.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/cglib-2.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-core-2.4.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-regex-2.4.1.jar"/>
