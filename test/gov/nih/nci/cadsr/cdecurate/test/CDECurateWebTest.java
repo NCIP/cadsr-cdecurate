@@ -19,20 +19,37 @@ import static org.hamcrest.CoreMatchers.*;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriverService;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
 
 public class CDECurateWebTest {
-	private WebDriver driver;
-	private String baseUrl;
-	private StringBuffer verificationErrors = new StringBuffer();
+	private static WebDriver driver;
+	private static String baseUrl;
+//	private StringBuffer verificationErrors = new StringBuffer();
+	
+//	public void init() {
+//		baseUrl = "http://localhost:8080/cdecurate/NCICurationServlet?reqType=homePage";
+//		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+//	}
+//
+//	@Before
+//	public void setUp() throws Exception {
+//		driver = new FirefoxDriver();
+//		init();
+//	}
 
-	@Before
-	public void setUp() throws Exception {
-		driver = new FirefoxDriver();
-		baseUrl = "http://localhost:8080/cdecurate/NCICurationServlet?reqType=homePage";
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-	}
-
+//	@Before
+//	public void setup(){
+//	    DesiredCapabilities caps = new DesiredCapabilities();
+//	    caps.setJavascriptEnabled(true);
+//	    caps.setCapability("takesScreenshot", true);
+//	    caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "C:\\Users\\ag\\demo\\cadsr-cdecurate\\testlib\\junit\\phantomjs.exe");
+//	    this.driver = new PhantomJSDriver(caps);
+//	    init();
+//	}
+	
 	@Test
 	public void testEditVD() {
 		driver.get(baseUrl + "/cdecurate/NCICurationServlet?reqType=homePage");
@@ -55,7 +72,23 @@ public class CDECurateWebTest {
 	    assertTrue(driver.findElement(By.tagName("body")).getText().indexOf("Permissible Values") > -1);
 	}
 	
-//	@Test
+	public static WebDriver getDriver() {
+		return driver;
+	}
+
+	public static void setDriver(WebDriver driver) {
+		CDECurateWebTest.driver = driver;
+	}
+
+	public static String getBaseUrl() {
+		return baseUrl;
+	}
+
+	public static void setBaseUrl(String baseUrl) {
+		CDECurateWebTest.baseUrl = baseUrl;
+	}
+
+	@Test
 	public void testSelectionActionMenu() throws Exception {
 		driver.get(baseUrl + "/cdecurate/NCICurationServlet?reqType=homePage");
 		driver.findElement(By.linkText("Login")).click();
@@ -73,7 +106,7 @@ public class CDECurateWebTest {
 	}
 	
 
-//	@Test
+	@Test
 	public void testSearchConcept() throws Exception {
 		driver.get(baseUrl + "/cdecurate/NCICurationServlet?reqType=homePage");
 		driver.findElement(By.name("listSearchIn")).click();
@@ -84,7 +117,7 @@ public class CDECurateWebTest {
 		driver.findElement(By.name("keyword")).sendKeys("blood*\n");
 	}
 
-//	@Test
+	@Test
 	public void testSearchVM() throws Exception {
 		driver.get(baseUrl + "/cdecurate/NCICurationServlet?reqType=homePage");
 		driver.findElement(By.linkText("Login")).click();
@@ -111,7 +144,7 @@ public class CDECurateWebTest {
 		driver.findElement(By.linkText("Logout")).click();
 	}
 
-//	@Test
+	@Test
 	public void testCreateDEC() {
 		driver.get(baseUrl + "/cdecurate/NCICurationServlet?reqType=homePage");
 		driver.findElement(By.linkText("Login")).click();
@@ -205,15 +238,13 @@ public class CDECurateWebTest {
 	    driver.findElement(By.name("editSelectedBtn")).click();
 	}
 
-//	@Test
+	@Test
 	public void testFeatureRequiresLogin() {
 		//https://groups.google.com/forum/#!topic/selenium-users/F2c4QWP50F8
 		driver.get(baseUrl + "/cdecurate/NCICurationServlet?reqType=homePage");
 		driver.findElement(By.xpath("//td[@onclick=\"menuShow(this, event, 'no');\"]")).click();
 	    driver.findElement(By.xpath("(//dt[@id=''])[15]")).click();
 	    assertEquals("Please Login to use this feature.", confirmLogin());
-//	    Alert a = driver.switchTo().alert();
-//		a.accept(); // or dismiss() if you want to hit 'cancel'
 	}
 
 	private String confirmLogin() {
@@ -253,21 +284,21 @@ public class CDECurateWebTest {
 		//http://stackoverflow.com/questions/19117747/how-to-switch-between-two-windows-in-browser-using-selenium-java
 	}
 		
-	@After
-	public void tearDown() throws Exception {
+//	@After
+//	public void tearDown() throws Exception {
 //		driver.quit();	//close it once done
-		String verificationErrorString = verificationErrors.toString();
-		if (!"".equals(verificationErrorString)) {
-			fail(verificationErrorString);
-		}
-	}
-
-	private boolean isElementPresent(By by) {
-		try {
-			driver.findElement(by);
-			return true;
-		} catch (NoSuchElementException e) {
-			return false;
-		}
-	}
+//		String verificationErrorString = verificationErrors.toString();
+//		if (!"".equals(verificationErrorString)) {
+//			fail(verificationErrorString);
+//		}
+//	}
+//
+//	private boolean isElementPresent(By by) {
+//		try {
+//			driver.findElement(by);
+//			return true;
+//		} catch (NoSuchElementException e) {
+//			return false;
+//		}
+//	}
 }
