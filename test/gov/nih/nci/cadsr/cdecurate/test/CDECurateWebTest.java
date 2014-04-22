@@ -33,6 +33,28 @@ public class CDECurateWebTest {
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
+	@Test
+	public void testEditVD() {
+		driver.get(baseUrl + "/cdecurate/NCICurationServlet?reqType=homePage");
+		driver.findElement(By.linkText("Login")).click();
+		driver.findElement(By.name("Username")).click();
+		driver.findElement(By.name("Username")).sendKeys("GUEST");
+		driver.findElement(By.name("Password")).click();
+		driver.findElement(By.name("Password")).sendKeys("Nci_gue5t");
+		driver.findElement(By.name("login")).click();
+
+		driver.findElement(By.id("listSearchFor")).click();
+	    new Select(driver.findElement(By.id("listSearchFor"))).selectByVisibleText("Value Domain");
+	    driver.findElement(By.cssSelector("option[value=\"ValueDomain\"]")).click();
+	    driver.findElement(By.id("keyword")).clear();
+	    driver.findElement(By.id("keyword")).sendKeys("Anatomic Site\n");
+	    driver.findElement(By.cssSelector("img.stripe")).click();
+	    driver.findElement(By.cssSelector("img[alt=\"single\"]")).click();
+	    driver.findElement(By.cssSelector("#vdpvstab > b")).click();
+
+	    assertTrue(driver.findElement(By.tagName("body")).getText().indexOf("Permissible Values") > -1);
+	}
+	
 //	@Test
 	public void testSelectionActionMenu() throws Exception {
 		driver.get(baseUrl + "/cdecurate/NCICurationServlet?reqType=homePage");
@@ -89,11 +111,8 @@ public class CDECurateWebTest {
 		driver.findElement(By.linkText("Logout")).click();
 	}
 
-	@Test
+//	@Test
 	public void testCreateDEC() {
-		//https://groups.google.com/forum/#!topic/selenium-users/F2c4QWP50F8
-//		Alert a = driver.switchTo().alert();
-//		a.confirm(); // or dismiss() if you want to hit 'cancel'
 		driver.get(baseUrl + "/cdecurate/NCICurationServlet?reqType=homePage");
 		driver.findElement(By.linkText("Login")).click();
 		driver.findElement(By.name("Username")).click();
