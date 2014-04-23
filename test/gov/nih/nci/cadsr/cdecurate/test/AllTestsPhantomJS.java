@@ -46,6 +46,8 @@ public class AllTestsPhantomJS {
 	public static void init() {
 		baseUrl = "http://localhost:8080/cdecurate/NCICurationServlet?reqType=homePage";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		((PhantomJSDriver)driver).executeScript("window.alert = function(){}");
+		((PhantomJSDriver)driver).executeScript("window.confirm = function(){return true;}");
 	}
 
 	@BeforeClass
@@ -53,7 +55,7 @@ public class AllTestsPhantomJS {
 	    DesiredCapabilities caps = new DesiredCapabilities();
 	    caps.setJavascriptEnabled(true);
 	    caps.setCapability("takesScreenshot", true);
-	    caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "C:\\Users\\ag\\demo\\cadsr-cdecurate\\testlib\\junit\\phantomjs.exe");
+	    caps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "C:\\Users\\ag\\demo\\cadsr-cdecurate\\testlib\\junit\\phantomjs-1.9.7-windows\\phantomjs.exe");
 	    driver = new PhantomJSDriver(caps);
 	    init();
 		CDECurateWebTest.setDriver(driver);
