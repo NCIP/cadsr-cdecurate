@@ -139,13 +139,13 @@ public class StringUtil {
 		if (stringToClean == null)
 			return stringToClean;
 		
-		stringToClean = stringToClean.replaceAll("alert", "");
-		stringToClean = stringToClean.replaceAll("<script>", "");
-		stringToClean = stringToClean.replaceAll("</script>", "");
+		stringToClean = stringToClean.replaceAll("alert\\(", "(");
+		stringToClean = stringToClean.replaceAll("<script", "<");
+		stringToClean = stringToClean.replaceAll("</script", "</");
 		stringToClean = stringToClean.replaceAll("javascript", "");
 		stringToClean = stringToClean.replaceAll(".html", "");
 		stringToClean = stringToClean.replaceAll("iframe", "");
-		//stringToClean = stringToClean.replaceAll(".net", "");
+		stringToClean = stringToClean.replaceAll("UTL_HTTP.REQUEST", "");
 		
 		return stringToClean;
 	}
