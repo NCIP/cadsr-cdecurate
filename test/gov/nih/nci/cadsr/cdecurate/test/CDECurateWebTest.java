@@ -120,12 +120,12 @@ public class CDECurateWebTest {
 	@Test
 	public void testSearchVM() throws Exception {
 		driver.get(baseUrl + "/cdecurate/NCICurationServlet?reqType=homePage");
-		driver.findElement(By.linkText("Login")).click();
-		driver.findElement(By.name("Username")).click();
-		driver.findElement(By.name("Username")).sendKeys("GUEST");
-		driver.findElement(By.name("Password")).click();
-		driver.findElement(By.name("Password")).sendKeys("Nci_gue5t");
-		driver.findElement(By.name("login")).click();
+//		driver.findElement(By.linkText("Login")).click();
+//		driver.findElement(By.name("Username")).click();
+//		driver.findElement(By.name("Username")).sendKeys("GUEST");
+//		driver.findElement(By.name("Password")).click();
+//		driver.findElement(By.name("Password")).sendKeys("Nci_gue5t");
+//		driver.findElement(By.name("login")).click();
 		driver.findElement(By.name("keyword")).clear();
 		driver.findElement(By.name("keyword")).sendKeys("blood*\n");
 		driver.findElement(By.name("listSearchIn")).click();
@@ -141,7 +141,7 @@ public class CDECurateWebTest {
 //		driver.findElement(By.name("btnValidate")).click();
 //		driver.findElement(By.name("btnBack")).click();
 //		driver.findElement(By.name("btnBack")).click();
-		driver.findElement(By.linkText("Logout")).click();
+//		driver.findElement(By.linkText("Logout")).click();
 	}
 
 	@Test
