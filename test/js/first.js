@@ -12,8 +12,8 @@ casper.on('page.error', function(msg, trace) {
     }
 });
 casper.test.begin('Resurrectio test', function(test) {
-    //casper.start('http://localhost:8080/cdecurate');
-    casper.start('https://cdecurate-dev.nci.nih.gov');
+    casper.start('http://localhost:8080/cdecurate');
+//    casper.start('https://cdecurate-dev.nci.nih.gov');
     casper.waitForSelector("#listSearchFor",
         function success() {
             test.assertExists("#listSearchFor");
@@ -48,7 +48,7 @@ casper.test.begin('Resurrectio test', function(test) {
         });
     casper.waitForSelector("input[name='keyword']",
         function success() {
-            this.sendKeys("input[name='keyword']", "cell\r");
+            this.sendKeys("input[name='keyword']", "blood\r");
         },
         function fail() {
             test.assertExists("input[name='keyword']");
@@ -71,15 +71,13 @@ casper.test.begin('Resurrectio test', function(test) {
         });
     casper.then(function(){
         casper.evaluate(function() {
-//            var x_unselect = document.getElementById("listSearchFor").children[4]; //option unselected DE
-//            x_unselect.setAttribute("selected", false);
-
-            var y_select = document.getElementById("listSearchFor").children[8]; //select option VD
-            y_select.setAttribute("selected", "selected");
-        });
-//        this.fill('form[name=searchParmsForm]', {
-//            'listSearchFor': 'Value Domain'
-//        }, true);
+            //=== select the VD
+            var sel1 = document.querySelector('select[name=listSearchFor]');
+            sel1.value = 'ValueDomain';
+            var evt = document.createEvent('HTMLEvents');
+            evt.initEvent('change', true, false);
+            sel1.dispatchEvent(evt);
+    	});
     });
     casper.then(function() {
         this.captureSelector("result.png", "html");

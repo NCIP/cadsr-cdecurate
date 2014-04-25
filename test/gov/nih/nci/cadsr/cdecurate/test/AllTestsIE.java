@@ -22,6 +22,8 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.Test;
@@ -44,6 +46,7 @@ public class AllTestsIE {
 
 	public static void init() {
 		baseUrl = "http://localhost:8080/cdecurate/NCICurationServlet?reqType=homePage";
+//		baseUrl = "http://cdecurate-dev.nci.nih.gov";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
@@ -51,7 +54,9 @@ public class AllTestsIE {
 	public static void setUp() throws Exception {
 		File file = new File("C:\\Users\\ag\\demo\\cadsr-cdecurate\\testlib\\junit\\IEDriverServer_Win32_2.29.1\\IEDriverServer.exe");
         System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
-		driver = new InternetExplorerDriver();
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);   
+        driver = new InternetExplorerDriver(capabilities);
 		init();
 		CDECurateWebTest.setDriver(driver);
 		CDECurateWebTest.setBaseUrl(baseUrl);

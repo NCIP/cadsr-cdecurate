@@ -91,6 +91,7 @@ public class CDECurateWebTest {
 	@Test
 	public void testSelectionActionMenu() throws Exception {
 		driver.get(baseUrl + "/cdecurate/NCICurationServlet?reqType=homePage");
+		driver.get("javascript:document.getElementById('overridelink').click();");
 		driver.findElement(By.linkText("Login")).click();
 		driver.findElement(By.name("Username")).click();
 		driver.findElement(By.name("Username")).sendKeys("GUEST");

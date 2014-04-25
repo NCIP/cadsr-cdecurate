@@ -41,7 +41,8 @@ public class AllTestsFirefox {
 	private StringBuffer verificationErrors = new StringBuffer();
 
 	public static void init() {
-		baseUrl = "http://localhost:8080/cdecurate/NCICurationServlet?reqType=homePage";
+		baseUrl = "http://localhost:8080/cdecurate";
+//		baseUrl = "https://cdecurate-dev.nci.nih.gov";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
