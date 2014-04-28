@@ -46,5 +46,7 @@ Please execute as in the following order:
 . gf32649_MAINTAIN_CONCEPTS_SPEC.sql (SBREXT)
 . update_evs_url.sql (SBREXT)
 . GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql (SBREXT)
+. GF32723_insert_alt_name_lov.sql (SBREXT)
+. GF32723_update_vocabnames.sql (SBREXT)
 
 End of instructions.

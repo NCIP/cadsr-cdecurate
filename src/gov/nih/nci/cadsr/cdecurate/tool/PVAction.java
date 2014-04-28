@@ -31,6 +31,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpSession;
 
 
+
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
 
@@ -814,6 +815,7 @@ public class PVAction implements Serializable {
 	 */
 	public String setVD_PVS(PVForm data) {
 		Database db = new Database();
+		db.setEnabled(true);
 		db.trace(data.getCurationServlet().getConn());
 
 		PV_Bean pvBean = data.getSelectPV();
@@ -910,6 +912,7 @@ public class PVAction implements Serializable {
 			sMsg += "\\t Exception : Unable to update or remove PV of VD.";
 		}finally{
 		  cstmt = SQLHelper.closeCallableStatement(cstmt);
+		  System.out.println("-------------------------- PVAction: 1 ---------------------------");
 		  db.show();
 		}
 		return sMsg;

@@ -27,6 +27,7 @@ The account that needs to be used are specified in the parenthesis, please use t
 . gf32649_SBREXT_SET_ROW_BODY.sql (SBREXT)
 . update_evs_url.sql (SBREXT)
 . GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql (SBREXT)
+. GF32723_update_vocabnames.sql (SBREXT)
 
 There are 24 scripts in total.
 
