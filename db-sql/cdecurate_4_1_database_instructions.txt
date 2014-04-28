@@ -26,6 +26,7 @@
 . SBREXT_CDE_CURATOR_PKG_BODY.sql
 . update_evs_url.sql
 . GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql
+. GF32723_insert_alt_name_lov.sql
 . GF32723_update_vocabnames.sql
 
 *** Execution order ***
