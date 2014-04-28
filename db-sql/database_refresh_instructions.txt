@@ -19,10 +19,11 @@ Please execute as in the following order:
 . change_default_context_to_NCIP.sql (SBR)
 . change_user_groups_sc_groups_to_NCIP.sql (SBR)
 
-Curation Tool 4.1 related scripts (26 scripts in total). Please proceed only if the previous scripts were successfully executed and validated.
+Curation Tool 4.1 related scripts (27 scripts in total). Please proceed only if the previous scripts were successfully executed and validated.
 Please execute as in the following order:
 
 . customDownload.sql (SBREXT)
+. customDownload-grants.sql (called by customDownload.sql)
 . gf30681_alter_grant_dec_table.sql (SBREXT)
 . gf30681_update_SBR_INS_UPD_SPEC.sql (SBR)
 . gf30681_update_SBR_INS_UPD_BODY.sql (SBR)
