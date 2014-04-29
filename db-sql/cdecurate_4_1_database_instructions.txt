@@ -1,6 +1,6 @@
 Curation Tool 4.1 related scripts (27 scripts in total). 
 
-Please proceed only if the previous scripts were successfully executed and validated.
+Please STOP proceeding to the next script if any errors show up with the current script.
 
 Please execute as in the following order:
 
