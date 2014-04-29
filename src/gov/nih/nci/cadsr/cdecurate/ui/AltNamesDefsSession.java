@@ -230,9 +230,11 @@ public class AltNamesDefsSession implements Serializable
         _editAlt = new Alternates();
         _editAlt.setAltIdseq(newIdseq());
         _editAlt.setInstance(inst_);
+        //begin TODO GF32723 this might cause NPE
         _editAlt.setConteIdseq(_conteIdseq[0]);
         _editAlt.setConteName(_conteName[0]);
         _editAlt.setACIdseq(_acIdseq[0]);
+        //end TODO GF32723 this might cause NPE
     }
 
     /**
@@ -1348,7 +1350,7 @@ public class AltNamesDefsSession implements Serializable
      */
     public String getDefaultConteID()
     {
-        return _conteIdseq[0];
+        return _conteIdseq[0];	//TODO GF32723 this might cause NPE
     }
 
     /**
