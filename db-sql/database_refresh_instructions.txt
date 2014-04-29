@@ -19,35 +19,6 @@ Please execute as in the following order:
 . change_default_context_to_NCIP.sql (SBR)
 . change_user_groups_sc_groups_to_NCIP.sql (SBR)
 
-Curation Tool 4.1 related scripts (27 scripts in total). Please proceed only if the previous scripts were successfully executed and validated.
-Please execute as in the following order:
-
-. customDownload.sql (SBREXT)
-. customDownload-grants.sql (called by customDownload.sql)
-. gf30681_alter_grant_dec_table.sql (SBREXT)
-. gf30681_update_SBR_INS_UPD_SPEC.sql (SBR)
-. gf30681_update_SBR_INS_UPD_BODY.sql (SBR)
-. gf30681_update_existing_DEC_CDR_no_oc.sql (SBR)
-. gf30681_update_existing_DEC_CDR_no_prop.sql (SBR)
-. gf30681_update_SBREXT_Set_Row_SET_DEC_SPEC.sql (SBREXT)
-. gf30681_update_SBREXT_Set_Row_SET_DEC_BODY.sql (SBREXT)
-. gf30681_update_ac_exists.sql (SBREXT)
-. gf30681_update_existing_DEC_CDR.sql (SBR)
-. gf30681_update_SBR_data_element_concepts_view.sql (SBREXT)
-. SBREXT_CDE_CURATOR_PKG_SPEC.sql (SBREXT)
-. SBREXT_CDE_CURATOR_PKG_BODY.sql (SBREXT)
-. gf32649_SBREXT_SET_ROW_BODY.sql (SBREXT)
-. gf32649_SBREXT_GET_ROW_BODY.sql (SBREXT)
-. gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql (SBREXT)
-. gf32649_CADSR_XLS_LOADER_PKG_WORK3_SPEC.sql (SBREXT)
-. gf32649_MAINTAIN_CONCEPTS_BODY.sql (SBREXT)
-. gf32649_MAINTAIN_CONCEPTS_SPEC.sql (SBREXT)
-. gf32649_SBREXT_GET_ROW_BODY.sql (SBREXT)
-. gf32649_CADSR_XLS_LOADER_PKG_WORK3_SPEC.sql (SBREXT)
-. gf32649_MAINTAIN_CONCEPTS_SPEC.sql (SBREXT)
-. update_evs_url.sql (SBREXT)
-. GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql (SBREXT)
-. GF32723_insert_alt_name_lov.sql (SBREXT)
-. GF32723_update_vocabnames.sql (SBREXT)
+If applicable, also run Curation Tool 4.1 related scripts as mentioned in cdecurate_4_1_database_instructions.txt.
 
 End of instructions.
