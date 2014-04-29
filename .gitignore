@@ -18,3 +18,15 @@
 /spy.log
 /sql.cmd
 /dist
+/jcrasher-testees.txt
+/jcrasher.cmd
+/jcrasher.xml
+/jcrasher-bin/
+/jcrasher-generated-tests-bin/
+/jcrasher-generated-tests-src/
+/package-download/
+/.settings/
+/cadsr-cdecurate-jcrasher-2.1.3-2014-04-29-1652.jcrasher.txt
+/cadsr-cdecurate-jcrasher-2.1.3-2014-04-29-1652.junit.txt
+/cadsr-cdecurate-jcrasher-2.1.3-2014-04-29-1652.zip
+/setEnv.cmd
