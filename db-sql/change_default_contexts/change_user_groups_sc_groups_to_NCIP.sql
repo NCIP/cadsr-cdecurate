@@ -67,7 +67,7 @@ Insert into SBR.USER_GROUPS (UA_NAME,GRP_NAME,CREATED_BY,DATE_CREATED,MODIFIED_B
 commit;
 
 --More sanity check
-select '4 of 8 CHECK:COUNT SHOULD AROUND > 200 = '||count(*) from sbr.user_groups where grp_name like '%NCIP%';
+select '4 of 8 CHECK:COUNT SHOULD AROUND 200 = '||count(*) from sbr.user_groups where grp_name like '%NCIP%';
 
 select '5 of 8 CHECK:COUNT SHOULD BE > 1 = '||count(*) from sbr.sc_groups where grp_name like '%NCIP%';
 
