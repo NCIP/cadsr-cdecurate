@@ -42,10 +42,11 @@ Insert into sbr.groups (GRP_NAME,DESCRIPTION,CREATED_BY,DATE_CREATED,MODIFIED_BY
 commit;
 
 --Sanity check
+select '1 of 8 CHECK:CHANGED CONTEXT BE ONE OF THE FOLLOWING RESULTS:' from dual;
 select distinct scl_name from sbr.sc_contexts where scl_name in ('CTEP_SC','TEST_SC','caBIG_SC');
 select distinct scl_name from sbr.security_contexts_lov where scl_name in ('CTEP_SC','TEST_SC','caBIG_SC');
-select '1 of 2 CHECK:CONTEXT ID = '||CONTE_IDSEQ from sbr.sc_contexts where SCL_NAME = 'caBIG_SC';
-select '2 of 2 CHECK:CONTEXT ID = '||CONTE_IDSEQ from SBR.CONTEXTS where NAME = 'caBIG';
+select '2 of 2 CHECK:AFFECTED CONTEXT ID = '||CONTE_IDSEQ from sbr.sc_contexts where SCL_NAME = 'caBIG_SC';
+select '3 of 2 CHECK:AFFECTED CONTEXT ID = '||CONTE_IDSEQ from SBR.CONTEXTS where NAME = 'caBIG';
 
 --Now the rest of the children/dependants
 
@@ -67,16 +68,15 @@ Insert into SBR.USER_GROUPS (UA_NAME,GRP_NAME,CREATED_BY,DATE_CREATED,MODIFIED_B
 commit;
 
 --More sanity check
-select count(*) from sbr.user_groups 
-where lower(grp_name) like '%cabig%';
+select '4 of 8 CHECK:COUNT SHOULD BE AROUND 200 = '||count(*) from sbr.user_groups where grp_name like '%caBIG%';
 
-select count(*) from sbr.sc_groups 
-where lower(grp_name) like '%cabig%';
+select '5 of 8 CHECK:COUNT SHOULD BE > 1 = '||count(*) from sbr.sc_groups where grp_name like '%caBIG%';
 
-select count(*) from sbr.sc_contexts where lower(scl_name) like '%cabig%';
+select '6 of 8 CHECK:COUNT SHOULD BE 1 = '||count(*) from sbr.sc_contexts where scl_name like '%caBIG%';
 
-select count(*) from sbr.SECURITY_CONTEXTS_LOV where lower(scl_name) like '%cabig%';
+select '7 of 8 CHECK:COUNT SHOULD BE 1 = '||count(*) from sbr.SECURITY_CONTEXTS_LOV where scl_name like '%caBIG%';
 
+select '8 of 8 CHECK:ONE OF THE FOLLOWING GROUPS SHOULD STARTS WITH THE CHANGED CONTEXT:' from dual;
 select g.grp_name from SBR.USER_GROUPS g where ua_name = 'GUEST';
 
 commit;
