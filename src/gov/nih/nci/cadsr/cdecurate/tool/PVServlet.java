@@ -63,7 +63,7 @@ public class PVServlet implements Serializable
       String retData = "/PermissibleValue.jsp";
       try
       {
-         HttpSession session = data.getRequest().getSession();
+         HttpSession session = data.getRequest().getSession();	//TODO might cause NPE
          DataManager.setAttribute(session, "vStatMsg", null);  //reset the status message
          String sAction = (String)data.getRequest().getParameter("pageAction");
          data.setPageAction(sAction);
@@ -423,7 +423,7 @@ public class PVServlet implements Serializable
   @SuppressWarnings("unchecked")
   private void readValidValueData(PV_Bean pv, String pvID)
    {
-     HttpSession session = data.getRequest().getSession();
+     HttpSession session = data.getRequest().getSession();	//TODO might cause NPE
      String sVVid = "";
      if (pvID.equals("pvNew"))
        sVVid = (String)data.getRequest().getParameter("selValidValue");  //valid value
@@ -653,10 +653,10 @@ public class PVServlet implements Serializable
       try
       {
         String pvAct = "Search";
-         if (sMenu.equals("NewVDTemplate") || sMenu.equals("NewVDVersion")) 
+         if (sMenu.equals("NewVDTemplate") || sMenu.equals("NewVDVersion")) 	//TODO might cause NPE
              pvAct = "NewUsing"; 
 
-         String acIdseq = vd.getVD_VD_IDSEQ();
+         String acIdseq = vd.getVD_VD_IDSEQ();	//TODO might cause NPE
          //String acName = vd.getVD_LONG_NAME();
          Vector<PV_Bean> vdpv = pvAction.doPVACSearch(acIdseq, pvAct, data);
          vd.setVD_PV_List(vdpv);
@@ -935,7 +935,7 @@ public class PVServlet implements Serializable
      String jsp = VMForm.JSP_PV_DETAIL; 
      try
      {
-         HttpSession session = data.getRequest().getSession();
+         HttpSession session = data.getRequest().getSession();	//TODO might cause NPE
              
          //set the attributes
          DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, selVM);
@@ -1135,7 +1135,7 @@ public class PVServlet implements Serializable
      try
     {
       //read the selected row from the request
-       HttpSession session = (HttpSession)data.getRequest().getSession();
+       HttpSession session = (HttpSession)data.getRequest().getSession();	//TODO might cause NPE
        Vector<VM_Bean> vRSel = (Vector)session.getAttribute("vACSearch");
        if (vRSel == null) vRSel = new Vector<VM_Bean>();
 
@@ -1176,7 +1176,7 @@ public class PVServlet implements Serializable
    {
       try
       {
-        HttpSession session = data.getRequest().getSession();
+        HttpSession session = data.getRequest().getSession();	//TODO might cause NPE
          VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);  //new VD_Bean();
          //get the selected parent info from teh request
          data.setVD(vd);
@@ -1256,7 +1256,7 @@ public class PVServlet implements Serializable
    {
      try
      {
-       HttpSession session = data.getRequest().getSession();   
+       HttpSession session = data.getRequest().getSession();   //TODO might cause NPE
        //document name  (concept long name)
        String sParName = (String)data.getRequest().getParameter("hiddenParentName");
        if(sParName == null) sParName = "";

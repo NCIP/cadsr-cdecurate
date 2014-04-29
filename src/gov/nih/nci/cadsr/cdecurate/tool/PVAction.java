@@ -435,7 +435,7 @@ public class PVAction implements Serializable {
 		CallableStatement cstmt = null;
 		Database mon = new Database();
 		mon.setEnabled(true);
-		mon.trace(data.getCurationServlet().getConn());
+		mon.trace(data.getCurationServlet().getConn());		//TODO might cause NPE
 		Vector<PV_Bean> vList = new Vector<PV_Bean>();
 		try {
 			if (data.getCurationServlet().getConn() != null) {
@@ -623,7 +623,7 @@ public class PVAction implements Serializable {
 		Vector<PV_Bean> vList = new Vector<PV_Bean>();
 		
 		try {
-			if (data.getCurationServlet().getConn() != null) {
+			if (data.getCurationServlet().getConn() != null) {	//TODO might cause NPE
 				cstmt = data
 						.getCurationServlet()
 						.getConn()

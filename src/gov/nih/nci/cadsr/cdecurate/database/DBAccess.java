@@ -47,14 +47,14 @@ public class DBAccess
         // Check the arguments.
         if (args.length != 1)
         {
-            System.err.println("Missing database connection URL.");
+            System.err.println("DBAccess: Missing database connection URL.");
             return;
         }
 
         // This is a test so it is not necessary to create a connection pool or other more elaborate obfuscations.
         try
         {
-            FileOutputStream fout = new FileOutputStream("d:/temp/dbaccessout.txt");
+            FileOutputStream fout = new FileOutputStream("c:/temp/dbaccessout.txt");
             
             DriverManager.registerDriver (new oracle.jdbc.driver.OracleDriver());
 
