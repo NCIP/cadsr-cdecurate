@@ -2325,7 +2325,7 @@ public class VMAction implements Serializable
 		CallableStatement cstmt = null;
 		try
 		{
-			if (data.getCurationServlet().getConn() != null)
+			if (data.getCurationServlet().getConn() != null)    //TODO might cause NPE
 			{
 				cstmt =
 						data

@@ -1,11 +1,11 @@
-Curation Tool 4.1 related scripts (27 scripts in total). 
+Curation Tool 4.1 related scripts (30 scripts in total). 
 
 Please STOP proceeding to the next script if any errors show up with the current script.
 
 Please execute as in the following order:
 
 . customDownload.sql (SBREXT)
-. customDownload-grants.sql (called by customDownload.sql)
+. customDownload-grants.sql (NOTE: DO NOT execute this script, as it is invoked indirectly by customDownload.sql)
 . gf30681_alter_grant_dec_table.sql (SBREXT)
 . gf30681_update_SBR_INS_UPD_SPEC.sql (SBR)
 . gf30681_update_SBR_INS_UPD_BODY.sql (SBR)
@@ -18,7 +18,10 @@ Please execute as in the following order:
 . gf30681_update_SBR_data_element_concepts_view.sql (SBREXT)
 . SBREXT_CDE_CURATOR_PKG_SPEC.sql (SBREXT)
 . SBREXT_CDE_CURATOR_PKG_BODY.sql (SBREXT)
+. gf32649_SBREXT_SET_ROW_SPEC.sql (SBREXT)
 . gf32649_SBREXT_SET_ROW_BODY.sql (SBREXT)
+. gf32649_SBREXT_SET_ROW_BODY_NCIP.sql (NOTE: DO NOT execute this script, as it is invoked indirectly by gf32649_SBREXT_SET_ROW_BODY.sql)
+. gf32649_SBREXT_GET_ROW_SPEC.sql (SBREXT)
 . gf32649_SBREXT_GET_ROW_BODY.sql (SBREXT)
 . gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql (SBREXT)
 . gf32649_CADSR_XLS_LOADER_PKG_WORK3_SPEC.sql (SBREXT)
