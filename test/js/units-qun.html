@@ -8,13 +8,23 @@
     <body>
         <div id="qunit"></div>
         <div id="qunit-fixture"></div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <!-- begin app specific dependencies -->
+        <script src="https://ajax.googleapis.com/ajax/libs/dojo/1.8.5/dojo/dojo.js" data-dojo-config="async: false"></script>
+        <!--<script src="../../WebRoot/js/dojo/dojo/dojo.js" data-dojo-config="async: true"></script>-->
         <script src="https://code.jquery.com/qunit/qunit-1.14.0.js"></script>
         <script src="units-qun.js"></script>
-        <!-- begin app specific dependencies -->
-        <!--<script src="https://ajax.googleapis.com/ajax/libs/dojo/1.8.5/dojo/dojo.js" data-dojo-config="async: true"></script>-->
-        <script src="../../WebRoot/js/dojo/dojo/dojo.js" data-dojo-config="async: true"></script>
         <script src="../../WebRoot/js/PermissibleValues.js"></script>    <!-- GF7680 -->
         <!-- end app specific dependencies -->
+        <script>
+            jQuery.noConflict();
+            function dojoReady() {
+//                QUnit.load();
+                QUnit.start();
+//                alert('QUnit started!');
+            }
+            window.addEventListener('DOMContentLoaded', dojoReady);
+        </script>
 
         <!-- begin GF7680 mockup html -->
         <form name="PVForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=pvEdits">
@@ -31,6 +41,7 @@
             <input type="hidden" name="currentVM" value="">
         </form>
 
+        <img class="PVAction" style="display:block;" alt="Remove">
         <table style="display:none;">
             <td align="center">
                 <div id="imgCloseAll" style="display: none;">
@@ -157,12 +168,4 @@
         <!-- end GF7680 mockup html -->
 
     </body>
-    <script>
-        function dojoReady() {
-            QUnit.load();
-            QUnit.start();
-            view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'RELEASED','true','true','RETIRED WITHDRAWN');
-        }
-        window.addEventListener('DOMContentLoaded', dojoReady);
-    </script>
 </html>
