@@ -11,6 +11,8 @@ update tool_options_ext set value= 'CDE_IDSEQ,DEC_IDSEQ,VD_IDSEQ,Conceptual Doma
 insert into sbrext.tool_options_view_ext (tool_name, property, Value) 
 values('CURATION', 'CUSTOM_DOWNLOAD_LIMIT', '5000');
 
+select 'CHECK:CUSTOM_DOWNLOAD_LIMIT COUNT CHECK, SHOULD BE 5000 = '||value value from sbrext.tool_options_view_ext where tool_name = 'CURATION' and property = 'CUSTOM_DOWNLOAD_LIMIT';
+
 --GF32647
 --------------------------------------------------------
 --  DROP for Type VALID_VALUE_LIST_T
