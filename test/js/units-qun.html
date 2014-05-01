@@ -2,17 +2,167 @@
 <html>
     <head>
     <meta charset="utf-8">
-        <title>QUnit Example</title>
-        <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.14.0.css">
+        <title>QUnit Tests</title>
+        <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-1.14.0.css">
     </head>
     <body>
         <div id="qunit"></div>
         <div id="qunit-fixture"></div>
-        <script src="http://code.jquery.com/qunit/qunit-1.14.0.js"></script>
+        <script src="https://code.jquery.com/qunit/qunit-1.14.0.js"></script>
         <script src="units-qun.js"></script>
+        <!-- begin app specific dependencies -->
+        <!--<script src="https://ajax.googleapis.com/ajax/libs/dojo/1.8.5/dojo/dojo.js" data-dojo-config="async: true"></script>-->
+        <script src="../../WebRoot/js/dojo/dojo/dojo.js" data-dojo-config="async: true"></script>
+        <script src="../../WebRoot/js/PermissibleValues.js"></script>    <!-- GF7680 -->
+        <!-- end app specific dependencies -->
 
-        <!-- GF7680 mockup html -->
-        <!--img.PVAction-->
+        <!-- begin GF7680 mockup html -->
+        <form name="PVForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=pvEdits">
+            <input type="hidden" name="hideDatePick" oncalendar="appendDate(this.value);">
+            <input type="hidden" name="pageAction" value="nothing">
+            <input type="hidden" name="editPVInd" value="<%=sEditPV%>">
+            <!-- keep this if there was error -->
+            <input type="hidden" name="currentPVInd" value="">
+            <input type="hidden" name="currentElmID" value="">
+            <input type="hidden" name="currentPVViewType" value="">
+            <input type="hidden" name="currentOrg" value="">
+            <input type="hidden" name="currentBD" value="">
+            <input type="hidden" name="currentED" value="">
+            <input type="hidden" name="currentVM" value="">
+        </form>
+
+        <table style="display:none;">
+            <td align="center">
+                <div id="imgCloseAll" style="display: none;">
+                    <a href="javascript:viewAll('expandAll');">
+                        <img src="images/folderClosed.gif" border="0" alt="Expand All">
+                    </a>
+                </div>
+                <div id="imgOpenAll" style="display: inline;">
+                    <a href="javascript:viewAll('collapseAll');">
+                        <img src="images/folderOpen.gif" border="0" alt="Collapse All">
+                    </a>
+                </div>
+            </td>
+            <!-- first column -->
+            <td align="center" valign="top">
+                <div id="pv0ImgClose" style="display:  none ">
+                    <a href="javascript:view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'RELEASED','true','true','RETIRED WITHDRAWN');"><img src="images/folderClosed.gif" border="0" alt="Expand"></a>
+                </div>
+                <div id="pv0ImgOpen" style="display: inline ">
+                    <a href="javascript:view('pv0View', 'pv0ImgOpen', 'pv0ImgClose', 'view', 'pv0', 'RELEASED','true','true','RETIRED WITHDRAWN');"><img src="images/folderOpen.gif" border="0" alt="Collapse"></a>
+                </div>
+
+                <div id="pv0ImgEdit" style="display: inline">
+                    <a href="javascript:view('pv0View', 'pv0ImgEdit', 'pv0ImgSave', 'edit', 'pv0', 'RELEASED','true','true','RETIRED WITHDRAWN');" onclick="return confirm('This element is used in a form. Any edits will put the form out of sync. Are you sure you want to edit?');"><img src="images/edit.gif" border="0" alt="Edit" style="display: inline"></a>
+
+
+                </div>
+                <div id="pv0ImgSave" style="display: inline">
+                    <a id="pv0ImgSaveLink" href="javascript:view('pv0View', 'pv0ImgSave', 'pv0ImgEdit', 'save', 'pv0', 'RELEASED','true','true','RETIRED WITHDRAWN');"><img src="images/save.gif" border="0" alt="Save"></a>
+                </div>
+                <div id="pv0ImgDelete" style="display: inline">
+                    <a href="javascript:confirmRM('pv0', 'remove', 'the Permissible Value : Apheresis at a different time than collection of PBSC used for allogeneic transplant');"><img src="images/delete.gif" border="0" alt="Remove" style="display: inline"></a>
+                </div>
+                <div id="pv0ImgRestore" style="display: none">
+                    <a href="javascript:confirmRM('pv0', 'restore', 'restore');"><img src="images/restore.gif" border="0" alt="Restore"></a>
+                </div>
+
+            </td>
+
+            <!-- the VM Long Name column -->
+            <td>
+                <div id="pv0View" style="display: block " viewtype="expand">
+                    <table width="100%">
+                        <tbody><tr>
+                            <td colspan="2">
+                                <b>
+                                    Public Id &amp; Version
+                                </b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                &nbsp;&nbsp;
+                            </td>
+                            <td>
+
+                                2641798v1.0
+
+
+                                <br><br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <b>
+                                    Description/Definition
+                                </b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                &nbsp;&nbsp;
+                            </td>
+                            <td>
+                                <div id="pv0VMDView" style="display: none;">
+                                    Apheresis at a different time than collection of PBSC used for allogeneic transplant
+                                </div>
+
+                                <div id="pv0VMDEdit" style="display: block;"><textarea name="txtpv0Def" rows="4" style="width: 100%" onkeyup="javascript:getORsetEdited('pv0', 'vmd');">Apheresis at a different time than collection of PBSC used for allogeneic transplant</textarea></div>
+
+                                <br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td id="pv0ConLbl" colspan="2">
+                                <b>
+                                    Concepts
+                                </b>
+                                <div id="pv0ConLink" style="display: inline; padding-left: 0.3in;">
+                                    <a href="javascript:selectConcept('pv0ConLink','pv0');">
+                                        Search
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                &nbsp;&nbsp;
+                            </td>
+                            <td valign="top">
+                                <div id="pv0Con" style="display: block; border: 1px solid gray;">
+                                    <table id="pv0TBL" style="width: 98%; border: 0px">
+
+                                        <tbody><tr>
+                                            <td height="2px">
+                                                &nbsp;&nbsp;
+                                            </td>
+                                        </tr>
+
+                                        </tbody></table>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td height="2px">
+                                &nbsp;&nbsp;
+                            </td>
+                        </tr>
+                        </tbody></table>
+                </div>
+
+            </td>
+        </table>
+        <!-- end GF7680 mockup html -->
 
     </body>
+    <script>
+        function dojoReady() {
+            QUnit.load();
+            QUnit.start();
+            view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'RELEASED','true','true','RETIRED WITHDRAWN');
+        }
+        window.addEventListener('DOMContentLoaded', dojoReady);
+    </script>
 </html>

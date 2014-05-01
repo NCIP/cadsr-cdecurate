@@ -572,6 +572,7 @@
                         if (altText === 'Remove') {
                             dojo.style(node, 'display', 'none');
                             window.console && console.log('PVAction remove disabled');
+                            alert('PVAction remove disabled');
                         }
                     } catch (e) {
                         window.console && console.log('Error: Not able to disable PVAction remove, ' + e);
@@ -587,6 +588,7 @@
                     try {
                         dojo.attr(node, "readonly", true);
                         window.console && console.log('PV/VM input disabled');
+                        alert('PV/VM input disabled');
                     } catch (e) {
                         window.console && console.log('Error: Not able to disable PV/VM input, ' + e);
                     }
