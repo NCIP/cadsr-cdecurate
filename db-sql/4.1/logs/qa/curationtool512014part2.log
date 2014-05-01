@@ -1,0 +1,1103 @@
+SQL> @gf30681_alter_grant_dec_table.sql
+SP2-0103: Nothing in SQL buffer to run.
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+SP2-0223: No lines in SQL buffer.
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+  ADD CDR_NAME varchar2 (255)
+      *
+ERROR at line 2:
+ORA-01430: column being added already exists in table 
+
+
+  ADD CDR_NAME varchar2 (255)
+      *
+ERROR at line 2:
+ORA-01430: column being added already exists in table 
+
+
+SQL> conn sbr
+Connected.
+SQL> @gf30681_update_SBR_INS_UPD_SPEC.sql
+  ADD CDR_NAME varchar2 (255)
+      *
+ERROR at line 2:
+ORA-01430: column being added already exists in table 
+
+
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+  2*   ADD CDR_NAME varchar2 (255)
+
+Package created.
+
+SQL> @gf30681_update_SBR_INS_UPD_BODY.sql
+
+Package created.
+
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+220* END cg$DATA_ELEMENT_CONCEPTS_VIEW;
+
+Package body created.
+
+SQL> @gf30681_update_existing_DEC_CDR_no_oc.sql
+
+Package body created.
+
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+1737* END cg$DATA_ELEMENT_CONCEPTS_VIEW;
+CREATE TABLE SBR.DATA_ELEMENT_CONCEPTS_BACKUP AS SELECT * FROM SBR.DATA_ELEMENT_CONCEPTS
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+
+PL/SQL procedure successfully completed.
+
+SQL> @gf30681_update_existing_DEC_CDR_no_prop.sql
+
+PL/SQL procedure successfully completed.
+
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+ 46* END;
+CREATE TABLE SBR.DATA_ELEMENT_CONCEPTS_BACKUP AS SELECT * FROM SBR.DATA_ELEMENT_CONCEPTS
+                 *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+
+PL/SQL procedure successfully completed.
+
+SQL> conn sbrext
+Connected.
+SQL> @gf30681_update_SBREXT_Set_Row_SET_DEC_SPEC.sql
+
+PL/SQL procedure successfully completed.
+
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+ 46* END;
+
+Package created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL> @gf30681_update_SBREXT_Set_Row_SET_DEC_BODY.sql
+
+Grant succeeded.
+
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+  1*   GRANT EXECUTE ON "SBREXT"."DEC_ACTIONS" TO "DER_USER"
+
+Package body created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL> @gf30681_update_ac_exists.sql
+
+Grant succeeded.
+
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+  1*   GRANT EXECUTE ON "SBREXT"."DEC_ACTIONS" TO "DER_USER"
+
+Function created.
+
+SQL> conn sbr
+Connected.
+SQL> @gf30681_update_existing_DEC_CDR.sql
+
+Table dropped.
+
+
+Table dropped.
+
+
+Table created.
+
+
+Table created.
+
+
+PL/SQL procedure successfully completed.
+
+SQL> conn sbrext
+Connected.
+SQL> @gf30681_update_SBR_data_element_concepts_view.sql
+
+View created.
+
+
+View created.
+
+SQL> @SBREXT_CDE_CURATOR_PKG_SPEC.sql
+
+View created.
+
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+  3*  
+
+Package created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL> @gf32649_SBREXT_SET_ROW_SPEC.sql
+
+Package created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL> @gf32649_SBREXT_SET_ROW_BODY.sql
+
+Package body created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL> @gf32649_SBREXT_GET_ROW_SPEC.sql
+
+Package created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL> @gf32649_SBREXT_GET_ROW_BODY.sql
+
+Package body created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL> @gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql
+
+Package body created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL> @gf32649_CADSR_XLS_LOADER_PKG_WORK3_SPEC.sql
+
+Grant succeeded.
+
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+  1*   GRANT EXECUTE ON "SBREXT"."CADSR_XLS_LOADER_PKG_WORK3" TO "DER_USER"
+
+Package created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL> @gf32649_MAINTAIN_CONCEPTS_BODY.sql
+
+Package body created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL> @gf32649_MAINTAIN_CONCEPTS_SPEC.sql
+
+Grant succeeded.
+
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+  1*   GRANT EXECUTE ON "SBREXT"."MAINTAIN_CONCEPTS" TO "DER_USER"
+
+Package created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL> @gf32649_SBREXT_GET_ROW_BODY.sql
+
+Package body created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL> @gf32649_CADSR_XLS_LOADER_PKG_WORK3_SPEC.sql
+
+Grant succeeded.
+
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+  1*   GRANT EXECUTE ON "SBREXT"."SBREXT_GET_ROW" TO "DER_USER"
+
+Package created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL> @gf32649_MAINTAIN_CONCEPTS_SPEC.sql
+
+Grant succeeded.
+
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+  1*   GRANT EXECUTE ON "SBREXT"."CADSR_XLS_LOADER_PKG_WORK3" TO "DER_USER"
+
+Package created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+SQL> @update_evs_url.sql
+
+Grant succeeded.
+
+SP2-0734: unknown command beginning "Copyright ..." - rest of line ignored.
+SP2-0734: unknown command beginning "Distribute..." - rest of line ignored.
+SP2-0734: unknown command beginning "See http:/..." - rest of line ignored.
+  1*   GRANT EXECUTE ON "SBREXT"."MAINTAIN_CONCEPTS" TO "DER_USER"
+
+1 row updated.
+
+
+Commit complete.
+
+SQL> @GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql
+
+Trigger created.
+
+SQL> @GF32723_insert_alt_name_lov.sql
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('NCI Thesaurus','NCI Thesaurus',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('Gene Ontology','GO',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('Common Terminology Criteria for Adverse Events','CTCAE',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('HUGO Gene Nomenclature Committee Ontology','HUGO',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('Intrntnl Classifn of Diseases, 9th Revision, Clinical Modifn','ICD9CM',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('ICD-10','ICD10',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('Logical Observation Identifier Names and Codes','LNC',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('MedDRA (Medical Dict for Regulatory Activities Terminology)','MDR',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('The MGED Ontology','MGED',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('NCI Metathesaurus','NCI Metathesaurus',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('Nanoparticle Ontology','NPO',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('Ontology for Biomedical Investigations','OBI',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('Radiology Lexicon','RADLEX',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('SNOMED Clinical Terms','SNOMEDCT',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('UMLS Semantic Network','UMLS SemNet',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('National Drug File - Reference Terminology','VANDF',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+Insert into DESIGNATION_TYPES_LOV (DESCRIPTION,DETL_NAME,COMMENTS,CREATED_BY,DATE_CREATED,DATE_MODIFIED,MODIFIED_BY) values ('Zebrafish','ZFIN',null,'SBR',to_date('08-MAY-03','DD-MON-RR'),to_date('23-OCT-06','DD-MON-RR'),'DWARZEL')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBR.DT_PK) violated 
+
+
+
+Commit complete.
+
+
+DETL_NAME                                                                       
+--------------------                                                            
+DESCRIPTION                                                                     
+------------------------------------------------------------                    
+NCI Thesaurus                                                                   
+NCI Thesaurus                                                                   
+                                                                                
+GO                                                                              
+Gene Ontology                                                                   
+                                                                                
+CTCAE                                                                           
+Common Terminology Criteria for Adverse Events                                  
+                                                                                
+
+DETL_NAME                                                                       
+--------------------                                                            
+DESCRIPTION                                                                     
+------------------------------------------------------------                    
+HUGO                                                                            
+HUGO Gene Nomenclature Committee Ontology                                       
+                                                                                
+ICD9CM                                                                          
+Intrntnl Classifn of Diseases, 9th Revision, Clinical Modifn                    
+                                                                                
+ICD10                                                                           
+ICD-10                                                                          
+                                                                                
+
+DETL_NAME                                                                       
+--------------------                                                            
+DESCRIPTION                                                                     
+------------------------------------------------------------                    
+LNC                                                                             
+Logical Observation Identifier Names and Codes                                  
+                                                                                
+MDR                                                                             
+MedDRA (Medical Dict for Regulatory Activities Terminology)                     
+                                                                                
+MGED                                                                            
+The MGED Ontology                                                               
+                                                                                
+
+DETL_NAME                                                                       
+--------------------                                                            
+DESCRIPTION                                                                     
+------------------------------------------------------------                    
+NCI Metathesaurus                                                               
+NCI Metathesaurus                                                               
+                                                                                
+NPO                                                                             
+Nanoparticle Ontology                                                           
+                                                                                
+OBI                                                                             
+Ontology for Biomedical Investigations                                          
+                                                                                
+
+DETL_NAME                                                                       
+--------------------                                                            
+DESCRIPTION                                                                     
+------------------------------------------------------------                    
+RADLEX                                                                          
+Radiology Lexicon                                                               
+                                                                                
+SNOMEDCT                                                                        
+SNOMED Clinical Terms                                                           
+                                                                                
+UMLS SemNet                                                                     
+UMLS Semantic Network                                                           
+                                                                                
+
+DETL_NAME                                                                       
+--------------------                                                            
+DESCRIPTION                                                                     
+------------------------------------------------------------                    
+VANDF                                                                           
+National Drug File - Reference Terminology                                      
+                                                                                
+ZFIN                                                                            
+Zebrafish                                                                       
+                                                                                
+
+17 rows selected.
+
+SQL> @GF32723_update_vocabnames.sql
+
+1 row updated.
+
+
+1 row updated.
+
+
+1 row updated.
+
+
+1 row updated.
+
+
+1 row updated.
+
+
+1 row updated.
+
+
+1 row updated.
+
+
+1 row updated.
+
+
+1 row updated.
+
+
+1 row updated.
+
+
+1 row updated.
+
+
+1 row updated.
+
+
+1 row updated.
+
+
+1 row updated.
+
+
+1 row updated.
+
+
+1 row updated.
+
+
+Commit complete.
+
+
+TOOL_NAME                                                                       
+------------------------------                                                  
+PROPERTY                                                                        
+--------------------------------------------------------------------------------
+VALUE                                                                           
+--------------------------------------------------------------------------------
+CURATION                                                                        
+EVS.VOCAB.20.DISPLAY                                                            
+MDR                                                                             
+                                                                                
+CURATION                                                                        
+EVS.VOCAB.22.DISPLAY                                                            
+MGED                                                                            
+
+TOOL_NAME                                                                       
+------------------------------                                                  
+PROPERTY                                                                        
+--------------------------------------------------------------------------------
+VALUE                                                                           
+--------------------------------------------------------------------------------
+                                                                                
+CURATION                                                                        
+EVS.VOCAB.24.DISPLAY                                                            
+NCI Metathesaurus                                                               
+                                                                                
+CURATION                                                                        
+EVS.VOCAB.28.DISPLAY                                                            
+
+TOOL_NAME                                                                       
+------------------------------                                                  
+PROPERTY                                                                        
+--------------------------------------------------------------------------------
+VALUE                                                                           
+--------------------------------------------------------------------------------
+NPO                                                                             
+                                                                                
+CURATION                                                                        
+EVS.VOCAB.30.DISPLAY                                                            
+OBI                                                                             
+                                                                                
+CURATION                                                                        
+
+TOOL_NAME                                                                       
+------------------------------                                                  
+PROPERTY                                                                        
+--------------------------------------------------------------------------------
+VALUE                                                                           
+--------------------------------------------------------------------------------
+EVS.VOCAB.32.DISPLAY                                                            
+RADLEX                                                                          
+                                                                                
+CURATION                                                                        
+EVS.VOCAB.34.DISPLAY                                                            
+SNOMEDCT                                                                        
+                                                                                
+
+TOOL_NAME                                                                       
+------------------------------                                                  
+PROPERTY                                                                        
+--------------------------------------------------------------------------------
+VALUE                                                                           
+--------------------------------------------------------------------------------
+CURATION                                                                        
+EVS.VOCAB.36.DISPLAY                                                            
+UMLS SemNet                                                                     
+                                                                                
+CURATION                                                                        
+EVS.VOCAB.38.DISPLAY                                                            
+VANDF                                                                           
+
+TOOL_NAME                                                                       
+------------------------------                                                  
+PROPERTY                                                                        
+--------------------------------------------------------------------------------
+VALUE                                                                           
+--------------------------------------------------------------------------------
+                                                                                
+CURATION                                                                        
+EVS.VOCAB.40.DISPLAY                                                            
+ZFIN                                                                            
+                                                                                
+CURATION                                                                        
+EVS.VOCAB.02.DISPLAY                                                            
+
+TOOL_NAME                                                                       
+------------------------------                                                  
+PROPERTY                                                                        
+--------------------------------------------------------------------------------
+VALUE                                                                           
+--------------------------------------------------------------------------------
+NCI Thesaurus                                                                   
+                                                                                
+CURATION                                                                        
+EVS.VOCAB.04.DISPLAY                                                            
+CTCAE                                                                           
+                                                                                
+CURATION                                                                        
+
+TOOL_NAME                                                                       
+------------------------------                                                  
+PROPERTY                                                                        
+--------------------------------------------------------------------------------
+VALUE                                                                           
+--------------------------------------------------------------------------------
+EVS.VOCAB.06.DISPLAY                                                            
+GO                                                                              
+                                                                                
+CURATION                                                                        
+EVS.VOCAB.09.DISPLAY                                                            
+HGNC                                                                            
+                                                                                
+
+TOOL_NAME                                                                       
+------------------------------                                                  
+PROPERTY                                                                        
+--------------------------------------------------------------------------------
+VALUE                                                                           
+--------------------------------------------------------------------------------
+CURATION                                                                        
+EVS.VOCAB.08.DISPLAY                                                            
+HUGO                                                                            
+                                                                                
+CURATION                                                                        
+EVS.VOCAB.12.DISPLAY                                                            
+ICD9CM                                                                          
+
+TOOL_NAME                                                                       
+------------------------------                                                  
+PROPERTY                                                                        
+--------------------------------------------------------------------------------
+VALUE                                                                           
+--------------------------------------------------------------------------------
+                                                                                
+CURATION                                                                        
+EVS.VOCAB.14.DISPLAY                                                            
+ICD10                                                                           
+                                                                                
+CURATION                                                                        
+EVS.VOCAB.16.DISPLAY                                                            
+
+TOOL_NAME                                                                       
+------------------------------                                                  
+PROPERTY                                                                        
+--------------------------------------------------------------------------------
+VALUE                                                                           
+--------------------------------------------------------------------------------
+ICD10CM                                                                         
+                                                                                
+CURATION                                                                        
+EVS.VOCAB.18.DISPLAY                                                            
+LNC                                                                             
+                                                                                
+
+19 rows selected.
+
+SQL> conn system
+Connected.
+SQL> @check_invalid_objects.sql
+
+no rows selected
+
+SQL> exit
