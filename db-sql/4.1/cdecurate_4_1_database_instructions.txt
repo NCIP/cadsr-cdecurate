@@ -1,8 +1,8 @@
-Curation Tool 4.1 related scripts (30 scripts in total). 
+Curation Tool 4.1 related scripts (31 scripts in total). 
 
 Please STOP proceeding to the next script if any errors show up with the current script.
 
-Please execute as in the following order:
+Please execute as in the following order with the suggested account as written in the parentheses:
 
 . customDownload.sql (SBREXT)
 . customDownload-grants.sql (NOTE: DO NOT execute this script, as it is invoked indirectly by customDownload.sql)
@@ -34,5 +34,6 @@ Please execute as in the following order:
 . GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql (SBREXT)
 . GF32723_insert_alt_name_lov.sql (SBREXT)
 . GF32723_update_vocabnames.sql (SBREXT)
+. check_invalid_objects.sql (SYSTEM)
 
 End of instructions.
