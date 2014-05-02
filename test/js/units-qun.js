@@ -36,3 +36,8 @@ asyncTest( "GF7680 Test 3", function() {
         notEqual(ret2, 'PVAction remove disabled', "PV delete is enabled");
     });
 });
+
+test( "GF32723 Test 1", function() {
+    createNames('acType');
+    ok( 1 == "1", "TODO!" );  //just to avoid QUnit from complaining about no assertion! ;)
+});

@@ -1,42 +1,64 @@
 //var jasmine = require("jasmine-node");
-var jasmine_jquery = require("jasmine-jquery");
-//var request = require('request');
-//
-//jasmine.getEnv().defaultTimeoutInterval = 500;
-//
-//it("should respond with hello world", function(done) {
-//  request("https://cdecurate.nci.nih.gov/", function(error, response, body){
-//    done();
-//  });  // timeout after 500 ms
-//});
+//var jasmine_jquery = require("jasmine-jquery");
 
-//jasmine.getFixtures().fixturesPath = '../fixtures';
+/** define a test suite */
+describe('GF7680', function() {
+    var ret;
+    var mock;
 
-describe('jquery plugin', function() {
-    var elem;
-
-    beforeEach(function() {
-        loadFixtures('example.html');
-        elem = $('.my-element');
+    beforeEach(function () {
+        mock = require('../helpers/mock-gf7680');
     });
 
-    it('should add default classes to the element', function() {
-        elem.plugin();
-        expect(elem).toHaveClass('my default classes');
+    /** define a test specs */
+    it('PV delete should be disabled', function () {
+        ret = mock.view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'RELEASED', 'true', 'true', 'RELEASED');
+        //jasmine.log(ret);
+        expect(ret).toContain('PVAction remove disabled');
+        ret = mock.view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'NOT RELEASED', 'true', 'true', 'RELEASED');
+        //jasmine.log(ret);
+        expect(ret).toContain('PVAction remove disabled');
     });
 
-    it('should add default text to the element', function() {
-        elem.plugin();
-        expect(elem).toHaveText('Some default text');
+    it('PV delete should be enabled', function () {
+        ret = mock.view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'NOT RELEASED', 'true', 'true', '');
+        //jasmine.log(ret);
+        expect(ret).not.toContain('PVAction remove disabled');
     });
 
-    it('should add add custom classes to the element', function() {
-        elem.plugin({ 'classes': 'my custom classes' });
-        expect(elem).toHaveClass('my custom classes');
+    it('PV/VM input should be disabled', function () {
+        var expectedStat = 'PV/VM input disabled';
+        ret = mock.view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'RELEASED', 'true', 'true', 'WHATEVER');
+        //jasmine.log(ret);
+        expect(ret).toContain(expectedStat);
+        ret = mock.view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'RELEASED', 'true', 'false', 'WHATEVER');
+        //jasmine.log(ret);
+        expect(ret).toContain(expectedStat);
+        ret = mock.view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'NOT RELEASED', 'true', 'true', 'RELEASED');
+        jasmine.log(ret);
+        expect(ret).toContain(expectedStat);
     });
 
-    it('should add add custom text to the element', function() {
-        elem.plugin({ 'text': 'Hello' });
-        expect(elem).toHaveText('Hello');
+    it('PV/VM input should be enabled', function () {
+        var expectedStat = 'PV/VM input disabled';
+        ret = mock.view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'NOT RELEASED', 'false', 'true', 'WHATEVER');
+        //jasmine.log(ret);
+        expect(ret).not.toContain(expectedStat);
     });
-});
+})
+
+describe('GF32723', function() {
+    var ret;
+    var mock;
+
+    beforeEach(function () {
+        mock = require('../helpers/mock-gf32723');
+    });
+
+    /** define a test specs */
+    it('PV delete should be disabled', function () {
+        mock.createNamesMock('DEC');
+        //jasmine.log(ret);
+        //expect(ret).toContain('PVAction remove disabled');
+    });
+})
