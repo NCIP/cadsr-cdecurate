@@ -7,12 +7,13 @@
  */
 if (typeof define === 'function') {
     /** client side */
-    define(function (require, exports, module) {
+    define(['require', 'exports', 'module'], function (require, exports, module) {
         exports.createNamesMock = function (acType) {
             createNames(acType);
         };
     });
-} else {
+} else
+if (typeof define === undefined) {
     /** server side */
     exports.createNamesMock = function(acType) {
         //createNames(acType);

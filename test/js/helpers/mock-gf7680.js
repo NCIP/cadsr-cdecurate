@@ -5,7 +5,7 @@
  */
 if (typeof define === 'function') {
     /** client side */
-    define(function (require, exports, module) {
+    define(['require', 'exports', 'module'], function (require, exports, module) {
         //var dep1 = require('app/foo');
         exports.view = function (pvd, imgdhide, imgddisp, action, pvNo, vdwfstatus, vdusedinform, pvusedinform, fmwfstatus) {
             /**

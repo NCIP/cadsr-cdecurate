@@ -1,9 +1,9 @@
-start units-qun.html
+:start /wait units-qun.html
 
-start units-jas.html
+:start /wait units-jas.html
 
-start phantomjs runner.js units-qun.html
+call jasmine-node --matchall units-jas.js
 
-start jasmine-node --matchall units-jas.js
+call phantomjs runner-qun.js units-qun.html
 
-:start phantomjs units-jas.html
+call phantomjs runner-jas.js units-jas.html
