@@ -1,6 +1,6 @@
 "use strict";
 
-require('../../../WebRoot/js/SearchResultsBlocks');
+//require('../../../WebRoot/js/SearchResultsBlocks');
 
 /**
  * Define a CommonJS-style module to isolate the mocking codes in a module

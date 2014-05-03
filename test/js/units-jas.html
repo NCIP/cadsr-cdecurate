@@ -13,10 +13,13 @@
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/1.3.1/jasmine.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/1.3.1/jasmine-html.js"></script>
-    <script type="text/javascript" src="spec/units-jas.js" ></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.11/require.min.js
-" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/curl/0.7.3/curl-for-ssjs/curl.min.js" type="text/javascript"></script>
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.11/require.min.js"></script>-->
 
+    <script type="text/javascript" src="helpers/mock-gf7680.js"></script>
+    <script type="text/javascript" src="../../WebRoot/js/SearchResultsBlocks.js"></script>
+    <script type="text/javascript" src="helpers/mock-gf32723.js"></script>
+    <script type="text/javascript" src="./units-jas.js"></script>
 
     <script type="text/javascript">
 
@@ -51,7 +54,7 @@
             function loadClasses()
             {
 //                require.config({
-//                    baseUrl: "./js",
+//                    baseUrl: "."
 //                    optimize: "none",
 //                    packages: [
 //                        {
@@ -77,10 +80,17 @@
 //                    ]
 //                });
 
-//                require(["spec/DeviceFactorySpec",
-//                    "spec/ActivateDeviceServiceSpec",
-//                    "spec/ResponseFactorySpec",
-//                    "spec/SimpleSpec"], function()
+//                require([
+//                    "./helpers/mock-gf7680",
+//                    "../../WebRoot/js/SearchResultsBlocks",
+//                    "./helpers/mock-gf32723",
+//                    "./units-jas"
+//                ], function(
+//                     gf7680,
+//                     search,
+//                     gf32723,
+//                     test
+//                )
 //                {
                     console.log("Starting Jasmine...");
                     jasmineEnv.execute();
