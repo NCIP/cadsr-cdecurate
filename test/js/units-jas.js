@@ -7,7 +7,7 @@ describe('GF7680', function() {
     var mock;
 
     beforeEach(function () {
-        mock = require('../helpers/mock-gf7680');
+        mock = require('helpers/mock-gf7680');
     });
 
     /** define a test specs */
@@ -52,7 +52,7 @@ describe('GF32723', function() {
     var mock;
 
     beforeEach(function () {
-        mock = require('../helpers/mock-gf32723');
+        mock = require('helpers/mock-gf32723');
     });
 
     /** define a test specs */
