@@ -34,6 +34,8 @@ var callMock = function(name, callback) {
     }
 }
 
+QUnit.module("GF7680");
+
 xtest( "GF7680 Test 1", function() {
     QUnit.config.autostart = false;
     //ok( 1 == "1", "qunit is ready!" );  //just a sanity check to make sure that QUnit works! ;)
@@ -73,6 +75,8 @@ asyncTest( "GF7680 Test 3", function() {
         ok(!ret2.indexOf('PVAction remove disabled') !== -1, "PV delete is enabled");
     });
 });
+
+QUnit.module("GF32723");
 
 test( "GF32723 Test 1", function() {
 //    createNames('acType');    //need to avoid window.close somehow
