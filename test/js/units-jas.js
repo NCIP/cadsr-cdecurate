@@ -3,18 +3,27 @@
 //var jasmine = require("jasmine-node");
 //var jasmine_jquery = require("jasmine-jquery");
 
+function callMock(name, callback) {
+    if (typeof module === 'undefined') {
+        requirejs(['./helpers/' + name], function (mock) {
+            callback(mock);
+        });
+    } else {
+        var mock = require('./helpers/' + name);
+        callback(mock);
+    }
+}
+
 /** define a test suite */
 describe('GF7680', function() {
     var ret;
-    var mock;
 
     beforeEach(function () {
-    });
+    })
 
     /** define a test specs */
     it('PV delete should be disabled', function () {
-        require(['./helpers/mock-gf7680'], function(gf7680) {
-            mock = gf7680;
+        callMock('mock-gf7680', function(mock) {
             //jasmine.log(mock);
             ret = mock.view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'RELEASED', 'true', 'true', 'RELEASED');
             //jasmine.log(ret);
@@ -26,8 +35,7 @@ describe('GF7680', function() {
     });
 
     it('PV delete should be enabled', function () {
-        require(['./helpers/mock-gf7680'], function(gf7680) {
-            mock = gf7680;
+        callMock('mock-gf7680', function(mock) {
             //jasmine.log(mock);
             ret = mock.view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'NOT RELEASED', 'true', 'true', '');
             //jasmine.log(ret);
@@ -36,8 +44,7 @@ describe('GF7680', function() {
     });
 
     it('PV/VM input should be disabled', function () {
-        require(['./helpers/mock-gf7680'], function(gf7680) {
-            mock = gf7680;
+        callMock('mock-gf7680', function(mock) {
             //jasmine.log(mock);
             var expectedStat = 'PV/VM input disabled';
             ret = mock.view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'RELEASED', 'true', 'true', 'WHATEVER');
@@ -53,8 +60,7 @@ describe('GF7680', function() {
     });
 
     it('PV/VM input should be enabled', function () {
-        require(['./helpers/mock-gf7680'], function(gf7680) {
-            mock = gf7680;
+        callMock('mock-gf7680', function(mock) {
             //jasmine.log(mock);
             var expectedStat = 'PV/VM input disabled';
             ret = mock.view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'NOT RELEASED', 'false', 'true', 'WHATEVER');
@@ -66,16 +72,14 @@ describe('GF7680', function() {
 
 describe('GF32723', function() {
     var ret;
-    var mock;
 
     beforeEach(function () {
     });
 
     /** define a test specs */
     it('Altername name should be created', function () {
-        require(['./helpers/mock-gf32723'], function(gf32723) {
-            mock = gf32723;
-            mock.createNamesMock('DEC');
+        callMock('mock-gf32723', function (mock) {
+//            mock.createNamesMock('DEC');
             //jasmine.log(ret);
             //expect(ret).toContain('PVAction remove disabled');
         });
