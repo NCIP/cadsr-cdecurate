@@ -5,11 +5,21 @@
 
 function callMock(name, callback) {
     if (typeof module === 'undefined') {
-        requirejs(['./helpers/' + name], function (mock) {
-            callback(mock);
-        });
+//        console.log("units-jas.js callMock 1");
+        var tName = './helpers/' + name;
+        try {
+//            console.log("units-jas.js callMock 2");
+            requirejs([tName], function (mock) {    //TODO: for PhantomJS, this seems to be invoked more than once!
+//                console.log("units-jas.js callMock 3");
+                callback(mock);
+            });
+        } catch(e) {
+            console.log("units-jas.js callMock error: " + e);
+        }
     } else {
+//        console.log("units-jas.js callMock 4");
         var mock = require('./helpers/' + name);
+//        console.log("units-jas.js callMock 5");
         callback(mock);
     }
 }
@@ -79,9 +89,17 @@ describe('GF32723', function() {
     /** define a test specs */
     it('Altername name should be created', function () {
         callMock('mock-gf32723', function (mock) {
-//            mock.createNamesMock('DEC');
-            //jasmine.log(ret);
-            //expect(ret).toContain('PVAction remove disabled');
+            //jasmine.log(mock);
+            if(typeof document !== 'undefined') {
+                mock.pickVocab(1, "NCI Thesaurus");
+                var ret = mock.doVocabChange();
+                expect(ret).toBe(ret === "NCI Thesaurus");
+                mock.SubmitValidate('validate');
+                //expect(ret).toContain('PVAction remove disabled');
+            } else {
+                jasmine.log('Skipped!');
+                expect(true).toBe(true);
+            }
         });
     });
 })

@@ -17,19 +17,29 @@ QUnit.testSkip = function() {
 
 var xtest = QUnit.testSkip;
 
-var callMock = function(name, callback) {
+function callMock(name, callback) {
     if (typeof define !== 'undefined') {
+        console.log("units-qun.js callMock 1");
         /** client side */
-        curl(['./helpers/' + name], function (mock) {
-            callback(mock);
-        });
+        try {
+            console.log("units-qun.js callMock 2");
+            curl(['./helpers/' + name], function (mock) {
+                console.log("units-qun.js callMock 3");
+                callback(mock);
+            });
+        }catch(e) {
+            console.log("unit-qun.js callMock() client side error: " + e);
+        }
     } else {
+        console.log("units-qun.js callMock 4");
         /** server side */
         try {
+            console.log("units-qun.js callMock 5");
             var mock = require('./helpers/' + name);
+            console.log("units-qun.js callMock 6");
             callback(mock);
         }catch(e) {
-            console.log("unit-qun.js callMock() server side: " + e);
+            console.log("unit-qun.js callMock() server side error: " + e);
         }
     }
 }
@@ -78,7 +88,20 @@ asyncTest( "GF7680 Test 3", function() {
 
 QUnit.module("GF32723");
 
-test( "GF32723 Test 1", function() {
-//    createNames('acType');    //need to avoid window.close somehow
-    ok( 1 == "1", "TODO: Altername name should be created" );  //just to avoid QUnit from complaining about no assertion! ;)
+//test( "GF32723 Test 1", function() {
+asyncTest( "GF32723 Test 1", function() {
+    callMock('mock-gf32723', function (mock) {
+        var idx;
+        idx = 1;      //NCIt
+        if(typeof document !== 'undefined') {
+            mock.pickVocab(1, "NCI Thesaurus");
+            var ret = mock.doVocabChange();
+            ok(ret === "NCI Thesaurus");
+            mock.SubmitValidate('validate');
+            //ok('PVAction remove disabled');
+        } else {
+            ok( 1 == "1", "Skipped!" );
+        }
+    });
+    ok( 1 == "1", "Altername name should be created" );  //just to avoid QUnit from complaining about no assertion! ;)
 });
