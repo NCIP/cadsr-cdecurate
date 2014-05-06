@@ -1,6 +1,7 @@
 package gov.nih.nci.cadsr.common;
 
 import gov.nih.nci.cadsr.cdecurate.util.CurationToolProperties;
+import gov.nih.nci.ncicb.cadsr.common.CaDSRUtil;
 
 import java.io.FileInputStream;
 import java.sql.Connection;
@@ -23,6 +24,7 @@ public class PropertyHelper {
 	public static String LOGO_LINK;
 	public static String EMAIL_ID;
 	public static String EMAIL_PWD;
+	public static String DEFAULT_RAI = "'2.16.840.1.113883.3.26.2'";
 	
 	public static String getHELP_LINK() {
 		return HELP_LINK;
@@ -103,4 +105,22 @@ public class PropertyHelper {
         _logger.debug("PropertyHelper: " + _user + " property loaded.");
     }
     */
+	
+	/**
+	 * GF33095 NCI RAI for curation tool
+	 */
+	public static String getNciRegistryId() {
+		if(DEFAULT_RAI == null) {
+			try {
+				DEFAULT_RAI = CaDSRUtil.getNciRegistryIdNoCache();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		System.out.println("****** DEFAULT_RAI = [" + DEFAULT_RAI + "] from cadsrutil.properties ******");
+
+		return DEFAULT_RAI;
+	}
+
 }

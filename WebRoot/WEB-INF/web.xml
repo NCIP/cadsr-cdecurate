@@ -31,11 +31,11 @@ L-->
     </init-param>
     <init-param>
       <param-name>username</param-name>
-      <param-value>cdebrowser</param-value>
+      <param-value>cdecurate</param-value>
     </init-param>
     <init-param>
       <param-name>password</param-name>
-      <param-value>cdeuser</param-value>
+      <param-value></param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
 

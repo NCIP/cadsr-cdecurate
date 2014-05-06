@@ -163,6 +163,13 @@ L-->
 		    </fileset>
 		</unwar>
 -->
+ 		<!-- GF33095/CDEBROWSER-308/CADSRAPI-32 -->
+		<copy todir="${dist.dir}/jboss" filtering="false" verbose="true">
+			<fileset dir="conf">
+				<include name="cadsrutil.properties" />
+				<include name="properties-service.xml" />
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="-cjsp" description="Compiles the project JSP files to verify syntax.">
