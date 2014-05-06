@@ -2,6 +2,10 @@
 
 var arrValidate;
 
+QUnit.log(function( details ) {
+    console.log( "QUnit Log: ", details.result, details.message );
+});
+
 QUnit.testSkip = function() {
     QUnit.test(arguments[0] + ' (SKIPPED)', function() {
         //QUnit.expect(0);//dont expect any tests
@@ -74,9 +78,6 @@ xtest( "GF7680 Test 2", function() {
 asyncTest( "GF7680 Test 3", function() {
     var ret1, ret2;
     QUnit.config.autostart = false;
-    QUnit.log(function( details ) {
-        console.log( "QUnit Log: ", details.result, details.message );
-    });
 
     callMock('mock-gf7680', function (mock) {
         QUnit.start();
@@ -89,8 +90,8 @@ asyncTest( "GF7680 Test 3", function() {
 
 QUnit.module("GF32723");
 
-xasyncTest( "GF32723 Test 1", function() {
-    expect(3);
+asyncTest( "GF32723 Test 1", function() {
+    QUnit.config.autostart = false;
     function CustomError( message ) {
         this.message = message;
     }
@@ -98,6 +99,7 @@ xasyncTest( "GF32723 Test 1", function() {
         return this.message;
     };
     callMock('mock-gf32723', function (mock) {
+        QUnit.start();
         var idx;
         idx = 1;      //NCIt
         if(typeof document !== 'undefined') {
@@ -109,11 +111,9 @@ xasyncTest( "GF32723 Test 1", function() {
                 undefined,
                 "No raised error during submission"
             );
-            ok( ret == "valid_submitted", "Alternate name submitted successfully" );
+            ok( ret == "valid_submitted", "Alternate name successfully submitted" );
         } else {
             ok( 1 == "1", "Skipped!" );
         }
     });
-    //TODO somehow the test hang here and does not quit!
-    //ok( 1 == "1", "Altername name should be created" );  //just to avoid QUnit from complaining about no assertion! ;)
 });
