@@ -22,7 +22,9 @@
     <!-- end app specific dependencies -->
 
     <!--<script type="text/javascript" src="helpers/mock-gf7680.js"></script>-->
-    <!--<script type="text/javascript" src="../../WebRoot/js/SearchResultsBlocks.js"></script>-->
+    <!--<script src="../../WebRoot/jsp/SearchParametersBlocks.jsp"></script>-->
+    <!--<script src="../../WebRoot/js/CreateDEC.js"></script>-->
+    <!--<script src="../../WebRoot/js/SelectCS_CSI.js"></script>-->
     <!--<script type="text/javascript" src="helpers/mock-gf32723.js"></script>-->
     <!--<script type="text/javascript" src="./units-jas.js"></script>-->
 
@@ -63,8 +65,10 @@
                     optimize: "none",
                     paths: {
 //                        dojo: 'https://ajax.googleapis.com/ajax/libs/dojo/1.9.3/dojo/dojo',
-                        gf7680: 'helpers/mock-gf7680',
-                        gf32723: 'helpers/mock-g32723',
+                        createDEC: '../../WebRoot/js/CreateDEC',
+                        SelectCS_CSI: '../../WebRoot/js/SelectCS_CSI',
+                        gf7680: './helpers/mock-gf7680',
+                        gf32723: './helpers/mock-gf32723',
                         test: 'units-jas'
                     },
 //                    packages: [
@@ -98,7 +102,7 @@
                         },
                         test: {
 //                            deps: ['dojo'],
-//                            deps: ['gf7680','gf32723'],
+                            deps: ['createDEC', 'SelectCS_CSI', 'gf7680','gf32723'],
                             exports: 'test'
                         }
                     }

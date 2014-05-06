@@ -94,8 +94,18 @@ describe('GF32723', function() {
                 mock.pickVocab(1, "NCI Thesaurus");
                 var ret = mock.doVocabChange();
                 expect(ret).toBe(ret === "NCI Thesaurus");
-                mock.SubmitValidate('validate');
-                //expect(ret).toContain('PVAction remove disabled');
+                try {
+                    mock.SubmitValidate('validate');
+                    expect(mock.SubmitValidate()).toThrow(); //"No raised error during submission"   //TODO caused "Error: Actual is not a function"
+                } catch (e) {
+                    expect(false).toBeTruthy(); throw e;
+                }
+                try {
+                    ret = mock.SubmitValidate('validate');  //"Alternate name submitted successfully"
+                    expect(ret).toEqual("1valid_submitted");
+                } catch (e) {
+                    expect(false).toBeTruthy(); throw e;
+                }
             } else {
                 jasmine.log('Skipped!');
                 expect(true).toBe(true);

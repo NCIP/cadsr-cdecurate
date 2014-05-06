@@ -18,13 +18,13 @@ QUnit.testSkip = function() {
 var xtest = QUnit.testSkip;
 var xasyncTest = QUnit.testSkip;
 
-function callMock(name, callback) {
+function callMock(mockName, callback) {
     if (typeof define !== 'undefined') {
         console.log("units-qun.js callMock 1");
         /** client side */
         try {
             console.log("units-qun.js callMock 2");
-            curl(['./helpers/' + name], function (mock) {
+            curl(['./helpers/' + mockName], function (mock) {
                 console.log("units-qun.js callMock 3");
                 callback(mock);
             });
@@ -36,7 +36,7 @@ function callMock(name, callback) {
         /** server side */
         try {
             console.log("units-qun.js callMock 5");
-            var mock = require('./helpers/' + name);
+            var mock = require('./helpers/' + mockName);
             console.log("units-qun.js callMock 6");
             callback(mock);
         }catch(e) {
@@ -90,6 +90,13 @@ asyncTest( "GF7680 Test 3", function() {
 QUnit.module("GF32723");
 
 xasyncTest( "GF32723 Test 1", function() {
+    expect(3);
+    function CustomError( message ) {
+        this.message = message;
+    }
+    CustomError.prototype.toString = function() {
+        return this.message;
+    };
     callMock('mock-gf32723', function (mock) {
         var idx;
         idx = 1;      //NCIt
@@ -97,11 +104,16 @@ xasyncTest( "GF32723 Test 1", function() {
             mock.pickVocab(1, "NCI Thesaurus");
             var ret = mock.doVocabChange();
             ok(ret === "NCI Thesaurus");
-            mock.SubmitValidate('validate');
-            //ok('PVAction remove disabled');
+            throws(
+                ret = mock.SubmitValidate('validate'),
+                undefined,
+                "No raised error during submission"
+            );
+            ok( ret == "valid_submitted", "Alternate name submitted successfully" );
         } else {
             ok( 1 == "1", "Skipped!" );
         }
     });
-    ok( 1 == "1", "Altername name should be created" );  //just to avoid QUnit from complaining about no assertion! ;)
+    //TODO somehow the test hang here and does not quit!
+    //ok( 1 == "1", "Altername name should be created" );  //just to avoid QUnit from complaining about no assertion! ;)
 });
