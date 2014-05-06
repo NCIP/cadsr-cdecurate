@@ -16,6 +16,7 @@ QUnit.testSkip = function() {
 };
 
 var xtest = QUnit.testSkip;
+var xasyncTest = QUnit.testSkip;
 
 function callMock(name, callback) {
     if (typeof define !== 'undefined') {
@@ -88,8 +89,7 @@ asyncTest( "GF7680 Test 3", function() {
 
 QUnit.module("GF32723");
 
-//test( "GF32723 Test 1", function() {
-asyncTest( "GF32723 Test 1", function() {
+xasyncTest( "GF32723 Test 1", function() {
     callMock('mock-gf32723', function (mock) {
         var idx;
         idx = 1;      //NCIt
