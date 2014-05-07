@@ -2,6 +2,10 @@
 
 var arrValidate;
 
+QUnit.log(function( details ) {
+    console.log( "QUnit Log: ", details.result, details.message );
+});
+
 QUnit.testSkip = function() {
     QUnit.test(arguments[0] + ' (SKIPPED)', function() {
         //QUnit.expect(0);//dont expect any tests
@@ -16,20 +20,31 @@ QUnit.testSkip = function() {
 };
 
 var xtest = QUnit.testSkip;
+var xasyncTest = QUnit.testSkip;
 
-var callMock = function(name, callback) {
+function callMock(mockName, callback) {
     if (typeof define !== 'undefined') {
+        console.log("units-qun.js callMock 1");
         /** client side */
-        curl(['./helpers/' + name], function (mock) {
-            callback(mock);
-        });
+        try {
+            console.log("units-qun.js callMock 2");
+            curl(['./helpers/' + mockName], function (mock) {
+                console.log("units-qun.js callMock 3");
+                callback(mock);
+            });
+        }catch(e) {
+            console.log("unit-qun.js callMock() client side error: " + e);
+        }
     } else {
+        console.log("units-qun.js callMock 4");
         /** server side */
         try {
-            var mock = require('./helpers/' + name);
+            console.log("units-qun.js callMock 5");
+            var mock = require('./helpers/' + mockName);
+            console.log("units-qun.js callMock 6");
             callback(mock);
         }catch(e) {
-            console.log("unit-qun.js callMock() server side: " + e);
+            console.log("unit-qun.js callMock() server side error: " + e);
         }
     }
 }
@@ -63,9 +78,6 @@ xtest( "GF7680 Test 2", function() {
 asyncTest( "GF7680 Test 3", function() {
     var ret1, ret2;
     QUnit.config.autostart = false;
-    QUnit.log(function( details ) {
-        console.log( "QUnit Log: ", details.result, details.message );
-    });
 
     callMock('mock-gf7680', function (mock) {
         QUnit.start();
@@ -78,7 +90,30 @@ asyncTest( "GF7680 Test 3", function() {
 
 QUnit.module("GF32723");
 
-test( "GF32723 Test 1", function() {
-//    createNames('acType');    //need to avoid window.close somehow
-    ok( 1 == "1", "TODO: Altername name should be created" );  //just to avoid QUnit from complaining about no assertion! ;)
+asyncTest( "GF32723 Test 1", function() {
+    QUnit.config.autostart = false;
+    function CustomError( message ) {
+        this.message = message;
+    }
+    CustomError.prototype.toString = function() {
+        return this.message;
+    };
+    callMock('mock-gf32723', function (mock) {
+        QUnit.start();
+        var idx;
+        idx = 1;      //NCIt
+        if(typeof document !== 'undefined') {
+            mock.pickVocab(1, "NCI Thesaurus");
+            var ret = mock.doVocabChange();
+            ok(ret === "NCI Thesaurus");
+            throws(
+                ret = mock.SubmitValidate('validate'),
+                undefined,
+                "No raised error during submission"
+            );
+            ok( ret == "valid_submitted", "Alternate name successfully submitted" );
+        } else {
+            ok( 1 == "1", "Skipped!" );
+        }
+    });
 });

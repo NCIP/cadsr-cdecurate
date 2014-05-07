@@ -12,4 +12,8 @@ npm install -g phantomjs
 
 npm install -g instanbul
 
-Note: You need to have NodeJS with npm installed. Alternatively, you can also install the above three tools with other tools like brew or bower.
+You need to have NodeJS with npm installed. Alternatively, they can be installed with installer like brew or even bower.
+
+To run the tests with a real browser, either launch the browser manually with units-qun.html and/or units-jas.html.
+
+Alternatively, all the tests can be developed and watched automatically with tools like grunt together karma/mocha.

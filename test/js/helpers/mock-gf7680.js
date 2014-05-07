@@ -78,7 +78,7 @@ if (typeof define === 'function') {
                         ) {
                         if(typeof dojo === 'undefined') {
                             status += 'PVAction remove disabled';
-                            console.log('1 dojo is not loaded, bypass dojo call!');
+                            //console.log('1 dojo is not loaded, bypass dojo call!');
                         } else {
                             //#1 disablement
                             dojo.query("img.PVAction").forEach(function (node, index) {

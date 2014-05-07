@@ -11,6 +11,7 @@
     <link rel="shortcut icon" type="image/png" href="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.0.0/jasmine_favicon.png">
     <!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.0.0/jasmine.css">-->
     <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.0.0/jasmine.js"></script>-->
+    <!--<script type="text/javascript" src="./vendors/jasmine-2.0.0.js"></script>-->
     <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.0.0/jasmine-html.js"></script>-->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jasmine/1.3.1/jasmine.css">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/1.3.1/jasmine.js"></script>
@@ -22,9 +23,11 @@
     <!-- end app specific dependencies -->
 
     <!--<script type="text/javascript" src="helpers/mock-gf7680.js"></script>-->
-    <!--<script type="text/javascript" src="../../WebRoot/js/SearchResultsBlocks.js"></script>-->
+    <!--<script src="../../WebRoot/jsp/SearchParametersBlocks.jsp"></script>-->
+    <!--<script src="../../WebRoot/js/CreateDEC.js"></script>-->
+    <!--<script src="../../WebRoot/js/SelectCS_CSI.js"></script>-->
     <!--<script type="text/javascript" src="helpers/mock-gf32723.js"></script>-->
-    <!--<script type="text/javascript" src="./units-jas.js"></script>-->
+    <script type="text/javascript" src="./units-jas.js"></script>
 
     <script type="text/javascript">
 
@@ -62,9 +65,12 @@
                     baseUrl: ".",
                     optimize: "none",
                     paths: {
+//                        jasmine: ['./vendors/jasmine-1.3.0'],
 //                        dojo: 'https://ajax.googleapis.com/ajax/libs/dojo/1.9.3/dojo/dojo',
-                        gf7680: 'helpers/mock-gf7680',
-                        gf32723: 'helpers/mock-g32723',
+                        createDEC: '../../WebRoot/js/CreateDEC',
+                        SelectCS_CSI: '../../WebRoot/js/SelectCS_CSI',
+                        gf7680: './helpers/mock-gf7680',
+                        gf32723: './helpers/mock-gf32723',
                         test: 'units-jas'
                     },
 //                    packages: [
@@ -85,6 +91,9 @@
 //                        }
 //                    ],
                     shim: {
+//                        jasmine: {
+//                            exports: 'jasmine'
+//                        },
 //                        'dojo': {
 //                            exports: 'dojo'
 //                        },
@@ -98,19 +107,21 @@
                         },
                         test: {
 //                            deps: ['dojo'],
-//                            deps: ['gf7680','gf32723'],
+                            deps: ['createDEC', 'SelectCS_CSI', 'gf7680','gf32723'],
                             exports: 'test'
                         }
                     }
                 });
 
-                require([
+                requirejs([
+//                    "jasmine",
 //                   "dojo",
 //                    "gf7680",
 //                    "gf32723"
 //                    ,
                     "test"
                 ], function(
+//                    jasmine,
 //                    dojo,
 //                     gf7680,
 //                     gf32723
@@ -125,11 +136,14 @@
                     //console.log("unit-jas.html dojo [" + dojo + "]");
                     console.log("Starting Jasmine...");
                     jasmineEnv.execute();
+//                    jasmine.execute();
+//                    jasmine.getEnv().execute();
                 });
             }
 
         })();
     </script>
+    <!--<script src="spec/MySpec.js"></script>-->
 
 </head>
 <body>
