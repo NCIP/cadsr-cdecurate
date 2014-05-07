@@ -10,6 +10,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.common.Database;
 import gov.nih.nci.cadsr.common.ExceptionUtil;
+import gov.nih.nci.cadsr.common.PropertyHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -590,7 +591,16 @@ public class CustomDownloadServlet extends CurationServlet {
 
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		String sqlStmt = "select * from sbrext.custom_download_types c where UPPER(c.type_name) = ? order by c.column_index";
+		String RAI = "";
+		try
+		{
+			RAI = "'" + PropertyHelper.getNciRegistryId() + "'";	//GF33095
+		}
+		catch ( Exception e) {
+			RAI = PropertyHelper.DEFAULT_RAI;
+			System.out.println("NCI RAI ID not found, initialized to default [" + RAI + "]");
+        }
+		String sqlStmt = "select sbrext.custom_download_types.*," + RAI + " as \"RAI\" from sbrext.custom_download_types c where UPPER(c.type_name) = ? order by c.column_index";	//GF33095
 		String[] splitType = type.split("\\.");
 
 		type = splitType[1];
@@ -655,7 +665,16 @@ public class CustomDownloadServlet extends CurationServlet {
 
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		String sqlStmt = "select * from sbrext.custom_download_types c where UPPER(c.type_name) = ? order by c.display_column_index";
+		String RAI = "";
+		try
+		{
+			RAI = "'" + PropertyHelper.getNciRegistryId() + "'";	//GF33095
+		}
+		catch ( Exception e) {
+			RAI = PropertyHelper.DEFAULT_RAI;
+			System.out.println("NCI RAI ID not found, initialized to default [" + RAI + "]");
+        }
+		String sqlStmt = "select sbrext.custom_download_types.*," + RAI + " as \"RAI\" from sbrext.custom_download_types c where UPPER(c.type_name) = ? order by c.display_column_index";
 		String[] splitType = type.split("\\.");
 
 		type = splitType[1];

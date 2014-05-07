@@ -14,3 +14,9 @@ d4.cmd
 e.cmd
 o.cmd
 sql.cmd
+dist/* 
+dist/*.* 
+dist/** 
+dist/cdecurate.war 
+dist/jboss/cdecurate-oracle-ds.xml 
+setEnv.cmd 
