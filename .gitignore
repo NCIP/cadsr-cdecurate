@@ -20,3 +20,6 @@ dist/**
 dist/cdecurate.war 
 dist/jboss/cdecurate-oracle-ds.xml 
 setEnv.cmd 
+dist/jboss/* 
+dist/jboss/cadsrutil.properties 
+dist/jboss/properties-service.xml 
