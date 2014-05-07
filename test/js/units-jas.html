@@ -15,6 +15,9 @@
     <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.0.0/jasmine-html.js"></script>-->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jasmine/1.3.1/jasmine.css">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/1.3.1/jasmine.js"></script>
+    <script type="text/javascript" src="vendors/focused_specs_filter.js"></script>
+    <!--<script type="text/javascript" src="vendors/execution_filters_util.js"></script>-->
+    <!--<script type="text/javascript" src="https://raw.githubusercontent.com/vojtajina/jasmine/ddescribe-iit-build/lib/jasmine-core/jasmine.js"></script>-->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/1.3.1/jasmine-html.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.11/require.min.js"></script>
     <!-- begin app specific dependencies -->
@@ -27,7 +30,7 @@
     <!--<script src="../../WebRoot/js/CreateDEC.js"></script>-->
     <!--<script src="../../WebRoot/js/SelectCS_CSI.js"></script>-->
     <!--<script type="text/javascript" src="helpers/mock-gf32723.js"></script>-->
-    <script type="text/javascript" src="./units-jas.js"></script>
+    <!--<script type="text/javascript" src="./units-jas.js"></script>-->
 
     <script type="text/javascript">
 
@@ -135,9 +138,13 @@
 //                    });
                     //console.log("unit-jas.html dojo [" + dojo + "]");
                     console.log("Starting Jasmine...");
-                    jasmineEnv.execute();
+                    if (jasmineEnv.customExecute) {
+                        jasmineEnv.customExecute();
+                    } else {
+                        jasmineEnv.execute();
 //                    jasmine.execute();
 //                    jasmine.getEnv().execute();
+                    }
                 });
             }
 

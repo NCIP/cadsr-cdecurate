@@ -79,14 +79,14 @@ describe('GF7680', function() {
     });
 })
 
-describe('GF32723', function() {
+ddescribe('GF32723', function() {
     var ret;
 
     beforeEach(function () {
     });
 
     /** define a test specs */
-    it('Altername name should not be created', function () {
+    iit('Altername name should not be created', function () {
         var ret;
         try {
             callMock('mock-gf32723', function (mock) {
