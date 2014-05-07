@@ -79,37 +79,53 @@ describe('GF7680', function() {
     });
 })
 
-ddescribe('GF32723', function() {
+describe('GF32723', function() {
     var ret;
+    var mock1;
 
     beforeEach(function () {
+        callMock('mock-gf32723', function (mock) {
+           mock1 = mock;
+        });
+
     });
 
+    function paused(milliSeconds) {
+        setTimeout(continueExec, milliSeconds);
+    }
+
+    function continueExec() {
+        console.log("")
+    }
+
+    ret = {
+        stat1: '',
+        stat2: '',
+        stat3: ''
+    };
     /** define a test specs */
-    iit('Altername name should not be created', function () {
-        var ret;
+    it('Altername name should not be created', function () {
         try {
-            callMock('mock-gf32723', function (mock) {
-                //jasmine.log(mock);
-                if(typeof document !== 'undefined') {
-                        mock.pickVocab(1, "NCI Thesaurus");
-                        ret = mock.doVocabChange();
-                        expect(ret).toBe(ret === "NCI Thesaurus");
-                        expect(function () {
-                            mock.SubmitValidate()
-                        }).not.toThrow(); //"No raised error during submission"
-                        ret = mock.SubmitValidate('validate');  //"Alternate name successfully submitted"
-                        expect(ret).not.toEqual("1111valid_submitted");
-                } else {
-                    jasmine.log('Skipped!');
-                    expect(true).toBe(true);
-                }
-            });
+            //jasmine.log(mock);
+            if(typeof document !== 'undefined') {
+                mock1.pickVocab(1, "NCI Thesaurus");
+                ret.stat1 = mock.doVocabChange();
+                expect(ret.stat1).toBe("NCI Thesaurus");
+
+                expect(function () {
+                    mock.SubmitValidate()
+                }).not.toThrow(); //"No raised error during submission"
+                ret.stat2 = mock.SubmitValidate('validate');  //"Alternate name successfully submitted"
+                expect(ret.stat2).not.toEqual("1111valid_submitted");
+            } else {
+                jasmine.log('Skipped!');
+                expect(true).toBe(true);
+            }
         } catch (e) {
             console.log('units-jas.js GF32723 error: ' + e);
         }
         //expect(false).toBe(true);
-
+        //paused(5000);
     });
 
 })
