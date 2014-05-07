@@ -12,6 +12,7 @@
     <!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.0.0/jasmine.css">-->
     <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.0.0/jasmine.js"></script>-->
     <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.0.0/jasmine-html.js"></script>-->
+    <<<<<<< HEAD
     <link rel="shortcut icon" type="image/png" href="./vendors/jasmine-2.0.0/jasmine_favicon.png">
     <link rel="stylesheet" type="text/css" href="./vendors/jasmine-2.0.0/jasmine.css">
     <!--<script type="text/javascript" src="./vendors/jasmine-2.0.0/jasmine.js"></script>-->
@@ -24,6 +25,15 @@
     <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/1.3.1/jasmine.js"></script>-->
     <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/1.3.1/jasmine-html.js"></script>-->
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.11/require.min.js"></script>
+    =======
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jasmine/1.3.1/jasmine.css">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/1.3.1/jasmine.js"></script>
+    <script type="text/javascript" src="vendors/focused_specs_filter.js"></script>
+    <!--<script type="text/javascript" src="vendors/execution_filters_util.js"></script>-->
+    <!--<script type="text/javascript" src="https://raw.githubusercontent.com/vojtajina/jasmine/ddescribe-iit-build/lib/jasmine-core/jasmine.js"></script>-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/1.3.1/jasmine-html.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.11/require.min.js"></script>
+    >>>>>>> 42f63737a67fca4216cde0bc2a1de3e22bfa44b7
     <!-- begin app specific dependencies -->
     <!--<script src="https://ajax.googleapis.com/ajax/libs/dojo/1.9.3/dojo/dojo.js" data-dojo-config="async: false"></script>-->
     <!--<script src="../../WebRoot/js/dojo/dojo/dojo.js" data-dojo-config="async: false"></script>-->
@@ -38,11 +48,11 @@
 
     <script type="text/javascript">
 
-//        var logger = log4javascript.getLogger("JasmineClientUnitTests");
-//        logger.setLevel(log4javascript.Level.ALL);
-//        logger.addAppender(new log4javascript.BrowserConsoleAppender());
-//        window.logger = logger;
-//        logger.debug("debug: activate-tests-runner.html::log4javascript ready to rock the mic.");
+        //        var logger = log4javascript.getLogger("JasmineClientUnitTests");
+        //        logger.setLevel(log4javascript.Level.ALL);
+        //        logger.addAppender(new log4javascript.BrowserConsoleAppender());
+        //        window.logger = logger;
+        //        logger.debug("debug: activate-tests-runner.html::log4javascript ready to rock the mic.");
 
         (function() {
 //            var jasmineEnv = jasmine.getEnv();
@@ -127,12 +137,19 @@
                 requirejs([
                     "test"
                 ], function(
-                     test
-                ) {
+                        test
+                        ) {
                     //console.log("unit-jas.html dojo [" + dojo + "]");
                     console.log("Starting Jasmine...");
 //                    htmlReporter.initialize();
 //                    jasmineEnv.execute();
+                    if (jasmineEnv.customExecute) {
+                        jasmineEnv.customExecute();
+                    } else {
+                        jasmineEnv.execute();
+//                    jasmine.execute();
+//                    jasmine.getEnv().execute();
+                    }
                 });
             }
 
