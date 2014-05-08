@@ -17,6 +17,7 @@
         <script src="./units-qun.js"></script>
         <!--<script src="helpers/mock-gf7680.js"></script>-->
         <!-- GF7680 -->
+        <script src="../../WebRoot/js/PermissibleValues.js"></script>
         <!--<script src="../../WebRoot/jsp/SearchParametersBlocks.jsp"></script>-->
         <script src="../../WebRoot/js/CreateDEC.js"></script>
         <script src="../../WebRoot/js/SelectCS_CSI.js"></script>
@@ -84,6 +85,12 @@
                 </div>
 
             </td>
+
+            <div style="display: none">
+                &nbsp;&nbsp;
+                <!-- GF7680 pvname only -->
+                <input type="text" id="txtpvonly0" name="txt0Value" maxlength="255" width="98%" onkeyup="javascript:getORsetEdited('0', 'pv');" value="sPVValJsp">
+            </div>
 
             <!-- the VM Long Name column -->
             <td>

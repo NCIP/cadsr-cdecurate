@@ -47,9 +47,6 @@ var opener, origin, obj_selCSNAMEHidden, obj_selCSCSIHidden, obj_selectedCS, obj
     }
 })();
 
-/**
- * Define a CommonJS-style module to isolate the mocking codes in a module
- */
 if (typeof window === 'undefined') {
     /** server side */
     exports.pickVocab = pickVocab;
@@ -80,6 +77,7 @@ if (typeof define === 'function') {
     )
 }
 
+/** Mock when a vocabulary list is selected by a user */
 function pickVocab(idx, vocabName) {
     if(typeof window !== 'undefined' && typeof document !== 'undefined') {
         document.searchParmsForm.listContextFilterVocab[idx].text = vocabName;
@@ -87,6 +85,7 @@ function pickVocab(idx, vocabName) {
     }
 }
 
+/** Mock of SearchParametersBlocks.jsp#doVocabChange() */
 function doVocabChange() {
     var stat = "";
 
@@ -104,7 +103,7 @@ function doVocabChange() {
     return stat;
 }
 
-/** Mock when a "Validate" button is clicked */
+/** Mock when a "Validate" button is clicked by a user */
 function mockSubmitValidate() {
     var stat;
     try {

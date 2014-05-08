@@ -1,6 +1,6 @@
 "use strict";
 
-var arrValidate;
+var arrValidate = [];
 
 QUnit.log(function( details ) {
     console.log( "QUnit Log: ", details.result, details.message );
@@ -51,7 +51,7 @@ function callMock(mockName, callback) {
 
 QUnit.module("GF7680");
 
-xtest( "GF7680 Test 1", function() {
+test( "GF7680 Test 1", function() {
     QUnit.config.autostart = false;
     //ok( 1 == "1", "qunit is ready!" );  //just a sanity check to make sure that QUnit works! ;)
 
@@ -59,10 +59,10 @@ xtest( "GF7680 Test 1", function() {
     view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'RELEASED','true','true','RELEASED');
     var elem = document.getElementsByName("textarea");
     //equal(elem.readOnly, true);
-    equal(elem.readOnly, undefined, "Element is undefined");
+    equal(elem.readOnly, undefined, "Element is undefined (textarea is left as is)");
 });
 
-xtest( "GF7680 Test 2", function() {
+test( "GF7680 Test 2", function() {
     QUnit.config.autostart = false;
     //ok( 1 == "1", "qunit is ready!" );  //just a sanity check to make sure that QUnit works! ;)
 
@@ -70,8 +70,8 @@ xtest( "GF7680 Test 2", function() {
     view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'RELEASED','true','true','NOT RELEASED');
 //    var elem = $("img.PVAction");
 //    equals(elem.style.display, "none");
-    var elem = document.getElementsByName("textarea");
-    notEqual(elem.readOnly, true, "Readonly is not found");
+    var elem = document.getElementById("txtpvonly0");
+    equal(elem.readOnly, true, "Readonly is found (PV/VM input disabled)");
     //equal(elem.readOnly, undefined);
 });
 

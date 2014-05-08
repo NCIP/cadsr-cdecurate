@@ -1,13 +1,19 @@
 "use strict";
 
-/**
- * Define a CommonJS-style module to isolate the mocking codes in a module
- */
+(function() {
+    if(typeof document !== 'undefined') {
+        //===init for view(pvd, imgdhide, imgddisp, action, pvNo, vdwfstatus, vdusedinform, pvusedinform, fmwfstatus)
+//        document.searchParmsForm = {};
+    }
+})();
+
 if (typeof window === 'undefined') {
     /** server side */
     exports.view = function(pvd, imgdhide, imgddisp, action, pvNo, vdwfstatus, vdusedinform, pvusedinform, fmwfstatus) {
         /**
-         * These piece of codes should have been wrapped in function but it didn't. Thus this mock is created to make it testable. Also dojo codes and window.console are commented out, as those are client side component.
+         * Mock of PermissibleValues.js#view(pvd, imgdhide, imgddisp, action, pvNo, vdwfstatus, vdusedinform, pvusedinform, fmwfstatus)
+         *
+         * Notes: These piece of codes should have been wrapped in function but it didn't. Thus this mock is created to make it testable. Also dojo codes and window.console are commented out, as those are client side component.
          */
         var status = '';
 
@@ -68,7 +74,8 @@ if (typeof define === 'function') {
         function (require, exports, module) {
             exports.view = function (pvd, imgdhide, imgddisp, action, pvNo, vdwfstatus, vdusedinform, pvusedinform, fmwfstatus) {
                 /**
-                 * These piece of codes should have been wrapped in function but it didn't. Thus this mock is created to make it testable.
+                 * Mock of PermissibleValues.js#view(pvd, imgdhide, imgddisp, action, pvNo, vdwfstatus, vdusedinform, pvusedinform, fmwfstatus)
+                 * Notes: These piece of codes should have been wrapped in function but it didn't. Thus this mock is created to make it testable.
                  */
                 var status = '';
 
