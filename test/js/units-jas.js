@@ -79,44 +79,45 @@ describe('GF7680', function() {
     });
 })
 
-describe('GF32723', function() {
+
+function paused(milliSeconds) {
+    setTimeout(continueExec, milliSeconds);
+}
+
+function continueExec() {
+    console.log("")
+}
+var statusArray;
+
+describe('GF32723 Init', function() {
     var ret;
-    var mock1;
+    var mock;
+    var done;
 
     beforeEach(function () {
-        callMock('mock-gf32723', function (mock) {
-           mock1 = mock;
-        });
-
+        statusArray = [];
     });
 
-    function paused(milliSeconds) {
-        setTimeout(continueExec, milliSeconds);
+    function done() {
+        expect(statusArray).toEqual(['NCI Thesaurus', 'valid_submitted']);
     }
 
-    function continueExec() {
-        console.log("")
-    }
-
-    ret = {
-        stat1: '',
-        stat2: '',
-        stat3: ''
-    };
     /** define a test specs */
     it('Altername name should not be created', function () {
         try {
             //jasmine.log(mock);
             if(typeof document !== 'undefined') {
-                mock1.pickVocab(1, "NCI Thesaurus");
-                ret.stat1 = mock.doVocabChange();
-                expect(ret.stat1).toBe("NCI Thesaurus");
-
-                expect(function () {
-                    mock.SubmitValidate()
-                }).not.toThrow(); //"No raised error during submission"
-                ret.stat2 = mock.SubmitValidate('validate');  //"Alternate name successfully submitted"
-                expect(ret.stat2).not.toEqual("1111valid_submitted");
+                callMock('mock-gf32723', function(mock) {
+                    mock.pickVocab(1, 'NCI Thesaurus');
+                    ret = mock.doVocabChange();
+                    statusArray.push(ret);
+                    expect(function () {
+                        mock.SubmitValidate()
+                    }).not.toThrow(); //"No raised error during submission"
+                    ret = mock.SubmitValidate('validate');  //"Alternate name successfully submitted"
+                    statusArray.push(ret);
+                    done();
+                });
             } else {
                 jasmine.log('Skipped!');
                 expect(true).toBe(true);
@@ -128,4 +129,14 @@ describe('GF32723', function() {
         //paused(5000);
     });
 
+})
+
+xdescribe('GF32723 Test', function() {
+    beforeEach(function () {
+    });
+
+    /** define a test specs */
+    it('Altername name should not be created', function () {
+        expect(statusArray).toEqual(['NCI Thesaurus', 'valid_submitted']);
+    });
 })
