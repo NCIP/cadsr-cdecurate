@@ -1,10 +1,10 @@
-cd %~dp0
-cd ..\..
+:cd %~dp0
+:cd ..\..
 set PROJECT_HOME=%CD%
 
-set JAVA_HOME=C:\jdk1.7.0_51
+set JAVA_HOME=C:\jdk1.6.0_45
 set GAE_JAVA_SDK_HOME=C:\appengine-java-sdk-1.9.1
-set ANT_HOME=C:\apache-ant-1.9.3
+set ANT_HOME=C:\apache-ant-1.9.4
 set MAVEN_HOME=C:\apache-maven-2.2.1
 set ROO_HOME=C:\spring-roo-1.1.0.M3
 

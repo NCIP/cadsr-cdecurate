@@ -1,15 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
-=======
-
-<!--L
-  Copyright ScenPro Inc, SAIC-F
-
-  Distributed under the OSI-approved BSD 3-Clause License.
-  See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
-L-->
-
->>>>>>> 4c4d0f9b49482f1fdfac14bd324b6a606e9a9130
 <!--
     JBoss Server Configuration for the CDE Curation Tool, Sentinel Tool and Freestyle
 
@@ -19,13 +8,8 @@ L-->
 <datasources>
     <local-tx-datasource>
         <jndi-name>jdbc/CDECurateDS</jndi-name>
-<<<<<<< HEAD
         <connection-url>p6spy:jdbc:oracle:thin:@ncidb-dsr-d.nci.nih.gov:1551:DSRDEV</connection-url>
         <driver-class>com.p6spy.engine.spy.P6SpyDriver</driver-class>
-=======
-        <connection-url>jdbc:oracle:thin:@ncidb-dsr-d.nci.nih.gov:1551:DSRDEV</connection-url>
-        <driver-class>oracle.jdbc.driver.OracleDriver</driver-class>
->>>>>>> 4c4d0f9b49482f1fdfac14bd324b6a606e9a9130
         <exception-sorter-class-name>org.jboss.resource.adapter.jdbc.vendor.OracleExceptionSorter</exception-sorter-class-name>
         <check-valid-connection-sql>select 1 from dual</check-valid-connection-sql>
         <blocking-timeout-millis>10000</blocking-timeout-millis>
@@ -34,11 +18,7 @@ L-->
         <max-pool-size>85</max-pool-size>
         <min-pool-size>1</min-pool-size>
         <user-name>cdecurate</user-name> 
-<<<<<<< HEAD
         <password>dsr#cde2014</password> 
-=======
-        <password></password> 
->>>>>>> 4c4d0f9b49482f1fdfac14bd324b6a606e9a9130
     </local-tx-datasource>
 </datasources>
 

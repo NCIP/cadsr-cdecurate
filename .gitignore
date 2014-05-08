@@ -23,3 +23,5 @@ setEnv.cmd
 dist/jboss/* 
 dist/jboss/cadsrutil.properties 
 dist/jboss/properties-service.xml 
+jcrasher.cmd 
+/dist/

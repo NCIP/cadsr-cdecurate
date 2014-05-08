@@ -24,7 +24,7 @@ public class PropertyHelper {
 	public static String LOGO_LINK;
 	public static String EMAIL_ID;
 	public static String EMAIL_PWD;
-	public static String DEFAULT_RAI = "'2.16.840.1.113883.3.26.2'";
+	public static String DEFAULT_RAI = "2.16.840.1.113883.3.26.2";
 	
 	public static String getHELP_LINK() {
 		return HELP_LINK;

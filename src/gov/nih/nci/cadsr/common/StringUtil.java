@@ -127,5 +127,27 @@ public class StringUtil {
 		e.printStackTrace(pw);
 
 		return sw.toString();
-	}	
+	}
+	
+	/**
+	 * This method is added to address XSS issue discovered during app scan.
+	 * 
+	 * @param stringToClean
+	 * @return
+	 */
+	public static String cleanJavascriptAndHtml(String stringToClean) {
+		if (stringToClean == null)
+			return stringToClean;
+		
+		stringToClean = stringToClean.replaceAll("alert\\(", "(");
+		stringToClean = stringToClean.replaceAll("<script", "<");
+		stringToClean = stringToClean.replaceAll("</script", "</");
+		stringToClean = stringToClean.replaceAll("javascript", "");
+		stringToClean = stringToClean.replaceAll(".html", "");
+		stringToClean = stringToClean.replaceAll("iframe", "");
+		stringToClean = stringToClean.replaceAll("UTL_HTTP.REQUEST", "");
+		
+		return stringToClean;
+	}
+
 }

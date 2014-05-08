@@ -600,7 +600,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			RAI = PropertyHelper.DEFAULT_RAI;
 			System.out.println("NCI RAI ID not found, initialized to default [" + RAI + "]");
         }
-		String sqlStmt = "select sbrext.custom_download_types.*," + RAI + " as \"RAI\" from sbrext.custom_download_types c where UPPER(c.type_name) = ? order by c.column_index";	//GF33095
+		String sqlStmt = "select c.*,'" + RAI + "' as \"RAI\" from sbrext.custom_download_types c where UPPER(c.type_name) = ? order by c.column_index";	//GF33095
 		String[] splitType = type.split("\\.");
 
 		type = splitType[1];
@@ -674,7 +674,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			RAI = PropertyHelper.DEFAULT_RAI;
 			System.out.println("NCI RAI ID not found, initialized to default [" + RAI + "]");
         }
-		String sqlStmt = "select sbrext.custom_download_types.*," + RAI + " as \"RAI\" from sbrext.custom_download_types c where UPPER(c.type_name) = ? order by c.display_column_index";
+		String sqlStmt = "select c.*,'" + RAI + "' as \"RAI\" from sbrext.custom_download_types c where UPPER(c.type_name) = ? order by c.display_column_index";
 		String[] splitType = type.split("\\.");
 
 		type = splitType[1];
