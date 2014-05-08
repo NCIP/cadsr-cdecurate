@@ -98,6 +98,7 @@ asyncTest( "GF32723 Test 1", function() {
     CustomError.prototype.toString = function() {
         return this.message;
     };
+    var spec = ['Alternate Name Specs'];
     callMock('mock-gf32723', function (mock) {
         QUnit.start();
         var idx;
@@ -105,13 +106,13 @@ asyncTest( "GF32723 Test 1", function() {
         if(typeof document !== 'undefined') {
             mock.pickVocab(1, "NCI Thesaurus");
             var ret = mock.doVocabChange();
-            ok(ret === "NCI Thesaurus");
+            ok(ret === "NCI Thesaurus", "NCIt vocabulary picked");
             throws(
                 ret = mock.SubmitValidate('validate'),
                 undefined,
-                "No raised error during submission"
+                "No raised error during new DEC submission"
             );
-            ok( ret == "valid_submitted", "Alternate name successfully submitted" );
+            ok( ret == "valid_submitted", spec[0]);
         } else {
             ok( 1 == "1", "Skipped!" );
         }

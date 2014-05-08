@@ -10,11 +10,12 @@ echo ......
 
 
 echo Running unit tests in Jasmine against headless browser ...
-call phantomjs runner-jas.js units-jas.html
-pause
+:call phantomjs runner-jas.js units-jas.html
+:call phantomjs runner-jas.js units-jas-1.3.1.html
+:pause
 
 echo "Running unit tests in Jasmine without a browser ..."
-call jasmine-node --matchall units-jas.js
+call jasmine-node --matchall --captureExceptions units-jas.js
 pause
 
 echo Running unit tests in QUnits against headless browser ...

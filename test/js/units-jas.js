@@ -8,7 +8,7 @@ function callMock(mockName, callback) {
 //        console.log("units-jas.js callMock 1");
         try {
 //            console.log("units-jas.js callMock 2");
-            requirejs(['./helpers/' + mockName], function (mock) {    //TODO: for PhantomJS, this seems to be invoked more than once!
+            requirejs(['./helpers/' + mockName], function (mock) {
 //                console.log("units-jas.js callMock 3");
                 callback(mock);
             });
@@ -79,37 +79,64 @@ describe('GF7680', function() {
     });
 })
 
-ddescribe('GF32723', function() {
+var stats = [];
+describe('GF32723', function() {
     var ret;
+    var spec = ['Alternate Name Specs'];
+    var specm = [];
 
     beforeEach(function () {
+        specm.push('Vocabulary picked should be NCIt');
+        specm.push('Altername name should not be created');
     });
 
     /** define a test specs */
-    iit('Altername name should not be created', function () {
+    it(spec[0], function () {
         var ret;
-        try {
-            callMock('mock-gf32723', function (mock) {
-                //jasmine.log(mock);
-                if(typeof document !== 'undefined') {
+        //TODO: for PhantomJS to avoid timeout
+//        requirejs(['phantom'], function(phantom) {
+//            phantom.create(function (ph) {
+//                ph.createPage(function (page) {
+//                    page.settings.resourceTimeout = 3000; // 3 seconds
+//                });
+//            });
+//        });
+        //TODO: for PhantomJS to avoid timeout
+
+        runs(function () {
+            try {
+                callMock('mock-gf32723', function (mock) {
+                    //jasmine.log(mock);
+                    if (typeof document !== 'undefined') {
                         mock.pickVocab(1, "NCI Thesaurus");
                         ret = mock.doVocabChange();
-                        expect(ret).toBe(ret === "NCI Thesaurus");
+                        stats.push(ret);
                         expect(function () {
                             mock.SubmitValidate()
                         }).not.toThrow(); //"No raised error during submission"
                         ret = mock.SubmitValidate('validate');  //"Alternate name successfully submitted"
-                        expect(ret).not.toEqual("1111valid_submitted");
-                } else {
-                    jasmine.log('Skipped!');
-                    expect(true).toBe(true);
-                }
-            });
-        } catch (e) {
-            console.log('units-jas.js GF32723 error: ' + e);
-        }
-        //expect(false).toBe(true);
+                        stats.push(ret);
+                    } else {
+                        jasmine.log('Skipped!');
+                        expect(true).toBe(true);
+                    }
+                });
+            } catch (e) {
+                console.log('units-jas.js GF32723 error: ' + e);
+            }
+            //expect(false).toBe(true);
+        });
 
+        waitsFor(function() {
+            var flag;
+            if(stats.length === 2) {
+                expect(stats).toEqual(['NCI Thesaurus', 'valid_submitted']);
+
+                console.log("Async spec done!");
+                flag = true;
+            }
+            return flag;
+        }, spec[0], 1500);
     });
 
 })
