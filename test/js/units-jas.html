@@ -15,11 +15,12 @@
     <link rel="shortcut icon" type="image/png" href="./vendors/jasmine-2.0.0/jasmine_favicon.png">
     <link rel="stylesheet" type="text/css" href="./vendors/jasmine-2.0.0/jasmine.css">
     <script type="text/javascript" src="./vendors/jasmine-2.0.0/jasmine.js"></script>
+    <script type="text/javascript" src="./vendors/jasmine-2.0.0/start.js"></script>
+    <!--<script type="text/javascript" src="./vendors/jasmine-2.0.0/boot.js"></script>-->
     <script type="text/javascript" src="./vendors/jasmine-2.0.0/jasmine-html.js"></script>
-    <script type="text/javascript" src="./vendors/boot-without-onload.js"></script>
-    <!--<script type="text/javascript" src="./vendors/jasmine2-junit.js"></script>-->
+    <script type="text/javascript" src="./vendors/jasmine2-junit.js"></script>
     <!-- TODO https://github.com/sandermak/jasmine2-junit for PhantomJS -->
-    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.11/require.min.js"></script>
+    <!--<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.11/require.min.js"></script>-->
     <!--<script type="text/javascript" src="vendors/focused_specs_filter.js"></script>-->
     <!--<script type="text/javascript" src="vendors/execution_filters_util.js"></script>-->
     <!--<script type="text/javascript" src="https://raw.githubusercontent.com/vojtajina/jasmine/ddescribe-iit-build/lib/jasmine-core/jasmine.js"></script>-->
@@ -33,7 +34,7 @@
     <!--<script src="../../WebRoot/js/CreateDEC.js"></script>-->
     <!--<script src="../../WebRoot/js/SelectCS_CSI.js"></script>-->
     <!--<script type="text/javascript" src="helpers/mock-gf32723.js"></script>-->
-    <!--<script type="text/javascript" src="./units-jas-1.3.1.js"></script>-->
+    <!--<script type="text/javascript" src="./units-jas.js"></script>-->
 
     <script type="text/javascript">
 
@@ -43,6 +44,41 @@
         //        window.logger = logger;
         //        logger.debug("debug: activate-tests-runner.html::log4javascript ready to rock the mic.");
 
+        (function() {
+//            var jasmineEnv = jasmine.getEnv();
+//            jasmine.VERBOSE = true;
+//            jasmineEnv.updateInterval = 1000;
+//
+//            var htmlReporter = new jasmine.HtmlReporter();
+//            var htmlReporter = new jasmine.HtmlReporter({
+//                env: env,
+//                queryString: queryString,
+//                onRaiseExceptionsClick: function() { queryString.setParam("catch", !env.catchingExceptions()); },
+//                getContainer: function() { return document.body; },
+//                createElement: function() { return document.createElement.apply(document, arguments); },
+//                createTextNode: function() { return document.createTextNode.apply(document, arguments); },
+//                timer: new jasmine.Timer()
+//            });
+
+//            jasmineEnv.addReporter(htmlReporter);
+//
+//            jasmineEnv.specFilter = function(spec) {
+//                return htmlReporter.specFilter(spec);
+//            };
+
+            var currentWindowOnload = window.onload;
+
+            window.onload = function() {
+                if (currentWindowOnload) {
+                    currentWindowOnload();
+                }
+                htmlReporter.initialize();
+                jasmine.getEnv().execute();
+//                loadClasses();
+            };
+
+            function loadClasses()
+            {
                 require.config({
 //                    baseUrl: "./js",
                     optimize: "none",
@@ -50,6 +86,7 @@
                         jasmine: "./vendors/jasmine-2.0.0/jasmine",
                         jasmineHtml: "./vendors/jasmine-2.0.0/jasmine-html",
 //                        jasmineBoot: "./vendors//jasmine-2.0.0/boot",
+                        jasmineBoot: "./vendors//jasmine-2.0.0/start",
                         createDEC: '../../WebRoot/js/CreateDEC',
                         SelectCS_CSI: '../../WebRoot/js/SelectCS_CSI',
                         gf7680: './helpers/mock-gf7680',
@@ -71,15 +108,17 @@
                                 'jasmine'
                             ]
                         },
-//                        jasmineBoot: {
-//                            deps: [
-//                                'jasmine'
-//                            ]
-//                        },
+                        jasmineBoot: {
+                            deps: [
+                                'jasmine'
+//                                ,
+//                                'jasmineHtml'
+                            ]
+                        },
                         test: {
                             deps: [
                                 'jasmine',
-//                                'jasmineBoot',
+                                'jasmineBoot',
                                 'jasmineHtml',
                                 'createDEC', 'SelectCS_CSI', 'gf7680', 'gf32723'],
                             exports: 'test'
@@ -89,17 +128,28 @@
                     waitSeconds: 120     //timeout in seconds if not able to load any of the external URL above
                 });
 
-                require([
-//                    'test'
-//                    'jasmine',
-//                    'jasmineBoot',
-//                    'jasmineHtml',
-                    'createDEC', 'SelectCS_CSI', 'gf7680', 'gf32723',
-                    'test'
-                ], function () {
-                    window.executeTests();
+                requirejs([
+                    'jasmine',
+                    "test"
+                ], function(
+                        jasmine,
+                        test
+                        ) {
+                    //console.log("unit-jas.html dojo [" + dojo + "]");
+                    console.log("Starting Jasmine...");
+//                    htmlReporter.initialize();
+//                    jasmine.getEnv().execute();
+//                    if (jasmineEnv.customExecute) {
+//                        jasmineEnv.customExecute();
+//                    } else {
+//                        jasmineEnv.execute();
+//                    jasmine.execute();
+//                    jasmine.getEnv().execute();
+//                    }
                 });
+            }
 
+        })();
     </script>
     <!--<script src="spec/MySpec.js"></script>-->
 

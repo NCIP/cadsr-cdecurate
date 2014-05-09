@@ -136,7 +136,7 @@ L--%>
 
 		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
 		 var helpUrl = "<%=ToolURL.getCurationToolHelpURL(pageContext)%>";
-		
+
  var evsWindow2 = null;
  var selDefinition = null;
  var numRowsSelected = 0;
@@ -167,7 +167,7 @@ L--%>
 	      pageOpen = document.searchParmsForm.actSelect.value;
 	    if (pageOpen == "FirstSearch" || pageOpen == "OpenTreeToConcept" || pageOpen == "OpenTreeToParentConcept")
 	      document.searchResultsForm.Message.style.visibility="visible";
-    
+
    }
 
    function getSearchComponent()
@@ -183,23 +183,23 @@ L--%>
         document.searchResultsForm.selectedParentConceptMetaSource.value = sComp2;
       }
     <%  if (sMAction.equals("searchForCreate") || sMAction.equals("BEDisplay")){%>
-       
+
         if (sComp == "ObjectClass" || sComp == "VDObjectClass") type = "Object Class";
         else if (sComp == "PropertyClass" || sComp == "VDPropertyClass" || sComp == "Property") type = "Property";
         else if (sComp == "ObjectQualifier" || sComp == "VDObjectQualifier") type = "Object Qualifier";
         else if (sComp == "PropertyQualifier" || sComp == "VDPropertyQualifier") type = "Property Qualifier";
         else if (sComp == "RepTerm") type = "Rep Term";
         else if (sComp == "RepQualifier") type = "Rep Qualifier";
-        else if (sComp == "EVSValueMeaning" || 
-                  sComp == "CreateVM_EVSValueMeaning" || 
+        else if (sComp == "EVSValueMeaning" ||
+                  sComp == "CreateVM_EVSValueMeaning" ||
                   sComp == "ParentConceptVM") type = "Value Meaning";  // || sComp == "VMConcept"
         else if (sComp == "VMConcept" || sComp == "EditVMConcept") type = "Concept";
         else if (sComp == "ParentConcept") type = "Parent Concept";
-        
+
     <% } else { %>
         sComp = "<%=StringEscapeUtils.escapeHtml(sSelAC)%>";
     <% } %>
-    
+
       //selected concept info
       <% if (selBean.getLONG_NAME() != null && !selBean.getLONG_NAME().equals(""))
       {
@@ -218,7 +218,7 @@ L--%>
     window.console && console.log('SearchResultsBlocks.jsp getSearchComponent() sComp = ['+ sComp + '] (GF32723)');
 
     }
-     
+
   function ShowSelection()
   {
     //begin GF32723
@@ -234,7 +234,7 @@ L--%>
 
    function reSetAttribute()
    {
-<%    
+<%
        Vector vDECResult = new Vector();
        session.setAttribute("results", vDECResult);
        session.setAttribute("creRecsFound", "No ");
@@ -263,11 +263,11 @@ L--%>
       }
     //end GF32723
    }
-   
+
    function EnableButtonWithTxt(currentField)
-   { 
+   {
         document.searchParmsForm.keyword.value="";
-         <% 
+         <%
           String temp1 = (String)session.getAttribute("creSearchAC");
           Boolean temp2 =(Boolean)session.getAttribute("ApprovedRepTerm");
           if(temp1.equals("RepTerm")&& temp2.booleanValue())
@@ -277,12 +277,12 @@ L--%>
         document.searchParmsForm.keyword.value="* "+ conArray[rowindex].conName;
         <%}
         %>
-      
+
    }
    function EnableButtonWithTxt1(currentField,id)
    {
        document.searchParmsForm.keyword.value="";
-        <% 
+        <%
           String temp3 = (String)session.getAttribute("creSearchAC");
           Boolean temp4 =(Boolean)session.getAttribute("ApprovedRepTerm");
           if(temp3.equals("RepTerm")&& temp4.booleanValue())
@@ -294,35 +294,35 @@ L--%>
         document.searchParmsForm.nonEVSRepTermSearch.value = nonEVSRepTermSearch;
         document.searchParmsForm.conid.value = conArray[rowindex].conID;
         <%}
-        %>        
+        %>
         doSearchBuildingBlocks();
        }
-    
+
   function getSubConceptsAll()
   {
      if (opener.document == null)
           window.close();
-     getSubConceptsAll2("<%=StringEscapeUtils.escapeJavaScript(sUISearchType2)%>")  
+     getSubConceptsAll2("<%=StringEscapeUtils.escapeJavaScript(sUISearchType2)%>")
   }
-     
+
   function getSubConceptsImmediate()
   {
      if (opener.document == null)
           window.close();
     getSubConceptsImmediate2("<%=StringEscapeUtils.escapeJavaScript(sUISearchType2)%>")
   }
-     
+
   function getSuperConcepts()
   {
      if (opener.document == null)
           window.close();
-     getSuperConcepts2("<%=StringEscapeUtils.escapeJavaScript(sUISearchType2)%>")  
+     getSuperConcepts2("<%=StringEscapeUtils.escapeJavaScript(sUISearchType2)%>")
   }
 
   //stores the search resuls in the array
   function storeResultInArray()
   {
-<%  
+<%
 	try
 	{
 	  for(int i=0; i<vSearchRes.size(); i++)
@@ -346,9 +346,9 @@ L--%>
 	      var conDBOrg = "<%=evsBean.getEVS_ORIGIN()%>";
 	      var conLvl = "<%=evsBean.getLEVEL()%>";
 	      var conStatus = "<%=evsBean.getASL_NAME()%>";
-	      //create multi dimentional array with concept attributes 
-	      conArray[aIndex] = fillConArray(conID, conName, conDef, conDefSrc, conVocab, conDBOrg, conLvl, conStatus);      
-	<%        
+	      //create multi dimentional array with concept attributes
+	      conArray[aIndex] = fillConArray(conID, conName, conDef, conDefSrc, conVocab, conDBOrg, conLvl, conStatus);
+	<%
 	  }
 	}
 	catch (Exception e)
@@ -366,11 +366,11 @@ L--%>
 %>
       var kI = <%=k%>
       arrDefSrc[kI] = "<%=sSrc%>";
-<%        
+<%
     }
 %>
   }
-  
+
 </SCRIPT>
 
 	</head>
@@ -397,7 +397,7 @@ L--%>
 			</table>
 			<br>
 			<table width="100%" valign="top">
-				<% 
+				<%
 				Boolean temp =(Boolean)session.getAttribute("ApprovedRepTerm");
 				if(sSelAC.equals("Parent Concept")){%>
 				<tr>
@@ -420,7 +420,7 @@ L--%>
 						</font>
 					</td>
 				</tr>
-				<% } else { 				
+				<% } else {
 				if(!(sSelAC.equals("Rep Term") && temp.booleanValue()))
 				%>
 				<tr>
@@ -572,7 +572,7 @@ L--%>
           String strVocab = eBean.getEVS_DATABASE();  
           vName = eBean.getVocabAttr(uBean, strVocab, EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME);  // "vocabDBOrigin", "vocabName");
           nvp = eBean.getNAME_VALUE_PAIR_IND();
-   // System.out.println(eBean.getCONCEPT_NAME() + " nvp " + nvp);
+          System.out.println("JR1013 Concept Name [" + eBean.getCONCEPT_NAME() + "] nvp " + nvp);
         }
          String ckName = ("CK" + j);
          strResult = (String)results.get(i);
@@ -611,17 +611,21 @@ L--%>
 					<%} %>
 					<td width="150px" valign="top">
 						<%=strResult%>
-						<br>
-						<% //add the text box for NVP under concept name
+						<p>
+						<%
+System.out.println("JR1013 strResult [" + strResult + "] allowNVP [" + allowNVP + "] nvp [" + nvp + "] vSelAttr [" + vSelAttr.toString() + "]");
+						//add the text box for NVP under concept name
             		if (allowNVP && nvp > 0 && vSelAttr.contains("Concept Name"))
             		{
             	%>
-						<br>
+						<p>
 						&nbsp;&nbsp;Enter Concept Value
-						<br>
+						<p>
 						&nbsp;&nbsp;
 						<input type="text" name="nvp_<%=ckName%>" id="nvp_<%=ckName%>" maxlength="10" width="80%" onkeyup="" value="">
 						<% }	%>
+                        <br>
+                        &nbsp;&nbsp;
 					</td>
 					<%    }else{%>
 				<tr>
@@ -632,17 +636,19 @@ L--%>
 						<a href="<%=showConceptInTree%>">
 							<%=strResult%>
 						</a>
-						<br>
+                        <p>
 						<% //add the text box for NVP under concept name
             		if (allowNVP && nvp > 0 && vSelAttr.contains("Concept Name"))
             		{
             	%>
-						<br>
+                        <p>
 						&nbsp;&nbsp;Enter Concept Value
-						<br>
+                        <p>
 						&nbsp;&nbsp;
 						<input type="text" name="nvp_<%=ckName%>" id="nvp_<%=ckName%>" maxlength="10" size="30" onkeyup="" value="">
 						<% }	%>
+                        <br>
+                        &nbsp;&nbsp;
 					</td>
 					<%    } %>
 					<%
@@ -720,10 +726,10 @@ L--%>
 				</table>
 			</div>
 			<script language="javascript">
-				setup();				
+				setup();
 				getSearchComponent();
 				initPopupMenu2();
-				storeResultInArray();				
+				storeResultInArray();
 			</script>
 		</form>
 	</body>

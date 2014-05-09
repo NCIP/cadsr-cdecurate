@@ -377,7 +377,7 @@ L--%>
 							<% } %>
 							<br>
 						</div>
-						<input type="hidden" name="<%=VMForm.ELM_NVP_ORDER%>" value="<%=vmCon.size()%>">						
+						<input type="hidden" name="<%=VMForm.ELM_NVP_ORDER%>" id="VM<%=VMForm.ELM_NVP_ORDER%>" value="<%=vmCon.size()%>">	<!--JR1013-->
 					</form>
 					<div style="display:none">
 						<form name="SearchActionForm" method="post" action="">

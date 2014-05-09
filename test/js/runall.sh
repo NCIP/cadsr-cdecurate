@@ -17,7 +17,7 @@ phantomjs runner-jas.js units-jas.html
 echo "Press any key to continue..." ; read anykey 
 
 echo "Running unit tests in Jasmine without a browser ..."
-jasmine-node --matchall --captureExceptions units-jas-1.3.1.js
+jasmine-node --matchall --captureExceptions units-jas.js
 echo "Press any key to continue..." ; read anykey 
 
 echo Running unit tests in QUnit without a browser ...

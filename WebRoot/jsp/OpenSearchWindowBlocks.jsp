@@ -23,7 +23,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<title>
 			CDE Curation: Search
 		</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<script>
 history.forward();
@@ -38,7 +38,7 @@ history.forward();
 					<%@ include file="SearchParametersBlocks.jsp"%>
 				</td>
 				<td>
-					<%@ include file="SearchResultsBlocks.jsp"%>
+					<%@ include file="SearchResultsBlocks.jsp"%>    <!--JF1013 this is where the box is rendered-->
 				</td>
 			</tr>
 		</table>
