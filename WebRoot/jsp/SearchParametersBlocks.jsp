@@ -20,6 +20,7 @@ L--%>
 <html>
 	<head>
 		<title>Search Parameters</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 		<meta http-equiv="Content-Type"
 			content="text/html; charset=iso-8859-1">
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
@@ -465,11 +466,21 @@ function testIsValidObject(objToTest) {
 			}
 			else
 			{
-				var conOrd = opener.document.getElementById("vmConOrder");
-				if (conOrd != null && conOrd.value != null && conOrd.value != "")
+                try {
+                //JR1013 begin
+                conOrd = opener.document.getElementById("VMvmConOrder");
+                if(typeof conOrd === 'undefined' || conOrd == null) {
+                    throw new Error("SearchParametersBlocks.jsp error: Not able to retrieve a value from element VMvmConOrder in ValueMeaningDetail.jsp!");
+                }
+                //JR1013 end
+
+                if (conOrd != null && conOrd.value != null && conOrd.value != "")
 				{
 					document.getElementById("vmConOrder").value = conOrd.value;
 				}
+                }catch(e) {
+                    console.log("SearchParametersBlocks.jsp error: " + e);
+                }
 			}
 		}
 	}
@@ -1048,7 +1059,7 @@ function doMetaCodeSearch()
 					<td>
 						<input type="hidden" name="actSelect" value="Search"
 							style="visibility: hidden;">
-						<input type="hidden" name="vmConOrder" value="0">
+						<input type="hidden" name="vmConOrder" id="vmConOrder" value="0">   <!--JR1013 add the id!-->
 						<input type="hidden" name="sCCodeDB" value="">
 						<input type="hidden" name="sCCode" value="">
 						<input type="hidden" name="sCCodeName" value="">
