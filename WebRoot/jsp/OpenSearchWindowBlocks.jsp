@@ -38,7 +38,7 @@ history.forward();
 					<%@ include file="SearchParametersBlocks.jsp"%>
 				</td>
 				<td>
-					<%@ include file="SearchResultsBlocks.jsp"%>    <!--JF1013 this is where the box is rendered-->
+					<%@ include file="SearchResultsBlocks.jsp"%>    <!--JR1013 this is where the box is rendered-->
 				</td>
 			</tr>
 		</table>
