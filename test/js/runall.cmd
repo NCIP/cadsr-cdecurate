@@ -15,7 +15,7 @@ echo Running unit tests in Jasmine against headless browser ...
 :pause
 
 echo "Running unit tests in Jasmine without a browser ..."
-call jasmine-node --matchall --captureExceptions units-jas.js
+call jasmine-node --matchall --captureExceptions units-jas-1.3.1.js
 pause
 
 echo Running unit tests in QUnits against headless browser ...
