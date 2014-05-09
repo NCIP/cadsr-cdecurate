@@ -71,12 +71,11 @@ describe('GF7680', function() {
 var stats = [];
 describe('GF32723', function() {
     var ret;
-    var spec = [];
+    var spec = 'Alternate Name Specs';
     var specm = [];
     var callDone;
 
     beforeEach(function (done) {
-        spec.push('Alternate Name Specs');
         specm.push('Vocabulary picked should be NCIt');
         specm.push('Altername name should not be created');
         done();
@@ -88,7 +87,7 @@ describe('GF32723', function() {
     });
 
     /** define a test specs */
-    it(spec[0], function (done) {
+    it(spec, function (done) {
         callDone = done;
         var ret;
         //TODO: for PhantomJS to avoid timeout
@@ -124,7 +123,7 @@ describe('GF32723', function() {
                 }
             });
         } catch (e) {
-            console.log('units-jas-1.3.1.js GF32723 error: ' + e);
+            console.log('units-jas.js GF32723 error: ' + e);
         }
 
     });
