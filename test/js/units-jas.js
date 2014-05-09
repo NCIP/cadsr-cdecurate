@@ -5,20 +5,17 @@
 
 function callMock(mockName, callback) {
     if (typeof module === 'undefined') {
-//        console.log("units-jas-1.3.1.js callMock 1");
         try {
-//            console.log("units-jas-1.3.1.js callMock 2");
+            console.log("loading mock [" + mockName + "] via requirejs ...");
             requirejs(['./helpers/' + mockName], function (mock) {
-//                console.log("units-jas-1.3.1.js callMock 3");
                 callback(mock);
             });
         } catch(e) {
             console.log("units-jas-1.3.1.js callMock error: " + e);
         }
     } else {
-//        console.log("units-jas-1.3.1.js callMock 4");
+        console.log("loading mock [" + mockName + "] ala commonjs ...");
         var mock = require('./helpers/' + mockName);
-//        console.log("units-jas-1.3.1.js callMock 5");
         callback(mock);
     }
 }
@@ -105,27 +102,28 @@ describe('GF32723', function() {
 //        }
 
         try {
-            callMock('mock-gf32723', function (mock) {
-                if (typeof document !== 'undefined') {
-                    mock.pickVocab(1, "NCI Thesaurus");
-                    ret = mock.doVocabChange();
-                    stats.push(ret);
-                    expect(function () {
-                        mock.SubmitValidate()
-                    }).not.toThrow(); //"No raised error during submission"
-                    ret = mock.SubmitValidate('validate');  //"Alternate name successfully submitted"
-                    stats.push(ret);
-                    callDone();
-//                    done();
-                } else {
-//                    jasmine.log('Skipped!');
-                    expect(true).toBe(true);
-                }
-            });
+            if (typeof module === 'undefined') {
+                callMock('mock-gf32723', function (mock) {
+                    if (typeof document !== 'undefined') {
+                        mock.pickVocab(1, "NCI Thesaurus");
+                        ret = mock.doVocabChange();
+                        stats.push(ret);
+                        expect(function () {
+                            mock.SubmitValidate()
+                        }).not.toThrow(); //"No raised error during submission"
+                        ret = mock.SubmitValidate('validate');  //"Alternate name successfully submitted"
+                        stats.push(ret);
+                        callDone();
+                        //                    done();
+                    } else {
+                        jasmine.log('Document is undefined, Skipped!');
+                        expect(true).toBe(true);
+                    }
+                });
+            }
         } catch (e) {
             console.log('units-jas.js GF32723 error: ' + e);
         }
-
     });
 
 })
