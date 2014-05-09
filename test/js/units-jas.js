@@ -68,28 +68,33 @@ describe('GF7680', function() {
     });
 })
 
-var stats = [];
 describe('GF32723', function() {
+    var stats = [];
     var ret;
-    var spec = [];
+    var spec = 'Alternate Name Specs';
     var specm = [];
-    var callDone;
+    var mock;
+    var originalTimeout;
 
-    beforeEach(function (done) {
-        spec.push('Alternate Name Specs');
-        specm.push('Vocabulary picked should be NCIt');
-        specm.push('Altername name should not be created');
-        done();
+    beforeEach(function(done) {
+        originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
+        callMock('mock-gf32723', function (mock1) {
+            mock = mock1;
+            specm.push('Vocabulary picked should be NCIt');
+            specm.push('Altername name should not be created');
+            specm.push('Altername name should be created');
+            done();
+        });
     });
 
-    afterEach(function(done){
+    afterEach(function(){
         expect(stats).toEqual(['NCI Thesaurus', 'valid_submitted']);
-        done();
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
     });
 
     /** define a test specs */
-    it(spec[0], function (done) {
-        callDone = done;
+    it(spec, function(done) {
         var ret;
         //TODO: for PhantomJS to avoid timeout
 //        requirejs(['phantom'], function(phantom) {
@@ -101,32 +106,23 @@ describe('GF32723', function() {
 //        });
         //TODO: for PhantomJS to avoid timeout
 
-//        function callDone() {
-//            done();
-//        }
-
         try {
-            callMock('mock-gf32723', function (mock) {
-                if (typeof document !== 'undefined') {
-                    mock.pickVocab(1, "NCI Thesaurus");
-                    ret = mock.doVocabChange();
-                    stats.push(ret);
-                    expect(function () {
-                        mock.SubmitValidate()
-                    }).not.toThrow(); //"No raised error during submission"
-                    ret = mock.SubmitValidate('validate');  //"Alternate name successfully submitted"
-                    stats.push(ret);
-                    callDone();
-//                    done();
-                } else {
-//                    jasmine.log('Skipped!');
-                    expect(true).toBe(true);
-                }
-            });
+            if (typeof document !== 'undefined') {
+                mock.pickVocab(1, "NCI Thesaurus");
+                ret = mock.doVocabChange();
+                stats.push(ret);
+                expect(function () {
+                    mock.SubmitValidate()
+                }).not.toThrow(); //"No raised error during submission"
+                ret = mock.SubmitValidate('validate');  //"Alternate name successfully submitted"
+                stats.push(ret);
+                done();
+            } else {
+                jasmine.log('Skipped!');
+                expect(true).toBe(true);
+            }
         } catch (e) {
-            console.log('units-jas-1.3.1.js GF32723 error: ' + e);
+            console.log('units-jas.js GF32723 error: ' + e);
         }
-
     });
-
 })
