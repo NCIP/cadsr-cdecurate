@@ -51,31 +51,39 @@ function callMock(mockName, callback) {
 
 QUnit.module("GF7680");
 
-test( "GF7680 Test 1", function() {
-    QUnit.config.autostart = false;
-    //ok( 1 == "1", "qunit is ready!" );  //just a sanity check to make sure that QUnit works! ;)
+test("GF7680 Test 1", function() {
+    if(typeof view !== 'undefined') {
+        QUnit.config.autostart = false;
+        //ok( 1 == "1", "qunit is ready!" );  //just a sanity check to make sure that QUnit works! ;)
 
-    arrValidate[0] = arrValidate[2] = 'qunitTest';   //remove "view" and avoid "Please save the Permissible Value
-    view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'RELEASED','true','true','RELEASED');
-    var elem = document.getElementsByName("textarea");
-    //equal(elem.readOnly, true);
-    equal(elem.readOnly, undefined, "Element is undefined (textarea is left as is)");
+        arrValidate[0] = arrValidate[2] = 'qunitTest';   //remove "view" and avoid "Please save the Permissible Value
+        view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'RELEASED', 'true', 'true', 'RELEASED');
+        var elem = document.getElementsByName("textarea");
+        //equal(elem.readOnly, true);
+        equal(elem.readOnly, undefined, "Element is undefined (textarea is left as is)");
+    } else {
+        ok( 1 == "1", "Skipped!" );
+    }
 });
 
-test( "GF7680 Test 2", function() {
-    QUnit.config.autostart = false;
-    //ok( 1 == "1", "qunit is ready!" );  //just a sanity check to make sure that QUnit works! ;)
+test("GF7680 Test 2", function() {
+    if(typeof view !== 'undefined') {
+        QUnit.config.autostart = false;
+        //ok( 1 == "1", "qunit is ready!" );  //just a sanity check to make sure that QUnit works! ;)
 
-    arrValidate[0] = arrValidate[2] = 'qunitTest';   //remove "view" and avoid "Please save the Permissible Value
-    view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'RELEASED','true','true','NOT RELEASED');
-//    var elem = $("img.PVAction");
-//    equals(elem.style.display, "none");
-    var elem = document.getElementById("txtpvonly0");
-    equal(elem.readOnly, true, "Readonly is found (PV/VM input disabled)");
-    //equal(elem.readOnly, undefined);
+        arrValidate[0] = arrValidate[2] = 'qunitTest';   //remove "view" and avoid "Please save the Permissible Value
+        view('pv0View', 'pv0ImgClose', 'pv0ImgOpen', 'view', 'pv0', 'RELEASED','true','true','NOT RELEASED');
+//        var elem = $("img.PVAction");
+//        equals(elem.style.display, "none");
+        var elem = document.getElementById("txtpvonly0");
+        equal(elem.readOnly, true, "Readonly is found (PV/VM input disabled)");
+        //equal(elem.readOnly, undefined);
+    } else {
+        ok( 1 == "1", "Skipped!" );
+    }
 });
 
-asyncTest( "GF7680 Test 3", function() {
+asyncTest("GF7680 Test 3", function() {
     var ret1, ret2;
     QUnit.config.autostart = false;
 
@@ -90,7 +98,7 @@ asyncTest( "GF7680 Test 3", function() {
 
 QUnit.module("GF32723");
 
-asyncTest( "GF32723 Test 1", function() {
+asyncTest("GF32723 Test 1", function() {
     QUnit.config.autostart = false;
     function CustomError( message ) {
         this.message = message;

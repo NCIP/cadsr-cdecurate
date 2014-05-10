@@ -118,25 +118,26 @@ function mockSubmitValidate() {
         if (isValid == "valid" && origin == "validate")
             isValid = isNameTypeValid();
         if (isValid == "valid") {
-            //hourglass();  //GF32723
-            //keep the blocks selection list selected
-            selectBlocksList();
-            //keep the cscsi selection list selected
-            selectMultiSelectList();
+            if(typeof window !== 'undefined' && typeof document !== 'undefined') {
+                //hourglass();  //GF32723
+                //keep the blocks selection list selected
+                selectBlocksList();
+                //keep the cscsi selection list selected
+                selectMultiSelectList();
 
-            if (origin == "refresh") origin = "refreshCreateDEC";
-            document.newDECForm.pageAction.value = origin;
-            window.status = "Submitting data, it may take a minute, please wait.....";
-            window.console && console.log("GF32723 CreateDEC.js " + window.status);
-            //document.newDECForm.Message.style.visibility="visible";  //GF32723
-            //disable the buttons
-            document.newDECForm.btnValidate.disabled = true;
-            document.newDECForm.btnClear.disabled = true;
-            if (document.newDECForm.btnBack != null)
-                document.newDECForm.btnBack.disabled = true;
-            document.newDECForm.btnAltName.disabled = true;
-            document.newDECForm.btnRefDoc.disabled = true;
-
+                if (origin == "refresh") origin = "refreshCreateDEC";
+                document.newDECForm.pageAction.value = origin;
+                window.status = "Submitting data, it may take a minute, please wait.....";
+                window.console && console.log("GF32723 CreateDEC.js " + window.status);
+                //document.newDECForm.Message.style.visibility="visible";  //GF32723
+                //disable the buttons
+                document.newDECForm.btnValidate.disabled = true;
+                document.newDECForm.btnClear.disabled = true;
+                if (document.newDECForm.btnBack != null)
+                    document.newDECForm.btnBack.disabled = true;
+                document.newDECForm.btnAltName.disabled = true;
+                document.newDECForm.btnRefDoc.disabled = true;
+            }
             stat = "valid_submitted";
         }
     } catch (e) {
