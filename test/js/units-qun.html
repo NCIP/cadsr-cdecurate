@@ -15,14 +15,24 @@
         <script src="http://code.jquery.com/qunit/qunit-1.14.0.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/curl/0.7.3/curl-for-ssjs/curl.min.js" type="text/javascript"></script>
         <script src="./units-qun.js"></script>
+        <script src="bower_components/log4javascript/log4javascript.js"></script>
         <!--<script src="helpers/mock-gf7680.js"></script>-->
         <!-- GF7680 -->
-        <script src="../../WebRoot/js/PermissibleValues.js"></script>
         <!--<script src="../../WebRoot/jsp/SearchParametersBlocks.jsp"></script>-->
+        <script src="../../WebRoot/js/PermissibleValues.js"></script>
         <script src="../../WebRoot/js/CreateDEC.js"></script>
         <script src="../../WebRoot/js/SelectCS_CSI.js"></script>
+        <script src="../../js/PermissibleValues.js"></script>
+        <script src="../../js/CreateDEC.js"></script>
+        <script src="../../js/SelectCS_CSI.js"></script>
         <!-- end app specific dependencies -->
         <script>
+            var logger = log4javascript.getLogger("JasmineClientUnitTests");
+            logger.setLevel(log4javascript.Level.ALL);
+            logger.addAppender(new log4javascript.BrowserConsoleAppender());
+            window.logger = logger;
+            logger.debug("debug: units-qun.html::log4javascript is ready");
+
             jQuery.noConflict();
             function dojoReady() {
 //                QUnit.start();    //caused "global failure" script error for some reason!
