@@ -29,9 +29,11 @@
         <script>
             var logger = log4javascript.getLogger("JasmineClientUnitTests");
             logger.setLevel(log4javascript.Level.ALL);
+//            log4javascript.setEnabled(false);
             logger.addAppender(new log4javascript.BrowserConsoleAppender());
             window.logger = logger;
             logger.debug("debug: units-qun.html::log4javascript is ready");
+            logger.debug("log4javascript is " + log4javascript.isEnabled());
 
             jQuery.noConflict();
             function dojoReady() {
