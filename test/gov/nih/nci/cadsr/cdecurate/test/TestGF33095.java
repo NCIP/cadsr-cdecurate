@@ -25,10 +25,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Vector;
@@ -56,8 +58,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-
 
 
 
@@ -129,15 +129,24 @@ public class TestGF33095 {
 		  		session = new MyHttpSession();	//EasyMock.createMock(HttpSession.class);
 		  	}
 //		    EasyMock.expect(session.getId()).andReturn(MOCK_SESSION_ID).anyTimes();
-		    m_classReq = EasyMock.createMock(HttpServletRequest.class);
+		    m_classReq = EasyMock.createNiceMock(HttpServletRequest.class);
 		    m_classRes = EasyMock.createMock(HttpServletResponse.class);
+		    EasyMock.expect(m_classReq.getParameterMap()).andReturn(Collections.singletonMap("bob", new String[] { "bob" }));
+//		    Map<String, String[]> requestParams = new HashMap();
+//			requestParams.put("p1", new String[] { "/view/testAction" });
+//			requestParams.put("p2", new String[] { "true" });
+//			requestParams.put("p3", new String[] { "false" });
+			
 		    EasyMock.expect(m_classReq.getSession()).andReturn(session).anyTimes();
 		    EasyMock.expect(m_classReq.getHeader("X-FORWARDED-FOR")).andReturn(null).anyTimes();
 		    EasyMock.expect(m_classReq.getRemoteAddr()).andReturn(REMOTE_IP).anyTimes();
+
+		    //=== IMPORTANT: whatever you did above, it is useless until it's replay is called!
 //		    EasyMock.replay(session, m_classReq);
+			EasyMock.replay(m_classReq);
 	  }
 	  
-		class MyHttpSession implements HttpSession {
+	  class MyHttpSession implements HttpSession {
 			private List objectQualifierMap;
 			private List propQualifierMap;
 			private String oc;
@@ -294,10 +303,10 @@ public class TestGF33095 {
 			e.printStackTrace();
 		}
 
-		DownloadHelper.setDownloadIDs(null, null, "CDE",false);
-		DownloadHelper.setColHeadersAndTypes(null, null, varCon.openConnection(), "CDE");
+		DownloadHelper.setDownloadIDs(m_classReq, m_classRes, "CDE",false);
+		DownloadHelper.setColHeadersAndTypes(m_classReq, m_classRes, varCon.openConnection(), "CDE");
 		ArrayList<String[]> allRows = DownloadHelper.getRecords(m_classReq, m_classRes, varCon.openConnection(), true, false);
-		DownloadHelper.createDownloadColumns(null, null, allRows);
+		DownloadHelper.createDownloadColumns(m_classReq, m_classRes, allRows);
 	}
 
 	
