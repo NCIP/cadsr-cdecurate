@@ -63,6 +63,7 @@ import org.xml.sax.SAXException;
 
 
 
+
 //import com.sun.org.apache.xerces.internal.impl.xs.dom.DOMParser;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
@@ -303,13 +304,20 @@ public class TestGF33095 {
 			e.printStackTrace();
 		}
 
-		DownloadHelper.setDownloadIDs(m_classReq, m_classRes, "CDE",false);
-		DownloadHelper.setColHeadersAndTypes(m_classReq, m_classRes, varCon.openConnection(), "CDE");
-		ArrayList<String[]> allRows = DownloadHelper.getRecords(m_classReq, m_classRes, varCon.openConnection(), true, false);
-		DownloadHelper.createDownloadColumns(m_classReq, m_classRes, allRows);
+		dlExcelColumns(m_classReq, m_classRes, varCon.openConnection());
 	}
 
+	private void dlExcelColumns(HttpServletRequest m_classReq, HttpServletResponse m_classRes, Connection conn) {
+		ArrayList<String[]> downloadRows = DownloadHelper.getRecords(m_classReq, m_classRes, conn, false, false);	//GF30779 multiple rows, if any
+		DownloadHelper.createDownloadColumns(m_classReq, m_classRes, downloadRows);
+	}
 	
+	private void createFullDEDownload(HttpServletRequest m_classReq, HttpServletResponse m_classRes, Connection conn) {
+		DownloadHelper.setDownloadIDs(m_classReq, m_classRes, "CDE",false);
+		DownloadHelper.setColHeadersAndTypes(m_classReq, m_classRes, conn, "CDE");
+		ArrayList<String[]> allRows = DownloadHelper.getRecords(m_classReq, m_classRes, conn, true, false);
+		DownloadHelper.createDownloadColumns(m_classReq, m_classRes, allRows);
+	}
 	/**
 	 * @param args
 	 */
