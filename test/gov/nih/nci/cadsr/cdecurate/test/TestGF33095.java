@@ -62,6 +62,7 @@ import org.xml.sax.SAXException;
 
 
 
+
 //import com.sun.org.apache.xerces.internal.impl.xs.dom.DOMParser;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 
@@ -102,11 +103,16 @@ import gov.nih.nci.cadsr.cdecurate.util.DownloadHelper;
 //import gov.nih.nci.cadsr.cdecurate.test.CurationTestLogger;
 
 /**
- * @author shegde
- * 
+ *	Setup:
+ *	
+ *	Change the user id and password in DBConnection.xml before running this.
+ *
+ *	To run:
+ *
+ *	TestGF33095 DBConnection.xml
  */
 public class TestGF33095 {
-	static TestGF33095 testdec;
+	static TestGF33095 testCustomDownload;
 	public static final Logger logger = Logger.getLogger(CurationServlet.class
 			.getName());
 	UtilService m_util = new UtilService();
@@ -118,17 +124,17 @@ public class TestGF33095 {
 	public static final String REMOTE_IP = "127.0.0.1";
 	static HttpSession session = null;
 
-	  private HttpServletRequest getMockHttpSession() {
+	  private void initMockHttpSession() {
 		  	if(session == null) {
 		  		session = new MyHttpSession();	//EasyMock.createMock(HttpSession.class);
 		  	}
 //		    EasyMock.expect(session.getId()).andReturn(MOCK_SESSION_ID).anyTimes();
-		    HttpServletRequest request = EasyMock.createMock(HttpServletRequest.class);
-		    EasyMock.expect(request.getSession()).andReturn(session).anyTimes();
-		    EasyMock.expect(request.getHeader("X-FORWARDED-FOR")).andReturn(null).anyTimes();
-		    EasyMock.expect(request.getRemoteAddr()).andReturn(REMOTE_IP).anyTimes();
-//		    EasyMock.replay(session, request);
-		    return request;
+		    m_classReq = EasyMock.createMock(HttpServletRequest.class);
+		    m_classRes = EasyMock.createMock(HttpServletResponse.class);
+		    EasyMock.expect(m_classReq.getSession()).andReturn(session).anyTimes();
+		    EasyMock.expect(m_classReq.getHeader("X-FORWARDED-FOR")).andReturn(null).anyTimes();
+		    EasyMock.expect(m_classReq.getRemoteAddr()).andReturn(REMOTE_IP).anyTimes();
+//		    EasyMock.replay(session, m_classReq);
 	  }
 	  
 		class MyHttpSession implements HttpSession {
@@ -271,7 +277,23 @@ public class TestGF33095 {
 			
 		}
 		
-	public void doGF33095() throws Exception {
+	public void doGF33095(TestGF33095 self, String connXML,
+			CurationTestLogger logger1) throws Exception {
+	    initEasyMock();
+
+		varCon = new TestConnections(connXML, logger1);
+		self.m_servlet = new CurationServlet();
+		self.m_servlet.sessionData = new Session_Data();
+		self.m_servlet.sessionData.EvsUsrBean = new EVS_UserBean();
+//		m_classReq.se = session;
+		
+		try {
+			self.m_servlet.setConn(varCon.openConnection());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		DownloadHelper.setDownloadIDs(null, null, "CDE",false);
 		DownloadHelper.setColHeadersAndTypes(null, null, varCon.openConnection(), "CDE");
 		ArrayList<String[]> allRows = DownloadHelper.getRecords(m_classReq, m_classRes, varCon.openConnection(), true, false);
@@ -294,32 +316,17 @@ public class TestGF33095 {
 		if (args.length > 1)
 			connXML = args[1];
 
-		testdec = new TestGF33095();
-		testdec.testDataElementConceptServlet(testdec, connXML, logger1);
-	}
-
-	public void testDataElementConceptServlet(TestGF33095 testdec, String connXML,
-			CurationTestLogger logger1) {
-	    initEasyMock();
-
-		varCon = new TestConnections(connXML, logger1);
-		testdec.m_servlet = new CurationServlet();
-		testdec.m_servlet.sessionData = new Session_Data();
-		testdec.m_servlet.sessionData.EvsUsrBean = new EVS_UserBean();
-//		m_classReq.se = session;
-		
+		testCustomDownload = new TestGF33095();
 		try {
-			testdec.m_servlet.setConn(varCon.openConnection());
-		} catch (SQLException e) {
+			testCustomDownload.doGF33095(testCustomDownload, connXML, logger1);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		
 	}
 
 	  private HttpSession initEasyMock() {
-		  	m_classReq = getMockHttpSession();
+		  	initMockHttpSession();
 		  	
 //			servletConfig = EasyMock.createMock(ServletConfig.class);
 //			servletContext = EasyMock.createMock(ServletContext.class);
