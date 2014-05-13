@@ -1,0 +1,2001 @@
+
+
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/OpenSearchWindowBlocks.jsp,v 1.3 2008-01-23 22:40:49 hebell Exp $
+    $Name: not supported by cvs2svn $
+-->
+
+<!-- goes to secondary window error page if error occurs -->
+
+
+
+<html>
+	<head>
+	 <BASE href="https://cdecurate-dev.nci.nih.gov:443/cdecurate/">
+		<title>
+			CDE Curation: Search
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
+		<script>
+history.forward();
+</script>
+	</head>
+	<body>
+		<table width="100%" border="2" cellpadding="0" cellspacing="0">
+			<col style="width: 2.3in" />
+			<col />
+			<tr valign="top">
+				<td class="sidebarBGColor">
+
+
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchParametersBlocks.jsp,v 1.14 2009-05-05 20:52:07 veerlah Exp $
+    $Name: not supported by cvs2svn $
+-->
+
+
+
+
+
+
+
+
+<html>
+	<head>
+		<title>Search Parameters</title>
+		<meta http-equiv="Content-Type"
+			content="text/html; charset=iso-8859-1">
+		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
+		<SCRIPT LANGUAGE="JavaScript" SRC="js/SearchParameters.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
+
+
+		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
+  //submits the page if Vocab changed.
+   var helpUrl = "https://wiki.nci.nih.gov/x/xIFXAg";
+   var treeActionStarted = false;
+
+  function doVocabChange()
+  {
+    //begin GF32723
+      var idx = document.searchParmsForm.listContextFilterVocab.selectedIndex;
+      opener.document.newDECForm.userSelectedVocab.value = document.searchParmsForm.listContextFilterVocab[idx].text;
+      window.userSelectedVocab = opener.document.newDECForm.userSelectedVocab.value; //TODO global is bad we know!
+      window.console && console.log('SearchParametersBlocks.jsp doVocabChange:userSelectedVocab = [' + window.userSelectedVocab + ']');
+    //end GF32723
+
+    hourglass();
+    window.status = "Refreshing the page, it may take a minute, please wait....."
+    document.searchParmsForm.actSelect.value = "doVocabChange";
+    document.searchParmsForm.listSearchFor[0].selected = true;
+    if (document.searchResultsForm != null)
+      document.searchResultsForm.Message.style.visibility="visible";
+    document.searchParmsForm.submit();
+  }
+
+  function populateCaDSRSearchIn()
+  {
+     var selIdx = document.searchParmsForm.listSearchInEVS.selectedIndex;
+     if (document.searchParmsForm.listSearchIn != null)
+     {
+       if (selIdx > 0) selIdx = selIdx + 1;
+       if (document.searchParmsForm.listSearchIn[selIdx] != null)
+         document.searchParmsForm.listSearchIn[selIdx].selected = true;
+     }
+  }
+
+  function populateEVSSearchIn()
+  {
+     var selIdx = document.searchParmsForm.listSearchIn.selectedIndex;
+     if (selIdx > 1) selIdx = selIdx - 1;
+     if (document.searchParmsForm.listSearchInEVS[selIdx] != null)
+        document.searchParmsForm.listSearchInEVS[selIdx].selected = true;
+  }
+
+  function Setup()
+  {
+    //check if newly opened
+ // alert("parameter setup ");
+    getCompCreate();
+    var actSelect = "";
+    var isSearched = "false";
+    var isSubmit = false;
+    if (opener.document.SearchActionForm != null && opener.document.SearchActionForm.isValidSearch != null)
+      isSearched = opener.document.SearchActionForm.isValidSearch.value;
+    if(isSearched != null && isSearched == "false")
+    {
+       hourglass();
+       window.status = "Displaying selected attributes, it may take a minute, please wait....."
+       document.searchParmsForm.actSelect.value = "FirstSearch";
+       var thisblock = opener.document.SearchActionForm.searchComp.value;
+       document.searchParmsForm.listSearchFor[0].value = thisblock;
+       document.searchParmsForm.listSearchFor[0].text = thisblock;
+       opener.document.SearchActionForm.isValidSearch.value = "true";
+       //document.searchParmsForm.submit();
+       //isSubmit = true;
+    }
+    isSubmit = doOpenTreeSubmitAction();    //call the function to open the tree
+ //   alert(isSubmit + " : " + document.searchParmsForm.actSelect.value + " : " + document.searchParmsForm.openToTree.value);
+    if (isSearched == "false" || isSubmit == true)
+    {
+      window.status = "Submitting the page, please wait.....";
+      if (document.searchResultsForm != null)
+        document.searchResultsForm.Message.style.visibility="visible";
+// alert("here before submit");
+      document.searchParmsForm.submit();
+    }
+    //focus to the keyword if not null
+    if(document.searchParmsForm.keyword != null)
+      document.searchParmsForm.keyword.focus();
+  }
+
+  function doOpenTreeSubmitAction()
+  {
+    var actSelect = "";
+
+    if(document.searchParmsForm.openToTree != null && document.searchParmsForm.openToTree.value == "true" && actSelect != "OpenTreeToParentConcept")
+    {
+      window.status = "Submitting the page, please wait.....";
+      if (document.searchResultsForm != null)
+        document.searchResultsForm.Message.style.visibility="visible";
+      document.searchParmsForm.actSelect.value = "OpenTreeToConcept";
+      var idx = document.searchParmsForm.listContextFilterVocab.selectedIndex;
+      document.searchParmsForm.listContextFilterVocab[idx].text = document.searchParmsForm.sCCodeDB.value;
+     // document.searchParmsForm.submit();
+      return true;
+    }
+    return false;
+  }
+
+
+function keypress_handler(evt)
+{
+    var keycode = (window.event)?event.keyCode:evt.which;
+    if(keycode != 13)
+    {
+        return true;  // only interest on return kay
+    }
+    //make sure tool does not submitthe search  by key press if use selection is enabled or keyword is empty.
+    if (document.searchParmsForm.keyword == null || document.searchParmsForm.keyword.value == null
+    	|| document.searchParmsForm.keyword.value == "" ||
+    	(document.searchResultsForm.editSelectedBtn != null && !document.searchResultsForm.editSelectedBtn.disabled))
+    {
+        alert("Please use the pointer to select the desired action.");
+    		return false;
+    }
+    //check if it is valid for search
+    if(document.searchParmsForm.listSearchInEVS != null && document.searchParmsForm.listSearchInEVS.value == "MetaCode")
+    {
+      var sTerm = document.searchParmsForm.keyword.value;
+      if (sTerm == null) sTerm = "";
+      if(document.searchParmsForm.listContextFilterSource.value == "All Sources" || sTerm == "")
+      {
+        alert("This type of search will search the Metathesaurus only. \n"
+        + "The search term should be a code; for example, a LOINC code. \n"
+        + "Please select a Meta Concept Source to filter by and enter a search term. ");
+        return false;
+      }
+    }
+    // all other case go to servlet to search
+
+        if (opener && opener.document != null && opener.document.SearchActionForm != null)
+          opener.document.SearchActionForm.isValidSearch.value = "true";
+
+    hourglass();
+    window.status = "Searching Keyword, it may take a minute, please wait....."
+    document.searchResultsForm.Message.style.visibility="visible";
+    document.searchParmsForm.actSelect.value = "Search";
+    markVMConceptOrder("Search");
+    document.searchParmsForm.submit();
+    return false;
+}
+
+function LoadKeyHandler()
+{
+    document.onkeypress = null;
+    document.onkeypress = keypress_handler;
+}
+// check to see if input is whitespace only or empty
+function isEmpty(val)
+{
+if (val.match(/^\s+$/) || val == "")
+{
+return true;
+}
+else
+{
+return false;
+}
+}
+
+function testIsValidObject(objToTest) {
+		if (null == objToTest) {
+			return false;
+		}
+		if ("undefined" == typeof(objToTest) ) {
+			return false;
+		}
+		return true;
+
+	}
+ //submits the page to start the search
+    function doSearchBuildingBlocks()
+    {
+
+       var confirmation =false;
+       if(testIsValidObject(document.searchParmsForm.keyword) && (document.searchParmsForm.keyword.value==null || isEmpty(document.searchParmsForm.keyword.value)))
+       {
+          confirmation =  confirm("The Search Term is empty and will cause all caDSR content to be retrieved.\n"
+                                 + "This is a slow, lengthy search. Are you sure you wish to proceed?");
+        }
+       else
+        {
+         confirmation=true;
+        }
+      if (confirmation == true)
+      {
+        var sTerm = document.searchParmsForm.keyword.value;
+      	if(document.searchParmsForm.listSearchInEVS != null && document.searchParmsForm.listSearchInEVS.value == "MetaCode")
+      	{
+      		if (sTerm == null) sTerm = "";
+        	if(document.searchParmsForm.listContextFilterSource.value == "All Sources" || sTerm == "")
+        	{
+           		alert("This type of search will search the Metathesaurus only. \n"
+        		+ "The search term should be a code; for example, a LOINC code. \n"
+        		+ "Please select a Meta Concept Source to filter by and enter a search term. ");
+          		return false;
+        	}
+      	}
+      	//for (i=0; i<document.searchParmsForm.listAttrFilter.length; i++)
+      	//{
+        	//document.searchParmsForm.listAttrFilter.options[i].selected = true;
+      	//}
+      	if (opener && opener.document != null && opener.document.SearchActionForm != null)
+			opener.document.SearchActionForm.isValidSearch.value = "true";
+	    hourglass();
+      	window.status = "Searching Keyword, it may take a minute, please wait....."
+      	document.searchResultsForm.Message.style.visibility="visible";
+      	document.searchParmsForm.actSelect.value = "Search";
+      	markVMConceptOrder("Search");
+      	document.searchParmsForm.submit();
+      }
+    }
+
+	//mark if primary vm search
+	function markVMConceptOrder(actionType)
+	{
+		if (actionType == "Search" && opener.document != null)
+		{
+			var pv = opener.document.getElementById("currentPVInd");
+			if (pv != null)
+			{
+				var pvId = pv.value;
+				var curTbl = opener.document.getElementById(pvId + "TBL");
+				if (curTbl != null)
+				{
+			  	var totalCon = curTbl.rows.length;
+			  	//make sure the first row has data
+			  	if (totalCon == 1 && curTbl.rows(0).cells(1) == null)
+			  		totalCon = 0;
+			  	document.getElementById("vmConOrder").value = totalCon;
+			  }
+			}
+			else
+			{
+				var conOrd = opener.document.getElementById("vmConOrder");
+				if (conOrd != null && conOrd.value != null && conOrd.value != "")
+				{
+					document.getElementById("vmConOrder").value = conOrd.value;
+				}
+			}
+		}
+	}
+//fuction to refresh the page for simple/advanced filter
+function searchType(type)
+{
+    hourglass();
+    window.status = "Refreshing the page, it may take a minute, please wait....."
+    document.searchParmsForm.actSelect.value = type;
+    if (document.searchResultsForm != null)
+        document.searchResultsForm.Message.style.visibility="visible";
+    document.searchParmsForm.submit();
+}
+
+//fuction to search or expand or collapse tree
+function doTreeAction(type, nodeCode, vocab, nodeName, nodeID, nodeLvl)
+{
+
+	if (!treeActionStarted){
+    var url = "";
+    hourglass();
+    window.status = "Refreshing the page, it may take a minute, please wait.....";
+    document.searchResultsForm.Message.style.visibility="visible";
+  // alert(type + nodeCode + vocab);
+  // alert(nodeName + nodeID);
+  //  opener.document.SearchActionForm.searchComp.value = "EditVMConcept";
+    if(type == 'search')
+      url = "../../cdecurate/NCICurationServlet?reqType=treeSearch&&keywordID=" + nodeCode + "&&vocab=" + vocab + "&&keywordName=" + nodeName + "&&nodeID=" + nodeID + "&&nodeLevel=" + nodeLvl;
+    else if(type == 'expand')
+      url = "../../cdecurate/NCICurationServlet?reqType=treeExpand&&nodeName=" + nodeName + "&&vocab=" + vocab + "&&nodeCode=" + nodeCode + "&&nodeID=" + nodeID + "&&nodeLevel=" + nodeLvl;
+    else if(type == 'collapse')
+      url = "../../cdecurate/NCICurationServlet?reqType=treeCollapse&&nodeName=" + nodeName + "&&vocab=" + vocab + "&&nodeCode=" + nodeCode + "&&nodeID=" + nodeID + "&&nodeLevel=" + nodeLvl;
+    document.searchParmsForm.action = url;
+    window.status = "Submitting the page, please wait.....";
+    treeActionStarted = true;
+    if (document.searchResultsForm != null)
+      document.searchResultsForm.Message.style.visibility="visible";
+    document.searchParmsForm.submit();
+    }
+}
+
+
+//fuction to search or expand or collapse tree
+function refreshTree(vocab)
+{
+    var url = "";
+    window.status = "Refreshing the tree, it may take a minute, please wait.....";
+    url = "../../cdecurate/NCICurationServlet?reqType=treeRefresh&&vocab=" + vocab;
+    document.searchParmsForm.action = url;
+    var conf = confirm("This link refreshes the tree. All expanded nodes are collapsed. Continue?");
+    if(conf == true)
+    {
+      hourglass();
+      document.searchResultsForm.Message.style.visibility="visible";
+      document.searchParmsForm.submit();
+    }
+}
+
+//fuction to search or expand or collapse tree
+function doMetaCodeSearch()
+{
+  hourglass();
+  window.status = "Refreshing the page, it may take a minute, please wait....."
+  document.searchParmsForm.actSelect.value = "MetaCodeSearch";
+  window.status = "Submitting the page, please wait.....";
+  if (document.searchResultsForm != null)
+    document.searchResultsForm.Message.style.visibility="visible";
+  document.searchParmsForm.submit();
+}
+
+</SCRIPT>
+	</head>
+
+	<body onLoad="Setup();">
+		<form name="searchParmsForm" method="post"
+			action="../../cdecurate/NCICurationServlet?reqType=searchBlocks">
+			<table width="100%" class="sidebarBGColor">
+				<!-- style="position: relative; top: -22px;"> -->
+				<tr valign="top" align="left" class="firstRow">
+					<th>
+						1
+						) Search For:
+					</th>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<select name="listSearchFor" size="1" style="width: 160"
+							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
+							<option value="EditVMConcept">
+								Concept
+							</option>
+						</select>
+					</td>
+				</tr>
+
+				<tr valign="bottom" align="left" class="firstRow" height="22">
+					<th>
+						2
+						) Select EVS Vocabulary:
+					</th>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<select name="listContextFilterVocab" size="1" style="width: 160"
+							onChange="doVocabChange();"
+							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
+
+							<option value="NCI Thesaurus"
+								selected >
+								NCI Thesaurus
+							</option>
+
+							<option value="Common Terminology Criteria for Adverse Events" >
+								CTCAE
+							</option>
+
+							<option value="Gene Ontology" >
+								GO
+							</option>
+
+							<option value="HUGO Gene Nomenclature Committee" >
+								HGNC
+							</option>
+
+							<option value="International Classification of Diseases, Ninth Revision, Clinical Modification" >
+								ICD9CM
+							</option>
+
+							<option value="ICD-10" >
+								ICD10
+							</option>
+
+							<option value="Logical Observation Identifier Names and Codes" >
+								LNC
+							</option>
+
+							<option value="MedDRA (Medical Dictionary for Regulatory Activities Terminology)" >
+								MDR
+							</option>
+
+							<option value="The MGED Ontology" >
+								MGED
+							</option>
+
+							<option value="NCI Metathesaurus" >
+								NCI Metathesaurus
+							</option>
+
+							<option value="Nanoparticle Ontology" >
+								NPO
+							</option>
+
+							<option value="Ontology for Biomedical Investigations" >
+								OBI
+							</option>
+
+							<option value="Radiology Lexicon" >
+								RADLEX
+							</option>
+
+							<option value="SNOMED Clinical Terms" >
+								SNOMEDCT
+							</option>
+
+							<option value="UMLS Semantic Network" >
+								UMLS SemNet
+							</option>
+
+							<option value="National Drug File - Reference Terminology" >
+								VANDF
+							</option>
+
+							<option value="Zebrafish" >
+								ZFIN
+							</option>
+
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th height="22" valign="bottom">
+						<div align="left">
+							3
+							) Search In:
+							<!-- Place the adv/simple filter hyperlink only if it is for AC of these only -->
+						</div>
+					</th>
+				</tr>
+
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<b> caDSR </b>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<select name="listSearchIn" size="1" style="width: 170"
+								onChange="populateEVSSearchIn();"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
+								<option value="longName"
+									selected >
+									Names and Definition
+								</option>
+								<option value="publicID" >
+									Public ID
+								</option>
+								<option value="evsIdentifier"
+									>
+									EVS Identifier
+								</option>
+								<option value="Code" >
+									None
+								</option>
+							</select>
+						</p>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<b> EVS </b>
+
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+
+						<a href="javascript:searchType('tree');"> Tree Search </a>
+
+
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<select name="listSearchInEVS" size="1" style="width: 170"
+								onChange="populateCaDSRSearchIn();"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
+
+								<option value="Name"
+									selected >
+									Synonym
+								</option>
+
+								<option value="ConCode" >
+									Concept Code
+								</option>
+
+							</select>
+						</p>
+					</td>
+				</tr>
+
+				<tr>
+					<th height="22" valign="bottom">
+						<div align="left">
+							4
+							) Enter Search Term:
+						</div>
+					</th>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="text" name="keyword" size="22" style="width: 160"
+							value="integer"
+							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div align="left"
+							title="The wildcard character, *, expands the search to find a non-exact match.">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use * as wildcard
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th height="22" valign="bottom">
+						<div align="left">
+							5
+							) Filter Search By:
+						</div>
+					</th>
+				</tr>
+
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<b> caDSR </b>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Owned By/Used By
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<select name="listContextFilter" size="1" style="width: 160"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
+
+								<option value="All (No Test/Train)"
+									 selected >
+									All (No Test/Train)
+								</option>
+								<option value="AllContext"
+									>
+									All Contexts
+								</option>
+
+								<option value="ABTC"
+									>
+									ABTC
+								</option>
+
+								<option value="AECC"
+									>
+									AECC
+								</option>
+
+								<option value="Alliance"
+									>
+									Alliance
+								</option>
+
+								<option value="BOLD"
+									>
+									BOLD
+								</option>
+
+								<option value="BRIDG"
+									>
+									BRIDG
+								</option>
+
+								<option value="caCORE"
+									>
+									caCORE
+								</option>
+
+								<option value="CCR"
+									>
+									CCR
+								</option>
+
+								<option value="CDC/PHIN"
+									>
+									CDC/PHIN
+								</option>
+
+								<option value="CDISC"
+									>
+									CDISC
+								</option>
+
+								<option value="CIP"
+									>
+									CIP
+								</option>
+
+								<option value="CITN"
+									>
+									CITN
+								</option>
+
+								<option value="COG"
+									>
+									COG
+								</option>
+
+								<option value="CTEP"
+									>
+									CTEP
+								</option>
+
+								<option value="DCI"
+									>
+									DCI
+								</option>
+
+								<option value="DCP"
+									>
+									DCP
+								</option>
+
+								<option value="ECOG-ACRIN"
+									>
+									ECOG-ACRIN
+								</option>
+
+								<option value="EDRN"
+									>
+									EDRN
+								</option>
+
+								<option value="LCC"
+									>
+									LCC
+								</option>
+
+								<option value="NCIP"
+									>
+									NCIP
+								</option>
+
+								<option value="NCIP CDE Data Standards"
+									>
+									NCIP CDE Data Standards
+								</option>
+
+								<option value="NHC-NCI"
+									>
+									NHC-NCI
+								</option>
+
+								<option value="NHLBI"
+									>
+									NHLBI
+								</option>
+
+								<option value="NICHD"
+									>
+									NICHD
+								</option>
+
+								<option value="NIDA"
+									>
+									NIDA
+								</option>
+
+								<option value="NIDCR"
+									>
+									NIDCR
+								</option>
+
+								<option value="NINDS"
+									>
+									NINDS
+								</option>
+
+								<option value="NRG"
+									>
+									NRG
+								</option>
+
+								<option value="OHSU Knight"
+									>
+									OHSU Knight
+								</option>
+
+								<option value="PBTC"
+									>
+									PBTC
+								</option>
+
+								<option value="PS&CC"
+									>
+									PS&CC
+								</option>
+
+								<option value="SDC Pilot Project"
+									>
+									SDC Pilot Project
+								</option>
+
+								<option value="SPOREs"
+									>
+									SPOREs
+								</option>
+
+								<option value="SWOG"
+									>
+									SWOG
+								</option>
+
+								<option value="TEST"
+									>
+									TEST
+								</option>
+
+								<option value="Theradex"
+									>
+									Theradex
+								</option>
+
+								<option value="Training"
+									>
+									Training
+								</option>
+
+								<option value="USC/NCCC"
+									>
+									USC/NCCC
+								</option>
+
+							</select>
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Workflow Status
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<select name="listStatusFilter" multiple size="2"
+								style="width: 160"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
+								<option value="RELEASED"
+									 selected >
+									RELEASED
+								</option>
+								<option value="AllStatus"
+									>
+									All Statuses
+								</option>
+							</select>
+						</p>
+					</td>
+				</tr>
+
+
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<b> EVS </b>
+					</td>
+				</tr>
+
+				<tr>
+					<td style="height: 20" valign=bottom>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Retired Concepts
+					</td>
+				</tr>
+				<tr>
+					<td align=left>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="radio" name="rRetired" value="Exclude"
+							 checked
+							onHelp="showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
+						Exclude&nbsp;
+						<input type="radio" name="rRetired" value="Include"
+
+							onHelp="showHelp('Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
+						Include&nbsp;
+
+					</td>
+				</tr>
+
+
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Meta Concept Source
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<select name="listContextFilterSource" size="1"
+								style="width: 160"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
+								<option value="All Sources"
+									 selected >
+									All Sources
+								</option>
+
+								<option value="NDFRT"
+									>
+									NDFRT
+								</option>
+
+								<option value="NCIMTH"
+									>
+									NCIMTH
+								</option>
+
+								<option value="MTHMST"
+									>
+									MTHMST
+								</option>
+
+								<option value="GO"
+									>
+									GO
+								</option>
+
+								<option value="NCPDP"
+									>
+									NCPDP
+								</option>
+
+								<option value="ISO3166-2"
+									>
+									ISO3166-2
+								</option>
+
+								<option value="NCBI"
+									>
+									NCBI
+								</option>
+
+								<option value="CSP"
+									>
+									CSP
+								</option>
+
+								<option value="PNDS"
+									>
+									PNDS
+								</option>
+
+								<option value="SNOMEDCT"
+									>
+									SNOMEDCT
+								</option>
+
+								<option value="UMD"
+									>
+									UMD
+								</option>
+
+								<option value="SRC"
+									>
+									SRC
+								</option>
+
+								<option value="MGED"
+									>
+									MGED
+								</option>
+
+								<option value="DICOM"
+									>
+									DICOM
+								</option>
+
+								<option value="HCPCS"
+									>
+									HCPCS
+								</option>
+
+								<option value="KEGG"
+									>
+									KEGG
+								</option>
+
+								<option value="MTHFDA"
+									>
+									MTHFDA
+								</option>
+
+								<option value="NCI-HL7"
+									>
+									NCI-HL7
+								</option>
+
+								<option value="CBO"
+									>
+									CBO
+								</option>
+
+								<option value="MTHICD9"
+									>
+									MTHICD9
+								</option>
+
+								<option value="LNC"
+									>
+									LNC
+								</option>
+
+								<option value="FMA"
+									>
+									FMA
+								</option>
+
+								<option value="FDA"
+									>
+									FDA
+								</option>
+
+								<option value="RENI"
+									>
+									RENI
+								</option>
+
+								<option value="PID"
+									>
+									PID
+								</option>
+
+								<option value="HL7V3.0"
+									>
+									HL7V3.0
+								</option>
+
+								<option value="MSH"
+									>
+									MSH
+								</option>
+
+								<option value="SOP"
+									>
+									SOP
+								</option>
+
+								<option value="DTP"
+									>
+									DTP
+								</option>
+
+								<option value="NICHD"
+									>
+									NICHD
+								</option>
+
+								<option value="AOT"
+									>
+									AOT
+								</option>
+
+								<option value="ICH"
+									>
+									ICH
+								</option>
+
+								<option value="ICD10"
+									>
+									ICD10
+								</option>
+
+								<option value="MTHSPL"
+									>
+									MTHSPL
+								</option>
+
+								<option value="ICD9CM"
+									>
+									ICD9CM
+								</option>
+
+								<option value="VANDF"
+									>
+									VANDF
+								</option>
+
+								<option value="HGNC"
+									>
+									HGNC
+								</option>
+
+								<option value="DXP"
+									>
+									DXP
+								</option>
+
+								<option value="ICPC"
+									>
+									ICPC
+								</option>
+
+								<option value="MDBCAC"
+									>
+									MDBCAC
+								</option>
+
+								<option value="QMR"
+									>
+									QMR
+								</option>
+
+								<option value="RADLEX"
+									>
+									RADLEX
+								</option>
+
+								<option value="PMA"
+									>
+									PMA
+								</option>
+
+								<option value="PDQ"
+									>
+									PDQ
+								</option>
+
+								<option value="BRIDG"
+									>
+									BRIDG
+								</option>
+
+								<option value="CTEP"
+									>
+									CTEP
+								</option>
+
+								<option value="ICD10AE"
+									>
+									ICD10AE
+								</option>
+
+								<option value="RXNORM"
+									>
+									RXNORM
+								</option>
+
+								<option value="BioC"
+									>
+									BioC
+								</option>
+
+								<option value="SPN"
+									>
+									SPN
+								</option>
+
+								<option value="CDC"
+									>
+									CDC
+								</option>
+
+								<option value="NCI-GLOSS"
+									>
+									NCI-GLOSS
+								</option>
+
+								<option value="MEDLINEPLUS"
+									>
+									MEDLINEPLUS
+								</option>
+
+								<option value="MCM"
+									>
+									MCM
+								</option>
+
+								<option value="COSTAR"
+									>
+									COSTAR
+								</option>
+
+								<option value="USPMG"
+									>
+									USPMG
+								</option>
+
+								<option value="NPO"
+									>
+									NPO
+								</option>
+
+								<option value="ZFIN"
+									>
+									ZFIN
+								</option>
+
+								<option value="UWDA"
+									>
+									UWDA
+								</option>
+
+								<option value="MDR"
+									>
+									MDR
+								</option>
+
+								<option value="AOD"
+									>
+									AOD
+								</option>
+
+								<option value="CRCH"
+									>
+									CRCH
+								</option>
+
+								<option value="MTHHH"
+									>
+									MTHHH
+								</option>
+
+								<option value="CTEP-SDC"
+									>
+									CTEP-SDC
+								</option>
+
+								<option value="NCI"
+									>
+									NCI
+								</option>
+
+								<option value="ICD10CM"
+									>
+									ICD10CM
+								</option>
+
+								<option value="CDISC"
+									>
+									CDISC
+								</option>
+
+								<option value="JAX"
+									>
+									JAX
+								</option>
+
+								<option value="ICDO"
+									>
+									ICDO
+								</option>
+
+								<option value="MTH"
+									>
+									MTH
+								</option>
+
+								<option value="DCP"
+									>
+									DCP
+								</option>
+
+								<option value="CTCAE"
+									>
+									CTCAE
+								</option>
+
+								<option value="CST"
+									>
+									CST
+								</option>
+
+								<option value="UCUM"
+									>
+									UCUM
+								</option>
+
+								<option value="CCS"
+									>
+									CCS
+								</option>
+
+								<option value="ICD10PCS"
+									>
+									ICD10PCS
+								</option>
+
+								<option value="OMIM"
+									>
+									OMIM
+								</option>
+
+							</select>
+						</p>
+					</td>
+				<tr>
+					<td>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Set Meta Returns Limit
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<select name="listMetaLimit" size="1" style="width: 160"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
+								<option value="100"  selected
+									>
+									100
+								</option>
+								<option value="250" >
+									250
+								</option>
+								<option value="500" >
+									500
+								</option>
+								<option value="750" >
+									750
+								</option>
+								<!--  <option value="1000" >1000</option> -->
+							</select>
+						</p>
+					</td>
+				</tr>
+
+
+				<tr height="5"></tr>
+				<tr>
+					<td class="dashed-black">
+						<div align="left">
+							<b> 6 ) Display Attributes: </b> &nbsp;&nbsp;
+							<input type="button" name="updateDisplayBtn" value="Update"
+								onClick="displayAttributes('true');"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
+						</div>
+						<br>
+						<div align="center">
+							<select name="listAttrFilter" size="5" style="width: 160"
+								multiple
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
+
+								<option value="Concept Name"
+
+									selected >
+									Concept Name
+								</option>
+
+								<option value="Public ID"
+
+									selected >
+									Public ID
+								</option>
+
+								<option value="Version"
+									>
+									Version
+								</option>
+
+								<option value="EVS Identifier"
+
+									selected >
+									EVS Identifier
+								</option>
+
+								<option value="Definition"
+
+									selected >
+									Definition
+								</option>
+
+								<option value="Definition Source"
+
+									selected >
+									Definition Source
+								</option>
+
+								<option value="Workflow Status"
+
+									selected >
+									Workflow Status
+								</option>
+
+								<option value="Semantic Type"
+
+									selected >
+									Semantic Type
+								</option>
+
+								<option value="Context"
+
+									selected >
+									Context
+								</option>
+
+								<option value="Vocabulary"
+
+									selected >
+									Vocabulary
+								</option>
+
+								<option value="caDSR Component"
+
+									selected >
+									caDSR Component
+								</option>
+
+								<option value="All Attributes">
+									All Attributes
+								</option>
+
+							</select>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td height="33" valign="bottom">
+						<div align="center">
+							<input type="button" name="startSearchBtn" value="Start Search"
+								onClick="doSearchBuildingBlocks();"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchBlocks',helpUrl); return false">
+						</div>
+					</td>
+				</tr>
+
+
+				<tr>
+					<td>
+						<input type="hidden" name="actSelect" value="Search"
+							style="visibility: hidden;">
+						<input type="hidden" name="vmConOrder" value="0">
+						<input type="hidden" name="sCCodeDB" value="">
+						<input type="hidden" name="sCCode" value="">
+						<input type="hidden" name="sCCodeName" value="">
+						<input type="hidden" name="openToTree" value="">
+						<input type="hidden" name="sConteIdseq" value="">
+						<input type="hidden" name="nonEVSRepTermSearch" value="">
+						<input type="hidden" name="conid" value="">
+					</td>
+				</tr>
+			</table>
+
+			<script language="javascript">
+LoadKeyHandler();
+</script>
+		</form>
+	</body>
+</html>
+
+				</td>
+				<td>
+
+
+<!-- Copyright (c) 2006 ScenPro, Inc.
+    $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/SearchResultsBlocks.jsp,v 1.19 2009-05-05 19:39:27 veerlah Exp $
+    $Name: not supported by cvs2svn $
+-->
+
+
+
+
+
+
+
+<html>
+	<head>
+		<title>
+			Search Results
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
+		<link href="css/popupMenus.css" rel="stylesheet" type="text/css">
+		<SCRIPT LANGUAGE="JavaScript" SRC="js/SearchResultsBlocks.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
+		<SCRIPT LANGUAGE="JavaScript" SRC="js/popupMenus.js"></SCRIPT>
+
+
+		<SCRIPT LANGUAGE="JavaScript" type="text/JavaScript">
+		 var helpUrl = "https://wiki.nci.nih.gov/x/xIFXAg";
+
+ var evsWindow2 = null;
+ var selDefinition = null;
+ var numRowsSelected = 0;
+ var checkBoxArray = new Array();
+ var conArray = new Array();
+ var metaName = "";
+ var dsrName = "";
+ var arrDefSrc = new Array();
+ var isSel = false;
+ var evsNewUrl = "http://ncitermform.nci.nih.gov/ncitermform/";
+ var nonEVSRepTermSearch = "false";
+   function setup()
+   {
+
+	    displayStatus("", "searchForCreate");
+
+	    window.status = "Enter the keyword to search a component"
+	    //make the message visible.
+	    var pageOpen = "";
+	    if (document.searchParmsForm.actSelect != null)
+	      pageOpen = document.searchParmsForm.actSelect.value;
+	    if (pageOpen == "FirstSearch" || pageOpen == "OpenTreeToConcept" || pageOpen == "OpenTreeToParentConcept")
+	      document.searchResultsForm.Message.style.visibility="visible";
+
+   }
+
+   function getSearchComponent()
+   {
+     window.console && console.log('SearchResultsBlocks.jsp getSearchComponent() called (GF32723)');
+
+     var type = "";
+      sComp = opener.document.SearchActionForm.searchComp.value;
+      if (sComp == "ParentConceptVM")
+      {
+        var sComp2 = opener.document.PVForm.selectedParentConceptMetaSource.value;
+        if (sComp2 == null) sComp2 = "";
+        document.searchResultsForm.selectedParentConceptMetaSource.value = sComp2;
+      }
+
+
+        if (sComp == "ObjectClass" || sComp == "VDObjectClass") type = "Object Class";
+        else if (sComp == "PropertyClass" || sComp == "VDPropertyClass" || sComp == "Property") type = "Property";
+        else if (sComp == "ObjectQualifier" || sComp == "VDObjectQualifier") type = "Object Qualifier";
+        else if (sComp == "PropertyQualifier" || sComp == "VDPropertyQualifier") type = "Property Qualifier";
+        else if (sComp == "RepTerm") type = "Rep Term";
+        else if (sComp == "RepQualifier") type = "Rep Qualifier";
+        else if (sComp == "EVSValueMeaning" ||
+                  sComp == "CreateVM_EVSValueMeaning" ||
+                  sComp == "ParentConceptVM") type = "Value Meaning";  // || sComp == "VMConcept"
+        else if (sComp == "VMConcept" || sComp == "EditVMConcept") type = "Concept";
+        else if (sComp == "ParentConcept") type = "Parent Concept";
+
+
+
+      //selected concept info
+
+
+    window.console && console.log('SearchResultsBlocks.jsp getSearchComponent() sComp = ['+ sComp + '] (GF32723)');
+
+    }
+
+  function ShowSelection()
+  {
+    //begin GF32723
+    document.searchResultsForm.Message.style.visibility="visible";
+    hourglass();
+    //end GF32723
+
+    window.console && console.log("GF32723 1 in ShowSelection()");
+     if (opener.document == null)
+        window.close();
+      ShowUseSelection("searchForCreate");
+  }
+
+   function reSetAttribute()
+   {
+
+   }
+
+   function EnableButtons(checked, currentField, isAConcept)
+   {
+      if (opener.document == null)
+        window.close();
+      EnableCheckButtons(checked, currentField, "searchForCreate")
+      try {
+        opener.document.newDECForm.isAConcept.value = isAConcept;		//GF30798
+      } catch(e) {
+        window.console && console.log("SearchResultsBlocks.jsp EnableButtons error: " + e);
+      }
+      //alert("SearchResultsBlocks EnableButtons called!");
+      //opener.document.newDECForm.conceptName.value = "TEST CONCEPT NAME";
+      //begin GF32723
+      var userVocab = document.searchParmsForm.listContextFilterVocab[document.searchParmsForm.listContextFilterVocab.selectedIndex].text;            //window.userSelectedVocab
+      try {
+        opener.document.newDECForm.value = userVocab;
+        window.console && console.log('SearchResultsBlocks.jsp EnableButtons opener.document.newDECForm.value = [' + opener.document.newDECForm.value + ']');
+      } catch(e) {
+        window.console && console.log("SearchResultsBlocks.jsp EnableButtons error: " + e);
+      }
+    //end GF32723
+   }
+
+   function EnableButtonWithTxt(currentField)
+   {
+        document.searchParmsForm.keyword.value="";
+
+
+   }
+   function EnableButtonWithTxt1(currentField,id)
+   {
+       document.searchParmsForm.keyword.value="";
+
+        doSearchBuildingBlocks();
+       }
+
+  function getSubConceptsAll()
+  {
+     if (opener.document == null)
+          window.close();
+     getSubConceptsAll2("term")
+  }
+
+  function getSubConceptsImmediate()
+  {
+     if (opener.document == null)
+          window.close();
+    getSubConceptsImmediate2("term")
+  }
+
+  function getSuperConcepts()
+  {
+     if (opener.document == null)
+          window.close();
+     getSuperConcepts2("term")
+  }
+
+  //stores the search resuls in the array
+  function storeResultInArray()
+  {
+
+	      //store con attributes in an array
+	      var aIndex = 0;  //get the index
+	      var conID = "C45255";  //get evs identifier
+
+	      var conName = "Integer";
+
+	      var conDef = "A number with no fractional part, including the negative and positive numbers as well as zero.";
+	      var conDefSrc = "NCI";
+	      var conVocab = "caDSR";
+	      var conDBOrg = "NCI Thesaurus";
+	      var conLvl = "0";
+	      var conStatus = "RELEASED";
+	      //create multi dimentional array with concept attributes
+	      conArray[aIndex] = fillConArray(conID, conName, conDef, conDefSrc, conVocab, conDBOrg, conLvl, conStatus);
+
+	      //store con attributes in an array
+	      var aIndex = 1;  //get the index
+	      var conID = "C45255";  //get evs identifier
+
+	      var conName = "Integer";
+
+	      var conDef = "A number with no fractional part, including the negative and positive numbers as well as zero.";
+	      var conDefSrc = "NCI";
+	      var conVocab = "NCI Thesaurus";
+	      var conDBOrg = "NCI Thesaurus";
+	      var conLvl = "0";
+	      var conStatus = "Active";
+	      //create multi dimentional array with concept attributes
+	      conArray[aIndex] = fillConArray(conID, conName, conDef, conDefSrc, conVocab, conDBOrg, conLvl, conStatus);
+
+    //also store other variables
+    metaName = "NCI Metathesaurus";
+    dsrName = "caDSR";
+
+      var kI = 0
+      arrDefSrc[kI] = "NCI";
+
+      var kI = 1
+      arrDefSrc[kI] = "NCI-GLOSS_0701D";
+
+      var kI = 2
+      arrDefSrc[kI] = "NCI2007_02C";
+
+      var kI = 3
+      arrDefSrc[kI] = "NCICB";
+
+  }
+
+</SCRIPT>
+
+	</head>
+
+	<body>
+		<form name="searchResultsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=doSortBlocks">
+			<br>
+			<table border="0">
+				<tr align="left">
+					<td>
+						<input type="button" name="editSelectedBtn" value="Link Concept" onClick="ShowSelection();" disabled>
+						&nbsp;&nbsp;
+						<input type="button" name="btnSubConcepts" value="Get Subconcepts" onmouseover="controlsubmenu2(event,'divAssACMenu',null,null,null)" onmouseout="closeall()" disabled>
+						&nbsp;&nbsp;
+						<input type="button" name="btnSuperConcepts" value="Get Superconcepts" disabled onclick="javascript:getSuperConcepts();">
+						&nbsp;&nbsp;
+						<input type="button" name="closeBtn" value="Close Window" onClick="javascript:window.close();">
+						&nbsp;&nbsp;
+						<input type="button" name="btnSubmitToEVS" value="Suggest to EVS" onclick="javascript:NewTermSuggested();">
+						&nbsp;&nbsp;
+						<img id="evsCheckMessage" name="Message" src="images/SearchMessage.gif" width="180px" height="25" alt="WaitMessage" style="visibility:hidden;" align="top">
+					</td>
+				</tr>
+			</table>
+			<br>
+			<table width="100%" valign="top">
+
+				<tr>
+					<td>
+						<font size="4">
+							<b>
+								Search Results for
+								Value Meaning - integer
+							</b>
+						</font>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+						<font size="2">
+							&nbsp;
+							2
+							Records Found
+						</font>
+					</td>
+				</tr>
+			</table>
+			<table width="100%" border="1" valign="top">
+				<tr valign="middle">
+
+					<th height="30px" width="30px">
+						<img src="images/CheckBox.gif" border="0">
+					</th>
+
+
+					<th method="get">
+						<a href="javascript:SetSortType('name')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
+							Concept Name
+						</a>
+					</th>
+
+					<th method="get">
+						<a href="javascript:SetSortType('publicID')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
+							Public_ID
+						</a>
+					</th>
+
+					<th method="get">
+						<a href="javascript:SetSortType('umls')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
+							EVS Identifier
+						</a>
+					</th>
+
+					<th method="get">
+						<a href="javascript:SetSortType('def')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
+							Definition
+						</a>
+					</th>
+
+					<th method="get">
+						<a href="javascript:SetSortType('source')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
+							Definition Source
+						</a>
+					</th>
+
+					<th method="get">
+						<a href="javascript:SetSortType('asl')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
+							Workflow Status
+						</a>
+					</th>
+
+					<th method="get">
+						<a href="javascript:SetSortType('semantic')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
+							Semantic Type
+						</a>
+					</th>
+
+					<th method="get">
+						<a href="javascript:SetSortType('context')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
+							Context
+						</a>
+					</th>
+
+					<th method="get">
+						<a href="javascript:SetSortType('db')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
+							Vocabulary
+						</a>
+					</th>
+
+					<th method="get">
+						<a href="javascript:SetSortType('cadsrComp')" onHelp="showHelp('html/Help_SearchAC.html#searchResultsForm_sort',helpUrl); return false">
+							caDSR Component
+						</a>
+					</th>
+
+				</tr>
+
+				<tr>
+				 	<td width="5px" valign="top">
+						<input type="checkbox" name="CK0" onClick="javascript:EnableButtons(checked,this, false);">
+					</td>
+
+					<td width="150px" valign="top">
+						Integer
+						<br>
+
+						<br>
+						&nbsp;&nbsp;Enter Concept Value
+						<br>
+						&nbsp;&nbsp;
+                        <label for="nvp_CK0"></label><input type="text" name="nvp_CK0" id="nvp_CK0" maxlength="10" width="80%" onkeyup="" value="">
+
+					</td>
+
+
+					<td valign="top">
+						2433736
+					</td>
+
+					<td valign="top">
+						C45255
+					</td>
+
+					<td valign="top">
+						A number with no fractional part, including the negative and positive numbers as well as zero.
+					</td>
+
+					<td valign="top">
+						NCI
+					</td>
+
+					<td valign="top">
+						RELEASED
+					</td>
+
+					<td valign="top">
+
+					</td>
+
+					<td valign="top">
+						NCIP
+					</td>
+
+					<td valign="top">
+						caDSR
+					</td>
+
+					<td valign="top">
+						Concept Class
+					</td>
+
+				</tr>
+
+				<tr>
+					<td width="5px" valign="top">
+						<input type="checkbox" name="CK1" onClick="javascript:EnableButtons(checked,this, true);">
+					</td>
+					<td width="150px" valign="top">
+						<a href="javascript:showConceptInTree('CK1');">
+							Integer
+						</a>
+						<br>
+
+						<br>
+						&nbsp;&nbsp;Enter Concept Value
+						<br>
+						&nbsp;&nbsp;
+						<input type="text" name="nvp_CK1" id="nvp_CK1" maxlength="10" size="30" onkeyup="" value="">
+
+					</td>
+
+
+					<td valign="top">
+
+					</td>
+
+					<td valign="top">
+						C45255
+					</td>
+
+					<td valign="top">
+						A number with no fractional part, including the negative and positive numbers as well as zero.
+					</td>
+
+					<td valign="top">
+						NCI
+					</td>
+
+					<td valign="top">
+						Active
+					</td>
+
+					<td valign="top">
+						Conceptual Entity
+					</td>
+
+					<td valign="top">
+
+					</td>
+
+					<td valign="top">
+						NCI Thesaurus
+					</td>
+
+					<td valign="top">
+
+					</td>
+
+				</tr>
+
+
+			</table>
+			<div style="display:none">
+				<input type="hidden" name="AttChecked" value="5">
+				<input type="hidden" name="searchComp" value="">
+				<input type="hidden" name="openToTree" value="">
+				<input type="hidden" name="selectedParentConceptCode" value="">
+				<input type="hidden" name="selectedParentConceptName" value="">
+				<input type="hidden" name="selectedParentConceptDB" value="">
+				<input type="hidden" name="selectedParentConceptMetaSource" value="">
+				<input type="hidden" name="OCCCode" value="">
+				<input type="hidden" name="OCCCodeDB" value="">
+				<input type="hidden" name="OCCCodeName" value="">
+				<input type="hidden" name="numSelected" value="">
+				<input type="hidden" name="actSelected" value="Search">
+				<input type="hidden" name="numAttSelected" value="">
+				<input type="hidden" name="blockSortType" value="nothing">
+				<input type="hidden" name="UISearchType" value="term">
+				<input type="hidden" name="selRowID" value="">
+				<input type="hidden" name="editPVInd" value="">
+				<select size="1" name="hiddenPVValue" style="visibility:hidden;"></select>
+				<select size="1" name="hiddenPVMean" style="visibility:hidden;"></select>
+
+				<select size="1" name="hiddenResults" style="visibility:hidden;width:145px">
+
+					<option value="Integer">
+						Integer
+					</option>
+
+					<option value="2433736">
+						2433736
+					</option>
+
+					<option value="C45255">
+						C45255
+					</option>
+
+					<option value="A number with no fractional part, including the negative and positive numbers as well as zero.">
+						A number with no fractional part, including the negative and positive numbers as well as zero.
+					</option>
+
+					<option value="NCI">
+						NCI
+					</option>
+
+					<option value="RELEASED">
+						RELEASED
+					</option>
+
+					<option value="null">
+						null
+					</option>
+
+					<option value="NCIP">
+						NCIP
+					</option>
+
+					<option value="caDSR">
+						caDSR
+					</option>
+
+					<option value="Concept Class">
+						Concept Class
+					</option>
+
+					<option value="Integer">
+						Integer
+					</option>
+
+					<option value="null">
+						null
+					</option>
+
+					<option value="C45255">
+						C45255
+					</option>
+
+					<option value="A number with no fractional part, including the negative and positive numbers as well as zero.">
+						A number with no fractional part, including the negative and positive numbers as well as zero.
+					</option>
+
+					<option value="NCI">
+						NCI
+					</option>
+
+					<option value="Active">
+						Active
+					</option>
+
+					<option value="Conceptual Entity">
+						Conceptual Entity
+					</option>
+
+					<option value="null">
+						null
+					</option>
+
+					<option value="NCI Thesaurus">
+						NCI Thesaurus
+					</option>
+
+					<option value="null">
+						null
+					</option>
+
+				</select>
+				<select size="1" name="hiddenSelectedRow" style="visibility:hidden;">
+				</select>
+			</div>
+			<div id="divAssACMenu" style="position:absolute;z-index:1;visibility:hidden;width:185px;">
+				<table id="tblAssACMenu" border="3" cellspacing="0" cellpadding="0">
+					<tr>
+						<td class="menu" id="assDE">
+							<a href="javascript:getSubConceptsAll();" onmouseover="changecolor('assDE',oncolor)" onmouseout="changecolor('assDE',offcolor);closeall()">
+								All Subconcepts
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td class="menu" id="assDEC">
+							<a href="javascript:getSubConceptsImmediate();" onmouseover="changecolor('assDEC',oncolor)" onmouseout="changecolor('assDEC',offcolor);closeall()">
+								Immediate Subconcepts
+							</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<script language="javascript">
+				setup();
+				getSearchComponent();
+				initPopupMenu2();
+				storeResultInArray();
+			</script>
+		</form>
+	</body>
+</html>
+
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

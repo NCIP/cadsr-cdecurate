@@ -1,0 +1,6 @@
+/node_modules/
+/temp/
+/functions.js
+/npm-debug.log
+/package.json
+/coverage/

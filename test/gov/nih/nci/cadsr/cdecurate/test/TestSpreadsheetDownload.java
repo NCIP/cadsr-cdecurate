@@ -10,6 +10,13 @@
 // $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/testdec.java,v 1.11 2008-03-13 17:57:59 chickerura Exp $
 // $Name: not supported by cvs2svn $
 
+/*
+ * To run:
+ * 
+ * TestSpreadsheetDownload userId password
+ * 
+ */
+
 package gov.nih.nci.cadsr.cdecurate.test;
 
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
