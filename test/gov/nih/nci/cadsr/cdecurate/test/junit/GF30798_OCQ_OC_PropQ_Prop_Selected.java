@@ -1,4 +1,4 @@
-package gov.nih.nci.cadsr.cdecurate.test.legacy;
+package gov.nih.nci.cadsr.cdecurate.test.junit;
 
 import static org.junit.Assert.assertEquals;
 
