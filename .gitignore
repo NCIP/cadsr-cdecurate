@@ -3,7 +3,6 @@
 /d.cmd
 /p.cmd
 /conf
-/build.properties
 /c1.cmd
 /c4.cmd
 /cl.cmd
@@ -37,4 +36,5 @@ copytest2jboss.cmd
 /m.cmd
 /spy.*
 /*spy*.cmd
-/*.*spy
+/*.*spybuild.properties 
+/build.properties
